@@ -1,0 +1,3 @@
+" .ideavimrc holds the vim config for JetBrains products
+
+source ~/.vimrc

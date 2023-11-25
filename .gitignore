@@ -1,0 +1,8 @@
+.ssh
+.DS_Store
+.netrwhist
+undodir
+.viminfo
+plugged
+*.lock.json
+**/*.log
