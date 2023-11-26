@@ -38,11 +38,13 @@ symlink "macos/com.local.KeyRemapping.plist" "~/Library/LaunchAgents/com.local.K
 symlink ".gitconfig" "~/.gitconfig"
 symlink ".config/lazygit" "~/Library/Application\ Support/lazygit"
 symlink ".config/lazydocker" "~/Library/Application\ Support/lazydocker"
+symlink ".config/raycast" "~/.config/raycast"
 symlink ".config/starship" "~/.config/starship"
 symlink "vscode/snippets" "~/Library/Application\ Support/Code/User/snippets" 
 symlink "vscode/keybindings.json" "~/Library/Application\ Support/Code/User/keybindings.json"
 symlink "vim/.ideavimrc" "~/.ideavimrc"
 symlink "vim/.vimrc" "~/.vimrc"
+symlink ".profile" "~/.profile"
 # Add more symlinks here in the format:
 # symlink "relative_source_path" "destination_path"
 

@@ -6,3 +6,4 @@ undodir
 plugged
 *.lock.json
 **/*.log
+node_modules
