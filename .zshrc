@@ -87,6 +87,7 @@ alias cd..="cd .."
 alias tar-unzip="tar -xvf"
 alias tar-zip="tar -cvf"
 
+
 # Shell integrations
 source <(fzf --zsh)
 eval "$(zoxide init --cmd cd zsh)"
