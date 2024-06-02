@@ -84,5 +84,6 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`p10k`](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#zinit), for a minimal zsh prompt
 - [`fzf`](https://github.com/junegunn/fzf), for fuzzy finding
 - [`zoxide`](https://github.com/ajeetdsouza/zoxide), for fast directory switching
+- [`eza`](https://github.com/eza-community/eza), for a modern, maintained replacement for ls
 
 For more information on the zsh-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=ud7YxC33Z3w).
