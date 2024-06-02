@@ -115,6 +115,11 @@ bindings = [
   # CMD + K: Clear terminal screen in tmux using Ctrl-k
   { key = "K", mods = "Command", chars = "\u0002\u000B" },
 
+  # CMD + Shift + Enter: Full size the active tmux pane
+  { key = "Enter", mods = "Command|Shift", command = { program = "/usr/local/bin/tmux", args = [
+    "resize-pane",
+    "-Z",
+  ] } },
 ]
 
 [mouse]
