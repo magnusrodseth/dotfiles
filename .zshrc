@@ -87,8 +87,22 @@ alias cd..="cd .."
 alias tar-unzip="tar -xvf"
 alias tar-zip="tar -cvf"
 alias ls="eza -a"
-alias l="eza -l -a"
+alias l="eza --color=always --long --no-filesize --no-time -a"
 
+# Executes when the current directory is changed.
+function chpwd() {
+  clear
+  l
+}
+
+# Set the default editor
+export EDITOR='/usr/local/bin/nvim'
+export VISUAL="$EDITOR"
+export LC_ALL=en_US.UTF-8
+
+# pnpm
+export PNPM_HOME="/Users/magnusrodseth/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
 
 # Shell integrations
 source <(fzf --zsh)

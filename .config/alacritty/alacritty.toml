@@ -1,4 +1,6 @@
-working_directory = "$HOME/dev"
+import = ["~/.config/alacritty/themes/tokyo-night.toml"]
+
+working_directory = "/Users/magnusrodseth/dev"
 
 [env]
 TERM = "xterm-256color"
@@ -6,9 +8,16 @@ TERM = "xterm-256color"
 [window]
 dimensions = { columns = 400, lines = 500 }
 startup_mode = "Maximized"
+padding = { x = 10, y = 35 }
+decorations = "Transparent"
 
 [font]
 normal.family = "FiraCode Nerd Font Mono"
-size = 17
-offset.x = 1
+size = 16
+offset.y = 1
 
+[cursor]
+style.shape = "Block"
+
+[keyboard]
+bindings = [{ key = "T", mods = "Command", action = "CreateNewWindow" }]

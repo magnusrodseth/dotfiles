@@ -13,6 +13,7 @@
     - [More information on `stow`](#more-information-on-stow)
   - [Tools used](#tools-used)
     - [`zsh`-related tools](#zsh-related-tools)
+  - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
 
 ## Prerequisites
 
@@ -87,3 +88,12 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`eza`](https://github.com/eza-community/eza), for a modern, maintained replacement for ls
 
 For more information on the zsh-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=ud7YxC33Z3w).
+
+## Updating the color theme of Alacritty
+
+The themes for Alacritty are downloaded from the [`alacritty-theme`](https://github.com/alacritty/alacritty-theme) repository. They are stored in the [`.config/alacritty/themes`](/.config/alacritty/themes) directory. To update the color theme of Alacritty, simply update the `import` statement in the [`.config/alacritty/alacritty.toml`](/.config/alacritty/alacritty.toml) file.
+
+```toml
+# Replace {theme} with the filename of the theme you want to use from the `alacritty-theme` repository
+import = ["~/.config/alacritty/themes/{theme}.toml"]
+```
