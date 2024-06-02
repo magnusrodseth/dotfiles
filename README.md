@@ -12,6 +12,7 @@
     - [Resulting directory structure after stowing](#resulting-directory-structure-after-stowing)
     - [More information on `stow`](#more-information-on-stow)
   - [Tools used](#tools-used)
+    - [`tmux`-related tools](#tmux-related-tools)
     - [`zsh`-related tools](#zsh-related-tools)
   - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
 
@@ -77,6 +78,12 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`neovim`](https://neovim.io), for text editing
 - [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
 - [`alacritty`](https://github.com/alacritty/alacritty), for a fast terminal emulator
+
+### `tmux`-related tools
+
+- [`tmux`](https://github.com/tmux/tmux/wiki), for a terminal multiplexer
+- [`tpm`](https://github.com/tmux-plugins/tpm), for managing tmux plugins
+- [`catppuccin/tmux`](https://github.com/catppuccin/tmux), for a themes for tmux
 
 ### `zsh`-related tools
 
