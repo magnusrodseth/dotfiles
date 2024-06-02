@@ -83,7 +83,9 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 
 - [`tmux`](https://github.com/tmux/tmux/wiki), for a terminal multiplexer
 - [`tpm`](https://github.com/tmux-plugins/tpm), for managing tmux plugins
-- [`catppuccin/tmux`](https://github.com/catppuccin/tmux), for a themes for tmux
+- [`catppuccin/tmux`](https://github.com/catppuccin/tmux), for tmux themes. Note that I am using a fork of the original repository, which can be found [in this repository](https://github.com/dreamsofcode-io/catppuccin-tmux).
+
+For more information on the tmux-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=DzNmUNvnB04).
 
 ### `zsh`-related tools
 
