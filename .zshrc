@@ -86,6 +86,8 @@ alias c.="code ."
 alias cd..="cd .."
 alias tar-unzip="tar -xvf"
 alias tar-zip="tar -cvf"
+alias ls="eza -a"
+alias l="eza -l -a"
 
 
 # Shell integrations
