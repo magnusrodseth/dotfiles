@@ -12,6 +12,7 @@
     - [Resulting directory structure after stowing](#resulting-directory-structure-after-stowing)
     - [More information on `stow`](#more-information-on-stow)
   - [Tools used](#tools-used)
+    - [`zsh`-related tools](#zsh-related-tools)
 
 ## Prerequisites
 
@@ -71,8 +72,17 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`stow`](https://www.gnu.org/software/stow/), for managing dotfiles
 - [`brew`](https://brew.sh), for installing software packages
 - [`git`](https://git-scm.com), for version control
-- [`zsh`](https://www.zsh.org), for the shell
-- [`zinit`](https://github.com/zdharma-continuum/zinit), for managing zsh plugins
+
 - [`neovim`](https://neovim.io), for text editing
 - [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
 - [`alacritty`](https://github.com/alacritty/alacritty), for a fast terminal emulator
+
+### `zsh`-related tools
+
+- [`zsh`](https://www.zsh.org), for the shell
+- [`zinit`](https://github.com/zdharma-continuum/zinit), for managing zsh plugins
+- [`p10k`](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#zinit), for a minimal zsh prompt
+- [`fzf`](https://github.com/junegunn/fzf), for fuzzy finding
+- [`zoxide`](https://github.com/ajeetdsouza/zoxide), for fast directory switching
+
+For more information on the zsh-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=ud7YxC33Z3w).
