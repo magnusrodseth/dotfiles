@@ -1,6 +1,14 @@
+working_directory = "$HOME/dev"
+
 [env]
 TERM = "xterm-256color"
 
 [window]
 dimensions = { columns = 400, lines = 500 }
 startup_mode = "Maximized"
+
+[font]
+normal.family = "FiraCode Nerd Font Mono"
+size = 17
+offset.x = 1
+
