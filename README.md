@@ -11,6 +11,7 @@
     - [Using `stow` to mirror configuration](#using-stow-to-mirror-configuration)
     - [Resulting directory structure after stowing](#resulting-directory-structure-after-stowing)
     - [More information on `stow`](#more-information-on-stow)
+  - [Tools used](#tools-used)
 
 ## Prerequisites
 
@@ -64,3 +65,14 @@ stow .
 ### More information on `stow`
 
 Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for more information.
+
+## Tools used
+
+- [`stow`](https://www.gnu.org/software/stow/), for managing dotfiles
+- [`brew`](https://brew.sh), for installing software packages
+- [`git`](https://git-scm.com), for version control
+- [`zsh`](https://www.zsh.org), for the shell
+- [`zinit`](https://github.com/zdharma-continuum/zinit), for managing zsh plugins
+- [`neovim`](https://neovim.io), for text editing
+- [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
+- [`alacritty`](https://github.com/alacritty/alacritty), for a fast terminal emulator
