@@ -3,10 +3,11 @@
 fonts
 vscode
 macos
+scripts
 
 ### Default ignores
 
-# Comments and blank lines are allowed.
+# Comments and blank lines are allowed
 
 RCS
 .+,v

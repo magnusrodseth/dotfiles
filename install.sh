@@ -36,3 +36,21 @@ echo "Homebrew packages installed successfully."
 echo "Sourcing the .zshrc file..."
 source $HOME/.zshrc
 echo "Sourced the .zshrc file successfully."
+
+# Mapping ESC to CAPS
+echo "Mapping ESC to CAPS on the Mac machine..."
+source scripts/map-esc-to-caps.sh
+echo "Mapped ESC to CAPS successfully."
+
+# Setup tmux
+echo "Setting up tmux..."
+tmux source $HOME/.tmux.conf
+echo "Tmux setup successfully."
+
+# Install `tpm` plugins
+echo "Installing `tpm` plugins..."
+tmux start-server
+tmux new-session -d
+sh $HOME/.tmux/plugins/tpm/scripts/install_plugins.sh
+tmux kill-server
+echo "Installed `tpm` plugins successfully."
