@@ -18,17 +18,30 @@
 
 ## Prerequisites
 
+MacOS comes pre-installed with `git` and `brew`, but I will include instructions on how to install them for completeness.
+
 ```sh
+# Ensure you have Homebrew installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 # Ensure you have Git installed
 brew install git
-
-# Ensure you have stow installed
-brew install stow
 ```
 
 ## Getting started
 
-> TODO: Add instructions on how to bootstrap this setup.
+Now that you have `git` and `brew` installed, you can clone this repository and use `stow` to manage your dotfiles. When cloning the repository, **it is important to clone it into `$HOME/dotfiles`**. This is because the `stow` command will create symbolic links relative to the current directory, so it is important to clone the repository into the `$HOME` directory to ensure that the symbolic links are created correctly.
+
+```sh
+# Clone the repository into a specified directory
+git clone https://github.com/magnusrodseth/dotfiles.git $HOME/dotfiles
+
+# Navigate to the dotfiles directory
+cd $HOME/dotfiles
+
+# Run the install script
+sh install.sh
+```
 
 ## What is `stow`?
 
