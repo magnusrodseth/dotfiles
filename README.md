@@ -12,6 +12,7 @@
     - [Resulting directory structure after stowing](#resulting-directory-structure-after-stowing)
     - [More information on `stow`](#more-information-on-stow)
   - [Tools used](#tools-used)
+    - [`neovim`-related tools](#neovim-related-tools)
     - [`tmux`-related tools](#tmux-related-tools)
     - [`zsh`-related tools](#zsh-related-tools)
   - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
@@ -87,10 +88,16 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`stow`](https://www.gnu.org/software/stow/), for managing dotfiles
 - [`brew`](https://brew.sh), for installing software packages
 - [`git`](https://git-scm.com), for version control
-
-- [`neovim`](https://neovim.io), for text editing
+- [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal
 - [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
 - [`alacritty`](https://github.com/alacritty/alacritty), for a fast terminal emulator
+
+### `neovim`-related tools
+
+- [`neovim`](https://neovim.io), for text editing
+- [`lazyvim`](https://www.lazyvim.org/), for an IDE experience in Neovim that is easy to set up
+
+For more information on the Neovim setup, including plugins and keymaps, refer to the [`lazyvim` documentation](https://www.lazyvim.org/).
 
 ### `tmux`-related tools
 
