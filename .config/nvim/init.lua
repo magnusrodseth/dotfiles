@@ -43,6 +43,9 @@ vim.opt.signcolumn = 'yes'
 -- Decrease update time
 vim.opt.updatetime = 250
 
+-- Enable true colors
+vim.opt.termguicolors = true
+
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
@@ -78,6 +81,9 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- Buffer keymaps
+vim.keymap.set('n', '<leader>bw', '<cmd>bd<CR>', { desc = 'Delete [B]uffer' })
 
 -- Center cursor vertically on screen when using j and k
 vim.keymap.set('n', 'j', 'jzz')
@@ -475,9 +481,9 @@ require('lazy').setup({
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       -- https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
       local servers = {
-        clangd        = {},
-        gopls         = {},
-        pyright       = {},
+        clangd = {},
+        gopls = {},
+        pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -485,24 +491,24 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver      = {},
-        astro         = {},
-        bashls        = {},
-        cssls         = {},
-        denols        = {},
-        dockerls      = {},
-        eslint        = {},
-        graphql       = {},
-        html          = {},
-        biome         = {},
-        remark_ls     = {},
-        prismals      = {},
-        sqlls         = {},
-        svelte        = {},
-        taplo         = {},
-        tailwindcss   = {},
-        yamlls        = {},
-        lua_ls        = {
+        tsserver = {},
+        astro = {},
+        bashls = {},
+        cssls = {},
+        denols = {},
+        dockerls = {},
+        eslint = {},
+        graphql = {},
+        html = {},
+        biome = {},
+        remark_ls = {},
+        prismals = {},
+        sqlls = {},
+        svelte = {},
+        taplo = {},
+        tailwindcss = {},
+        yamlls = {},
+        lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
           -- capabilities = {},
@@ -628,6 +634,14 @@ require('lazy').setup({
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
 
+      local has_words_before = function()
+        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then
+          return false
+        end
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match '^%s*$' == nil
+      end
+
       cmp.setup {
         snippet = {
           expand = function(args)
@@ -653,7 +667,14 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<tab>'] = cmp.mapping.confirm { select = true },
+          -- ['<tab>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = vim.schedule_wrap(function(fallback)
+            if cmp.visible() and has_words_before() then
+              cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+            else
+              fallback()
+            end
+          end),
           ['<cr>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
@@ -691,6 +712,7 @@ require('lazy').setup({
         },
         sources = {
           { name = 'nvim_lsp' },
+          { name = 'copilot' },
           { name = 'luasnip' },
           { name = 'path' },
         },
@@ -761,7 +783,36 @@ require('lazy').setup({
     build = ':TSUpdate',
     opts = {
       -- https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#supported-languages
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'astro', 'css', 'dockerfile', 'gleam', 'go', 'gomod', 'graphql', 'javascript', 'json', 'just', 'prisma', 'python', 'rust', 'svelte', 'tmux', 'toml', 'tsx', 'typescript', 'yaml' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'vim',
+        'vimdoc',
+        'astro',
+        'css',
+        'dockerfile',
+        'gleam',
+        'go',
+        'gomod',
+        'graphql',
+        'javascript',
+        'json',
+        'just',
+        'prisma',
+        'python',
+        'rust',
+        'svelte',
+        'tmux',
+        'toml',
+        'tsx',
+        'typescript',
+        'yaml',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -805,6 +856,9 @@ require('lazy').setup({
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.dashboard',
+  require 'kickstart.plugins.copilot.copilot',
+  require 'kickstart.plugins.copilot.copilot-cmp',
+  require 'kickstart.plugins.bufferline'
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
