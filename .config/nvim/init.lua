@@ -858,7 +858,8 @@ require('lazy').setup({
   require 'kickstart.plugins.dashboard',
   require 'kickstart.plugins.copilot.copilot',
   require 'kickstart.plugins.copilot.copilot-cmp',
-  require 'kickstart.plugins.bufferline'
+  require 'kickstart.plugins.bufferline',
+  require 'kickstart.plugins.persistence'
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
