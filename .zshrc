@@ -93,6 +93,9 @@ export EDITOR='/usr/local/bin/nvim'
 export VISUAL="$EDITOR"
 export LC_ALL=en_US.UTF-8
 
+# Change the config directory
+export XDG_CONFIG_HOME="$HOME/.config"
+
 # pnpm
 export PNPM_HOME="/Users/magnusrodseth/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
