@@ -1,9 +1,10 @@
 ### Custom ignores
-
 fonts
 vscode
 macos
 scripts
+Brewfile
+install.sh
 
 ### Default ignores
 
