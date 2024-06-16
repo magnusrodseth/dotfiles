@@ -16,6 +16,7 @@
     - [`tmux`-related tools](#tmux-related-tools)
     - [`zsh`-related tools](#zsh-related-tools)
   - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
+  - [Managing Raycast](#managing-raycast)
 
 ## Prerequisites
 
@@ -91,6 +92,7 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal
 - [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
 - [`alacritty`](https://github.com/alacritty/alacritty), for a fast terminal emulator
+- [`raycast`](https://www.raycast.com/), for a Spotlight replacement with extensions, window management, etc.
 
 ### `neovim`-related tools
 
@@ -126,3 +128,9 @@ The themes for Alacritty are downloaded from the [`alacritty-theme`](https://git
 # Replace {theme} with the filename of the theme you want to use from the `alacritty-theme` repository
 import = ["~/.config/alacritty/themes/{theme}.toml"]
 ```
+
+## Managing Raycast
+
+The Raycast configuration is stored in [`.config/raycast`](/.config/raycast), in the most recent `*.rayconfig` file. After installing Raycast, open Settings using `CMD + ,` > `Advanced` > `Import / Export` > `Import` > `Select File`. Select the most up-to-date file from the folder.
+
+Note that Raycast reads its config and extensions from `~/.config/raycast`, so the [`extensions`](/.config/raycast/extensions/) located in the `dotfiles` are required to be there. **Do not delete the `extensions` directory**.
