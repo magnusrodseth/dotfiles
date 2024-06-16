@@ -112,7 +112,7 @@ bindings = [
     "-D",
   ] } },
 
-  # CMD + K: Clear terminal screen in tmux using Ctrl-k
+  # CMD + K: Clear terminal screen in tmux using the `clear` command
   { key = "K", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
     "send-keys",
     "clear",
