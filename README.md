@@ -111,7 +111,7 @@ For more information on the tmux-related tools, refer to [this YouTube video](ht
 
 - [`zsh`](https://www.zsh.org), for the shell
 - [`zinit`](https://github.com/zdharma-continuum/zinit), for managing zsh plugins
-- [`p10k`](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#zinit), for a minimal zsh prompt
+- [`oh-my-posh`](https://ohmyposh.dev/docs/), for a minimal zsh prompt
 - [`fzf`](https://github.com/junegunn/fzf), for fuzzy finding
 - [`zoxide`](https://github.com/ajeetdsouza/zoxide), for fast directory switching
 - [`eza`](https://github.com/eza-community/eza), for a modern, maintained replacement for ls
