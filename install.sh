@@ -29,7 +29,7 @@ echo "Symlinks created successfully."
 
 # Install Homebrew packages from `Brewfile`
 echo "Installing Homebrew packages from `Brewfile`..."
-brew bundle install
+brew bundle install --file=~/dotfiles/Brewfile
 echo "Homebrew packages installed successfully."
 
 # Source the `.zshrc` file
