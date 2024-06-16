@@ -16,7 +16,8 @@
     - [`tmux`-related tools](#tmux-related-tools)
     - [`zsh`-related tools](#zsh-related-tools)
   - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
-  - [Managing Raycast](#managing-raycast)
+  - [Configuring Raycast](#configuring-raycast)
+  - [Configuring VS Code](#configuring-vs-code)
 
 ## Prerequisites
 
@@ -129,8 +130,14 @@ The themes for Alacritty are downloaded from the [`alacritty-theme`](https://git
 import = ["~/.config/alacritty/themes/{theme}.toml"]
 ```
 
-## Managing Raycast
+## Configuring Raycast
 
 The Raycast configuration is stored in [`.config/raycast`](/.config/raycast), in the most recent `*.rayconfig` file. After installing Raycast, open Settings using `CMD + ,` > `Advanced` > `Import / Export` > `Import` > `Select File`. Select the most up-to-date file from the folder.
 
 Note that Raycast reads its config and extensions from `~/.config/raycast`, so the [`extensions`](/.config/raycast/extensions/) located in the `dotfiles` are required to be there. **Do not delete the `extensions` directory**.
+
+## Configuring VS Code
+
+The relevant stuff to backup for VS Code includes the settings, keybindings, snippets, and extensions. I do not want to backup all extensions, so I'll leave that to [Settings Sync](https://code.visualstudio.com/docs/editor/settings-sync). However, the rest are small files that are easy to backup. On Mac, VS Code settings are stored in `~/Library/Application Support/Code/User/`. Hence, it is mirrored in this `dotfiles` configuration.
+
+Simply running `stow .` as detailed above will symlink the necessary files to the correct location. Settings Sync will take care of extensions.
