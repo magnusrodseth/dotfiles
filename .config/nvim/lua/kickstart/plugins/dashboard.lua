@@ -4,7 +4,7 @@ return {
   event = 'VimEnter',
   opts = function()
     local function get_random_emoji()
-      local emojis = { '🚀', '✨', '🎉', '🤠', '🥳' }
+      local emojis = { '🚀', '✨', '🎉', '🤠' }
       math.randomseed(os.time())
       return emojis[math.random(#emojis)]
     end
