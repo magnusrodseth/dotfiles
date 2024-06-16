@@ -232,7 +232,7 @@
   ],
   "prisma.showPrismaDataPlatformNotification": false,
   "github.copilot.editor.enableAutoCompletions": true,
-  "workbench.colorTheme": "Kanagawa",
+  "workbench.colorTheme": "Tokyo Night Ported Nvim",
   "editor.quickSuggestionsDelay": 1,
   "editor.suggest.preview": true
 }
