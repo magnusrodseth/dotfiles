@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>e', ':Neotree toggle<CR>', { desc = 'NeoTree reveal' } },
+    { '<leader>e', ':Neotree toggle<CR>', { desc = '[E]xplorer Neotree' } },
   },
   opts = {
     filesystem = {
@@ -20,6 +20,9 @@ return {
           ['\\'] = 'close_window',
         },
       },
+    },
+    window = {
+      position = 'right',
     },
   },
 }
