@@ -39,7 +39,7 @@ os:
   open: "code {{filename}}"
 
 customCommands:
-  - key: "<c-a>"
+  - key: "C"
     context: "files"
     prompts:
       - type: "menuFromCommand"
