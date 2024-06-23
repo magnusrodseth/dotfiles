@@ -5,6 +5,7 @@ macos
 scripts
 Brewfile
 install.sh
+browser/*
 
 ### Default ignores
 
