@@ -37,3 +37,17 @@ os:
   # Command for opening a file, as if the file is double-clicked. Should
   # contain "{{filename}}", but doesn't support "{{line}}".
   open: "code {{filename}}"
+
+customCommands:
+  - key: "<c-a>"
+    context: "files"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Commit message"
+        key: "Msg"
+        command: "bunx bunnai"
+        filter: '^(?P<number>\d+)\.\s(?P<message>.+)$'
+        valueFormat: "{{ .message }}"
+        labelFormat: "{{ .number }}: {{ .message | green }}"
+    command: 'git commit -m "{{.Form.Msg}}"'
+    loadingText: "Generating commit message..."
