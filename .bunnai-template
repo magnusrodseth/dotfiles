@@ -1,4 +1,4 @@
-Please suggest 3 commit messages, given the following diff:
+Suggest 3 commit messages, given the following diff:
 
 ```diff
 {{diff}}
@@ -16,12 +16,13 @@ Please suggest 3 commit messages, given the following diff:
 - fix: add password regex pattern
 - feat: add new test cases
 - style: remove unused imports
+- deps: update turbo
 - refactor: extract common code to `utils/wait.ts`
 
 **Instructions:**
 
 - Take a moment to understand the changes made in the diff.
-- Think about the impact of these changes on the project (e.g., bug fixes, new features, performance improvements, code refactoring, documentation updates). It's critical to my career you abstract the changes to a higher level and not just describe the code changes.
+- Think about the impact of these changes on the project (e.g., bug fixes, new features, performance improvements, code refactoring, documentation updates). It is critical to my career you abstract the changes to a higher level and not just describe the code changes.
 - Generate commit messages that accurately describe these changes, ensuring they are helpful to someone reading the project's history.
 - Remember, a well-crafted commit message can significantly aid in the maintenance and understanding of the project over time.
 - If multiple changes are present, make sure you capture them all in each commit message.
