@@ -141,3 +141,7 @@ Note that Raycast reads its config and extensions from `~/.config/raycast`, so t
 The relevant stuff to backup for VS Code includes the settings, keybindings, snippets, and extensions. I do not want to backup all extensions, so I'll leave that to [Settings Sync](https://code.visualstudio.com/docs/editor/settings-sync). However, the rest are small files that are easy to backup. On Mac, VS Code settings are stored in `~/Library/Application Support/Code/User/`. Hence, it is mirrored in this `dotfiles` configuration.
 
 Simply running `stow .` as detailed above will symlink the necessary files to the correct location. Settings Sync will take care of extensions.
+
+## Configuring Brave Browser
+
+Brave is the web browser used. It is installed in the [`install.sh`](/install.sh) script. When that is finished, set the wallpaper and configure relevant extension options located in the [`browser`](/browser) directory.
