@@ -103,3 +103,6 @@ export PATH="$PNPM_HOME:$PATH"
 # Shell integrations
 source <(fzf --zsh)
 eval "$(zoxide init --cmd cd zsh)"
+
+# dotnet
+export PATH="$PATH:$HOME/.dotnet/tools/"
