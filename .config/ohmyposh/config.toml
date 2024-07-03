@@ -26,6 +26,11 @@ foreground = 'p:grey'
 background = 'transparent'
 template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
 
+[[blocks.segments]]
+type = "python"
+style = "plain"
+template = "|  {{ if .Venv }}{{ .Venv }} {{ end }} {{ .Full }} "
+
 [blocks.segments.properties]
 branch_icon = ''
 commit_icon = '@'
