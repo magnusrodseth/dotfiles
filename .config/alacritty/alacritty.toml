@@ -112,12 +112,8 @@ bindings = [
     "-D",
   ] } },
 
-  # CMD + K: Clear terminal screen in tmux using the `clear` command
-  { key = "K", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
-    "send-keys",
-    "clear",
-    "Enter",
-  ] } },
+  # CMD + K: Clear terminal screen in tmux
+  { key = "K", mods = "Command", chars = "\u0002\u000B\u000D" },
 
   # CMD + Shift + Enter: Full size the active tmux pane
   { key = "Enter", mods = "Command|Shift", command = { program = "/usr/local/bin/tmux", args = [
