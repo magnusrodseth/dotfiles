@@ -80,6 +80,7 @@ alias cd..="cd .."
 alias tar-unzip="tar -xvf"
 alias tar-zip="tar -cvf"
 alias ls="eza -a"
+alias speedtest="speedtest-cli"
 alias l="eza --color=always --long --no-filesize --no-time -a -I .DS_Store"
 
 # Executes when the current directory is changed.
