@@ -37,9 +37,14 @@ echo "Sourcing the .zshrc file..."
 source $HOME/.zshrc
 echo "Sourced the .zshrc file successfully."
 
+# Configure macOS defaults settings
+echo "Configuring macOS defaults settings..."
+source scripts/macos/defaults.sh
+echo "macOS defaults settings configured successfully."
+
 # Mapping ESC to CAPS
 echo "Mapping ESC to CAPS on the Mac machine..."
-source scripts/map-esc-to-caps.sh
+source scripts/macos/map-esc-to-caps.sh
 echo "Mapped ESC to CAPS successfully."
 
 # Setup tmux
