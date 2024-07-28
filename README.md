@@ -19,6 +19,8 @@
   - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
   - [Configuring Raycast](#configuring-raycast)
   - [Configuring VS Code](#configuring-vs-code)
+    - [Managing keybindings, settings and snippets](#managing-keybindings-settings-and-snippets)
+    - [Managing extensions](#managing-extensions)
   - [Configuring Brave Browser](#configuring-brave-browser)
 
 ## Prerequisites
@@ -146,9 +148,25 @@ Note that Raycast reads its config and extensions from `~/.config/raycast`, so t
 
 ## Configuring VS Code
 
-The relevant stuff to backup for VS Code includes the settings, keybindings, snippets, and extensions. I do not want to backup all extensions, so I'll leave that to [Settings Sync](https://code.visualstudio.com/docs/editor/settings-sync). However, the rest are small files that are easy to backup. On Mac, VS Code settings are stored in `~/Library/Application Support/Code/User/`. Hence, it is mirrored in this `dotfiles` configuration.
+### Managing keybindings, settings and snippets
 
-Simply running `stow .` as detailed above will symlink the necessary files to the correct location. Settings Sync will take care of extensions.
+The relevant stuff to backup for VS Code includes the settings, keybindings, snippets, and extensions. On Mac, VS Code settings are stored in `~/Library/Application Support/Code/User/`. Hence, it is mirrored in this `dotfiles` configuration.
+
+Simply running `stow .` as detailed above will symlink the necessary files to the correct location.
+
+### Managing extensions
+
+Regarding extensions, we don't want to actually link all extensions found in the `~/.vscode/extensions` directory, as this takes up a lot of space. Rather, I have written a script called [`./scripts/vscode/extensions.sh`](/scripts/vscode/extensions.sh) that serves to **export** existing extensions to the file [`vscode_extensions.txt`](/scripts/vscode/vscode_extensions.txt), and **install** them on a new machine. Use this script to manage extensions in VS Code.
+
+```sh
+# Export extensions
+sh ./scripts/vscode/extensions.sh export
+
+# Install extensions
+sh ./scripts/vscode/extensions.sh install
+```
+
+> Note that the list of extensions is manually maintained by me, i.e. running the `export` option in the script must be done when new extensions are installed, and the list must be updated in the script. However, I do not install extensions often, so this is not a big issue.
 
 ## Configuring Brave Browser
 
