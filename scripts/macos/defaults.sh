@@ -65,7 +65,7 @@ configure_keyboard() {
     # Repeats the key as long as it is held down, and very quickly
     defaults write NSGlobalDomain "ApplePressAndHoldEnabled" -bool "false"
     defaults write NSGlobalDomain KeyRepeat -int 6
-    defaults write NSGlobalDomain InitialKeyRepeat -int 15
+    defaults write NSGlobalDomain InitialKeyRepeat -int 25
 
     echo "Keyboard settings configured."
 }
