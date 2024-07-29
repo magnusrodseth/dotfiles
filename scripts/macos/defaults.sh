@@ -4,7 +4,11 @@
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until the script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2>/dev/null &
 
 # Function to apply Dock settings
 configure_dock() {
@@ -60,8 +64,8 @@ configure_keyboard() {
 
     # Repeats the key as long as it is held down, and very quickly
     defaults write NSGlobalDomain "ApplePressAndHoldEnabled" -bool "false"
-    defaults write NSGlobalDomain KeyRepeat -int 1
-    defaults write NSGlobalDomain InitialKeyRepeat -int 10
+    defaults write NSGlobalDomain KeyRepeat -int 6
+    defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
     echo "Keyboard settings configured."
 }
