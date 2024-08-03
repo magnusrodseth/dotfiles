@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Close any open System Preferences panes, to prevent them from overriding settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
 # Ask for the administrator password upfront
 sudo -v
 
@@ -9,6 +12,27 @@ while true; do
     sleep 60
     kill -0 "$$" || exit
 done 2>/dev/null &
+
+configure_global() {
+    echo "Configuring global settings..."
+
+    # Disable auto-correct
+    defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+    # Save to disk (not to iCloud) by default
+    defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
+    # Disable the sound effects on boot
+    sudo nvram SystemAudioVolume=" "
+
+    # Restart automatically on power loss
+    sudo pmset -a autorestart 1
+
+    # Restart automatically if the computer freezes
+    sudo systemsetup -setrestartfreeze on
+
+    echo "Global settings configured."
+}
 
 # Function to apply Dock settings
 configure_dock() {
@@ -70,6 +94,18 @@ configure_keyboard() {
     echo "Keyboard settings configured."
 }
 
+configure_trackpad() {
+    echo "Configuring trackpad settings..."
+
+    # Trackpad: map bottom right corner to right-click
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
+    defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
+    defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
+
+    echo "Trackpad settings configured."
+}
+
 configure_mission_control() {
     echo "Configuring Mission Control settings..."
 
@@ -95,6 +131,7 @@ configure_screensaver() {
 main() {
     echo "Starting macOS configuration..."
 
+    configure_global
     configure_dock
     configure_finder
     configure_menu_bar
