@@ -43,3 +43,5 @@
     fpo = fetch --prune origin
     ; ma - merge --abort
     ma = merge --abort
+    ; copy-diff - copy the diff of the current branch to the clipboard
+    copy-diff = !"git diff | pbcopy && echo 'Copied to clipboard!' || echo 'Error: Failed to copy diff'"
