@@ -22,15 +22,6 @@ configure_global() {
     # Save to disk (not to iCloud) by default
     defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
-    # Disable the sound effects on boot
-    sudo nvram SystemAudioVolume=" "
-
-    # Restart automatically on power loss
-    sudo pmset -a autorestart 1
-
-    # Restart automatically if the computer freezes
-    sudo systemsetup -setrestartfreeze on
-
     echo "Global settings configured."
 }
 
@@ -38,11 +29,18 @@ configure_global() {
 configure_dock() {
     echo "Configuring Dock settings..."
 
-    # Set Dock tile size
+    # Put the Dock on the left of the screen
+    defaults write com.apple.dock "orientation" -string "left"
+
+    # Set Dock tile size and magnification
     defaults write com.apple.dock tilesize -int 42
+    defaults write com.apple.dock largesize -int 52
 
     # Auto-hide the Dock
     defaults write com.apple.dock autohide -bool true
+
+    # Remove the autohide delay, the Dock appears instantly
+    defaults write com.apple.dock "autohide-delay" -float "0"
 
     # Do not display recent apps in the Dock
     defaults write com.apple.dock "show-recents" -bool "false"
@@ -54,6 +52,17 @@ configure_dock() {
     killall Dock
 
     echo "Dock settings configured."
+}
+
+configure_window_manager() {
+    echo "Configuring window manager settings..."
+
+    # Do nothing when clicking wallpaper in desktop
+    defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+
+    killall WindowManager
+
+    echo "Window manager settings configured."
 }
 
 configure_finder() {
@@ -83,10 +92,19 @@ configure_menu_bar() {
     echo "Menu bar settings configured."
 }
 
+configure_mouse() {
+    echo "Configuring mouse settings..."
+
+    # Set mouse speed to the 4th slowest
+    defaults write NSGlobalDomain com.apple.mouse.scaling -float "0.6875"
+
+    echo "Mouse settings configured."
+}
+
 configure_keyboard() {
     echo "Configuring keyboard settings..."
 
-    # Repeats the key as long as it is held down, and very quickly
+    # Repeats the key as long as it is held down, and quickly
     defaults write NSGlobalDomain "ApplePressAndHoldEnabled" -bool "false"
     defaults write NSGlobalDomain KeyRepeat -int 6
     defaults write NSGlobalDomain InitialKeyRepeat -int 25
@@ -135,6 +153,8 @@ main() {
     configure_dock
     configure_finder
     configure_menu_bar
+    configure_mouse
+    configure_window_manager
     configure_keyboard
     configure_mission_control
     configure_screensaver
