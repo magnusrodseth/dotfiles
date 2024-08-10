@@ -45,3 +45,17 @@
     ma = merge --abort
     ; copy-diff - copy the diff of the current branch to the clipboard
     copy-diff = !"git diff | pbcopy && echo 'Copied to clipboard!' || echo 'Error: Failed to copy diff'"
+
+    ; remove-file-history - remove the file history of a provided file
+    remove-file-history = "!f() { \
+        if ! command -v git-filter-repo >/dev/null 2>&1; then \
+            echo 'Error: git-filter-repo is not installed. Please install it first.'; \
+            echo 'You can install it using: brew install git-filter-repo'; \
+            return 1; \
+        fi; \
+        if [ $# -eq 0 ]; then \
+            echo 'Usage: git remove-file-history <file-path>'; \
+            return 1; \
+        fi; \
+        git filter-repo --invert-paths --path \"$1\"; \
+    }; f"
