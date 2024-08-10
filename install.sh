@@ -42,6 +42,11 @@ echo "Configuring macOS defaults settings..."
 source scripts/macos/defaults.sh
 echo "macOS defaults settings configured successfully."
 
+# Install App Store apps
+echo "Installing App Store apps..."
+source scripts/macos/install-app-store-apps.sh
+echo "App Store apps installed successfully."
+
 # Mapping ESC to CAPS
 echo "Mapping ESC to CAPS on the Mac machine..."
 source scripts/macos/map-esc-to-caps.sh
