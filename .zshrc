@@ -84,7 +84,6 @@ alias speedtest="speedtest-cli"
 alias l="eza --color=always --long --no-filesize --no-time -a -I .DS_Store"
 alias download-mp3='yt-dlp -x --audio-format mp3 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
-alias lorem="lorem -w 150 | pbcopy"
 
 
 # Executes when the current directory is changed.
