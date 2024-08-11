@@ -29,8 +29,8 @@ configure_global() {
 configure_dock() {
     echo "Configuring Dock settings..."
 
-    # Put the Dock on the left of the screen
-    defaults write com.apple.dock "orientation" -string "left"
+    # Put the Dock on the bottom of the screen
+    defaults write com.apple.dock "orientation" -string "bottom"
 
     # Set Dock tile size and magnification
     defaults write com.apple.dock tilesize -int 42
@@ -106,8 +106,8 @@ configure_keyboard() {
 
     # Repeats the key as long as it is held down, and quickly
     defaults write NSGlobalDomain "ApplePressAndHoldEnabled" -bool "false"
-    defaults write NSGlobalDomain KeyRepeat -int 6
-    defaults write NSGlobalDomain InitialKeyRepeat -int 25
+    defaults write NSGlobalDomain KeyRepeat -int 2
+    defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
     echo "Keyboard settings configured."
 }
