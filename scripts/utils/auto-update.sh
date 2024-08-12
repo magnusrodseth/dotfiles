@@ -9,9 +9,15 @@ handle_error() {
 # Function to perform git operations
 git_operations() {
 	git add . || handle_error "Failed to git add"
-	git commit -m "Auto-update on $(date '+%Y-%m-%d')" || handle_error "Failed to git commit"
-	git push || handle_error "Failed to git push"
-	echo "Git operations completed successfully"
+
+	# Check if there are changes to commit
+	if git diff-index --quiet HEAD --; then
+		echo "No changes to commit"
+	else
+		git commit -m "Auto-update on $(date '+%Y-%m-%d')" || handle_error "Failed to git commit"
+		git push || handle_error "Failed to git push"
+		echo "Git operations completed successfully"
+	fi
 }
 
 # Change to the dotfiles directory
