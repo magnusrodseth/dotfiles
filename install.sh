@@ -1,9 +1,16 @@
 #!/bin/sh
 
+
 # Ensure the current working directory is the dotfiles directory
 if [ "$(pwd)" != "$HOME/dotfiles" ]; then
     echo "Error: The install script must be run from the \$HOME/dotfiles directory."
     exit 1
+fi
+
+# Prompt for sudo at the start
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script requires sudo privileges. Please enter your password."
+    sudo -v || { echo "Failed to obtain sudo privileges. Exiting."; exit 1; }
 fi
 
 # Ensure Homebrew is installed
@@ -51,6 +58,11 @@ echo "App Store apps installed successfully."
 echo "Mapping ESC to CAPS on the Mac machine..."
 source scripts/macos/map-esc-to-caps.sh
 echo "Mapped ESC to CAPS successfully."
+
+# Ensure crontabs are installed
+echo "Installing crontabs..."
+sudo crontab ~/dotfiles/cron/$(whoami).crontab
+echo "Crontabs installed successfully."
 
 # Setup tmux
 echo "Setting up tmux..."
