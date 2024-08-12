@@ -28,32 +28,29 @@ echo "Updating brew packages..."
 brew update || handle_error "Failed to update brew"
 brew upgrade || handle_error "Failed to upgrade brew packages"
 
-# Run brew bundle dump
-echo "Running brew bundle dump..."
-brew bundle dump --force --file="~/dotfiles/Brewfile" || handle_error "Failed to run brew bundle dump"
-
-# Git operations for brew updates
-git_operations
+# Check if there are any changes in the Brewfile
+echo "Checking for changes in Brewfile..."
+if brew bundle check --file=~/dotfiles/Brewfile &>/dev/null; then
+	echo "No changes in Brewfile, skipping dump"
+else
+	echo "Changes detected, running brew bundle dump..."
+	brew bundle dump --force --file=~/dotfiles/Brewfile || handle_error "Failed to run brew bundle dump"
+	git_operations
+fi
 
 # Update Neovim Mason packages
 echo "Updating Neovim Mason packages..."
 nvim --headless -c "MasonUpdate" -c "qa" || handle_error "Failed to update Mason packages"
-
-# Git operations for Mason updates
 git_operations
 
 # Update Neovim Lazy packages
 echo "Updating Neovim Lazy packages..."
 nvim --headless -c "Lazy! sync" -c "qa" || handle_error "Failed to update Lazy packages"
-
-# Git operations for Lazy updates
 git_operations
 
 # Upgrade Oh My Posh
 echo "Upgrading Oh My Posh..."
 oh-my-posh upgrade || handle_error "Failed to upgrade Oh My Posh"
-
-# Final git operations
 git_operations
 
 echo "All tasks completed successfully!"
