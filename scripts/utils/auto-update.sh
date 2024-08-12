@@ -50,7 +50,10 @@ git_operations
 
 # Upgrade Oh My Posh
 echo "Upgrading Oh My Posh..."
-oh-my-posh upgrade || handle_error "Failed to upgrade Oh My Posh"
-git_operations
+if ! oh-my-posh upgrade; then
+	echo "⚠️ Failed to upgrade Oh My Posh, but continuing..."
+else
+	git_operations
+fi
 
 echo "All tasks completed successfully!"
