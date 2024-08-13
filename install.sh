@@ -49,6 +49,10 @@ echo "Configuring macOS defaults settings..."
 source scripts/macos/defaults.sh
 echo "macOS defaults settings configured successfully."
 
+echo "Installing Cargo packages..."
+sh scripts/cargo/packages.sh install
+echo "Cargo packages installed successfully."
+
 # Install App Store apps
 echo "Installing App Store apps..."
 source scripts/macos/install-app-store-apps.sh
