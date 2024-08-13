@@ -13,7 +13,6 @@ flamegraph
 gpt-feeder
 hyperfine
 insync
-kanata
 letterboxed-rs
 rustlings
 trunk
