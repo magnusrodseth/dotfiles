@@ -19,25 +19,43 @@ show_help() {
   echo "  help       Display this help and exit"
 }
 
-# Function to export packages
+# Function to export installed Cargo packages
 export_packages() {
+  # Use cargo install --list and filter package names, then write to the file
   cargo install --list | grep -E '^[a-zA-Z0-9_-]+' | awk '{print $1}' >"$PACKAGES_FILE"
   echo "Cargo packages have been exported to $PACKAGES_FILE"
 }
 
-# Function to install packages
+# Function to install packages from the list
 install_packages() {
   if [[ ! -f "$PACKAGES_FILE" ]]; then
     echo "File $PACKAGES_FILE not found!"
     exit 1
   fi
+
+  # Install each package listed in the file
   while IFS= read -r package; do
-    cargo install "$package"
+    if ! cargo install "$package"; then
+      echo "Failed to install package: $package"
+    fi
   done <"$PACKAGES_FILE"
+
   echo "All Cargo packages from $PACKAGES_FILE have been installed."
 }
 
-# Check the input argument
+# Ensure Rust and Cargo are installed, otherwise install them using rustup
+ensure_rust_installed() {
+  if ! command -v cargo >/dev/null 2>&1; then
+    echo "Rust and Cargo not found. Installing using rustup..."
+    curl https://sh.rustup.rs -sSf | sh
+    source $HOME/.cargo/env
+  fi
+}
+
+# Ensure Rust and Cargo are installed before proceeding
+ensure_rust_installed
+
+# Check the input argument and execute the corresponding function
 case "$1" in
 export)
   export_packages
