@@ -1,2 +1,0 @@
-# Run the auto-update.sh script every Monday at 10:00 AM
-0 10 * * 1 /bin/sh ~/dotfiles/scripts/utils/auto-update.sh 2>> ~/dotfiles/scripts/utils/auto-update.log
