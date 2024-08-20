@@ -85,6 +85,7 @@ alias l="eza --color=always --long --no-filesize --no-time -a -I .DS_Store"
 alias download-mp3='yt-dlp -x --audio-format mp3 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias o="open ."
+alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 
 
 # Executes when the current directory is changed.
@@ -111,5 +112,8 @@ eval "$(zoxide init --cmd cd zsh)"
 
 # dotnet
 export PATH="$PATH:$HOME/.dotnet/tools/"
+
+# latexmk for latex
+export PATH="/Library/TeX/texbin:$PATH"
 
 . "$HOME/.cargo/env"
