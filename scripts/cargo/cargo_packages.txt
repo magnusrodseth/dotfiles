@@ -16,4 +16,5 @@ insync
 letterboxed-rs
 rustlings
 trunk
+webtek-grader
 xcp
