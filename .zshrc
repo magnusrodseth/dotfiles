@@ -67,6 +67,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias vim="nvim"
 alias vi="nvim"
 alias bim="nvim"
+alias v="nvim"
 alias gitui="lazygit"
 alias tf="terraform"
 alias cat="bat"
@@ -86,6 +87,7 @@ alias download-mp3='yt-dlp -x --audio-format mp3 --restrict-filenames -o ~/Deskt
 alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias o="open ."
 alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
+alias aliases="alias | sed 's/=.*$/\t -> &/'"
 
 
 # Executes when the current directory is changed.
@@ -93,6 +95,11 @@ function chpwd() {
   clear
   l
 }
+
+# Source the custom functions
+if [ -f "$HOME/zsh/functions.sh" ]; then
+    source "$HOME/zsh/functions.sh"
+fi
 
 # Set the default editor
 export EDITOR='/usr/local/bin/nvim'
