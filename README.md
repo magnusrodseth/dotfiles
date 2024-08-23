@@ -1,11 +1,10 @@
 # cd `~`
 
-|                      **Shell**                      |                 **Neovim**                  |
-| :-------------------------------------------------: | :-----------------------------------------: |
-|             ![Shell](/images/shell.png)             |        ![Neovim](/images/neovim.png)        |
-|                     **Lazygit**                     |             **Editing a file**              |
-| :-------------------------------------------------: | :-----------------------------------------: |
-|           ![Lazygit](/images/lazygit.png)           |     ![Editing a file](/images/file.png)     |
+|            **Shell**            |             **Neovim**              |
+| :-----------------------------: | :---------------------------------: |
+|   ![Shell](/images/shell.png)   |    ![Neovim](/images/neovim.png)    |
+|           **Lazygit**           |         **Editing a file**          |
+| ![Lazygit](/images/lazygit.png) | ![Editing a file](/images/file.png) |
 
 ## Table of Contents
 
