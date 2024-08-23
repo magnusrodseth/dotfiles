@@ -39,6 +39,32 @@ echo "Installing Homebrew packages from `Brewfile`..."
 brew bundle install --file=~/dotfiles/Brewfile
 echo "Homebrew packages installed successfully."
 
+echo "Updating the path for tmux in the alacritty configuration file based on architecture..."
+
+# Determine the correct path for tmux based on architecture
+if [ "$(uname -m)" = "arm64" ]; then
+    TMUX_PATH="/opt/homebrew/bin/tmux"
+else
+    TMUX_PATH="/usr/local/bin/tmux"
+fi
+
+# Updating the `alacritty.toml` with the correct path for tmux
+ALACRITTY_CONF="$HOME/.config/alacritty/alacritty.toml"
+TEMP_CONF="$HOME/.config/alacritty/alacritty_temp.toml"
+
+# Make a copy of the configuration file
+cp "$ALACRITTY_CONF" "$TEMP_CONF"
+
+# Replace the tmux path in the configuration file
+sed -i.bak "s|/usr/local/bin/tmux|$TMUX_PATH|g" "$TEMP_CONF"
+mv "$TEMP_CONF" "$ALACRITTY_CONF"
+
+# Remove the backup file created by sed
+rm -f "$TEMP_CONF.bak"
+
+echo "Path updated successfully."
+
+
 # Source the `.zshrc` file
 echo "Sourcing the .zshrc file..."
 source $HOME/.zshrc
