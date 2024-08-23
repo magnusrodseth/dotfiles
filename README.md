@@ -1,5 +1,10 @@
 # cd `~`
 
+<p align="center">
+  <img src="/images/terminal.png" alt="Screenshot of the terminal" style="display: inline-block; margin-right: 20px;" />
+  <img src="/images/neovim.png" alt="Screenshot of `neovim`" style="display: inline-block;" />
+</p>
+
 ## Table of Contents
 
 - [cd `~`](#cd-)
