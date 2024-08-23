@@ -1,8 +1,8 @@
 # cd `~`
 
-| ![Screenshot of the terminal](/images/terminal.png) | ![Screenshot of `neovim`](/images/neovim.png) |
+|                    **Terminal**                     |                 **`neovim`**                  |
 | :-------------------------------------------------: | :-------------------------------------------: |
-|                      Terminal                       |                   `neovim`                    |
+| ![Screenshot of the terminal](/images/terminal.png) | ![Screenshot of `neovim`](/images/neovim.png) |
 
 ## Table of Contents
 
