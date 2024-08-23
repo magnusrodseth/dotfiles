@@ -1,8 +1,11 @@
 # cd `~`
 
-|                    **Terminal**                     |                 **`neovim`**                  |
-| :-------------------------------------------------: | :-------------------------------------------: |
-| ![Screenshot of the terminal](/images/terminal.png) | ![Screenshot of `neovim`](/images/neovim.png) |
+|                      **Shell**                      |                 **Neovim**                  |
+| :-------------------------------------------------: | :-----------------------------------------: |
+|             ![Shell](/images/shell.png)             |        ![Neovim](/images/neovim.png)        |
+|                     **Lazygit**                     |             **Editing a file**              |
+| :-------------------------------------------------: | :-----------------------------------------: |
+|           ![Lazygit](/images/lazygit.png)           |     ![Editing a file](/images/file.png)     |
 
 ## Table of Contents
 
