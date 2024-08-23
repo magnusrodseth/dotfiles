@@ -1,9 +1,8 @@
 # cd `~`
 
-<p align="center">
-  <img src="/images/terminal.png" alt="Screenshot of the terminal" style="display: inline-block; margin-right: 20px;" />
-  <img src="/images/neovim.png" alt="Screenshot of `neovim`" style="display: inline-block;" />
-</p>
+| ![Screenshot of the terminal](/images/terminal.png) | ![Screenshot of `neovim`](/images/neovim.png) |
+| :-------------------------------------------------: | :-------------------------------------------: |
+|                      Terminal                       |                   `neovim`                    |
 
 ## Table of Contents
 
