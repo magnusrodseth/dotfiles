@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 
 # Ensure the current working directory is the dotfiles directory
@@ -23,20 +23,20 @@ fi
 
 # Ensure stow is installed
 if ! command -v stow &> /dev/null; then
-    echo "`stow` is not installed. Installing `stow`..."
+    echo "stow is not installed. Installing stow..."
     brew install stow
 else
     echo "`stow` is already installed."
 fi
 
 # Symlink the dotfiles using `stow` 
-echo "Creating symlinks using `stow`..."
+echo "Creating symlinks using stow..."
 stow .
 echo "Symlinks created successfully."
 
 # Install Homebrew packages from `Brewfile`
-echo "Installing Homebrew packages from `Brewfile`..."
-brew bundle install --file=~/dotfiles/Brewfile
+echo "Installing Homebrew packages from Brewfile..."
+brew bundle install --file="$HOME/dotfiles/Brewfile"
 echo "Homebrew packages installed successfully."
 
 # Source the `.zshrc` file
@@ -44,10 +44,6 @@ echo "Sourcing the .zshrc file..."
 source $HOME/.zshrc
 echo "Sourced the .zshrc file successfully."
 
-# Configure macOS defaults settings
-echo "Configuring macOS defaults settings..."
-source scripts/macos/defaults.sh
-echo "macOS defaults settings configured successfully."
 
 echo "Installing Cargo packages..."
 sh scripts/cargo/packages.sh install
@@ -58,25 +54,19 @@ echo "Installing App Store apps..."
 source scripts/macos/install-app-store-apps.sh
 echo "App Store apps installed successfully."
 
-# Mapping ESC to CAPS
-echo "Mapping ESC to CAPS on the Mac machine..."
-source scripts/macos/map-esc-to-caps.sh
-echo "Mapped ESC to CAPS successfully."
-
-# Ensure crontabs are installed
-echo "Installing crontabs..."
-sudo crontab ~/dotfiles/cron/$(whoami).crontab
-echo "Crontabs installed successfully."
-
 # Setup tmux
 echo "Setting up tmux..."
 tmux source $HOME/.tmux.conf
-echo "Tmux setup successfully."
+echo "tmux setup successfully."
 
 # Install `tpm` plugins
-echo "Installing `tpm` plugins..."
+echo "Installing tpm plugins..."
 tmux start-server
 tmux new-session -d
 sh $HOME/.tmux/plugins/tpm/scripts/install_plugins.sh
-tmux kill-server
-echo "Installed `tpm` plugins successfully."
+echo "Installed tpm plugins successfully."
+
+# Configure macOS defaults settings
+echo "Configuring macOS defaults settings..."
+source scripts/macos/defaults.sh
+echo "macOS defaults settings configured successfully."
