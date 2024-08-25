@@ -91,6 +91,7 @@ alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4
 alias o="open ."
 alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
+alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 
 
 
