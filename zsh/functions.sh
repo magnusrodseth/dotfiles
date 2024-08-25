@@ -16,3 +16,14 @@ md-to-pdf() {
           -V linkcolor=blue \
           -o "$output_file" "$input_file"
 }
+
+
+# yy shell wrapper that provides the ability to change the current working directory when exiting Yazi
+function yy() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
