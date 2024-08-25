@@ -1,5 +1,11 @@
 #!/bin/zsh
 
+# Executes when the current directory is changed.
+function chpwd() {
+  clear
+  l
+}
+
 # Custom function to convert markdown files to PDFs
 md-to-pdf() {
   if [ $# -ne 2 ]; then

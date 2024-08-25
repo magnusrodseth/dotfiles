@@ -26,7 +26,7 @@ if ! command -v stow &> /dev/null; then
     echo "stow is not installed. Installing stow..."
     brew install stow
 else
-    echo "`stow` is already installed."
+    echo "stow is already installed."
 fi
 
 # Symlink the dotfiles using `stow` 
@@ -44,10 +44,15 @@ echo "Sourcing the .zshrc file..."
 source $HOME/.zshrc
 echo "Sourced the .zshrc file successfully."
 
-
+# Install cargo packages
 echo "Installing Cargo packages..."
 sh scripts/cargo/packages.sh install
 echo "Cargo packages installed successfully."
+
+# Install plugins to Yazi
+echo "Installing Yazi plugins..."
+ya pack -i
+echo "Yazi plugins installed successfully."
 
 # Install App Store apps
 echo "Installing App Store apps..."
