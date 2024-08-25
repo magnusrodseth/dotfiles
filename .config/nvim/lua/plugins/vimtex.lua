@@ -24,7 +24,6 @@ return {
       aux_dir = "out",
     }
 
-    -- Use localleader + v to open Zathura and jump to the current location in the PDF
     vim.keymap.set("n", "<localleader><CR>", "<cmd>VimtexView<CR>", { desc = "Open TeX in PDF reader" })
 
     -- localleader + c to compile
