@@ -127,6 +127,7 @@ For more information on the tmux-related tools, refer to [this YouTube video](ht
 - [`fzf`](https://github.com/junegunn/fzf), for fuzzy finding
 - [`zoxide`](https://github.com/ajeetdsouza/zoxide), for fast directory switching
 - [`eza`](https://github.com/eza-community/eza), for a modern, maintained replacement for ls
+- [`yazi`](https://yazi-rs.github.io/), for a terminal file manager with Vim-like keybindings
 
 For more information on the zsh-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=ud7YxC33Z3w).
 
