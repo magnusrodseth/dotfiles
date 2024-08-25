@@ -28,6 +28,7 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light lukechilds/zsh-nvm
 zinit light Aloxaf/fzf-tab
+zinit light paulirish/git-open
 zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
 
 # Add in snippets
