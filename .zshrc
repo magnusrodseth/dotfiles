@@ -92,11 +92,6 @@ alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 
 
-# Executes when the current directory is changed.
-function chpwd() {
-  clear
-  l
-}
 
 # Source the custom functions
 if [ -f "$HOME/zsh/functions.sh" ]; then
