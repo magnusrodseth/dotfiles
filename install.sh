@@ -49,6 +49,11 @@ echo "Installing Cargo packages..."
 sh scripts/cargo/packages.sh install
 echo "Cargo packages installed successfully."
 
+# Install pnpm packages
+echo "Installing pnpm packages..."
+sh scripts/pnpm/packages.sh install
+echo "pnpm packages installed successfully."
+
 # Install plugins to Yazi
 echo "Installing Yazi plugins..."
 ya pack -i

@@ -1,0 +1,6 @@
+@chhoumann/bunnai
+eas-cli
+expo-cli
+pnpm
+turbo
+vercel
