@@ -80,3 +80,8 @@ echo "Installed tpm plugins successfully."
 echo "Configuring macOS defaults settings..."
 source scripts/macos/defaults.sh
 echo "macOS defaults settings configured successfully."
+
+# Configure bat
+echo "Activating bat configuration..."
+bat cache --build
+echo "bat configuration successfully activated."
