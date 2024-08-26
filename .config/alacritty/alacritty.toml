@@ -3,7 +3,7 @@ import = ["~/.config/alacritty/themes/tokyo-night.toml"]
 working_directory = "/Users/magnusrodseth/dev"
 
 [shell]
-program = "/bin/zsh"
+program = "/opt/homebrew/bin/zsh"
 # Immediately start tmux
 args = ["-l", "-c", "tmux attach || tmux"]
 
@@ -11,7 +11,7 @@ args = ["-l", "-c", "tmux attach || tmux"]
 TERM = "xterm-256color"
 
 [window]
-dimensions = { columns = 400, lines = 500 }
+dimensions = { columns = 200, lines = 100 }
 startup_mode = "Maximized"
 padding = { x = 10, y = 35 }
 decorations = "Transparent"
@@ -27,87 +27,87 @@ style.shape = "Block"
 [keyboard]
 bindings = [
   # CMD + t: New tab (new tmux window)
-  { key = "T", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "T", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "new-window",
-    "/usr/local/bin/zsh",
+    "/opt/homebrew/bin/zsh",
   ] } },
   # CMD + w: Close pane (close tmux pane)
-  { key = "W", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "W", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "kill-pane",
   ] } },
   # CMD + d: Split pane horizontally
-  { key = "D", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "D", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "split-window",
     "-h",
     "-c",
     "#{pane_current_path}",
   ] } },
   # CMD + shift + d: Split pane vertically
-  { key = "D", mods = "Command|Shift", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "D", mods = "Command|Shift", command = { program = "/opt/homebrew/bin/tmux", args = [
     "split-window",
     "-c",
     "#{pane_current_path}",
   ] } },
   # CMD + number: Switch to window
-  { key = "Key1", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key1", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "1",
   ] } },
-  { key = "Key2", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key2", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "2",
   ] } },
-  { key = "Key3", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key3", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "3",
   ] } },
-  { key = "Key4", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key4", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "4",
   ] } },
-  { key = "Key5", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key5", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "5",
   ] } },
-  { key = "Key6", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key6", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "6",
   ] } },
-  { key = "Key7", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key7", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "7",
   ] } },
-  { key = "Key8", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key8", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "8",
   ] } },
-  { key = "Key9", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Key9", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-window",
     "-t",
     "9",
   ] } },
   # CMD + arrows: Navigate tmux panes
-  { key = "Left", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Left", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-pane",
     "-L",
   ] } },
-  { key = "Right", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Right", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-pane",
     "-R",
   ] } },
-  { key = "Up", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Up", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-pane",
     "-U",
   ] } },
-  { key = "Down", mods = "Command", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Down", mods = "Command", command = { program = "/opt/homebrew/bin/tmux", args = [
     "select-pane",
     "-D",
   ] } },
@@ -116,7 +116,7 @@ bindings = [
   { key = "K", mods = "Command", chars = "\u0002\u000B\u000D" },
 
   # CMD + Shift + Enter: Full size the active tmux pane
-  { key = "Enter", mods = "Command|Shift", command = { program = "/usr/local/bin/tmux", args = [
+  { key = "Enter", mods = "Command|Shift", command = { program = "/opt/homebrew/bin/tmux", args = [
     "resize-pane",
     "-Z",
   ] } },
