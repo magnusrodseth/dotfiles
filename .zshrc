@@ -94,10 +94,13 @@ alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 
 
-
-# Source the custom functions
-if [ -f "$HOME/zsh/functions.sh" ]; then
-    source "$HOME/zsh/functions.sh"
+# Source all custom functions in the zsh/functions directory
+if [ -d "$HOME/zsh/functions" ]; then
+    for file in "$HOME/zsh/functions"/*.sh; do
+        if [ -f "$file" ]; then
+            source "$file"
+        fi
+    done
 fi
 
 # Set the default editor
