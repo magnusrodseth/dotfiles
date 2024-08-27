@@ -63,8 +63,19 @@ send-env() {
 
         if [ $exit_code -eq 0 ]; then
             local access_url
-            access_url=$(echo "$send_output" | jq -r '.accessUrl')
-            result+="$access_url"$'\n'
+            access_url=$(echo "$send_output" | jq -r '.accessUrl' 2>&1)
+            local jq_exit_code=$?
+
+            if [ $jq_exit_code -ne 0 ]; then
+                echo "jq error processing send_output for chunk ${chunk_number}:"
+                echo "$access_url"  # This contains the jq error message
+            elif [ "$access_url" == "null" ] || [ -z "$access_url" ]; then
+                echo "Failed to retrieve accessUrl for chunk ${chunk_number}."
+                echo "send_output was:"
+                echo "$send_output"
+            else
+                result+="$access_url"$'\n'
+            fi
         else
             echo "Error sending chunk ${chunk_number}:"
             echo "$send_output"
