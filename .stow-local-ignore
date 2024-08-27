@@ -8,6 +8,10 @@ install.sh
 browser/*
 images/*
 
+### Include only the User directory under Library/Application Support/Code
+Library/Application Support/Code/*
+!Library/Application Support/Code/User
+
 ### Default ignores
 
 # Comments and blank lines are allowed
