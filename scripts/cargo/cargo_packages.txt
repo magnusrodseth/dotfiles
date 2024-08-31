@@ -14,6 +14,7 @@ gpt-feeder
 hyperfine
 insync
 letterboxed-rs
+macchina
 rustlings
 trunk
 webtek-grader
