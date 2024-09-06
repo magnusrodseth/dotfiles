@@ -142,6 +142,7 @@ cask "figma"
 cask "firefox"
 cask "flux"
 cask "gitkraken"
+cask "hazeover"
 cask "jetbrains-toolbox"
 cask "jordanbaird-ice"
 cask "mactex"
@@ -160,6 +161,7 @@ cask "tableplus"
 cask "todoist"
 cask "visual-studio-code"
 cask "zed"
+cask "zotero"
 mas "Dropover", id: 1355679052
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
