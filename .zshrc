@@ -125,4 +125,10 @@ export PATH="$PATH:$HOME/.dotnet/tools/"
 # latexmk for latex
 export PATH="/Library/TeX/texbin:$PATH"
 
+# openai key (gitignored)
+# check if the file $HOME/dotfiles/zsh/ignored/openai.sh exists. if it does, source it
+if [ -f "$HOME/dotfiles/zsh/ignored/openai.sh" ]; then
+  source "$HOME/dotfiles/zsh/ignored/openai.sh"
+fi
+
 . "$HOME/.cargo/env"
