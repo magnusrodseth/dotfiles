@@ -4,7 +4,7 @@
 function cmdfinder() {
   local query="$*"
   # Use sgpt to generate a shell command based on the human-readable query
-  local generated_command=$(sgpt sh "$query")
+  local generated_command=$(sgpt sh -m "gpt-4o" "$query")
 
   # Print the generated command and ask for confirmation before running it
   echo "Suggested command: $generated_command"
