@@ -156,7 +156,6 @@
     }
   ],
   "snyk.yesWelcomeNotification": false,
-  "editor.tabSize": 2,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -235,5 +234,9 @@
   "workbench.colorTheme": "Tokyo Night Ported Nvim",
   "editor.quickSuggestionsDelay": 1,
   "editor.suggest.preview": true,
-  "editor.codeLens": false
+  "editor.codeLens": false,
+  "[mdx]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "window.commandCenter": false
 }

@@ -103,8 +103,9 @@ if [ -d "$HOME/zsh/functions" ]; then
     done
 fi
 
-# Set the default editor
-export EDITOR='/usr/local/bin/nvim'
+# Set the default EDITOR
+
+export EDITOR="$(which nvim)"
 export VISUAL="$EDITOR"
 export LC_ALL=en_US.UTF-8
 
@@ -132,3 +133,4 @@ if [ -f "$HOME/dotfiles/zsh/ignored/openai.sh" ]; then
 fi
 
 . "$HOME/.cargo/env"
+
