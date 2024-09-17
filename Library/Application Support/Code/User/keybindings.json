@@ -241,5 +241,13 @@
   {
     "key": "cmd+b",
     "command": "-workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "shift+alt+cmd+a",
+    "command": "github.copilot.chat.attachFile"
+  },
+  {
+    "key": "shift+alt+cmd+n",
+    "command": "workbench.action.chat.newChat"
   }
 ]
