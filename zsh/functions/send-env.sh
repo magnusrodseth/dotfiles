@@ -1,37 +1,18 @@
 #!/bin/zsh
 
 send-env() {
-    export NODE_NO_WARNINGS=1
-
     # Check if input is from a pipe or stdin
     if [ -t 0 ]; then
         echo "Usage: cat .env | send-env"
         return 1
     fi
 
-    # Check if Bitwarden CLI is logged in
-    local bw_status
-    bw_status=$(bw status | jq -r '.status')
+    # Check if 1Password CLI is signed in
+    op_status=$(op account list --format=json 2>/dev/null)
 
-    if [[ "$bw_status" == "unauthenticated" ]]; then
-        echo "Bitwarden CLI is not logged in. Logging in..."
-        bw login
-        if [[ $? -ne 0 ]]; then
-            echo "Login failed. Please check your credentials."
-            return 1
-        fi
-    fi
-
-    # Check if the vault is locked and provide instructions if necessary
-    bw_status=$(bw status | jq -r '.status')
-
-    if [[ "$bw_status" == "locked" ]]; then
-        echo "The Bitwarden vault is locked."
-        echo "Please run the following command to unlock it and set the session key:"
-        echo
-        echo 'export BW_SESSION=$(bw unlock --raw)'
-        echo
-        echo "Then, re-run this script."
+    if [ -z "$op_status" ]; then
+        echo "1Password CLI is not signed in. Please sign in first."
+        echo "Run: eval \$(op signin)"
         return 1
     fi
 
@@ -39,79 +20,78 @@ send-env() {
     local env_content
     env_content=$(cat)
 
-    # Initialize variables
-    local chunk=""
-    local chunk_counter=1
-    local max_length=1000
-    local result=""
+    # Create a temporary JSON file for the template
+    tmp_template=$(mktemp)
+    tmp_modified_template=$(mktemp)
+    tmp_env_content=$(mktemp)
 
-    send_chunk() {
-        local chunk_data="$1"
-        local chunk_number="$2"
-        local send_name=".env"
-        
-        if [ $chunk_counter -gt 1 ]; then
-            send_name=".env - Part ${chunk_number}"
-        fi
+    # Get the Secure Note template (suppress overwrite prompt)
+    op item template get "Secure Note" --out-file "$tmp_template" -f
 
-        echo "Sending chunk ${chunk_number}..."
-
-        # Use the simpler bw send command to create the Send
-        local send_output
-        send_output=$(bw send -n "$send_name" -d 7 "$chunk_data" 2>&1)
-        local exit_code=$?
-
-        if [ $exit_code -eq 0 ]; then
-            local access_url
-            access_url=$(echo "$send_output" | jq -r '.accessUrl' 2>&1)
-            local jq_exit_code=$?
-
-            if [ $jq_exit_code -ne 0 ]; then
-                echo "jq error processing send_output for chunk ${chunk_number}:"
-                echo "$access_url"  # This contains the jq error message
-            elif [ "$access_url" == "null" ] || [ -z "$access_url" ]; then
-                echo "Failed to retrieve accessUrl for chunk ${chunk_number}."
-                echo "send_output was:"
-                echo "$send_output"
-            else
-                result+="$access_url"$'\n'
-            fi
-        else
-            echo "Error sending chunk ${chunk_number}:"
-            echo "$send_output"
-        fi
-    }
-
-    # Process the env content
-    local current_length=0
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        # Ignore lines that start with '#', as these are comments in an env file
-        if [[ "$line" =~ ^# ]]; then
-            continue
-        fi
-
-        local line_length=${#line}
-
-        if (( current_length + line_length + 1 > max_length )); then
-            send_chunk "$chunk" "$chunk_counter"
-            ((chunk_counter++))
-            chunk=""
-            current_length=0
-        fi
-
-        chunk+="$line"$'\n'
-        ((current_length += line_length + 1))
-    done <<< "$env_content"
-
-    # Send the last chunk if it's not empty
-    if [[ -n "$chunk" ]]; then
-        send_chunk "$chunk" "$chunk_counter"
+    if [ $? -ne 0 ]; then
+        echo "Error getting Secure Note template."
+        rm "$tmp_template"
+        return 1
     fi
 
-    # Copy the result to clipboard
-    echo -n "$result" | pbcopy
+    # Write env_content to a temporary file
+    echo "$env_content" > "$tmp_env_content"
 
-    echo "All chunks sent. Links copied to clipboard:"
-    echo "$result"
+    # Modify the template to include your .env content
+    jq --rawfile content "$tmp_env_content" '(.fields[] | select(.id=="notesPlain")).value = $content' "$tmp_template" > "$tmp_modified_template"
+
+    if [ $? -ne 0 ]; then
+        echo "Error modifying the template."
+        rm "$tmp_template" "$tmp_modified_template" "$tmp_env_content"
+        return 1
+    fi
+
+    item_title="[$(basename "$(pwd)")] - .env - $(date +'%d.%m.%Y')"
+
+    # Close stdin before op item create
+    exec </dev/null
+
+    # Create the item in 1Password using the modified template
+    item_create_output=$(op item create --title "$item_title" --vault "Environment Variables" --template "$tmp_modified_template" --format=json)
+
+    # Clean up temporary files
+    rm "$tmp_template" "$tmp_modified_template" "$tmp_env_content"
+
+    if [ $? -ne 0 ]; then
+        echo "Error creating the item in 1Password."
+        echo "$item_create_output"
+        return 1
+    fi
+
+    # Extract the item ID from the output
+    item_id=$(echo "$item_create_output" | jq -r '.id')
+
+    if [ -z "$item_id" ] || [ "$item_id" = "null" ]; then
+        echo "Failed to get item ID."
+        return 1
+    fi
+
+    # Generate a shareable link
+    share_output=$(op item share "$item_id" --vault "Environment Variables")
+
+    if [ $? -ne 0 ]; then
+        echo "Error sharing the item."
+        echo "$share_output"
+        return 1
+    fi
+
+    # Extract the share link
+    share_link=$(echo "$share_output" | grep -o 'https://share.*')
+
+    if [ -z "$share_link" ]; then
+        echo "Failed to retrieve share link."
+        echo "$share_output"
+        return 1
+    fi
+
+    # Copy the link to clipboard
+    echo -n "$share_link" | pbcopy
+
+    echo "Link copied to clipboard:"
+    echo "$share_link"
 }
-
