@@ -135,6 +135,7 @@ brew "oven-sh/bun/bun"
 brew "stripe/stripe-cli/stripe"
 brew "tbckr/tap/sgpt"
 cask "1password"
+cask "1password-cli"
 cask "alacritty"
 cask "bitwarden"
 cask "brave-browser"
@@ -171,7 +172,6 @@ mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Xcode", id: 497799835
 vscode "4ops.terraform"
 vscode "aaron-bond.better-comments"
 vscode "apollographql.vscode-apollo"
