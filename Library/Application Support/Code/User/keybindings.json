@@ -94,10 +94,6 @@
     "command": "-extension.openInSpecifyBrowser"
   },
   {
-    "key": "shift+cmd+enter",
-    "command": "extension.openInDefaultBrowser"
-  },
-  {
     "key": "alt+b",
     "command": "-extension.openInDefaultBrowser"
   },
@@ -249,5 +245,15 @@
   {
     "key": "shift+alt+cmd+n",
     "command": "workbench.action.chat.newChat"
+  },
+  {
+    "key": "shift+cmd+enter",
+    "command": "openInDefaultBrowser.openInDefaultBrowser",
+    "when": "resourceExtname == '.pdf' || resourceLangId == 'html' || resourceLangId == 'xml'"
+  },
+  {
+    "key": "cmd+1",
+    "command": "-openInDefaultBrowser.openInDefaultBrowser",
+    "when": "resourceExtname == '.pdf' || resourceLangId == 'html' || resourceLangId == 'xml'"
   }
 ]
