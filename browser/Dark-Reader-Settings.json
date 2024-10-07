@@ -146,7 +146,8 @@
         "www.scopus.com",
         "www.ntnu.no",
         "bibsys-almaprimo.hosted.exlibrisgroup.com",
-        "www.webofscience.com"
+        "www.webofscience.com",
+        "scholar.google.com"
     ],
     "disabledFor": [],
     "changeBrowserTheme": false,
