@@ -46,7 +46,7 @@
   },
   "editor.suggestSelection": "first",
   "liveServer.settings.donotShowInfoMsg": true,
-  "editor.accessibilitySupport": "off",
+  "editor.accessibilitySupport": "on",
   "editor.inlineSuggest.enabled": true,
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
