@@ -134,3 +134,5 @@ fi
 
 . "$HOME/.cargo/env"
 
+source /Users/magnusrodseth/.config/op/plugins.sh
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
