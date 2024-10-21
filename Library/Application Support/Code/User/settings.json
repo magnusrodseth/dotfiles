@@ -1,4 +1,5 @@
 {
+  "latex-workshop.formatting.latex": "latexindent",
   "svelte.plugin.css.diagnostics.enable": false,
   "git.mergeEditor": true,
   "git.enableSmartCommit": true,
@@ -61,7 +62,8 @@
   "nasc-touchbar.addCursorBelow": false,
   "[latex]": {
     "editor.formatOnPaste": false,
-    "editor.suggestSelection": "recentlyUsedByPrefix"
+    "editor.suggestSelection": "recentlyUsedByPrefix",
+    "editor.defaultFormatter": "James-Yu.latex-workshop"
   },
   "security.workspace.trust.untrustedFiles": "open",
   "dart.flutterSdkPath": "/Users/magnusrodseth/flutter",
@@ -71,8 +73,10 @@
   "editor.formatOnPaste": true,
   "redhat.telemetry.enabled": false,
   "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
     "*.ipynb": "jupyter-notebook",
-    "git-rebase-todo": "default"
+    "git-rebase-todo": "default",
+    "*.pdf": "latex-workshop-pdf-hook"
   },
   "python.languageServer": "Default",
   "python.formatting.provider": "autopep8",
@@ -238,5 +242,102 @@
   "[mdx]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "window.commandCenter": false
+  "window.commandCenter": false,
+  "accessibility.signals.lineHasBreakpoint": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.chatRequestSent": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.chatResponseReceived": {
+    "sound": "off"
+  },
+  "accessibility.signals.clear": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.onDebugBreak": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.diffLineDeleted": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineInserted": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineModified": {
+    "sound": "off"
+  },
+  "accessibility.signals.positionHasError": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.lineHasError": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.lineHasFoldedArea": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.lineHasInlineSuggestion": {
+    "sound": "off"
+  },
+  "accessibility.signals.noInlayHints": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.notebookCellCompleted": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.notebookCellFailed": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.progress": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.taskCompleted": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.taskFailed": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.terminalBell": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.terminalCommandFailed": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.terminalCommandSucceeded": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.terminalQuickFix": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.voiceRecordingStarted": {
+    "sound": "off"
+  },
+  "accessibility.signals.voiceRecordingStopped": {
+    "sound": "off"
+  },
+  "accessibility.signals.positionHasWarning": {
+    "sound": "off",
+    "announcement": "auto"
+  },
+  "accessibility.signals.lineHasWarning": {
+    "sound": "off",
+    "announcement": "auto"
+  }
 }

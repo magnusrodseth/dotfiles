@@ -255,5 +255,20 @@
     "key": "cmd+1",
     "command": "-openInDefaultBrowser.openInDefaultBrowser",
     "when": "resourceExtname == '.pdf' || resourceLangId == 'html' || resourceLangId == 'xml'"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "latex-workshop.synctex",
+    "when": "editorTextFocus && !config.latex-workshop.bind.altKeymap.enabled && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
+  },
+  {
+    "key": "alt+cmd+j",
+    "command": "-latex-workshop.synctex",
+    "when": "editorTextFocus && !config.latex-workshop.bind.altKeymap.enabled && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
+  },
+  {
+    "key": "cmd+l alt+j",
+    "command": "-latex-workshop.synctex",
+    "when": "config.latex-workshop.bind.altKeymap.enabled && editorTextFocus && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^doctex$/"
   }
 ]
