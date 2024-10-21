@@ -93,7 +93,6 @@ alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 
-
 # Source all custom functions in the zsh/functions directory
 if [ -d "$HOME/zsh/functions" ]; then
     for file in "$HOME/zsh/functions"/*.sh; do
@@ -126,10 +125,16 @@ export PATH="$PATH:$HOME/.dotnet/tools/"
 # latexmk for latex
 export PATH="/Library/TeX/texbin:$PATH"
 
-# openai key (gitignored)
-# check if the file $HOME/dotfiles/zsh/ignored/openai.sh exists. if it does, source it
-if [ -f "$HOME/dotfiles/zsh/ignored/openai.sh" ]; then
-  source "$HOME/dotfiles/zsh/ignored/openai.sh"
+# deno
+export PATH="/Users/magnusrodseth/.deno/bin:$PATH"
+
+# Check if the ignored folder exists, and source all files in it
+if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
+    for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
+        if [ -f "$file" ]; then
+            source "$file"
+        fi
+    done
 fi
 
 . "$HOME/.cargo/env"
