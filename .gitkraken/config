@@ -1,0 +1,204 @@
+{
+  "lastUpgradeScriptRun": "v10.4.1",
+  "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
+  "appLocale": "en-US",
+  "appDateFormat": "DD/MM/YY",
+  "appDateTimeFormat": "DD/MM/YY @ HH:MM",
+  "appDateWordFormat": "D MMM, YYYY",
+  "appDateVerboseFormat": "DD/MM/YY @ HH:MM",
+  "userMilestones": {
+    "installId": "77a3bd3a-56a2-41d5-a23b-ed5fea6ebc08",
+    "firstAppOpen": true,
+    "connectIntegration": true,
+    "firstLoginRegister": true,
+    "startATrial": true,
+    "firstProfileCreated": true,
+    "completedNewUserOnboarding": true,
+    "firstRepoOpened": true,
+    "guideOpened": true,
+    "firstTimeCommitSelected": true,
+    "leftPanelToggled": true,
+    "acknowledgedCommitDetailPanel": true,
+    "acknowledgedLeftPanel": true,
+    "pushSomeCode": true,
+    "createACommit": true,
+    "makeABranch": true
+  },
+  "sslWhitelist": [],
+  "lastReleaseNotesDisplayed": "10.4.1",
+  "ui": {
+    "shouldShowStartupPromoModal": false
+  },
+  "aliases": {
+    "repo": {},
+    "tabs": {}
+  },
+  "registration": {
+    "email": "magnus.rodseth@gmail.com",
+    "name": "magnusrodseth",
+    "status": "activated",
+    "loginType": "github",
+    "date": "2024-08-27T07:58:08.836Z",
+    "EULA": {
+      "version": "8.3.1",
+      "status": "agree_verified"
+    }
+  },
+  "userId": "31aa0181-0956-4a85-b13a-4f9720ad0ebb",
+  "licensedFeatures": [
+    "pro",
+    "gitgui:pro",
+    "gitlens:pro",
+    "bundle:pro",
+    "gitkraken_v1:pro",
+    "suite:pro",
+    "boards:pro",
+    "timelines:pro",
+    "student",
+    "gitgui:student",
+    "gitlens:student",
+    "bundle:student",
+    "gitkraken_v1:student",
+    "suite:student",
+    "boards:student",
+    "timelines:student"
+  ],
+  "orgSettingsByOrgId": {
+    "65c5b5e52cebeb4f193295da": {
+      "aiSettings": {
+        "enabled": true,
+        "createdAt": "2024-02-15T15:15:02.617812Z",
+        "updatedAt": "2024-02-15T15:15:02.617812Z"
+      },
+      "draftsSettings": {
+        "enabled": true,
+        "createdAt": "2024-02-15T15:15:02.619111Z",
+        "updatedAt": "2024-02-15T15:15:02.619111Z"
+      },
+      "ssoSettings": {
+        "enabled": false,
+        "enforced": false,
+        "provision": false,
+        "createdAt": "2024-02-15T15:15:02.617812Z",
+        "updatedAt": "2024-02-15T15:15:02.617812Z"
+      },
+      "memberInvitesRequireApproval": true,
+      "createdAt": "2024-02-15T15:15:02.617812Z",
+      "updatedAt": "2024-02-15T15:15:02.617812Z"
+    }
+  },
+  "userFeatures": [
+    {
+      "name": "activityStatus"
+    },
+    {
+      "name": "changePriceEnabled"
+    },
+    {
+      "name": "cli"
+    },
+    {
+      "name": "experimentalAiCommmitMsg"
+    },
+    {
+      "name": "experimentalGitBinary"
+    },
+    {
+      "name": "experimentalGitBinaryDefaultOn960"
+    },
+    {
+      "name": "experimentalGitBinaryDefaultOn971"
+    },
+    {
+      "name": "experimentalGitBinarySpawnServer961"
+    },
+    {
+      "name": "fall2024SpecialPricing"
+    },
+    {
+      "name": "gitBash"
+    },
+    {
+      "name": "gitkraken"
+    },
+    {
+      "name": "gkApi"
+    },
+    {
+      "name": "gkDotDevInsights"
+    },
+    {
+      "name": "gkDotDevLaunchpadViewSettings"
+    },
+    {
+      "name": "gkDotDevNewPurchaseFlow"
+    },
+    {
+      "name": "GKDotDevShowSsoSettings"
+    },
+    {
+      "name": "goldenTicketSpecial"
+    },
+    {
+      "name": "noGlobalFocusView"
+    },
+    {
+      "name": "onboardingGuide"
+    },
+    {
+      "name": "registeredForGST"
+    },
+    {
+      "name": "terminalInsideRepoTab"
+    },
+    {
+      "name": "unregisteredTrials"
+    },
+    {
+      "name": "velocityInClient_9_0_0"
+    },
+    {
+      "name": "version_2"
+    },
+    {
+      "name": "workspacesPRComplexity"
+    }
+  ],
+  "fuzzyFinderMetadata": {
+    "itemMetadata": {
+      "OPEN_REPO": {
+        "openRepo-/Users/magnusrodseth/dotfiles": {
+          "id": "openRepo-/Users/magnusrodseth/dotfiles",
+          "timestamps": [
+            1724745506897
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/jrc/internal/revamped/web-revamped/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/jrc/internal/revamped/web-revamped/",
+          "timestamps": [
+            1726748811523
+          ],
+          "total": 1
+        }
+      }
+    }
+  },
+  "windowSettings": {
+    "x": 352,
+    "y": 103,
+    "width": 1251,
+    "height": 800,
+    "fullScreen": false,
+    "maximized": true
+  },
+  "commits": {
+    "maxCommitsInGraph": 2000
+  },
+  "notification": {
+    "toastPosition": "bottom-right"
+  },
+  "onboarding": {
+    "tutorialVariant": "10_4_0"
+  }
+}
