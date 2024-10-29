@@ -141,3 +141,5 @@ fi
 
 source /Users/magnusrodseth/.config/op/plugins.sh
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
