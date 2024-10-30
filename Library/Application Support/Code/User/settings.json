@@ -63,7 +63,8 @@
   "[latex]": {
     "editor.formatOnPaste": false,
     "editor.suggestSelection": "recentlyUsedByPrefix",
-    "editor.defaultFormatter": "James-Yu.latex-workshop"
+    "editor.defaultFormatter": "James-Yu.latex-workshop",
+    "editor.wordWrap": "on"
   },
   "security.workspace.trust.untrustedFiles": "open",
   "dart.flutterSdkPath": "/Users/magnusrodseth/flutter",
@@ -133,7 +134,6 @@
   "gitlens.hovers.currentLine.enabled": false,
 
   "vim.vimrc.path": "$HOME/.config/nvim/init.lua",
-  "bracket-pair-colorizer-2.depreciation-notice": false,
   "vim.vimrc.enable": true,
   // Add relatvie line numbers
   "editor.lineNumbers": "relative",
@@ -159,7 +159,6 @@
       "after": ["g", "g", "I"]
     }
   ],
-  "snyk.yesWelcomeNotification": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
