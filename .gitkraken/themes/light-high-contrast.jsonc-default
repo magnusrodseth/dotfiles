@@ -32,6 +32,7 @@
         "glass-inverse-5": "#0000000D",
         "input__bg":"#ffffff7f",
         "input-bg-warn-color":"#de9b4399",
+        "panel-accent": "#7600F6",
         "panel-border":"#C6C6C6",
         "section-border":"#CCCCCC",
         "subtle-border":"#E6E6E6",

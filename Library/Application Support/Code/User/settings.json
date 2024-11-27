@@ -79,8 +79,7 @@
     "git-rebase-todo": "default",
     "*.pdf": "latex-workshop-pdf-hook"
   },
-  "python.languageServer": "Default",
-  "python.formatting.provider": "autopep8",
+  "python.languageServer": "Pylance",
   "[less]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -173,6 +172,10 @@
     {
       "name": "latexmk",
       "tools": ["latexmk"]
+    },
+    {
+      "name": "xelatex -> biber -> xelatex*2",
+      "tools": ["xelatex", "biber", "xelatex", "xelatex"]
     }
   ],
   "latex-workshop.latex.tools": [
@@ -184,10 +187,29 @@
         "-interaction=nonstopmode",
         "-file-line-error",
         "-pdf",
+        "-shell-escape",
         "-aux-directory=out",
         "-output-directory=out",
         "%DOC%"
       ]
+    },
+    {
+      "name": "xelatex",
+      "command": "xelatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-shell-escape",
+        "-file-line-error",
+        "-aux-directory=out",
+        "-output-directory=out",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": ["--output-directory=out", "%DOCFILE%"]
     },
     {
       "name": "pdflatex",
@@ -196,6 +218,7 @@
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
+        "-shell-escape",
         "-aux-directory=out",
         "-output-directory=out",
         "%DOC%"
@@ -338,5 +361,6 @@
   "accessibility.signals.lineHasWarning": {
     "sound": "off",
     "announcement": "auto"
-  }
+  },
+  "chat.editing.alwaysSaveWithGeneratedChanges": true
 }
