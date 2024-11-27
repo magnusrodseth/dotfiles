@@ -1,5 +1,5 @@
 {
-  "lastUpgradeScriptRun": "v10.4.1",
+  "lastUpgradeScriptRun": "v10.5.0",
   "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
   "appDateFormat": "DD/MM/YY",
@@ -22,12 +22,14 @@
     "acknowledgedLeftPanel": true,
     "pushSomeCode": true,
     "createACommit": true,
-    "makeABranch": true
+    "makeABranch": true,
+    "acknowledgedWorktrees_10_5_0": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "10.4.1",
+  "lastReleaseNotesDisplayed": "10.5.0",
   "ui": {
-    "shouldShowStartupPromoModal": false
+    "shouldShowStartupPromoModal": false,
+    "needsToAcknowledgeWorktrees": true
   },
   "aliases": {
     "repo": {},
@@ -113,9 +115,6 @@
       "name": "experimentalGitBinarySpawnServer961"
     },
     {
-      "name": "fall2024SpecialPricing"
-    },
-    {
       "name": "gitBash"
     },
     {
@@ -125,16 +124,19 @@
       "name": "gkApi"
     },
     {
-      "name": "gkDotDevInsights"
+      "name": "gkdOnboardingTutorial_10_5_0"
     },
     {
-      "name": "gkDotDevLaunchpadViewSettings"
+      "name": "gkDotDevInsights"
     },
     {
       "name": "gkDotDevNewPurchaseFlow"
     },
     {
       "name": "GKDotDevShowSsoSettings"
+    },
+    {
+      "name": "gkDotDevUserflow"
     },
     {
       "name": "goldenTicketSpecial"
@@ -144,6 +146,9 @@
     },
     {
       "name": "onboardingGuide"
+    },
+    {
+      "name": "privateRepoModalTest_10_5_0"
     },
     {
       "name": "registeredForGST"
@@ -185,10 +190,10 @@
     }
   },
   "windowSettings": {
-    "x": 352,
-    "y": 103,
-    "width": 1251,
-    "height": 800,
+    "x": 96,
+    "y": 25,
+    "width": 1728,
+    "height": 1055,
     "fullScreen": false,
     "maximized": true
   },

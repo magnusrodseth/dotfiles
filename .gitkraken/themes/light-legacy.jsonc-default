@@ -30,6 +30,7 @@
       "glass-inverse-5": "#0000000D",
       "input__bg": "fade(#ffffff, 20%)",
       "input-bg-warn-color": "fade(@orange, 60%)",
+      "panel-accent": "#7600F6",
       "panel-border": "#C6C6C6",
       "section-border": "#DADADA",
       "subtle-border": "#E6E6E6",
