@@ -30,6 +30,8 @@ zinit light lukechilds/zsh-nvm
 zinit light Aloxaf/fzf-tab
 zinit light paulirish/git-open
 zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
+zinit load atuinsh/atuin
+
 
 # Add in snippets
 zinit snippet OMZP::git
@@ -144,3 +146,4 @@ source /Users/magnusrodseth/.config/op/plugins.sh
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
+eval "$(atuin init zsh)"
