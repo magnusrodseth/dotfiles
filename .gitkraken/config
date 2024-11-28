@@ -23,7 +23,8 @@
     "pushSomeCode": true,
     "createACommit": true,
     "makeABranch": true,
-    "acknowledgedWorktrees_10_5_0": true
+    "acknowledgedWorktrees_10_5_0": true,
+    "mergeABranch": true
   },
   "sslWhitelist": [],
   "lastReleaseNotesDisplayed": "10.5.0",
