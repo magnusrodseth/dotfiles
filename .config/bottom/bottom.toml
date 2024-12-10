@@ -1,3 +1,9 @@
+[flags]
+enable_gpu = true
+
+[processes]
+columns = ["name", "cpu%", "gmem%", "gpu%"]
+
 [[row]]
 [[row.child]]
 type = "proc"
