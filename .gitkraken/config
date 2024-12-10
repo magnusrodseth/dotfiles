@@ -55,16 +55,12 @@
     "bundle:pro",
     "gitkraken_v1:pro",
     "suite:pro",
-    "boards:pro",
-    "timelines:pro",
     "student",
     "gitgui:student",
     "gitlens:student",
     "bundle:student",
     "gitkraken_v1:student",
-    "suite:student",
-    "boards:student",
-    "timelines:student"
+    "suite:student"
   ],
   "orgSettingsByOrgId": {
     "65c5b5e52cebeb4f193295da": {
