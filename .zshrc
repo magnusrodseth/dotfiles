@@ -147,3 +147,6 @@ source /Users/magnusrodseth/.config/op/plugins.sh
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 eval "$(atuin init zsh)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/magnusrodseth/.cache/lm-studio/bin"
