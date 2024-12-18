@@ -2,7 +2,7 @@
 enable_gpu = true
 
 [processes]
-columns = ["name", "cpu%", "gmem%", "gpu%"]
+columns = ["name", "cpu%", "mem%", "gmem%", "gpu%"]
 
 [[row]]
 [[row.child]]
