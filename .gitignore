@@ -4,3 +4,4 @@ Library
 rest-client
 ignored
 **/openai.sh
+.config/github-copilot/**

@@ -1,5 +1,5 @@
 {
-  "lastUpgradeScriptRun": "v10.5.0",
+  "lastUpgradeScriptRun": "v10.6.0",
   "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
   "appDateFormat": "DD/MM/YY",
@@ -23,14 +23,12 @@
     "pushSomeCode": true,
     "createACommit": true,
     "makeABranch": true,
-    "acknowledgedWorktrees_10_5_0": true,
     "mergeABranch": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "10.5.0",
+  "lastReleaseNotesDisplayed": "10.6.0",
   "ui": {
-    "shouldShowStartupPromoModal": false,
-    "needsToAcknowledgeWorktrees": true
+    "shouldShowStartupPromoModal": false
   },
   "aliases": {
     "repo": {},
@@ -200,7 +198,5 @@
   "notification": {
     "toastPosition": "bottom-right"
   },
-  "onboarding": {
-    "tutorialVariant": "10_4_0"
-  }
+  "onboarding": {}
 }
