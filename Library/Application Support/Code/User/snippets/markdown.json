@@ -1,0 +1,26 @@
+{
+  "README.md Template 📄": {
+    "prefix": "readme",
+    "body": [
+      "# ${1:[Insert header]} ${2:[Insert fitting emoji]}",
+      "\n",
+      "## Description ✏️",
+      "\n",
+      "${3:[Insert description]}",
+      "\n",
+      "## Developer Information 🙋🏼‍♂️",
+      "\n",
+      "${4:[Insert developer information]}",
+      "\n",
+      "## Tech Stack 🛠",
+      "\n",
+      "${5:[Insert tech stack bullet list]}",
+      "\n",
+      "## Running the application ✅",
+      "\n",
+      "${6:[Insert section about running the application]}",
+      "\n"
+    ],
+    "description": "README.md Template 📄"
+  }
+}
