@@ -1,0 +1,19 @@
+{
+  "System.out.println()": {
+    "scope": "java",
+    "prefix": "sout",
+    "body": ["System.out.println($0);"],
+    "description": "System.out.println()"
+  },
+
+  "Scanner scanner = new Scanner(System.in)": {
+    "scope": "java",
+    "prefix": "sin",
+    "body": [
+      "Scanner scanner = new Scanner(System.in);",
+      "System.out.print(\"Your input: \");"
+    ],
+    "description": "Scanner scanner = new Scanner(System.in)"
+  }
+}
+
