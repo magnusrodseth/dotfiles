@@ -14,7 +14,6 @@ images/*
 !Library/Application Support/Code/User/snippets/*
 
 ### same goes for Cursor settings
-Library/Application Support/Cursor/*
 !Library/Application Support/Cursor/User/keybindings.json
 !Library/Application Support/Cursor/User/settings.json
 !Library/Application Support/Cursor/User/snippets/*
