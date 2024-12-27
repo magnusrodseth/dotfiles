@@ -2,7 +2,7 @@
 theme = "tokyonight"
 
 # Set the default working directory to "~/dev"
-# TODO
+working-directory = "/Users/magnusrodseth/dev"
 
 # Set the font
 font-family = "FiraCode Nerd Font Mono"
@@ -16,3 +16,11 @@ keybind = "cmd+up=goto_split:top"
 keybind = "cmd+down=goto_split:bottom"
 keybind = "cmd+left=goto_split:left"
 keybind = "cmd+right=goto_split:right"
+
+# Set the window size to 80 columns wide and 24 rows high
+window-width = 200
+window-height = 100
+
+# Set the opacity of unfocused splits
+unfocused-split-opacity = 0.5
+
