@@ -105,9 +105,7 @@
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
     "editor.wordBasedSuggestions": "off",
-    "editor.rulers": [
-      80
-    ],
+    "editor.rulers": [80],
     "editor.selectionHighlight": false,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
@@ -121,10 +119,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
   "svelte.enable-ts-plugin": true,
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
@@ -141,47 +136,23 @@
   "vim.normalModeKeyBindings": [
     // Ensure cursor stays vertically centered going down
     {
-      "before": [
-        "j"
-      ],
-      "after": [
-        "j",
-        "z",
-        "z"
-      ]
+      "before": ["j"],
+      "after": ["j", "z", "z"]
     },
     // Ensure cursor stays vertically centered going up
     {
-      "before": [
-        "k"
-      ],
-      "after": [
-        "k",
-        "z",
-        "z"
-      ]
+      "before": ["k"],
+      "after": ["k", "z", "z"]
     },
     // Go to end of file, go to end of line, create a new blank line
     {
-      "before": [
-        ","
-      ],
-      "after": [
-        "G",
-        "A",
-        "\n"
-      ]
+      "before": [","],
+      "after": ["G", "A", "\n"]
     },
     // Go to top of file, go to start of line, enter insert mode
     {
-      "before": [
-        ";"
-      ],
-      "after": [
-        "g",
-        "g",
-        "I"
-      ]
+      "before": [";"],
+      "after": ["g", "g", "I"]
     }
   ],
   "[javascript]": {
@@ -197,18 +168,11 @@
   "latex-workshop.latex.recipes": [
     {
       "name": "latexmk",
-      "tools": [
-        "latexmk"
-      ]
+      "tools": ["latexmk"]
     },
     {
       "name": "xelatex -> biber -> xelatex*2",
-      "tools": [
-        "xelatex",
-        "biber",
-        "xelatex",
-        "xelatex"
-      ]
+      "tools": ["xelatex", "biber", "xelatex", "xelatex"]
     }
   ],
   "latex-workshop.latex.tools": [
@@ -242,10 +206,7 @@
     {
       "name": "biber",
       "command": "biber",
-      "args": [
-        "--output-directory=out",
-        "%DOCFILE%"
-      ]
+      "args": ["--output-directory=out", "%DOCFILE%"]
     },
     {
       "name": "pdflatex",
@@ -398,5 +359,12 @@
     "sound": "off",
     "announcement": "auto"
   },
-  "chat.editing.alwaysSaveWithGeneratedChanges": true
+  "chat.editing.alwaysSaveWithGeneratedChanges": true,
+  "editor.tabSize": 2,
+  "accessibility.signals.codeActionApplied": {
+    "sound": "off"
+  },
+  "accessibility.signals.codeActionTriggered": {
+    "sound": "off"
+  }
 }
