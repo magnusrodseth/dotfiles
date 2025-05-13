@@ -231,10 +231,6 @@
     "command": "-workbench.action.toggleSidebarVisibility"
   },
   {
-    "key": "shift+cmd+a",
-    "command": "github.copilot.chat.attachFile"
-  },
-  {
     "key": "shift+alt+cmd+n",
     "command": "workbench.action.chat.newChat"
   },
@@ -346,5 +342,49 @@
     "key": "shift+cmd+r",
     "command": "-workbench.view.extension.thunder-client",
     "when": "viewContainer.workbench.view.extension.thunder-client.enabled"
+  },
+  {
+    "key": "cmd+i",
+    "command": "workbench.panel.chat.view.edits.focus"
+  },
+  {
+    "key": "cmd+i",
+    "command": "composer.newAgentChat"
+  },
+  {
+    "key": "shift+cmd+i",
+    "command": "-composer.newAgentChat"
+  },
+  {
+    "key": "shift+cmd+a",
+    "command": "workbench.action.chat.addSelectedFilesToWorkingSet"
+  },
+  {
+    "key": "cmd+i",
+    "command": "composerMode.agent"
+  },
+  {
+    "key": "cmd+l",
+    "command": "composerMode.chat"
+  },
+  {
+    "key": "shift+cmd+m",
+    "command": "composer.openModelToggle",
+    "when": "composerFocused && !editorTextFocus"
+  },
+  {
+    "key": "shift+alt+cmd+7",
+    "command": "-composer.openModelToggle",
+    "when": "composerFocused && !editorTextFocus"
+  },
+  {
+    "key": "shift+cmd+7",
+    "command": "-composer.openModelToggle",
+    "when": "composerFocused && !editorTextFocus"
+  },
+  {
+    "key": "shift+cmd+m",
+    "command": "-workbench.actions.view.problems",
+    "when": "workbench.panel.markers.view.active"
   }
 ]

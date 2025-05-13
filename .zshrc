@@ -77,7 +77,6 @@ alias gitui="lazygit"
 alias tf="terraform"
 alias cat="bat"
 alias cp='xcp'
-alias find="fd"
 alias ps="procs"
 alias top="btm"
 alias c="code"
@@ -95,6 +94,7 @@ alias o="open ."
 alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
+alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
 
 # Source all custom functions in the zsh/functions directory
 if [ -d "$HOME/zsh/functions" ]; then
@@ -106,8 +106,7 @@ if [ -d "$HOME/zsh/functions" ]; then
 fi
 
 # Set the default EDITOR
-
-export EDITOR="$(which nvim)"
+export EDITOR="$(which cursor)"
 export VISUAL="$EDITOR"
 export LC_ALL=en_US.UTF-8
 
@@ -150,3 +149,16 @@ eval "$(atuin init zsh)"
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/magnusrodseth/.cache/lm-studio/bin"
+
+# pnpm
+export PNPM_HOME="/Users/magnusrodseth/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# ngrok
+if command -v ngrok &>/dev/null; then
+    eval "$(ngrok completion)"
+fi
