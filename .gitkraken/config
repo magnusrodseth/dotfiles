@@ -1,5 +1,5 @@
 {
-  "lastUpgradeScriptRun": "v10.6.0",
+  "lastUpgradeScriptRun": "v11.1.0",
   "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
   "appDateFormat": "DD/MM/YY",
@@ -23,10 +23,11 @@
     "pushSomeCode": true,
     "createACommit": true,
     "makeABranch": true,
-    "mergeABranch": true
+    "mergeABranch": true,
+    "introTutorialWelcomeStepSkipped": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "10.6.0",
+  "lastReleaseNotesDisplayed": "11.1.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -119,25 +120,40 @@
       "name": "gkApi"
     },
     {
+      "name": "gkdConflictPreventionFeedback_11_1_0"
+    },
+    {
+      "name": "gkDevConflictPreventionSetting"
+    },
+    {
+      "name": "gkdevEnableAllAutomationProviders"
+    },
+    {
+      "name": "gkDevReferralSystem"
+    },
+    {
       "name": "gkdOnboardingTutorial_10_5_0"
     },
     {
-      "name": "gkDotDevInsights"
+      "name": "gkDotDevAutomations"
     },
     {
-      "name": "gkDotDevNewPurchaseFlow"
+      "name": "gkDotDevCycleTime"
     },
     {
-      "name": "GKDotDevShowSsoSettings"
+      "name": "gkDotDevPurchaseCheckoutShowPlanFeatures"
     },
     {
-      "name": "gkDotDevUserflow"
+      "name": "gkdReferralProgram_11_0_0"
+    },
+    {
+      "name": "gkdTrialStartModalPromoMessage_11_1_0"
+    },
+    {
+      "name": "gkdTutorialSkipFirstStep_10_8_0"
     },
     {
       "name": "goldenTicketSpecial"
-    },
-    {
-      "name": "noGlobalFocusView"
     },
     {
       "name": "onboardingGuide"
@@ -155,10 +171,10 @@
       "name": "unregisteredTrials"
     },
     {
-      "name": "velocityInClient_9_0_0"
+      "name": "useNewTrialStartModalTest_10_8_0"
     },
     {
-      "name": "version_2"
+      "name": "velocityInClient_9_0_0"
     },
     {
       "name": "workspacesPRComplexity"
@@ -180,17 +196,38 @@
             1726748811523
           ],
           "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/Downloads/klink/": {
+          "id": "openRepo-/Users/magnusrodseth/Downloads/klink/",
+          "timestamps": [
+            1738783226689
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/ffmpeg-tools/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/ffmpeg-tools/",
+          "timestamps": [
+            1743747725830
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/ntnu/master-thesis/master-thesis-norwegian-datasets/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/ntnu/master-thesis/master-thesis-norwegian-datasets/",
+          "timestamps": [
+            1746436007213
+          ],
+          "total": 1
         }
       }
     }
   },
   "windowSettings": {
-    "x": 96,
-    "y": 25,
+    "x": 0,
+    "y": 50,
     "width": 1728,
     "height": 1055,
     "fullScreen": false,
-    "maximized": true
+    "maximized": false
   },
   "commits": {
     "maxCommitsInGraph": 2000
@@ -198,5 +235,8 @@
   "notification": {
     "toastPosition": "bottom-right"
   },
-  "onboarding": {}
+  "onboarding": {},
+  "ai": {
+    "enabled": true
+  }
 }
