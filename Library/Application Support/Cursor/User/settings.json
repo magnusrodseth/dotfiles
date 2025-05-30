@@ -4,22 +4,14 @@
   "git.mergeEditor": true,
   "git.enableSmartCommit": true,
   "python.defaultInterpreterPath": "/Users/magnusrodseth/opt/anaconda3/bin/python",
-  "nasc-touchbar.peekDefinition": true,
-  "nasc-touchbar.blockComment": true,
-  "python.showStartPage": false,
   "workbench.iconTheme": "material-icon-theme",
-  "nasc-touchbar.selectNext": true,
   "latex-workshop.view.pdf.viewer": "tab",
-  "open-in-browser.default": "chrome",
   "notebook.cellToolbarLocation": {
     "default": "right",
     "jupyter-notebook": "left"
   },
-  "nasc-touchbar.showCommands": false,
-  "nasc-touchbar.commentLine": true,
   "terminal.integrated.inheritEnv": false,
   "terminal.external.osxExec": "iTerm.app",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
   "editor.autoClosingBrackets": "always",
   "[xml]": {
     "editor.defaultFormatter": "DotJoshJohnson.xml"
@@ -31,34 +23,21 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "java.semanticHighlighting.enabled": true,
-  "todohighlight.keywords": [],
-  "github.copilot.enable": {
-    "*": true,
-    "yaml": true,
-    "plaintext": true,
-    "markdown": true,
-    "c": true
-  },
   "[java]": {
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.defaultFormatter": "mwpb.java-prettier-formatter"
   },
   "editor.suggestSelection": "first",
   "liveServer.settings.donotShowInfoMsg": true,
-  "editor.accessibilitySupport": "on",
+  "editor.accessibilitySupport": "off",
   "editor.inlineSuggest.enabled": true,
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "java.configuration.checkProjectSettingsExclusions": false,
   "editor.fontSize": 16,
-  "code-runner.clearPreviousOutput": true,
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "nasc-touchbar.rename": false,
-  "nasc-touchbar.addCursorBelow": false,
   "[latex]": {
     "editor.formatOnPaste": false,
     "editor.suggestSelection": "recentlyUsedByPrefix",
@@ -88,13 +67,18 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "workbench.colorCustomizations": {
     "editorLineNumber.foreground": "#8d8d8d",
-    "editorLineNumber.activeForeground": "#dbdbdb"
+    "editorLineNumber.activeForeground": "#d3d2d2",
+    "[Tokyo Night Light]": {
+      "editorLineNumber.foreground": "#747373",
+      "editorLineNumber.activeForeground": "#242424"
+    },
+    "[Tokyo Night Ported Nvim]": {
+      "editorLineNumber.foreground": "#8d8d8d",
+      "editorLineNumber.activeForeground": "#e8e7e7"
+    }
   },
-  "tabnine.experimentalAutoImports": true,
   "terminal.integrated.tabs.enabled": true,
   "python.pythonPath": "/Users/magnusrodseth/opt/anaconda3/bin/python",
-  "nasc-touchbar.goToDefinition": false,
-  "python.jediEnabled": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "[python]": {
     "editor.defaultFormatter": "ms-python.python",
@@ -257,14 +241,12 @@
   ],
   "prisma.showPrismaDataPlatformNotification": false,
   "github.copilot.editor.enableAutoCompletions": true,
-  "workbench.colorTheme": "Tokyo Night Ported Nvim",
   "editor.quickSuggestionsDelay": 1,
   "editor.suggest.preview": true,
   "editor.codeLens": false,
   "[mdx]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "window.commandCenter": false,
   "accessibility.signals.lineHasBreakpoint": {
     "sound": "off",
     "announcement": "auto"
@@ -369,5 +351,6 @@
   },
   "accessibility.signals.codeActionTriggered": {
     "sound": "off"
-  }
+  },
+  "workbench.colorTheme": "Tokyo Night Ported Nvim"
 }
