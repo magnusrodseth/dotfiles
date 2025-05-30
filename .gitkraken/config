@@ -27,7 +27,7 @@
     "introTutorialWelcomeStepSkipped": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.1.0",
+  "lastReleaseNotesDisplayed": "11.1.1",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -81,6 +81,11 @@
         "updatedAt": "2024-02-15T15:15:02.617812Z"
       },
       "memberInvitesRequireApproval": true,
+      "conflictDetectionEnabled": true,
+      "aiEnabled": true,
+      "ssoEnabled": false,
+      "ssoEnforced": false,
+      "ssoProvision": false,
       "createdAt": "2024-02-15T15:15:02.617812Z",
       "updatedAt": "2024-02-15T15:15:02.617812Z"
     }
@@ -142,6 +147,9 @@
     },
     {
       "name": "gkDotDevPurchaseCheckoutShowPlanFeatures"
+    },
+    {
+      "name": "gkDotDevRadialPaymentMethods"
     },
     {
       "name": "gkdReferralProgram_11_0_0"
@@ -227,7 +235,7 @@
     "width": 1728,
     "height": 1055,
     "fullScreen": false,
-    "maximized": false
+    "maximized": true
   },
   "commits": {
     "maxCommitsInGraph": 2000
@@ -238,5 +246,33 @@
   "onboarding": {},
   "ai": {
     "enabled": true
+  },
+  "webConfig": {
+    "lastUpdatedAt": "2025-05-29T09:11:03.468Z",
+    "config": {
+      "promos": [
+        {
+          "key": "GITSMARTER25",
+          "code": "GITSMARTER25",
+          "startsOn": "2025-05-19T06:59:00.000Z",
+          "expiresOn": "2025-06-03T06:59:00.000Z",
+          "content": {
+            "promoBadgeMarkdown": "**Limited-Time Sale!**\n\nSave more than 60% on GitKraken Pro.",
+            "proPromoLabelSmall": "SAVE 60% for a limited time!",
+            "toolbarLinkLabelOverride": "Save 60% on Pro"
+          }
+        },
+        {
+          "key": "nullPromo"
+        },
+        {
+          "key": "50OFFADV",
+          "code": "50OFFADV",
+          "content": {
+            "advancedPromoLabelSmall": "SAVE 50% for a limited time!"
+          }
+        }
+      ]
+    }
   }
 }
