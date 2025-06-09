@@ -74,7 +74,8 @@
     },
     "[Tokyo Night Ported Nvim]": {
       "editorLineNumber.foreground": "#8d8d8d",
-      "editorLineNumber.activeForeground": "#e8e7e7"
+      "editorLineNumber.activeForeground": "#e8e7e7",
+      "sideBar.border": "#445891"
     }
   },
   "terminal.integrated.tabs.enabled": true,
