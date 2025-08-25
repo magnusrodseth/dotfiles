@@ -4,3 +4,4 @@ rest-client
 ignored
 **/openai.sh
 .config/github-copilot/**
+**/stripe/config.toml

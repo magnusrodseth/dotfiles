@@ -1,5 +1,5 @@
 {
-  "lastUpgradeScriptRun": "v11.1.0",
+  "lastUpgradeScriptRun": "v11.3.0",
   "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
   "appDateFormat": "DD/MM/YY",
@@ -24,10 +24,11 @@
     "createACommit": true,
     "makeABranch": true,
     "mergeABranch": true,
-    "introTutorialWelcomeStepSkipped": true
+    "introTutorialWelcomeStepSkipped": true,
+    "installDate": 1724745480020
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.1.1",
+  "lastReleaseNotesDisplayed": "11.3.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -130,31 +131,22 @@
       "name": "gkdAIFeedback_11_2_0"
     },
     {
+      "name": "gkdAIMergeConflictResolutionNudge_11_3_0"
+    },
+    {
+      "name": "gkdCommitComposeWipButtonBottom_11_3_0"
+    },
+    {
       "name": "gkdConflictPreventionFeedback_11_1_0"
     },
     {
-      "name": "gkDevConflictPreventionSetting"
-    },
-    {
-      "name": "gkdevEnableAllAutomationProviders"
+      "name": "gkdevAllowInviteMessages"
     },
     {
       "name": "gkDevReferralSystem"
     },
     {
       "name": "gkdOnboardingTutorial_10_5_0"
-    },
-    {
-      "name": "gkDotDevAutomations"
-    },
-    {
-      "name": "gkDotDevCycleTime"
-    },
-    {
-      "name": "gkDotDevPurchaseCheckoutShowPlanFeatures"
-    },
-    {
-      "name": "gkDotDevRadialPaymentMethods"
     },
     {
       "name": "gkdReferralProgram_11_0_0"
@@ -237,17 +229,45 @@
             1749468987250
           ],
           "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/capra/aws-game-day-2025/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/capra/aws-game-day-2025/",
+          "timestamps": [
+            1750409297912
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/shadcn-mcp-server/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/shadcn-mcp-server/",
+          "timestamps": [
+            1753172385449
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/convert-to/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/convert-to/",
+          "timestamps": [
+            1753957365229
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/nabostylisten": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/nabostylisten",
+          "timestamps": [
+            1754054477211
+          ],
+          "total": 1
         }
       }
     }
   },
   "windowSettings": {
     "x": 0,
-    "y": 50,
+    "y": 38,
     "width": 1728,
     "height": 1055,
     "fullScreen": false,
-    "maximized": true
+    "maximized": false
   },
   "commits": {
     "maxCommitsInGraph": 2000
@@ -257,25 +277,25 @@
   },
   "onboarding": {},
   "ai": {
-    "enabled": true
+    "enabled": true,
+    "providers": {
+      "ConfigurableOpenAI": {}
+    }
   },
   "webConfig": {
-    "lastUpdatedAt": "2025-06-09T11:36:25.115Z",
+    "lastUpdatedAt": "2025-08-25T09:20:29.777Z",
     "config": {
+      "callouts": [],
       "promos": [
         {
-          "key": "GITSMARTER25",
-          "code": "GITSMARTER25",
-          "startsOn": "2025-05-19T06:59:00.000Z",
-          "expiresOn": "2025-06-03T06:59:00.000Z",
+          "key": "2XTOKENS25",
+          "code": "2XTOKENS",
+          "startsOn": "2025-07-21T23:59:00.000Z",
+          "expiresOn": "2025-07-31T09:59:00.000Z",
           "content": {
-            "promoBadgeMarkdown": "**Limited-Time Sale!**\n\nSave more than 60% on GitKraken Pro.",
-            "proPromoLabelSmall": "SAVE 60% for a limited time!",
-            "toolbarLinkLabelOverride": "Save 60% on Pro"
+            "advancedPromoLabelSmall": "66% Off Single Seat",
+            "toolbarLinkLabelOverride": "66% off Advanced"
           }
-        },
-        {
-          "key": "nullPromo"
         },
         {
           "key": "50OFFADV",
@@ -285,6 +305,7 @@
           }
         }
       ]
-    }
+    },
+    "dismissedCallouts": {}
   }
 }
