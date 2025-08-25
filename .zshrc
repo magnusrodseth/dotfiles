@@ -119,7 +119,9 @@ export PATH="$PNPM_HOME:$PATH"
 
 # Shell integrations
 source <(fzf --zsh)
-eval "$(zoxide init --cmd cd zsh)"
+if [ -z "$DISABLE_ZOXIDE" ]; then
+    eval "$(zoxide init --cmd cd zsh)"
+fi
 
 # dotnet
 export PATH="$PATH:$HOME/.dotnet/tools/"
@@ -162,3 +164,10 @@ esac
 if command -v ngrok &>/dev/null; then
     eval "$(ngrok completion)"
 fi
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/magnusrodseth/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
