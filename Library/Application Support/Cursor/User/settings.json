@@ -353,5 +353,9 @@
   "accessibility.signals.codeActionTriggered": {
     "sound": "off"
   },
-  "workbench.colorTheme": "Tokyo Night Ported Nvim"
+  "workbench.colorTheme": "Tokyo Night Ported Nvim",
+  "git.confirmSync": false,
+  "amazonQ.suppressPrompts": {
+    "amazonQChatDisclaimer": true
+  }
 }
