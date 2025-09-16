@@ -357,5 +357,11 @@
   "git.confirmSync": false,
   "amazonQ.suppressPrompts": {
     "amazonQChatDisclaimer": true
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false
   }
 }
