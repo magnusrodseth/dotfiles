@@ -25,10 +25,11 @@
     "makeABranch": true,
     "mergeABranch": true,
     "introTutorialWelcomeStepSkipped": true,
-    "installDate": 1724745480020
+    "installDate": 1724745480020,
+    "acknowledgedTipAiMergeConflictResolution": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.3.0",
+  "lastReleaseNotesDisplayed": "11.4.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -98,6 +99,9 @@
       "name": "activityStatus"
     },
     {
+      "name": "ashtest"
+    },
+    {
       "name": "changePriceEnabled"
     },
     {
@@ -147,6 +151,12 @@
     },
     {
       "name": "gkdOnboardingTutorial_10_5_0"
+    },
+    {
+      "name": "gkDotDevAutoConnectTargetProvider"
+    },
+    {
+      "name": "gkDotDevElasticPricing"
     },
     {
       "name": "gkdReferralProgram_11_0_0"
@@ -283,10 +293,21 @@
     }
   },
   "webConfig": {
-    "lastUpdatedAt": "2025-08-25T09:20:29.777Z",
+    "lastUpdatedAt": "2025-09-16T05:47:32.210Z",
     "config": {
       "callouts": [],
       "promos": [
+        {
+          "key": "BYTE256_2025",
+          "code": "BYTE256",
+          "startsOn": "2025-09-08T23:59:00.000Z",
+          "expiresOn": "2025-09-20T09:59:00.000Z",
+          "content": {
+            "promoBadgeMarkdown": "**Happy International Programmer's Day!**\n\nSave 60-85% on GitKraken Pro.",
+            "proPromoLabelSmall": "SAVE 60-85% for a limited time!",
+            "toolbarLinkLabelOverride": "Save 60-85% on Pro"
+          }
+        },
         {
           "key": "2XTOKENS25",
           "code": "2XTOKENS",
@@ -307,5 +328,6 @@
       ]
     },
     "dismissedCallouts": {}
-  }
+  },
+  "lastSatsfactionSurveyDate": 1756733678286
 }
