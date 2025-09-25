@@ -96,103 +96,140 @@
   },
   "userFeatures": [
     {
-      "name": "activityStatus"
+      "name": "activityStatus",
+      "value": true
     },
     {
-      "name": "ashtest"
+      "name": "ashtest",
+      "value": 3.14
     },
     {
-      "name": "changePriceEnabled"
+      "name": "changePriceEnabled",
+      "value": true
     },
     {
-      "name": "cli"
+      "name": "cli",
+      "value": true
     },
     {
-      "name": "experimentalAiCommmitMsg"
+      "name": "experimentalAiCommmitMsg",
+      "value": true
     },
     {
-      "name": "experimentalGitBinary"
+      "name": "experimentalGitBinary",
+      "value": true
     },
     {
-      "name": "experimentalGitBinaryDefaultOn960"
+      "name": "experimentalGitBinaryDefaultOn960",
+      "value": true
     },
     {
-      "name": "experimentalGitBinaryDefaultOn971"
+      "name": "experimentalGitBinaryDefaultOn971",
+      "value": true
     },
     {
-      "name": "experimentalGitBinarySpawnServer961"
+      "name": "experimentalGitBinarySpawnServer961",
+      "value": true
     },
     {
-      "name": "gitBash"
+      "name": "gitBash",
+      "value": true
     },
     {
-      "name": "gitkraken"
+      "name": "gitkraken",
+      "value": true
     },
     {
-      "name": "gkApi"
+      "name": "gkApi",
+      "value": true
     },
     {
-      "name": "gkdAIFeedback_11_2_0"
+      "name": "gkdAIFeedback_11_2_0",
+      "value": true
     },
     {
-      "name": "gkdAIMergeConflictResolutionNudge_11_3_0"
+      "name": "gkdAIMergeConflictResolutionNudge_11_3_0",
+      "value": true
     },
     {
-      "name": "gkdCommitComposeWipButtonBottom_11_3_0"
+      "name": "gkdCommitComposeWipButtonBottom_11_3_0",
+      "value": true
     },
     {
-      "name": "gkdConflictPreventionFeedback_11_1_0"
+      "name": "gkdConflictPreventionFeedback_11_1_0",
+      "value": true
     },
     {
-      "name": "gkdevAllowInviteMessages"
+      "name": "gkdevAllowInviteMessages",
+      "value": true
     },
     {
-      "name": "gkDevReferralSystem"
+      "name": "gkDevReferralSystem",
+      "value": true
     },
     {
-      "name": "gkdOnboardingTutorial_10_5_0"
+      "name": "gkdOnboardingTutorial_10_5_0",
+      "value": true
     },
     {
-      "name": "gkDotDevAutoConnectTargetProvider"
+      "name": "gkDotDevAutoConnectTargetProvider",
+      "value": true
     },
     {
-      "name": "gkDotDevElasticPricing"
+      "name": "gkDotDevElasticPricing",
+      "value": true
     },
     {
-      "name": "gkdReferralProgram_11_0_0"
+      "name": "gkdReferralProgram_11_0_0",
+      "value": true
     },
     {
-      "name": "gkdTrialStartModalPromoMessage_11_1_0"
+      "name": "gkdTrialStartModalPromoMessage_11_1_0",
+      "value": true
     },
     {
-      "name": "gkdTutorialSkipFirstStep_10_8_0"
+      "name": "gkdTutorialSkipFirstStep_10_8_0",
+      "value": true
     },
     {
-      "name": "goldenTicketSpecial"
+      "name": "gkdUpgradeLicenseFlowVariant_11_5_0",
+      "value": "checkout"
     },
     {
-      "name": "onboardingGuide"
+      "name": "goldenTicketSpecial",
+      "value": true
     },
     {
-      "name": "privateRepoModalTest_10_5_0"
+      "name": "onboardingGuide",
+      "value": true
     },
     {
-      "name": "registeredForGST"
+      "name": "privateRepoModalTest_10_5_0",
+      "value": true
     },
     {
-      "name": "terminalInsideRepoTab"
+      "name": "registeredForGST",
+      "value": true
     },
     {
-      "name": "unregisteredTrials"
+      "name": "terminalInsideRepoTab",
+      "value": true
     },
     {
-      "name": "useNewTrialStartModalTest_10_8_0"
+      "name": "unregisteredTrials",
+      "value": true
     },
     {
-      "name": "velocityInClient_9_0_0"
+      "name": "useNewTrialStartModalTest_10_8_0",
+      "value": true
     },
     {
-      "name": "workspacesPRComplexity"
+      "name": "velocityInClient_9_0_0",
+      "value": true
+    },
+    {
+      "name": "workspacesPRComplexity",
+      "value": true
     }
   ],
   "fuzzyFinderMetadata": {
@@ -293,7 +330,7 @@
     }
   },
   "webConfig": {
-    "lastUpdatedAt": "2025-09-16T05:47:32.210Z",
+    "lastUpdatedAt": "2025-09-22T14:24:34.915Z",
     "config": {
       "callouts": [],
       "promos": [
