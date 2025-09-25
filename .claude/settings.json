@@ -25,5 +25,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); current_dir=$(echo \"$input\" | jq -r '.workspace.current_dir'); model=$(echo \"$input\" | jq -r '.model.display_name'); style=$(echo \"$input\" | jq -r '.output_style.name'); printf \"\\033[2m%s\\033[0m | \\033[34m%s\\033[0m\" \"$model\" \"$(basename \"$current_dir\")\"; if [ -d \"$current_dir/.git\" ]; then cd \"$current_dir\" && branch=$(git branch --show-current 2>/dev/null) && [ -n \"$branch\" ] && printf \" \\033[90m%s\\033[0m\" \"$branch\" && (git diff --quiet && git diff --cached --quiet || printf \"\\033[90m*\\033[0m\"); fi; [ \"$style\" != \"default\" ] && printf \" | \\033[33m%s\\033[0m\" \"$style\"; echo"
   }
 }
