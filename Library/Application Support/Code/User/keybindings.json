@@ -388,10 +388,6 @@
     "when": "workbench.panel.markers.view.active"
   },
   {
-    "key": "cmd+e",
-    "command": "composerMode.background"
-  },
-  {
     "key": "shift+enter",
     "command": "workbench.action.terminal.sendSequence",
     "args": {
@@ -418,5 +414,19 @@
     "key": "cmd+k",
     "command": "-cursorai.action.generateInTerminal",
     "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported || terminalHasBeenCreated && terminalPromptBarVisible || terminalProcessSupported && terminalPromptBarVisible"
+  },
+  {
+    "key": "cmd+j",
+    "command": "-workbench.action.togglePanel"
+  },
+  {
+    "key": "cmd+j",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  {
+    "key": "ctrl+shift+[Equal]",
+    "command": "-workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
   }
 ]

@@ -366,5 +366,6 @@
   },
   "accessibility.signals.codeActionTriggered": {
     "sound": "off"
-  }
+  },
+  "github.copilot.nextEditSuggestions.enabled": true
 }

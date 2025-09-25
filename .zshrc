@@ -132,6 +132,9 @@ export PATH="/Library/TeX/texbin:$PATH"
 # deno
 export PATH="/Users/magnusrodseth/.deno/bin:$PATH"
 
+# bun
+export PATH="/Users/magnusrodseth/.bun/bin:$PATH"
+
 # Check if the ignored folder exists, and source all files in it
 if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
     for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
