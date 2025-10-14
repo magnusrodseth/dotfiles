@@ -368,5 +368,7 @@
   "terminal.integrated.automationProfile.osx": {
     "terminal.integrated.defaultLocation": "panel",
     "workbench.panel.defaultLocation": "left"
-  }
+  },
+  "claude-code.selectedModel": "default",
+  "github.copilot.selectedCompletionModel": ""
 }

@@ -1,5 +1,5 @@
 {
-  "lastUpgradeScriptRun": "v11.3.0",
+  "lastUpgradeScriptRun": "v11.5.0",
   "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
   "appDateFormat": "DD/MM/YY",
@@ -29,7 +29,7 @@
     "acknowledgedTipAiMergeConflictResolution": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.4.0",
+  "lastReleaseNotesDisplayed": "11.5.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -49,20 +49,7 @@
     }
   },
   "userId": "31aa0181-0956-4a85-b13a-4f9720ad0ebb",
-  "licensedFeatures": [
-    "pro",
-    "gitgui:pro",
-    "gitlens:pro",
-    "bundle:pro",
-    "gitkraken_v1:pro",
-    "suite:pro",
-    "student",
-    "gitgui:student",
-    "gitlens:student",
-    "bundle:student",
-    "gitkraken_v1:student",
-    "suite:student"
-  ],
+  "licensedFeatures": [],
   "orgSettingsByOrgId": {
     "65c5b5e52cebeb4f193295da": {
       "aiSettings": {
@@ -100,10 +87,6 @@
       "value": true
     },
     {
-      "name": "ashtest",
-      "value": 3.14
-    },
-    {
       "name": "changePriceEnabled",
       "value": true
     },
@@ -113,18 +96,6 @@
     },
     {
       "name": "experimentalAiCommmitMsg",
-      "value": true
-    },
-    {
-      "name": "experimentalGitBinary",
-      "value": true
-    },
-    {
-      "name": "experimentalGitBinaryDefaultOn960",
-      "value": true
-    },
-    {
-      "name": "experimentalGitBinaryDefaultOn971",
       "value": true
     },
     {
@@ -141,6 +112,10 @@
     },
     {
       "name": "gkApi",
+      "value": true
+    },
+    {
+      "name": "gkdAIComposeCommitsNudge_11_5_0",
       "value": true
     },
     {
@@ -176,7 +151,7 @@
       "value": true
     },
     {
-      "name": "gkDotDevElasticPricing",
+      "name": "gkDotDevUpdateProfilePicture",
       "value": true
     },
     {
@@ -188,12 +163,8 @@
       "value": true
     },
     {
-      "name": "gkdTutorialSkipFirstStep_10_8_0",
-      "value": true
-    },
-    {
       "name": "gkdUpgradeLicenseFlowVariant_11_5_0",
-      "value": "checkout"
+      "value": "pricingPage"
     },
     {
       "name": "goldenTicketSpecial",
@@ -330,7 +301,7 @@
     }
   },
   "webConfig": {
-    "lastUpdatedAt": "2025-09-22T14:24:34.915Z",
+    "lastUpdatedAt": "2025-10-13T12:14:57.886Z",
     "config": {
       "callouts": [],
       "promos": [
