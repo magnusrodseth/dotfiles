@@ -5,3 +5,8 @@ ignored
 **/openai.sh
 .config/github-copilot/**
 **/stripe/config.toml
+.config/StardewValley
+.config/swiftpm
+.config/zed/prompts
+.config/zed/embeddings
+.config/zed/conversations

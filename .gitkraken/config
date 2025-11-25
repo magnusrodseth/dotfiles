@@ -1,5 +1,5 @@
 {
-  "lastUpgradeScriptRun": "v11.5.0",
+  "lastUpgradeScriptRun": "v11.6.0",
   "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
   "appDateFormat": "DD/MM/YY",
@@ -26,10 +26,11 @@
     "mergeABranch": true,
     "introTutorialWelcomeStepSkipped": true,
     "installDate": 1724745480020,
-    "acknowledgedTipAiMergeConflictResolution": true
+    "acknowledgedTipAiMergeConflictResolution": true,
+    "acknowledgedTipAiComposeCommits": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.5.0",
+  "lastReleaseNotesDisplayed": "11.6.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -71,6 +72,7 @@
       },
       "memberInvitesRequireApproval": true,
       "conflictDetectionEnabled": true,
+      "insightsEnabled": false,
       "aiEnabled": true,
       "enforceAiProviders": false,
       "aiProviders": {},
@@ -147,7 +149,19 @@
       "value": true
     },
     {
+      "name": "gkDotDevAIAutomations",
+      "value": true
+    },
+    {
       "name": "gkDotDevAutoConnectTargetProvider",
+      "value": true
+    },
+    {
+      "name": "gkDotDevDefaultCouponCode",
+      "value": "50OFFPRO101125"
+    },
+    {
+      "name": "gkDotDevInsightsVisxGraphs",
       "value": true
     },
     {
@@ -275,17 +289,24 @@
             1754054477211
           ],
           "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/aoc-2025/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/aoc-2025/",
+          "timestamps": [
+            1761115703327
+          ],
+          "total": 1
         }
       }
     }
   },
   "windowSettings": {
-    "x": 0,
-    "y": 38,
+    "x": 96,
+    "y": 31,
     "width": 1728,
-    "height": 1055,
+    "height": 1049,
     "fullScreen": false,
-    "maximized": false
+    "maximized": true
   },
   "commits": {
     "maxCommitsInGraph": 2000
@@ -301,41 +322,24 @@
     }
   },
   "webConfig": {
-    "lastUpdatedAt": "2025-10-13T12:14:57.886Z",
+    "lastUpdatedAt": "2025-11-24T15:10:12.157Z",
     "config": {
       "callouts": [],
       "promos": [
         {
-          "key": "BYTE256_2025",
-          "code": "BYTE256",
-          "startsOn": "2025-09-08T23:59:00.000Z",
-          "expiresOn": "2025-09-20T09:59:00.000Z",
+          "key": "CYBERWEEK25",
+          "code": "CYBERWEEK25",
+          "startsOn": "2025-11-23T23:59:00.000Z",
+          "expiresOn": "2025-12-06T09:59:00.000Z",
           "content": {
-            "promoBadgeMarkdown": "**Happy International Programmer's Day!**\n\nSave 60-85% on GitKraken Pro.",
-            "proPromoLabelSmall": "SAVE 60-85% for a limited time!",
-            "toolbarLinkLabelOverride": "Save 60-85% on Pro"
-          }
-        },
-        {
-          "key": "2XTOKENS25",
-          "code": "2XTOKENS",
-          "startsOn": "2025-07-21T23:59:00.000Z",
-          "expiresOn": "2025-07-31T09:59:00.000Z",
-          "content": {
-            "advancedPromoLabelSmall": "66% Off Single Seat",
-            "toolbarLinkLabelOverride": "66% off Advanced"
-          }
-        },
-        {
-          "key": "50OFFADV",
-          "code": "50OFFADV",
-          "content": {
-            "advancedPromoLabelSmall": "SAVE 50% for a limited time!"
+            "promoBadgeMarkdown": "**Cyber Week Sale!**\n\nSave 50% on GitKraken Pro.",
+            "proPromoLabelSmall": "SAVE 50% for a limited time!",
+            "toolbarLinkLabelOverride": "Save 50% on Pro"
           }
         }
       ]
     },
     "dismissedCallouts": {}
   },
-  "lastSatsfactionSurveyDate": 1756733678286
+  "lastSatisfactionSurveyDate": 1756733678286
 }

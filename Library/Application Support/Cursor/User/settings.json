@@ -369,6 +369,7 @@
     "terminal.integrated.defaultLocation": "panel",
     "workbench.panel.defaultLocation": "left"
   },
-  "claude-code.selectedModel": "default",
-  "github.copilot.selectedCompletionModel": ""
+  "github.copilot.selectedCompletionModel": "",
+  "claudeCode.selectedModel": "default",
+  "claudeCode.useTerminal": true
 }
