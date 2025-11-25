@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git diff:*), Bash(git commit:*), Bash(git push:*), Bash(git log:*), Bash(git branch:*)
 description: Commit all changes and push to remote
+model: claude-haiku-4-5
 ---
 
 ## Context
@@ -19,7 +20,8 @@ description: Commit all changes and push to remote
 5. Push to the current branch
 
 Use the commit message format:
-```
+
+```txt
 <type>: <short description>
 
 <optional body if changes are complex>
