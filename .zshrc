@@ -79,9 +79,9 @@ alias cat="bat"
 alias cp='xcp'
 alias ps="procs"
 alias top="btm"
-alias c="code"
 # alias c.="code ."
-alias c.="cursor ."
+# alias c.="cursor ."
+alias c.="surf ."
 alias cd..="cd .."
 alias tar-unzip="tar -xvf"
 alias tar-zip="tar -cvf"
@@ -95,6 +95,7 @@ alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
+alias clc="claude --continue"
 
 # Source all custom functions in the zsh/functions directory
 if [ -d "$HOME/zsh/functions" ]; then
@@ -174,3 +175,9 @@ fpath=(/Users/magnusrodseth/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+# Added by Antigravity
+export PATH="/Users/magnusrodseth/.antigravity/antigravity/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/magnusrodseth/.codeium/windsurf/bin:$PATH"
