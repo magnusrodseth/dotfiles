@@ -13,9 +13,11 @@
         "type": "git-branch",
         "color": "brightBlack",
         "rawValue": true
-      },
+      }
+    ],
+    [
       {
-        "id": "b13e2d85-6e75-4919-a13f-219188db262b",
+        "id": "6da07567-2ecd-4d21-a52e-3449046e6f6b",
         "type": "context-percentage-usable",
         "color": "brightBlack",
         "rawValue": false,
@@ -24,7 +26,6 @@
         }
       }
     ],
-    [],
     []
   ],
   "flexMode": "full-minus-40",
