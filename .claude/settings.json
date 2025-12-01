@@ -1,4 +1,16 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(git -C:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git push)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ]
+  },
   "env": {
     "DISABLE_ZOXIDE": "1"
   },
