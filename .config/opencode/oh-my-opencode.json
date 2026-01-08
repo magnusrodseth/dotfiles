@@ -3,24 +3,24 @@
   "google_auth": false,
   "agents": {
     "librarian": {
-      "model": "google/gemini-3-flash"
+      "model": "google/gemini-3-flash-preview"
     },
     "explore": {
-      "model": "google/gemini-3-flash"
+      "model": "google/gemini-3-flash-preview"
     },
     "oracle": {
       "model": "anthropic/claude-opus-4-5"
     },
     "frontend-ui-ux-engineer": {
-      "model": "google/gemini-3-pro"
+      "model": "google/gemini-3-pro-preview"
     },
     "document-writer": {
-      "model": "google/gemini-3-pro",
+      "model": "google/gemini-3-pro-preview",
       "description": "Norwegian technical blog writer for AI and agentic development patterns",
       "prompt_append": "You are writing for a Norwegian technical blog about AI and agentic development patterns. Follow AGENTS.md exactly. Always write in Norwegian (bokmål) but keep technical terms in English (e.g., 'embedding', 'state machine', 'prompt engineering')."
     },
     "multimodal-looker": {
-      "model": "google/gemini-3-flash"
+      "model": "google/gemini-3-flash-preview"
     }
   }
 }
