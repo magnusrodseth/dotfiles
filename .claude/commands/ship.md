@@ -25,8 +25,6 @@ Use the commit message format:
 <type>: <short description>
 
 <optional body if changes are complex>
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 If there are no changes to commit, inform me and do not create an empty commit.
