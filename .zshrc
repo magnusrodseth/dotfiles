@@ -97,6 +97,7 @@ alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
 alias clc="claude --continue"
 alias ship='claude "/ship"'
+alias oc='opencode'
 alias solve='cd ~/dev/personal/aoc-2025 && claude --dangerously-skip-permissions "/solve"'
 
 # Source all custom functions in the zsh/functions directory
