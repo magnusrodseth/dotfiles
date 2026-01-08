@@ -30,7 +30,7 @@
     "acknowledgedTipAiComposeCommits": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.6.0",
+  "lastReleaseNotesDisplayed": "11.7.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -158,10 +158,26 @@
     },
     {
       "name": "gkDotDevDefaultCouponCode",
-      "value": "50OFFPRO101125"
+      "value": "50OFFPRO26"
+    },
+    {
+      "name": "gkDotDevGitlensPricingPageTest",
+      "value": true
+    },
+    {
+      "name": "gkDotDevInsightsBitbucket",
+      "value": true
+    },
+    {
+      "name": "gkDotDevInsightsMultiDashboards",
+      "value": true
     },
     {
       "name": "gkDotDevInsightsVisxGraphs",
+      "value": true
+    },
+    {
+      "name": "gkDotDevShowNewPriceComponent",
       "value": true
     },
     {
@@ -296,6 +312,13 @@
             1761115703327
           ],
           "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/naustet/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/naustet/",
+          "timestamps": [
+            1766583440218
+          ],
+          "total": 1
         }
       }
     }
@@ -322,7 +345,7 @@
     }
   },
   "webConfig": {
-    "lastUpdatedAt": "2025-11-24T15:10:12.157Z",
+    "lastUpdatedAt": "2025-12-24T13:38:47.105Z",
     "config": {
       "callouts": [],
       "promos": [
