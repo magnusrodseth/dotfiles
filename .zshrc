@@ -111,7 +111,7 @@ if [ -d "$HOME/zsh/functions" ]; then
 fi
 
 # Set the default EDITOR
-export EDITOR="$(which cursor)"
+export EDITOR="windsurf -w"
 export VISUAL="$EDITOR"
 export LC_ALL=en_US.UTF-8
 
