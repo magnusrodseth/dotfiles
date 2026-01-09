@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "plugins": {
+    "n8n-mcp-skills@n8n-mcp-skills": [
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/n8n-mcp-skills/n8n-mcp-skills/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2025-12-17T09:38:32.726Z",
+        "lastUpdated": "2026-01-08T08:19:57.407Z",
+        "gitCommitSha": "ec350daa6e148733ddb7d0c74b25c8dc69879b12"
+      }
+    ],
+    "agent-orchestration@claude-code-workflows": [
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-workflows/agent-orchestration/1.2.0",
+        "version": "1.2.0",
+        "installedAt": "2026-01-09T15:22:01.838Z",
+        "lastUpdated": "2026-01-09T15:22:01.838Z"
+      }
+    ],
+    "context-management@claude-code-workflows": [
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-workflows/context-management/1.2.0",
+        "version": "1.2.0",
+        "installedAt": "2026-01-09T15:22:02.888Z",
+        "lastUpdated": "2026-01-09T15:22:02.888Z"
+      }
+    ],
+    "feature-dev@claude-code-plugins": [
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-plugins/feature-dev/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-09T15:22:06.917Z",
+        "lastUpdated": "2026-01-09T15:22:06.917Z"
+      }
+    ],
+    "ralph-wiggum@claude-code-plugins": [
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-plugins/ralph-wiggum/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-09T15:22:07.278Z",
+        "lastUpdated": "2026-01-09T15:22:07.278Z"
+      }
+    ]
+  }
+}

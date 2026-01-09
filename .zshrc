@@ -98,6 +98,7 @@ alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
 alias clc="claude --continue"
 alias ship='claude "/ship"'
 alias oc='opencode'
+sisyphus() { claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/commands/sisyphus.md)"; }
 alias solve='cd ~/dev/personal/aoc-2025 && claude --dangerously-skip-permissions "/solve"'
 
 # Source all custom functions in the zsh/functions directory
