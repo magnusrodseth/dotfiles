@@ -3,10 +3,10 @@
   "google_auth": false,
   "agents": {
     "librarian": {
-      "model": "google/gemini-3-flash-preview"
+      "model": "anthropic/claude-sonnet-4"
     },
     "explore": {
-      "model": "google/gemini-3-flash-preview"
+      "model": "anthropic/claude-sonnet-4"
     },
     "oracle": {
       "model": "anthropic/claude-opus-4-5"
