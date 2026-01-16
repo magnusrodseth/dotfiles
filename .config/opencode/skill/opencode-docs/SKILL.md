@@ -33,6 +33,16 @@ description: OpenCode + OhMyOpenCode configuration reference - agents, tools, MC
 
 ## Agents
 
+Agents are specialized AI assistants with custom prompts, models, and tool access.
+
+### Agent Types
+
+| Type | Description | Invocation |
+|------|-------------|------------|
+| **primary** | Main assistants for direct interaction | Tab key cycles, or configured `switch_agent` keybind |
+| **subagent** | Specialized assistants for specific tasks | @ mention or invoked by primary agents |
+| **all** | Can be used as both (default if not specified) | Both methods |
+
 ### Built-in Primary Agents
 | Agent | Purpose | Default Model |
 |-------|---------|---------------|
@@ -64,40 +74,90 @@ description: OpenCode + OhMyOpenCode configuration reference - agents, tools, MC
 .claude/agents/*.md               - Claude Code compat (project)
 ```
 
-### Agent Markdown Format
+### Creating Agents
+
+**Interactive CLI:**
+```bash
+opencode agent create
+```
+This will ask where to save (global/project), description, generate prompt, select tools, and create the markdown file.
+
+**Manual - Markdown (recommended):**
+Create `~/.config/opencode/agent/<name>.md`:
 ```markdown
 ---
-description: What this agent does
-mode: subagent           # primary | subagent | all
-model: provider/model-id
-temperature: 0.3
+description: Required - what this agent does (shown in @ menu)
+mode: subagent           # primary | subagent | all (default: all)
+model: anthropic/claude-sonnet-4-20250514
+temperature: 0.3         # 0.0-1.0 (default: model-specific)
+maxSteps: 10             # Optional: limit agentic iterations
+disable: false           # Set true to disable
+hidden: false            # Set true to hide from @ autocomplete (subagents only)
 tools:
   write: false
+  edit: false
   bash: false
+  mymcp_*: false         # Wildcards supported
 permission:
-  edit: deny
+  edit: deny             # allow | deny | ask
   bash:
-    "git *": allow
+    "*": ask             # Default for all commands
+    "git status": allow  # Specific command override
+    "rm -rf *": deny     # Last matching rule wins
+  task:                  # Control which subagents this agent can invoke
+    "*": deny
+    "code-reviewer": ask
+    "my-helper-*": allow
 ---
 
 System prompt goes here.
+You can include:
+- Detailed instructions
+- Code examples
+- Behavioral guidelines
 ```
 
-### Agent JSON Config (opencode.json)
+**Manual - JSON (opencode.json):**
 ```json
 {
   "agent": {
     "my-agent": {
       "description": "Required description",
       "mode": "subagent",
-      "model": "anthropic/claude-sonnet-4",
+      "model": "anthropic/claude-sonnet-4-20250514",
       "temperature": 0.3,
-      "tools": { "write": false },
-      "permission": { "edit": "deny" }
+      "maxSteps": 10,
+      "tools": { "write": false, "edit": false },
+      "permission": { 
+        "edit": "deny",
+        "bash": { "*": "ask", "git *": "allow" }
+      },
+      "prompt": "{file:./prompts/my-agent.txt}"
     }
   }
 }
 ```
+
+### Configuration Options Reference
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `description` | string | **Required**. Shown in @ autocomplete menu |
+| `mode` | string | `primary`, `subagent`, or `all` (default) |
+| `model` | string | `provider/model-id` format. If not set: primary uses global, subagent uses parent's |
+| `temperature` | number | 0.0-1.0. Lower = deterministic, higher = creative |
+| `maxSteps` | number | Max agentic iterations before forced text response |
+| `disable` | boolean | Set true to disable agent |
+| `hidden` | boolean | Hide from @ menu (subagents only, still invokable by Task tool) |
+| `tools` | object | Enable/disable tools. Supports wildcards (`mcp_*: false`) |
+| `permission` | object | `edit`, `bash`, `webfetch`, `task` permissions |
+| `prompt` | string | System prompt or `{file:./path.txt}` for external file |
+| `reasoningEffort` | string | Provider-specific (e.g., OpenAI's `high`/`medium`/`low`) |
+
+### Temperature Guidelines
+- `0.0-0.2`: Deterministic, ideal for code analysis and planning
+- `0.3-0.5`: Balanced, good for general development
+- `0.6-1.0`: Creative, useful for brainstorming
 
 ### OhMyOpenCode Agent Override (oh-my-opencode.json)
 ```json
@@ -110,6 +170,16 @@ System prompt goes here.
   "disabled_agents": ["oracle", "frontend-ui-ux-engineer"]
 }
 ```
+
+### Usage
+
+**Switch primary agents:** Tab key or `switch_agent` keybind
+
+**Invoke subagents:** `@agent-name your request here`
+
+**Navigate sessions:** When subagents create child sessions:
+- `<Leader>+Right` - cycle forward through parent → children
+- `<Leader>+Left` - cycle backward
 
 ---
 
@@ -490,7 +560,7 @@ cat ./.opencode/oh-my-opencode.json
 // oh-my-opencode.json
 {
   "agents": {
-    "oracle": { "model": "anthropic/claude-sonnet-4" }
+    "oracle": { "model": "anthropic/claude-sonnet-4-20250514" }
   }
 }
 ```
