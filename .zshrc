@@ -186,3 +186,4 @@ export PATH="/Users/magnusrodseth/.antigravity/antigravity/bin:$PATH"
 
 # Added by Windsurf
 export PATH="/Users/magnusrodseth/.codeium/windsurf/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
