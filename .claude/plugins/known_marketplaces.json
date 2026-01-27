@@ -29,7 +29,7 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-01-22T07:35:08.796Z"
+    "lastUpdated": "2026-01-26T11:51:58.613Z"
   },
   "claude-code-plugins": {
     "source": {
@@ -37,7 +37,7 @@
       "repo": "anthropics/claude-code"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/claude-code-plugins",
-    "lastUpdated": "2026-01-22T07:28:22.177Z"
+    "lastUpdated": "2026-01-27T09:05:56.049Z"
   },
   "claude-code-workflows": {
     "source": {
