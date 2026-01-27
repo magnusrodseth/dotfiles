@@ -33,6 +33,10 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Bottle.aiff"
+          },
+          {
+            "type": "command",
+            "command": "echo '⚠️  STOP CHECK: Is the task FULLY complete? All errors fixed? All todos done? If not, continue working.'"
           }
         ]
       }
