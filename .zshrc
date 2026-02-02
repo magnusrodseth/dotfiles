@@ -96,8 +96,17 @@ alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
 alias clc="claude --continue"
-alias ship='claude "/ship"'
-alias oc='opencode'
+# Headless ship - optimized for speed
+unalias ship 2>/dev/null
+function ship {
+  claude -p "Stage all changes with 'git add -A'. Review the diff. Create a concise conventional commit message (<type>: <description>). Commit and push to current branch. If no changes, report and exit." \
+    --model claude-haiku-4-5 \
+    --dangerously-skip-permissions \
+    --no-session-persistence \
+    --allowedTools "Bash(git *)"
+}
+alias oc='opencode'                                                # Full oh-my-opencode with cloud models
+alias ocl='OPENCODE_CONFIG_DIR=~/.config/opencode-local opencode'  # Local Ollama + MCPs
 # sisyphus alias for running the Sisyphus prompt - the ultimate agent harness
 sis() { claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/commands/sisyphus.md)"; }
 alias solve='cd ~/dev/personal/aoc-2025 && claude --dangerously-skip-permissions "/solve"'
