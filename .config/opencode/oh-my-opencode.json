@@ -49,6 +49,10 @@
       "model": "google/antigravity-gemini-3-flash"
     },
     "hephaestus": {
+      "model": "anthropic/claude-opus-4-5",
+      "variant": "max"
+    },
+    "atlas": {
       "model": "anthropic/claude-opus-4-5"
     }
   },
