@@ -1,4 +1,5 @@
 @chhoumann/bunnai
+@playwright/cli
 eas-cli
 expo-cli
 pnpm

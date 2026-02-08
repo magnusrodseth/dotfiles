@@ -91,11 +91,13 @@ alias l="eza --color=always --long --no-filesize --no-time -a -I .DS_Store"
 alias download-mp3='yt-dlp -x --audio-format mp3 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias o="open ."
+alias obs="open -a Obsidian"
 alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
-alias clc="claude --continue"
+alias claude="claude --dangerously-skip-permissions"
+alias clc="claude --continue --dangerously-skip-permissions"
 # Headless ship - optimized for speed
 unalias ship 2>/dev/null
 function ship {
