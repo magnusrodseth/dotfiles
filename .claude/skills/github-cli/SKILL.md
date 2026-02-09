@@ -13,6 +13,7 @@ metadata:
 ## Prerequisites
 
 Ensure `gh` is authenticated:
+
 ```bash
 gh auth status
 ```
@@ -42,6 +43,7 @@ EOF
 ```
 
 **Issue Title Conventions:**
+
 - Start with action verb: Add, Fix, Update, Remove, Refactor, Implement
 - Be specific: "Add user authentication" not "Auth stuff"
 - Keep under 72 characters
@@ -100,6 +102,7 @@ gh label create "scope:feature-name" --description "Features for X" --color "005
 ```
 
 **Label Naming Conventions:**
+
 - Use prefixes with colon: `scope:`, `priority:`, `type:`, `status:`
 - Lowercase with hyphens: `scope:user-auth`
 - Common prefixes:
@@ -178,11 +181,13 @@ EOF
 ```
 
 **Closing Keywords (any of these work):**
+
 - `Closes #123`
 - `Fixes #123`
 - `Resolves #123`
 
 **PR Title Conventions:**
+
 - Match the issue title or summarize the change
 - Use imperative mood: "Add feature" not "Added feature"
 - Keep under 72 characters
