@@ -75,13 +75,13 @@ alias bim="nvim"
 alias v="nvim"
 alias gitui="lazygit"
 alias tf="terraform"
-alias cat="bat"
 alias cp='xcp'
 alias ps="procs"
 alias top="btm"
 # alias c.="code ."
 # alias c.="cursor ."
 alias c.="surf ."
+alias oc="opencode"
 alias cd..="cd .."
 alias tar-unzip="tar -xvf"
 alias tar-zip="tar -cvf"
@@ -96,8 +96,10 @@ alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
 alias clc="claude --continue"
-alias ship='claude "/ship"'
+alias ship='claude -p "/ship" --dangerously-skip-permissions'
 alias solve='cd ~/dev/personal/aoc-2025 && claude --dangerously-skip-permissions "/solve"'
+# sisyphus alias for running the Sisyphus prompt - the ultimate agent harness
+sis() { claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/commands/sisyphus.md)"; }
 
 # Source all custom functions in the zsh/functions directory
 if [ -d "$HOME/zsh/functions" ]; then
@@ -117,26 +119,30 @@ export LC_ALL=en_US.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # pnpm
-export PNPM_HOME="/Users/magnusrodseth/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
 # Shell integrations
 source <(fzf --zsh)
-if [ -z "$DISABLE_ZOXIDE" ]; then
+if [ -z "$DISABLE_ZOXIDE" ] && [[ "$CLAUDECODE" != "1" ]]; then
     eval "$(zoxide init --cmd cd zsh)"
 fi
 
 # dotnet
 export PATH="$PATH:$HOME/.dotnet/tools/"
 
+# Java 21 (Homebrew)
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+export PATH="$JAVA_HOME/bin:$PATH"
+
 # latexmk for latex
 export PATH="/Library/TeX/texbin:$PATH"
 
 # deno
-export PATH="/Users/magnusrodseth/.deno/bin:$PATH"
+export PATH="$HOME/.deno/bin:$PATH"
 
 # bun
-export PATH="/Users/magnusrodseth/.bun/bin:$PATH"
+export PATH="$HOME/.bun/bin:$PATH"
 
 # Check if the ignored folder exists, and source all files in it
 if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
@@ -149,17 +155,21 @@ fi
 
 . "$HOME/.cargo/env"
 
-source /Users/magnusrodseth/.config/op/plugins.sh
+# 1Password CLI plugins (uncomment if using op CLI)
+# source "$HOME/.config/op/plugins.sh"
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
-eval "$(uv generate-shell-completion zsh)"
-eval "$(uvx --generate-shell-completion zsh)"
+# uv shell completions (requires uv to be installed)
+if command -v uv &>/dev/null; then
+    eval "$(uv generate-shell-completion zsh)"
+    eval "$(uvx --generate-shell-completion zsh)"
+fi
 eval "$(atuin init zsh)"
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/magnusrodseth/.cache/lm-studio/bin"
+export PATH="$PATH:$HOME/.cache/lm-studio/bin"
 
 # pnpm
-export PNPM_HOME="/Users/magnusrodseth/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -173,13 +183,19 @@ fi
 
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/magnusrodseth/.docker/completions $fpath)
+fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
 
 # Added by Antigravity
-export PATH="/Users/magnusrodseth/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # Added by Windsurf
-export PATH="/Users/magnusrodseth/.codeium/windsurf/bin:$PATH"
+export PATH="$HOME/.codeium/windsurf/bin:$PATH"
+
+. "$HOME/.local/bin/env"
+
+# Added by Windsurf
+export PATH="/Users/magnus.rodseth/.codeium/windsurf/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"

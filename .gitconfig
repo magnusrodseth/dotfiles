@@ -1,61 +1,12 @@
-[filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-
 [user]
-	name = magnusrodseth
 	email = magnus.rodseth@gmail.com
-
-[pull]
-	ff = only
-
-[init]
-	defaultBranch = main
-
-[core]
-    pager = delta
-
-[interactive]
-    diffFilter = delta --color-only
-
-[add.interactive]
-    useBuiltin = false # required for git 2.37.0
-
-[delta]
-    navigate = true    # use n and N to move between diff sections
-    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-    
-
-[merge]
-    conflictstyle = diff3
-
-[diff]
-    colorMoved = default
-
-[alias]
-    ; k - GitKraken in current working directory
-    k = !"open -na '/Applications/GitKraken.app/Contents/MacOS/GitKraken' --args -p $(pwd)"
-    ; ui - lazygit
-    ui = !"/usr/local/bin/lazygit"
-    ; fpo - fetch --prune origin
-    fpo = fetch --prune origin
-    ; ma - merge --abort
-    ma = merge --abort
-    ; copy-diff - copy the diff of the current branch to the clipboard
-    copy-diff = !"git diff | pbcopy && echo 'Copied to clipboard!' || echo 'Error: Failed to copy diff'"
-
-    ; remove-file-history - remove the file history of a provided file
-    remove-file-history = "!f() { \
-        if ! command -v git-filter-repo >/dev/null 2>&1; then \
-            echo 'Error: git-filter-repo is not installed. Please install it first.'; \
-            echo 'You can install it using: brew install git-filter-repo'; \
-            return 1; \
-        fi; \
-        if [ $# -eq 0 ]; then \
-            echo 'Usage: git remove-file-history <file-path>'; \
-            return 1; \
-        fi; \
-        git filter-repo --invert-paths --path \"$1\"; \
-    }; f"
+	name = magnusrodseth
+	signingkey = /Users/magnus.rodseth/.ssh/id_ed25519.pub
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgSign = true
+[gpg "ssh"]
+	allowedSignersFile = /Users/magnus.rodseth/.ssh/allowed_signers

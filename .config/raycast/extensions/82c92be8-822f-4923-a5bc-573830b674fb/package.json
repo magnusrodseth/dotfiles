@@ -15,6 +15,9 @@
     "zakj",
     "Visual-Studio-Coder"
   ],
+  "platforms": [
+    "macOS"
+  ],
   "license": "MIT",
   "commands": [
     {
@@ -66,7 +69,7 @@
     },
     {
       "name": "caffeinateFor",
-      "title": "Caffeinate For",
+      "title": "Caffeinate for ...",
       "subtitle": "Coffee",
       "description": "Prevent your Mac from sleeping for a certain time",
       "mode": "no-view",
@@ -261,15 +264,15 @@
   ],
   "dependencies": {
     "@raycast/api": "^1.91.0",
-    "@raycast/utils": "^1.12.5"
+    "@raycast/utils": "^2.2.2"
   },
   "devDependencies": {
-    "@raycast/eslint-config": "^1.0.8",
-    "@types/node": "20.11.19",
-    "@types/react": "^18.3.3",
-    "eslint": "^8.56.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "@raycast/eslint-config": "^2.1.1",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
   },
   "scripts": {
     "build": "ray build -e dist",
@@ -279,7 +282,7 @@
     "publish": "npx @raycast/api@latest publish"
   },
   "ai": {
-    "instructions": "Before running any tool, always run check-caffeination-status before to check the status",
+    "instructions": "Help users manage their Mac's sleep prevention (caffeination).\n\nBefore performing any action, check the current status with check-caffeination-status.\n\nTool selection guide:\n- User wants indefinite caffeination → use caffeinate\n- User specifies a duration (hours/minutes) → use caffeinate-for\n- User wants to caffeinate while an app runs → use caffeinate-while-app-is-running\n- User wants to set up recurring schedules → use schedule-caffeination\n- User wants to stop caffeination → use decaffeinate (note: won't work if a schedule is actively running)\n\nWhen confirming actions, mention the specific duration or condition if applicable.\n",
     "evals": [
       {
         "input": "@coffee keep my mac awake for 2 hours",
@@ -436,8 +439,5 @@
         ]
       }
     ]
-  },
-  "platforms": [
-    "macOS"
-  ]
+  }
 }
