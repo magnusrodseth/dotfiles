@@ -1,6 +1,9 @@
 return {
   "snacks.nvim",
   opts = {
+    input = {},
+    picker = {},
+    terminal = {},
     dashboard = {
       preset = {
         header = (function()

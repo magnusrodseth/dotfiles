@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "google_auth": false,
+  "disabled_mcps": ["context7"],
+  "agents": {
+    "explore": {
+      "model": "ollama/qwen2.5-coder:32b"
+    }
+  }
+}
