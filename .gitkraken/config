@@ -1,22 +1,36 @@
 {
   "lastUpgradeScriptRun": "v11.6.0",
-  "appId": "7d5e621c30d858384811c86bbd1be39d00084f5a",
+  "appId": "866df65cc4e070cd82e1e3e96e4f8298e1334779",
   "appLocale": "en-US",
-  "appDateFormat": null,
-  "appDateTimeFormat": null,
-  "appDateWordFormat": null,
-  "appDateVerboseFormat": null,
+  "appDateFormat": "DD/MM/YY",
+  "appDateTimeFormat": "DD/MM/YY @ HH:MM",
+  "appDateWordFormat": "D MMM, YYYY",
+  "appDateVerboseFormat": "DD/MM/YY @ HH:MM",
   "userMilestones": {
-    "installId": "5fa1069c-3870-4abe-af62-2e3b823dd5ea",
-    "installDate": 1764680945469,
+    "installId": "77a3bd3a-56a2-41d5-a23b-ed5fea6ebc08",
     "firstAppOpen": true,
+    "connectIntegration": true,
     "firstLoginRegister": true,
     "startATrial": true,
-    "connectIntegration": true,
-    "firstProfileCreated": true
+    "firstProfileCreated": true,
+    "completedNewUserOnboarding": true,
+    "firstRepoOpened": true,
+    "guideOpened": true,
+    "firstTimeCommitSelected": true,
+    "leftPanelToggled": true,
+    "acknowledgedCommitDetailPanel": true,
+    "acknowledgedLeftPanel": true,
+    "pushSomeCode": true,
+    "createACommit": true,
+    "makeABranch": true,
+    "mergeABranch": true,
+    "introTutorialWelcomeStepSkipped": true,
+    "installDate": 1724745480020,
+    "acknowledgedTipAiMergeConflictResolution": true,
+    "acknowledgedTipAiComposeCommits": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.6.0",
+  "lastReleaseNotesDisplayed": "11.7.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -24,36 +38,16 @@
     "repo": {},
     "tabs": {}
   },
-  "webConfig": {
-    "lastUpdatedAt": "2025-12-02T13:09:09.467Z",
-    "config": {
-      "callouts": [],
-      "promos": [
-        {
-          "key": "CYBERWEEK25",
-          "code": "CYBERWEEK25",
-          "startsOn": "2025-11-23T23:59:00.000Z",
-          "expiresOn": "2025-12-06T09:59:00.000Z",
-          "content": {
-            "promoBadgeMarkdown": "**Cyber Week Sale!**\n\nSave 50% on GitKraken Pro.",
-            "proPromoLabelSmall": "SAVE 50% for a limited time!",
-            "toolbarLinkLabelOverride": "Save 50% on Pro"
-          }
-        }
-      ]
-    },
-    "dismissedCallouts": {}
-  },
   "registration": {
     "email": "magnus.rodseth@gmail.com",
     "name": "magnusrodseth",
-    "EULA": {
-      "status": "agree_verified",
-      "version": "8.3.1"
-    },
+    "status": "activated",
     "loginType": "github",
-    "date": "2025-12-02T13:10:43.002Z",
-    "status": "activated"
+    "date": "2024-08-27T07:58:08.836Z",
+    "EULA": {
+      "version": "8.3.1",
+      "status": "agree_verified"
+    }
   },
   "userId": "31aa0181-0956-4a85-b13a-4f9720ad0ebb",
   "licensedFeatures": [],
@@ -164,10 +158,14 @@
     },
     {
       "name": "gkDotDevDefaultCouponCode",
-      "value": "50OFFPRO101125"
+      "value": "50OFFPRO26"
     },
     {
       "name": "gkDotDevGitlensPricingPageTest",
+      "value": true
+    },
+    {
+      "name": "gkDotDevInsightsBitbucket",
       "value": true
     },
     {
@@ -176,6 +174,10 @@
     },
     {
       "name": "gkDotDevInsightsVisxGraphs",
+      "value": true
+    },
+    {
+      "name": "gkDotDevShowNewPriceComponent",
       "value": true
     },
     {
@@ -230,5 +232,137 @@
       "name": "workspacesPRComplexity",
       "value": true
     }
-  ]
+  ],
+  "fuzzyFinderMetadata": {
+    "itemMetadata": {
+      "OPEN_REPO": {
+        "openRepo-/Users/magnusrodseth/dotfiles": {
+          "id": "openRepo-/Users/magnusrodseth/dotfiles",
+          "timestamps": [
+            1724745506897
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/jrc/internal/revamped/web-revamped/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/jrc/internal/revamped/web-revamped/",
+          "timestamps": [
+            1726748811523
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/Downloads/klink/": {
+          "id": "openRepo-/Users/magnusrodseth/Downloads/klink/",
+          "timestamps": [
+            1738783226689
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/ffmpeg-tools/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/ffmpeg-tools/",
+          "timestamps": [
+            1743747725830
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/ntnu/master-thesis/master-thesis-norwegian-datasets/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/ntnu/master-thesis/master-thesis-norwegian-datasets/",
+          "timestamps": [
+            1746436007213
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/bare-metal/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/bare-metal/",
+          "timestamps": [
+            1749468987250
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/capra/aws-game-day-2025/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/capra/aws-game-day-2025/",
+          "timestamps": [
+            1750409297912
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/shadcn-mcp-server/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/shadcn-mcp-server/",
+          "timestamps": [
+            1753172385449
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/convert-to/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/convert-to/",
+          "timestamps": [
+            1753957365229
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/nabostylisten": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/nabostylisten",
+          "timestamps": [
+            1754054477211
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/aoc-2025/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/aoc-2025/",
+          "timestamps": [
+            1761115703327
+          ],
+          "total": 1
+        },
+        "openRepo-/Users/magnusrodseth/dev/personal/naustet/": {
+          "id": "openRepo-/Users/magnusrodseth/dev/personal/naustet/",
+          "timestamps": [
+            1766583440218
+          ],
+          "total": 1
+        }
+      }
+    }
+  },
+  "windowSettings": {
+    "x": 96,
+    "y": 31,
+    "width": 1728,
+    "height": 1049,
+    "fullScreen": false,
+    "maximized": true
+  },
+  "commits": {
+    "maxCommitsInGraph": 2000
+  },
+  "notification": {
+    "toastPosition": "bottom-right"
+  },
+  "onboarding": {},
+  "ai": {
+    "enabled": true,
+    "providers": {
+      "ConfigurableOpenAI": {}
+    }
+  },
+  "webConfig": {
+    "lastUpdatedAt": "2025-12-24T13:38:47.105Z",
+    "config": {
+      "callouts": [],
+      "promos": [
+        {
+          "key": "CYBERWEEK25",
+          "code": "CYBERWEEK25",
+          "startsOn": "2025-11-23T23:59:00.000Z",
+          "expiresOn": "2025-12-06T09:59:00.000Z",
+          "content": {
+            "promoBadgeMarkdown": "**Cyber Week Sale!**\n\nSave 50% on GitKraken Pro.",
+            "proPromoLabelSmall": "SAVE 50% for a limited time!",
+            "toolbarLinkLabelOverride": "Save 50% on Pro"
+          }
+        }
+      ]
+    },
+    "dismissedCallouts": {}
+  },
+  "lastSatisfactionSurveyDate": 1756733678286
 }

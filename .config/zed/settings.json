@@ -14,5 +14,14 @@
     "mode": "system",
     "light": "Tokyo Night Light",
     "dark": "Catppuccin Macchiato - No Italics"
+  },
+  "context_servers": {
+    "posthog": {
+      "enabled": true,
+      "url": "https://mcp-eu.posthog.com/mcp",
+      "headers": {
+        "Authorization": "Bearer undefined"
+      }
+    }
   }
 }

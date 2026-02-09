@@ -10,3 +10,4 @@ ignored
 .config/zed/prompts
 .config/zed/embeddings
 .config/zed/conversations
+.config/opencode/antigravity-accounts.json
