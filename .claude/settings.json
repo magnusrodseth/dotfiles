@@ -1,4 +1,8 @@
 {
+  "env": {
+    "DISABLE_ZOXIDE": "1",
+    "SHELL": "/bin/bash"
+  },
   "permissions": {
     "allow": [
       "Bash(git -C:*)",
@@ -10,9 +14,6 @@
       "Bash(git diff:*)",
       "Bash(git log:*)"
     ]
-  },
-  "env": {
-    "DISABLE_ZOXIDE": "1"
   },
   "hooks": {
     "Notification": [
@@ -47,7 +48,11 @@
     "superpowers@superpowers-marketplace": false,
     "example-skills@anthropic-agent-skills": true,
     "n8n-mcp-skills@n8n-mcp-skills": true,
-    "document-skills@anthropic-agent-skills": true
+    "document-skills@anthropic-agent-skills": true,
+    "agent-orchestration@claude-code-workflows": true,
+    "ralph-loop@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "context-management@claude-code-workflows": true
   },
   "alwaysThinkingEnabled": true
 }
