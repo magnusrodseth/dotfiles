@@ -7,6 +7,7 @@ Brewfile
 install.sh
 browser/*
 images/*
+\.config/op
 
 ### Include only the select files from the User directory under Library/Application Support/Code
 !Library/Application Support/Code/User/keybindings.json

@@ -1,7 +1,8 @@
 {
   "env": {
     "DISABLE_ZOXIDE": "1",
-    "SHELL": "/bin/bash"
+    "SHELL": "/bin/bash",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
     "allow": [
@@ -12,7 +13,8 @@
       "Bash(git push)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(playwright-cli:*)"
     ]
   },
   "hooks": {
@@ -34,6 +36,10 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Bottle.aiff"
+          },
+          {
+            "type": "command",
+            "command": "echo '⚠️  STOP CHECK: Is the task FULLY complete? All errors fixed? All todos done? If not, continue working.'"
           }
         ]
       }
@@ -45,14 +51,23 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": false,
-    "example-skills@anthropic-agent-skills": true,
-    "n8n-mcp-skills@n8n-mcp-skills": true,
-    "document-skills@anthropic-agent-skills": true,
+    "n8n-mcp-skills@n8n-mcp-skills": false,
     "agent-orchestration@claude-code-workflows": true,
+    "context-management@claude-code-workflows": true,
+    "feature-dev@claude-code-plugins": true,
+    "ralph-wiggum@claude-code-plugins": true,
     "ralph-loop@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "context-management@claude-code-workflows": true
+    "superpowers@superpowers-marketplace": true,
+    "example-skills@anthropic-agent-skills": true,
+    "document-skills@anthropic-agent-skills": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true
 }

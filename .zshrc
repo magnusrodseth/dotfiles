@@ -91,12 +91,23 @@ alias l="eza --color=always --long --no-filesize --no-time -a -I .DS_Store"
 alias download-mp3='yt-dlp -x --audio-format mp3 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias o="open ."
+alias obs="open -a Obsidian"
 alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
-alias clc="claude --continue"
-alias ship='claude -p "/ship" --dangerously-skip-permissions'
+alias claude="claude --dangerously-skip-permissions"
+alias clc="claude --continue --dangerously-skip-permissions"
+# Headless ship - optimized for speed
+unalias ship 2>/dev/null
+function ship {
+  claude -p "Stage all changes with 'git add -A'. Review the diff. Create a concise conventional commit message (<type>: <description>). Commit and push to current branch. If no changes, report and exit." \
+    --model claude-haiku-4-5 \
+    --dangerously-skip-permissions \
+    --no-session-persistence \
+    --allowedTools "Bash(git *)"
+}
+alias ocl='OPENCODE_CONFIG_DIR=~/.config/opencode-local opencode'  # Local Ollama + MCPs
 alias solve='cd ~/dev/personal/aoc-2025 && claude --dangerously-skip-permissions "/solve"'
 # sisyphus alias for running the Sisyphus prompt - the ultimate agent harness
 sis() { claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/commands/sisyphus.md)"; }
@@ -111,7 +122,7 @@ if [ -d "$HOME/zsh/functions" ]; then
 fi
 
 # Set the default EDITOR
-export EDITOR="$(which cursor)"
+export EDITOR="windsurf -w"
 export VISUAL="$EDITOR"
 export LC_ALL=en_US.UTF-8
 
@@ -196,6 +207,4 @@ export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 
 . "$HOME/.local/bin/env"
 
-# Added by Windsurf
-export PATH="/Users/magnus.rodseth/.codeium/windsurf/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
