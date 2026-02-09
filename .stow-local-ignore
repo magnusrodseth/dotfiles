@@ -8,6 +8,11 @@ install.sh
 browser/*
 images/*
 \.config/op
+\.agents
+\.agent
+\.cursor
+\.kiro
+\.windsurf
 
 ### Include only the select files from the User directory under Library/Application Support/Code
 !Library/Application Support/Code/User/keybindings.json
