@@ -167,8 +167,6 @@ source /Users/magnusrodseth/.config/op/plugins.sh
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
-eval "$(atuin init zsh)"
-
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/magnusrodseth/.cache/lm-studio/bin"
 
@@ -198,3 +196,14 @@ export PATH="/Users/magnusrodseth/.antigravity/antigravity/bin:$PATH"
 # Added by Windsurf
 export PATH="/Users/magnusrodseth/.codeium/windsurf/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+# bun completions
+[ -s "/Users/magnusrodseth/.bun/_bun" ] && source "/Users/magnusrodseth/.bun/_bun"
+
+# Report CWD to terminal via OSC 7 (fixes Ghostty new tab directory inheritance)
+# Must be at the end of .zshrc so it isn't overridden by plugins
+_osc7_cwd() {
+  printf '\e]7;file://%s%s\e\\' "$HOST" "$PWD"
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _osc7_cwd
