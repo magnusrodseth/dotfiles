@@ -22,35 +22,35 @@
       "model": "github-copilot/gpt-5.2"
     },
     "oracle": {
-      "model": "github-copilot/gpt-5.3-codex"
+      "model": "github-copilot/gpt-5.2"
     },
     "librarian": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "anthropic/claude-sonnet-4-6"
     },
     "explore": {
-      "model": "github-copilot/gpt-5-mini"
+      "model": "github-copilot/grok-code-fast-1"
     },
     "general": {
       "model": "anthropic/claude-opus-4-6"
     },
     "document-writer": {
-      "model": "github-copilot/gemini-3-pro-preview",
+      "model": "github-copilot/gemini-3-pro",
       "description": "Norwegian technical blog writer for AI and agentic development patterns",
       "prompt_append": "You are writing for a Norwegian technical blog about AI and agentic development patterns. Follow AGENTS.md exactly. Always write in Norwegian (bokmal) but keep technical terms in English (e.g., 'embedding', 'state machine', 'prompt engineering')."
     },
     "multimodal-looker": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "github-copilot/gemini-3-flash"
     },
     "hephaestus": {
       "model": "github-copilot/gpt-5.3-codex"
     },
     "atlas": {
-      "model": "anthropic/claude-sonnet-4-6"
+      "model": "anthropic/claude-sonnet-4-5"
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "github-copilot/gemini-3-pro-preview"
+      "model": "github-copilot/gemini-3-pro"
     },
     "ultrabrain": {
       "model": "github-copilot/gpt-5.3-codex",
@@ -61,7 +61,7 @@
       "reasoningEffort": "medium"
     },
     "artistry": {
-      "model": "github-copilot/gemini-3-pro-preview"
+      "model": "github-copilot/gemini-3-pro"
     },
     "quick": {
       "model": "anthropic/claude-haiku-4-5"
@@ -74,7 +74,7 @@
       "variant": "max"
     },
     "writing": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "github-copilot/gemini-3-flash"
     }
   },
   "background_task": {
@@ -83,8 +83,5 @@
       "anthropic": 3,
       "github-copilot": 5
     }
-  },
-  "_migrations": [
-    "model-version:anthropic/claude-sonnet-4-5->anthropic/claude-sonnet-4-6"
-  ]
+  }
 }
