@@ -16,3 +16,35 @@ ignored
 .cursor/
 .kiro/
 .windsurf/
+
+# Claude Code runtime
+.claude/cache/
+.claude/debug/
+.claude/file-history/
+.claude/history.jsonl
+.claude/ide/
+.claude/paste-cache/
+.claude/plans/
+.claude/plugins/cache/
+.claude/plugins/install-counts-cache.json
+.claude/plugins/marketplaces/
+.claude/projects/
+.claude/shell-snapshots/
+.claude/stats-cache.json
+.claude/statsig/
+.claude/tasks/
+.claude/telemetry/
+.claude/todos/
+.claude/transcripts/
+
+# Windsurf runtime (track User/settings.json only)
+Library/Application Support/Windsurf/*
+!Library/Application Support/Windsurf/User/
+Library/Application Support/Windsurf/User/*
+!Library/Application Support/Windsurf/User/settings.json
+
+# MLflow
+.config/mlflow/
+
+# Podman Desktop
+Library/LaunchAgents/io.podman_desktop.PodmanDesktop.plist
