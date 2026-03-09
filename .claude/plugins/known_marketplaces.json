@@ -5,7 +5,7 @@
       "repo": "obra/superpowers-marketplace"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/superpowers-marketplace",
-    "lastUpdated": "2026-02-26T14:35:49.067Z"
+    "lastUpdated": "2025-12-17T07:09:18.422Z"
   },
   "anthropic-agent-skills": {
     "source": {
@@ -13,7 +13,7 @@
       "repo": "anthropics/skills"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/anthropic-agent-skills",
-    "lastUpdated": "2026-02-26T14:35:53.685Z"
+    "lastUpdated": "2025-12-13T11:46:03.577Z"
   },
   "n8n-mcp-skills": {
     "source": {
@@ -21,7 +21,7 @@
       "repo": "czlonkowski/n8n-skills"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/n8n-mcp-skills",
-    "lastUpdated": "2026-02-26T13:17:10.467Z"
+    "lastUpdated": "2025-12-13T11:35:17.620Z"
   },
   "claude-plugins-official": {
     "source": {
@@ -29,7 +29,7 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-02-26T13:17:15.335Z"
+    "lastUpdated": "2026-03-09T08:24:24.741Z"
   },
   "claude-code-plugins": {
     "source": {
@@ -37,7 +37,7 @@
       "repo": "anthropics/claude-code"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/claude-code-plugins",
-    "lastUpdated": "2026-02-26T13:17:20.812Z"
+    "lastUpdated": "2026-03-09T08:18:17.093Z"
   },
   "claude-code-workflows": {
     "source": {
@@ -45,6 +45,6 @@
       "repo": "wshobson/agents"
     },
     "installLocation": "/Users/magnusrodseth/.claude/plugins/marketplaces/claude-code-workflows",
-    "lastUpdated": "2026-02-26T13:17:25.689Z"
+    "lastUpdated": "2026-01-09T15:21:40.376Z"
   }
 }
