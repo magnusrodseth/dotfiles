@@ -203,7 +203,7 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 # Added by Windsurf
 export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 
-. "$HOME/.local/bin/env"
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 export PATH="$HOME/.local/bin:$PATH"
 
