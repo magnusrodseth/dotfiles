@@ -30,7 +30,7 @@
     "acknowledgedTipAiComposeCommits": true
   },
   "sslWhitelist": [],
-  "lastReleaseNotesDisplayed": "11.7.0",
+  "lastReleaseNotesDisplayed": "11.6.0",
   "ui": {
     "shouldShowStartupPromoModal": false
   },
@@ -41,15 +41,15 @@
   "registration": {
     "email": "magnus.rodseth@gmail.com",
     "name": "magnusrodseth",
-    "status": "activated",
-    "loginType": "github",
+    "status": "unregistered",
+    "loginType": null,
     "date": "2024-08-27T07:58:08.836Z",
     "EULA": {
       "version": "8.3.1",
       "status": "agree_verified"
     }
   },
-  "userId": "31aa0181-0956-4a85-b13a-4f9720ad0ebb",
+  "userId": null,
   "licensedFeatures": [],
   "orgSettingsByOrgId": {
     "65c5b5e52cebeb4f193295da": {
@@ -153,6 +153,10 @@
       "value": true
     },
     {
+      "name": "gkDotDevAnnotations",
+      "value": true
+    },
+    {
       "name": "gkDotDevAutoConnectTargetProvider",
       "value": true
     },
@@ -161,15 +165,15 @@
       "value": "50OFFPRO26"
     },
     {
-      "name": "gkDotDevGitlensPricingPageTest",
+      "name": "gkDotDevHideWhatsIncludedCheckoutPageTest",
+      "value": true
+    },
+    {
+      "name": "gkDotDevInsightsAzureDevOps",
       "value": true
     },
     {
       "name": "gkDotDevInsightsBitbucket",
-      "value": true
-    },
-    {
-      "name": "gkDotDevInsightsMultiDashboards",
       "value": true
     },
     {
@@ -182,6 +186,10 @@
     },
     {
       "name": "gkDotDevUpdateProfilePicture",
+      "value": true
+    },
+    {
+      "name": "gkdPrivateRepoModalOffer_11_8_0",
       "value": true
     },
     {
