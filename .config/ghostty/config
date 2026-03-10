@@ -2,7 +2,7 @@
 theme = "tokyonight"
 
 # Set the default working directory to "~/dev"
-working-directory = "/Users/magnusrodseth/dev"
+working-directory = "/Users/magnus.rodseth/dev"
 
 # Set the font
 font-family = "FiraCode Nerd Font Mono"
