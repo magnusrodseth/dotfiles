@@ -18,6 +18,7 @@ ignored
 .windsurf/
 
 # Claude Code runtime
+.claude/backups/
 .claude/cache/
 .claude/debug/
 .claude/file-history/
@@ -25,8 +26,11 @@ ignored
 .claude/ide/
 .claude/paste-cache/
 .claude/plans/
+.claude/mcp-needs-auth-cache.json
+.claude/plugins/blocklist.json
 .claude/plugins/cache/
 .claude/plugins/install-counts-cache.json
+.claude/plugins/known_marketplaces.json
 .claude/plugins/marketplaces/
 .claude/projects/
 .claude/shell-snapshots/
@@ -36,6 +40,7 @@ ignored
 .claude/telemetry/
 .claude/todos/
 .claude/transcripts/
+.claude/skills/*/scripts/__pycache__/
 
 # Windsurf runtime (track User/settings.json only)
 Library/Application Support/Windsurf/*
@@ -45,6 +50,15 @@ Library/Application Support/Windsurf/User/*
 
 # MLflow
 .config/mlflow/
+
+# Copilot runtime
+.config/.copilot/
+
+# Cagent runtime
+.config/cagent/
+
+# uv package manager
+.config/uv/uv-receipt.json
 
 # Podman Desktop
 Library/LaunchAgents/io.podman_desktop.PodmanDesktop.plist
