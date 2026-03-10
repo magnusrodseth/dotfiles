@@ -2,97 +2,112 @@
 
 This document describes the oh-my-opencode configuration for this setup.
 
+## Provider Routing
+
+| Provider | Auth | Routes |
+|----------|------|--------|
+| **Anthropic** | Personal subscription | All Claude models (opus, sonnet, haiku) |
+| **GitHub Copilot** | `opencode auth login` | GPT, Gemini, and Grok models |
+
 ## Quick Reference
 
 | Task Type | Delegate To | Model |
 |-----------|-------------|-------|
-| Frontend/UI work | `category="visual-engineering"` | gemini-3-pro |
-| Hard logic/architecture | `category="ultrabrain"` | opus + thinking |
-| Autonomous deep work | `category="deep"` | opus + thinking |
-| Creative/unconventional | `category="artistry"` | gemini-3-pro |
-| Trivial tasks | `category="quick"` | gemini-3-flash |
-| Documentation/writing | `category="writing"` | gemini-3-flash |
-| Codebase search | `explore` agent | sonnet |
-| External docs/examples | `librarian` agent | sonnet |
-| Debugging/consultation | `oracle` agent | opus + thinking |
+| Frontend/UI work | `category="visual-engineering"` | `github-copilot/gemini-3-pro-preview` |
+| Hard logic/architecture | `category="ultrabrain"` | `github-copilot/gpt-5.3-codex` (high reasoning) |
+| Autonomous deep work | `category="deep"` | `github-copilot/gpt-5.3-codex` (medium reasoning) |
+| Creative/unconventional | `category="artistry"` | `github-copilot/gemini-3-pro-preview` |
+| Trivial tasks | `category="quick"` | `anthropic/claude-haiku-4-5` |
+| Documentation/writing | `category="writing"` | `github-copilot/gemini-3-flash-preview` |
+| General low-effort | `category="unspecified-low"` | `anthropic/claude-sonnet-4-6` |
+| General high-effort | `category="unspecified-high"` | `anthropic/claude-opus-4-6` (max) |
+| Codebase search | `explore` agent | `github-copilot/gpt-5-mini` |
+| External docs/examples | `librarian` agent | `github-copilot/gemini-3-flash-preview` |
+| Debugging/consultation | `oracle` agent | `github-copilot/gpt-5.3-codex` |
 
 ## Agents
 
-### Orchestration (Opus)
+### Orchestration (Claude Opus via Anthropic)
 
-| Agent | Purpose |
-|-------|---------|
-| **sisyphus** | Main orchestrator - coordinates all work |
-| **sisyphus-junior** | Executes delegated tasks from categories |
-| **prometheus** | Work planning methodology |
-| **metis** | Pre-planning analysis, identifies hidden requirements |
-| **momus** | Plan review, catches gaps before execution |
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **sisyphus** | `anthropic/claude-opus-4-6` | Main orchestrator - coordinates all work |
+| **sisyphus-junior** | Varies by category | Executes delegated tasks from categories |
+| **prometheus** | `anthropic/claude-opus-4-6` | Work planning methodology |
+| **metis** | `anthropic/claude-opus-4-6` | Pre-planning analysis, identifies hidden requirements |
 
-### Execution (Opus)
+### Execution
 
-| Agent | Purpose |
-|-------|---------|
-| **build** | Primary code builder |
-| **plan** | Planning tasks |
-| **general** | General-purpose tasks |
-| **hephaestus** | Autonomous deep worker (goal-oriented) |
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **build** | `anthropic/claude-opus-4-6` | Primary code builder |
+| **plan** | `anthropic/claude-opus-4-6` | Planning tasks |
+| **general** | `anthropic/claude-opus-4-6` | General-purpose tasks |
+| **hephaestus** | `github-copilot/gpt-5.3-codex` | Autonomous deep worker (goal-oriented, GPT-native) |
 
-### Research (Sonnet)
+### Review (GPT via GitHub Copilot)
 
-| Agent | Purpose |
-|-------|---------|
-| **explore** | Codebase grep - finds patterns, implementations, file structures |
-| **librarian** | External research - official docs, GitHub examples, remote repos |
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **momus** | `github-copilot/gpt-5.2` | Ruthless plan reviewer, catches gaps before execution |
+| **oracle** | `github-copilot/gpt-5.3-codex` | High-IQ architecture consultation, debugging |
+
+### Research
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| **explore** | `github-copilot/gpt-5-mini` | Fast codebase grep - patterns, implementations, file structures |
+| **librarian** | `github-copilot/gemini-3-flash-preview` | External research - official docs, GitHub examples, remote repos |
+| **atlas** | `anthropic/claude-sonnet-4-6` | Todo orchestration and execution |
 
 ### Specialized
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| **oracle** | opus + thinking (200k) | High-IQ debugging, architecture consultation |
-| **multimodal-looker** | gemini-3-flash | PDF/image analysis |
-| **document-writer** | gemini-3-pro | Norwegian technical blog writing |
+| **multimodal-looker** | `github-copilot/gemini-3-flash-preview` | PDF/image analysis |
+| **document-writer** | `github-copilot/gemini-3-pro-preview` | Norwegian technical blog writing |
 
 ## Categories
 
-Categories are used with `delegate_task(category="...")` to route work to optimal models.
+Categories are used with `task(category="...")` to route work to optimal models.
 
 ### When to Use Each Category
 
-#### `visual-engineering` (gemini-3-pro)
+#### `visual-engineering` (`github-copilot/gemini-3-pro-preview`)
 - Frontend development
 - UI/UX implementation
 - Styling and animations
 - React/Vue/Svelte components
 
-#### `ultrabrain` (opus + max + thinking 200k)
+#### `ultrabrain` (`github-copilot/gpt-5.3-codex`, reasoning: high)
 - Complex algorithms
 - Architecture decisions
 - Hard debugging problems
 - Multi-system design
 
-#### `deep` (opus + max + thinking 200k)
+#### `deep` (`github-copilot/gpt-5.3-codex`, reasoning: medium)
 - Goal-oriented autonomous work
 - Problems requiring thorough research before action
 - End-to-end feature implementation
 
-#### `artistry` (gemini-3-pro + high)
+#### `artistry` (`github-copilot/gemini-3-pro-preview`)
 - Creative problem-solving
 - Unconventional approaches
 - Novel solutions beyond standard patterns
 
-#### `quick` (gemini-3-flash)
+#### `quick` (`anthropic/claude-haiku-4-5`)
 - Single file changes
 - Typo fixes
 - Simple modifications
 - Trivial tasks
 
-#### `unspecified-low` (sonnet)
+#### `unspecified-low` (`anthropic/claude-sonnet-4-6`)
 - Low-effort tasks that don't fit other categories
 
-#### `unspecified-high` (opus + max)
+#### `unspecified-high` (`anthropic/claude-opus-4-6`, variant: max)
 - High-effort tasks that don't fit other categories
 
-#### `writing` (gemini-3-flash)
+#### `writing` (`github-copilot/gemini-3-flash-preview`)
 - Documentation
 - Technical writing
 - Prose content
@@ -102,7 +117,7 @@ Categories are used with `delegate_task(category="...")` to route work to optima
 ### Basic Delegation
 
 ```typescript
-delegate_task(
+task(
   category="quick",
   load_skills=[],
   prompt="Fix the typo in README.md",
@@ -113,7 +128,7 @@ delegate_task(
 ### With Skills
 
 ```typescript
-delegate_task(
+task(
   category="visual-engineering",
   load_skills=["frontend-ui-ux", "playwright"],
   prompt="Create a responsive navbar with dark mode toggle",
@@ -125,13 +140,13 @@ delegate_task(
 
 ```typescript
 // Fire multiple explore/librarian agents in parallel
-delegate_task(
+task(
   subagent_type="explore",
   load_skills=[],
   prompt="Find authentication patterns in this codebase",
   run_in_background=true
 )
-delegate_task(
+task(
   subagent_type="librarian", 
   load_skills=[],
   prompt="Find Next.js middleware examples for auth",
@@ -144,7 +159,7 @@ delegate_task(
 Always continue sessions for follow-up work:
 
 ```typescript
-delegate_task(
+task(
   session_id="ses_abc123",  // From previous task output
   prompt="Fix: the type error on line 42",
   load_skills=[]
@@ -157,7 +172,7 @@ delegate_task(
 |----------|--------------|
 | Default | 5 |
 | Anthropic | 3 |
-| Google | 8 |
+| GitHub Copilot | 5 |
 
 ## MCPs Enabled
 
@@ -184,26 +199,49 @@ mcp_context7_query-docs(
 
 ## Cost Optimization Strategy
 
-| Tier | Models | Use For |
-|------|--------|---------|
-| **Expensive** | opus | Orchestration, planning, debugging, deep work |
-| **Mid-tier** | sonnet | Explore, librarian (frequent but need quality) |
-| **Cheap** | gemini-3-flash | Quick tasks, writing, multimodal |
-| **Specialized** | gemini-3-pro | UI/UX work, creative tasks |
+| Tier | Provider | Models | Use For |
+|------|----------|--------|---------|
+| **Expensive** | Anthropic | `claude-opus-4-6` | Orchestration, planning, deep work |
+| **Mid-tier** | Anthropic | `claude-sonnet-4-6` | Atlas, general delegation |
+| **Cheap** | Anthropic | `claude-haiku-4-5` | Quick tasks |
+| **Deep reasoning** | GH Copilot | `gpt-5.3-codex`, `gpt-5.2` | Oracle, hephaestus, ultrabrain, deep, momus |
+| **Fast utility** | GH Copilot | `gpt-5-mini` | Explore (codebase grep) |
+| **Visual/Creative** | GH Copilot | `gemini-3-pro-preview` | Frontend, artistry, document-writer |
+| **Light tasks** | GH Copilot | `gemini-3-flash-preview` | Writing, multimodal-looker, librarian |
 
 ## Key Learnings
 
-1. **Categories must be configured** - They don't use built-in defaults unless explicitly set in `oh-my-opencode.json`
+1. **Gemini models need `-preview` suffix** - Use `gemini-3-flash-preview` and `gemini-3-pro-preview`, NOT `gemini-3-flash` or `gemini-3-pro`. OpenCode resolves model IDs from models.dev, not GitHub display names.
 
-2. **Explore/Librarian are grep-like** - Fire liberally in parallel, they're cheap (sonnet)
+2. **Categories must be configured** - They don't use built-in defaults unless explicitly set in `oh-my-opencode.json`
 
-3. **Oracle has thinking enabled** - Use for hard problems, architecture consultation
+3. **Explore/Librarian are grep-like** - Fire liberally in parallel, they're cheap
 
-4. **Gemini models marked unstable** - Auto-converted to background mode for monitoring
+4. **Oracle uses GPT for principle-driven reasoning** - Not Claude. GPT-5.3-codex excels at architecture consultation.
 
 5. **Session IDs are critical** - Always continue sessions for follow-ups to preserve context
 
 6. **Skills must be passed** - Use `load_skills=["skill-name"]` to inject specialized knowledge
+
+7. **`gpt-5.3-codex` works via GH Copilot** - Even though it's not yet in models.dev, it's listed on GitHub's supported models page and works in practice
+
+## Model ID Reference (GitHub Copilot)
+
+Exact model IDs confirmed working or available via `github-copilot/` provider:
+
+| Model ID | Status |
+|----------|--------|
+| `gpt-5-mini` | ✅ Verified |
+| `gpt-5.2` | ✅ Verified |
+| `gpt-5.3-codex` | ✅ Verified (not yet in models.dev) |
+| `gpt-5.2-codex` | Available |
+| `gpt-5.1-codex` | Available |
+| `gpt-5.1-codex-max` | Available |
+| `gemini-3-flash-preview` | Available (⚠️ `-preview` required) |
+| `gemini-3-pro-preview` | Available (⚠️ `-preview` required) |
+| `gemini-3.1-pro-preview` | Available (⚠️ `-preview` required) |
+| `gemini-2.5-pro` | Available |
+| `grok-code-fast-1` | Available (in models.dev, failed in practice — using gpt-5-mini instead) |
 
 ## File Locations
 
