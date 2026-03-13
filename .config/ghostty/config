@@ -2,6 +2,7 @@
 theme = "tokyonight"
 
 # Set the default working directory to "~/dev"
+# Personal Mac: /Users/magnusrodseth, Gjensidige Mac: /Users/magnus.rodseth
 working-directory = "/Users/magnusrodseth/dev"
 
 # Set the font
