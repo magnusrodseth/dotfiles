@@ -40,6 +40,8 @@ ignored
 .claude/telemetry/
 .claude/todos/
 .claude/transcripts/
+.claude/image-cache/
+.claude/sessions/
 .claude/skills/*/scripts/__pycache__/
 
 # Windsurf runtime (track User/settings.json only)
@@ -62,3 +64,6 @@ Library/Application Support/Windsurf/User/*
 
 # Podman Desktop
 Library/LaunchAgents/io.podman_desktop.PodmanDesktop.plist
+
+# Raycast runtime
+.config/raycast/extensions/node_modules
