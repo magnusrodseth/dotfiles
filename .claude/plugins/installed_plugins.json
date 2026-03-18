@@ -4,180 +4,180 @@
     "n8n-mcp-skills@n8n-mcp-skills": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/n8n-mcp-skills/n8n-mcp-skills/1.0.0",
         "version": "1.0.0",
         "installedAt": "2025-12-17T09:38:32.726Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "ec350daa6e148733ddb7d0c74b25c8dc69879b12",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "ec350daa6e148733ddb7d0c74b25c8dc69879b12"
       }
     ],
     "agent-orchestration@claude-code-workflows": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-workflows/agent-orchestration/1.2.0",
         "version": "1.2.0",
         "installedAt": "2026-01-09T15:22:01.838Z",
-        "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-02-09T07:21:42.675Z"
       }
     ],
     "context-management@claude-code-workflows": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-workflows/context-management/1.2.0",
         "version": "1.2.0",
         "installedAt": "2026-01-09T15:22:02.888Z",
-        "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-02-09T07:21:42.675Z"
       }
     ],
     "feature-dev@claude-code-plugins": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-plugins/feature-dev/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-01-09T15:22:06.917Z",
-        "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-02-09T07:21:42.675Z"
       }
     ],
     "ralph-wiggum@claude-code-plugins": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-code-plugins/ralph-wiggum/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-01-09T15:22:07.278Z",
-        "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-02-09T07:21:42.675Z"
       }
     ],
     "superpowers@superpowers-marketplace": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/superpowers-marketplace/superpowers/4.2.0",
         "version": "4.2.0",
         "installedAt": "2026-02-08T08:39:06.790Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "a98c5dfc9de0df5318f4980d91d24780a566ee60",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "a98c5dfc9de0df5318f4980d91d24780a566ee60"
       }
     ],
     "typescript-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/typescript-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:45.483Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "pyright-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/pyright-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:47.640Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "gopls-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/gopls-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:48.856Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "rust-analyzer-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/rust-analyzer-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:49.793Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "swift-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:50.842Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "lua-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/lua-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:52.124Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "clangd-lsp@claude-plugins-official": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/clangd-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-02-08T08:56:53.460Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
-        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
       }
     ],
     "ralph-loop@claude-plugins-official": [
       {
         "scope": "project",
-        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/ralph-loop/unknown",
-        "version": "unknown",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
+        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/ralph-loop/6b70f99f769f",
+        "version": "6b70f99f769f",
         "installedAt": "2026-02-09T07:21:43.089Z",
-        "lastUpdated": "2026-02-09T07:21:43.089Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-03-18T08:23:19.609Z"
       }
     ],
     "feature-dev@claude-plugins-official": [
       {
         "scope": "project",
-        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/feature-dev/unknown",
-        "version": "unknown",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
+        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/feature-dev/6b70f99f769f",
+        "version": "6b70f99f769f",
         "installedAt": "2026-02-09T07:21:43.089Z",
-        "lastUpdated": "2026-02-09T07:21:43.089Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-03-18T08:23:19.601Z"
       }
     ],
     "example-skills@anthropic-agent-skills": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/anthropic-agent-skills/example-skills/unknown",
         "version": "unknown",
         "installedAt": "2026-02-09T07:21:43.089Z",
-        "lastUpdated": "2026-02-09T07:21:43.089Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-02-09T07:21:43.089Z"
       }
     ],
     "document-skills@anthropic-agent-skills": [
       {
         "scope": "project",
+        "projectPath": "/Users/magnus.rodseth/dotfiles",
         "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/anthropic-agent-skills/document-skills/unknown",
         "version": "unknown",
         "installedAt": "2026-02-09T07:21:43.089Z",
-        "lastUpdated": "2026-02-09T07:21:43.089Z",
-        "projectPath": "/Users/magnus.rodseth/dotfiles"
+        "lastUpdated": "2026-02-09T07:21:43.089Z"
       }
     ]
   }
