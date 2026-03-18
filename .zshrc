@@ -5,6 +5,25 @@ if [[ -f "/opt/homebrew/bin/brew" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+# Skip heavy init for Claude Code shell
+if [[ "$CLAUDECODE" == "1" ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+  export PATH="$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.bun/bin:$PNPM_HOME:$HOME/.local/bin:$PATH"
+  export PATH="$HOME/.dotnet/tools:$PATH"
+  export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+  export PATH="$JAVA_HOME/bin:$PATH"
+  export PATH="/Library/TeX/texbin:$PATH"
+  export LC_ALL=en_US.UTF-8
+  export XDG_CONFIG_HOME="$HOME/.config"
+  . "$HOME/.cargo/env" 2>/dev/null
+  if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
+    for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
+      [ -f "$file" ] && source "$file"
+    done
+  fi
+  return
+fi
+
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
