@@ -3,6 +3,10 @@
     "DISABLE_ZOXIDE": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(git -C:*)",
@@ -50,25 +54,25 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "n8n-mcp-skills@n8n-mcp-skills": false,
-    "agent-orchestration@claude-code-workflows": true,
-    "context-management@claude-code-workflows": true,
-    "feature-dev@claude-code-plugins": true,
-    "ralph-wiggum@claude-code-plugins": true,
-    "superpowers@superpowers-marketplace": true,
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "vercel-plugin@vercel-vercel-plugin": true
+  },
+  "extraKnownMarketplaces": {
+    "vercel-vercel-plugin": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/magnusrodseth/.cache/plugins/github.com-vercel-vercel-plugin"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true,
   "effortLevel": "high",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "voiceEnabled": true,
+  "skipDangerousModePermissionPrompt": true
 }
