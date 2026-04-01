@@ -152,20 +152,20 @@
       {
         "scope": "project",
         "projectPath": "/Users/magnus.rodseth/dotfiles",
-        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/ralph-loop/6b70f99f769f",
-        "version": "6b70f99f769f",
+        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/ralph-loop/1.0.0",
+        "version": "1.0.0",
         "installedAt": "2026-02-09T07:21:43.089Z",
-        "lastUpdated": "2026-03-18T08:23:19.609Z"
+        "lastUpdated": "2026-04-01T14:32:55.649Z"
       }
     ],
     "feature-dev@claude-plugins-official": [
       {
         "scope": "project",
         "projectPath": "/Users/magnus.rodseth/dotfiles",
-        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/feature-dev/6b70f99f769f",
-        "version": "6b70f99f769f",
+        "installPath": "/Users/magnus.rodseth/.claude/plugins/cache/claude-plugins-official/feature-dev/unknown",
+        "version": "unknown",
         "installedAt": "2026-02-09T07:21:43.089Z",
-        "lastUpdated": "2026-03-18T08:23:19.601Z"
+        "lastUpdated": "2026-04-01T14:32:55.630Z"
       }
     ],
     "example-skills@anthropic-agent-skills": [

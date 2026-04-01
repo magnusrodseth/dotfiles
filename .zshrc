@@ -227,7 +227,7 @@ export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # bun completions
-[ -s "/Users/magnusrodseth/.bun/_bun" ] && source "/Users/magnusrodseth/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Report CWD to terminal via OSC 7 (fixes Ghostty new tab directory inheritance)
 # Must be at the end of .zshrc so it isn't overridden by plugins
@@ -238,7 +238,7 @@ autoload -Uz add-zsh-hook
 add-zsh-hook precmd _osc7_cwd
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/magnusrodseth/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/magnusrodseth/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/magnusrodseth/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/magnusrodseth/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
