@@ -21,11 +21,12 @@ The `install.sh` script runs in sequence:
 2. Homebrew packages from `Brewfile`
 3. Cargo packages from `scripts/cargo/cargo_packages.txt`
 4. pnpm packages from `scripts/pnpm/pnpm_packages.txt`
-5. Yazi plugins
-6. macOS App Store apps
-7. tmux plugin manager setup
-8. macOS system defaults
-9. bat cache build
+5. Agent skills from `scripts/skills/skill-lock.json`
+6. Yazi plugins
+7. macOS App Store apps
+8. tmux plugin manager setup
+9. macOS system defaults
+10. bat cache build
 
 ## Key Commands
 
@@ -34,10 +35,12 @@ The `install.sh` script runs in sequence:
 brew bundle                              # Install Homebrew packages
 ./scripts/cargo/packages.sh install      # Install Cargo packages
 ./scripts/pnpm/packages.sh install       # Install pnpm packages
+./scripts/skills/packages.sh install     # Restore agent skills from lock file
 
 # Export current packages to lists
 ./scripts/cargo/packages.sh export
 ./scripts/pnpm/packages.sh export
+./scripts/skills/packages.sh export      # Snapshot skill-lock.json to dotfiles
 
 # macOS defaults
 ./scripts/macos/defaults.sh
