@@ -1,0 +1,9 @@
+agent/auth.json
+agent/sessions/
+agent/git/
+agent/taskplane/
+agent/extensions/
+agent/themes/
+suggester/
+taskplane.json
+agents/

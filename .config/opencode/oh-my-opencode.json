@@ -1,90 +1,67 @@
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
-  "google_auth": false,
-  "disabled_mcps": [],
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
-    "build": {
-      "model": "anthropic/claude-opus-4-6"
-    },
-    "plan": {
-      "model": "anthropic/claude-opus-4-6"
-    },
     "sisyphus": {
-      "model": "anthropic/claude-opus-4-6"
-    },
-    "prometheus": {
-      "model": "anthropic/claude-opus-4-6"
-    },
-    "metis": {
-      "model": "anthropic/claude-opus-4-6"
-    },
-    "momus": {
-      "model": "github-copilot/gpt-5.2"
-    },
-    "oracle": {
-      "model": "github-copilot/gpt-5.3-codex"
-    },
-    "librarian": {
-      "model": "github-copilot/gemini-3-flash-preview"
-    },
-    "explore": {
-      "model": "github-copilot/gpt-5-mini"
-    },
-    "general": {
-      "model": "anthropic/claude-opus-4-6"
-    },
-    "document-writer": {
-      "model": "github-copilot/gemini-3-pro-preview",
-      "description": "Norwegian technical blog writer for AI and agentic development patterns",
-      "prompt_append": "You are writing for a Norwegian technical blog about AI and agentic development patterns. Follow AGENTS.md exactly. Always write in Norwegian (bokmal) but keep technical terms in English (e.g., 'embedding', 'state machine', 'prompt engineering')."
-    },
-    "multimodal-looker": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "anthropic/claude-opus-4-6",
+      "variant": "max"
     },
     "hephaestus": {
-      "model": "github-copilot/gpt-5.3-codex"
+      "model": "github-copilot/gpt-5.4",
+      "variant": "medium"
+    },
+    "oracle": {
+      "model": "github-copilot/gpt-5.4",
+      "variant": "high"
+    },
+    "explore": {
+      "model": "anthropic/claude-haiku-4-5"
+    },
+    "multimodal-looker": {
+      "model": "github-copilot/gpt-5-nano"
+    },
+    "prometheus": {
+      "model": "anthropic/claude-opus-4-6",
+      "variant": "max"
+    },
+    "metis": {
+      "model": "anthropic/claude-opus-4-6",
+      "variant": "max"
+    },
+    "momus": {
+      "model": "github-copilot/gpt-5.4",
+      "variant": "xhigh"
     },
     "atlas": {
+      "model": "anthropic/claude-sonnet-4-6"
+    },
+    "sisyphus-junior": {
       "model": "anthropic/claude-sonnet-4-6"
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "github-copilot/gemini-3-pro-preview"
+      "model": "github-copilot/gemini-3.1-pro-preview",
+      "variant": "high"
     },
     "ultrabrain": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "reasoningEffort": "high"
-    },
-    "deep": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "reasoningEffort": "medium"
+      "model": "github-copilot/gemini-3.1-pro-preview",
+      "variant": "high"
     },
     "artistry": {
-      "model": "github-copilot/gemini-3-pro-preview"
+      "model": "github-copilot/gemini-3.1-pro-preview",
+      "variant": "high"
     },
     "quick": {
-      "model": "anthropic/claude-haiku-4-5"
+      "model": "github-copilot/gpt-5.4-mini"
     },
     "unspecified-low": {
       "model": "anthropic/claude-sonnet-4-6"
     },
     "unspecified-high": {
-      "model": "anthropic/claude-opus-4-6",
-      "variant": "max"
+      "model": "anthropic/claude-sonnet-4-6"
     },
     "writing": {
       "model": "github-copilot/gemini-3-flash-preview"
     }
-  },
-  "background_task": {
-    "defaultConcurrency": 5,
-    "providerConcurrency": {
-      "anthropic": 3,
-      "github-copilot": 5
-    }
-  },
-  "_migrations": [
-    "model-version:anthropic/claude-sonnet-4-5->anthropic/claude-sonnet-4-6"
-  ]
+  }
 }

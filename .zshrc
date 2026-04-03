@@ -117,6 +117,7 @@ alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
 alias claude="claude --dangerously-skip-permissions"
 alias clc="claude --continue --dangerously-skip-permissions"
+alias pic="pi -c"
 # Headless ship - optimized for speed
 unalias ship 2>/dev/null
 function ship {
