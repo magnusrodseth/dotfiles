@@ -24,7 +24,6 @@
     - [`tmux`-related tools](#tmux-related-tools)
     - [`zsh`-related tools](#zsh-related-tools)
     - [`lazygit`-related tools](#lazygit-related-tools)
-  - [Updating the color theme of Alacritty](#updating-the-color-theme-of-alacritty)
   - [Configuring Raycast](#configuring-raycast)
   - [Configuring VS Code](#configuring-vs-code)
     - [Managing keybindings, settings and snippets](#managing-keybindings-settings-and-snippets)
@@ -103,7 +102,7 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`brew`](https://brew.sh), for installing software packages
 - [`git`](https://git-scm.com), for version control
 - [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal
-- [`alacritty`](https://github.com/alacritty/alacritty), for a fast terminal emulator
+- [`ghostty`](https://ghostty.org/), for a fast, native terminal emulator
 - [`raycast`](https://www.raycast.com/), for a Spotlight replacement with extensions, window management, etc.
 
 ### `neovim`-related tools
@@ -136,18 +135,6 @@ For more information on the zsh-related tools, refer to [this YouTube video](htt
 ### `lazygit`-related tools
 
 - [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
-- [`bunnai`](https://github.com/chhoumann/bunnai), a CLI to inject AI-generated commit messages into `lazygit`
-
-In order to change the AI-generated commit message template, edit the [`.bunnai-template`](/.bunnai-template) file. Inspect the `lazygit` configuration in the [`.config/lazygit`](/.config/lazygit) directory to inspect how to use `bunnai` with `lazygit`.
-
-## Updating the color theme of Alacritty
-
-The themes for Alacritty are downloaded from the [`alacritty-theme`](https://github.com/alacritty/alacritty-theme) repository. They are stored in the [`.config/alacritty/themes`](/.config/alacritty/themes) directory. To update the color theme of Alacritty, simply update the `import` statement in the [`.config/alacritty/alacritty.toml`](/.config/alacritty/alacritty.toml) file.
-
-```toml
-# Replace {theme} with the filename of the theme you want to use from the `alacritty-theme` repository
-import = ["~/.config/alacritty/themes/{theme}.toml"]
-```
 
 ## Configuring Raycast
 
