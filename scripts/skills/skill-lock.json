@@ -93,15 +93,6 @@
       "installedAt": "2026-02-27T07:22:39.714Z",
       "updatedAt": "2026-02-27T07:22:39.714Z"
     },
-    "gws-admin-reports": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-admin-reports/SKILL.md",
-      "skillFolderHash": "93de7ebc155cefef8bbaac202283e349c50da1e0",
-      "installedAt": "2026-03-10T18:56:10.879Z",
-      "updatedAt": "2026-03-10T18:56:10.879Z"
-    },
     "gws-calendar": {
       "source": "googleworkspace/cli",
       "sourceType": "github",
@@ -128,33 +119,6 @@
       "skillFolderHash": "ac5187305907c6d60eed7aefe6dfc14f049c5f4e",
       "installedAt": "2026-03-10T18:56:12.087Z",
       "updatedAt": "2026-03-10T18:56:12.087Z"
-    },
-    "gws-chat": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-chat/SKILL.md",
-      "skillFolderHash": "959e0df5c91ba46c2a360e9c61500e571655dee8",
-      "installedAt": "2026-03-10T18:56:12.606Z",
-      "updatedAt": "2026-03-10T18:56:12.606Z"
-    },
-    "gws-chat-send": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-chat-send/SKILL.md",
-      "skillFolderHash": "bb627bdc4b90f609a5ac52e0128864406b3ed01a",
-      "installedAt": "2026-03-10T18:56:13.046Z",
-      "updatedAt": "2026-03-10T18:56:13.046Z"
-    },
-    "gws-classroom": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-classroom/SKILL.md",
-      "skillFolderHash": "1026ef37d7e0dcdff2cb4eda59a71cd53ba9e5a8",
-      "installedAt": "2026-03-10T18:56:13.481Z",
-      "updatedAt": "2026-03-10T18:56:13.481Z"
     },
     "gws-docs": {
       "source": "googleworkspace/cli",
@@ -191,33 +155,6 @@
       "skillFolderHash": "81211255691edf50416a622005b7b1ee77bdf826",
       "installedAt": "2026-03-10T18:56:15.097Z",
       "updatedAt": "2026-03-10T18:56:15.097Z"
-    },
-    "gws-events": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-events/SKILL.md",
-      "skillFolderHash": "5102dc992a1cacb13b8e34605ec10276c1cd60e9",
-      "installedAt": "2026-03-10T18:56:15.612Z",
-      "updatedAt": "2026-03-10T18:56:15.612Z"
-    },
-    "gws-events-renew": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-events-renew/SKILL.md",
-      "skillFolderHash": "44d014dc38eaf0eb644f4dfcccc259e93e0942a9",
-      "installedAt": "2026-03-10T18:56:16.099Z",
-      "updatedAt": "2026-03-10T18:56:16.099Z"
-    },
-    "gws-events-subscribe": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-events-subscribe/SKILL.md",
-      "skillFolderHash": "2c5a035da670daf8012ba5b60f4a8abc772eabb5",
-      "installedAt": "2026-03-10T18:56:16.451Z",
-      "updatedAt": "2026-03-10T18:56:16.451Z"
     },
     "gws-forms": {
       "source": "googleworkspace/cli",
@@ -291,15 +228,6 @@
       "installedAt": "2026-03-10T18:56:19.859Z",
       "updatedAt": "2026-03-10T18:56:19.859Z"
     },
-    "gws-keep": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-keep/SKILL.md",
-      "skillFolderHash": "94cca7a5868999779e6cdcf57f6fa39affe0d26d",
-      "installedAt": "2026-03-10T18:56:20.296Z",
-      "updatedAt": "2026-03-10T18:56:20.296Z"
-    },
     "gws-meet": {
       "source": "googleworkspace/cli",
       "sourceType": "github",
@@ -308,51 +236,6 @@
       "skillFolderHash": "e09809eb43470a0cab190af216539dc6d04ea5b2",
       "installedAt": "2026-03-10T18:56:20.717Z",
       "updatedAt": "2026-03-10T18:56:20.717Z"
-    },
-    "gws-modelarmor": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-modelarmor/SKILL.md",
-      "skillFolderHash": "b882e3b23e264ad4fb5c074aea78a7b1184e750f",
-      "installedAt": "2026-03-10T18:56:21.174Z",
-      "updatedAt": "2026-03-10T18:56:21.174Z"
-    },
-    "gws-modelarmor-create-template": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-modelarmor-create-template/SKILL.md",
-      "skillFolderHash": "0c6f8a08f7d62ee8b000941152bf34081376d0da",
-      "installedAt": "2026-03-10T18:56:21.633Z",
-      "updatedAt": "2026-03-10T18:56:21.633Z"
-    },
-    "gws-modelarmor-sanitize-prompt": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-modelarmor-sanitize-prompt/SKILL.md",
-      "skillFolderHash": "7938f206128e7212575810929c4623bb2fb8af73",
-      "installedAt": "2026-03-10T18:56:22.150Z",
-      "updatedAt": "2026-03-10T18:56:22.150Z"
-    },
-    "gws-modelarmor-sanitize-response": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-modelarmor-sanitize-response/SKILL.md",
-      "skillFolderHash": "f21ee5b0c3a198af7a56d0a2639b8e129569a5cc",
-      "installedAt": "2026-03-10T18:56:22.547Z",
-      "updatedAt": "2026-03-10T18:56:22.547Z"
-    },
-    "gws-people": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-people/SKILL.md",
-      "skillFolderHash": "d79e2f93d72d7800d19c2f3a61954a9129660078",
-      "installedAt": "2026-03-10T18:56:22.917Z",
-      "updatedAt": "2026-03-10T18:56:22.917Z"
     },
     "gws-shared": {
       "source": "googleworkspace/cli",
@@ -426,15 +309,6 @@
       "installedAt": "2026-03-10T18:56:25.929Z",
       "updatedAt": "2026-03-10T18:56:25.929Z"
     },
-    "gws-workflow-file-announce": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/gws-workflow-file-announce/SKILL.md",
-      "skillFolderHash": "24fbecd3983ad4c88b2276d6650cfffa02361cff",
-      "installedAt": "2026-03-10T18:56:26.289Z",
-      "updatedAt": "2026-03-10T18:56:26.289Z"
-    },
     "gws-workflow-meeting-prep": {
       "source": "googleworkspace/cli",
       "sourceType": "github",
@@ -461,96 +335,6 @@
       "skillFolderHash": "055cb4f55bcba3201c0678495222fcb1bddeb188",
       "installedAt": "2026-03-10T18:56:27.297Z",
       "updatedAt": "2026-03-10T18:56:27.297Z"
-    },
-    "persona-content-creator": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-content-creator/SKILL.md",
-      "skillFolderHash": "82cc12bae6c3c0ed15e789b2a13c7afc05ff1f11",
-      "installedAt": "2026-03-10T18:56:27.656Z",
-      "updatedAt": "2026-03-10T18:56:27.656Z"
-    },
-    "persona-customer-support": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-customer-support/SKILL.md",
-      "skillFolderHash": "9ef5a7a791ce011bd4e1c59f2c043c21f923d784",
-      "installedAt": "2026-03-10T18:56:28.184Z",
-      "updatedAt": "2026-03-10T18:56:28.184Z"
-    },
-    "persona-event-coordinator": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-event-coordinator/SKILL.md",
-      "skillFolderHash": "3b388f55a427b1725c8e6da5fc75113f1d3d8807",
-      "installedAt": "2026-03-10T18:56:28.788Z",
-      "updatedAt": "2026-03-10T18:56:28.788Z"
-    },
-    "persona-exec-assistant": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-exec-assistant/SKILL.md",
-      "skillFolderHash": "8c8cf89ef5c1a6f6dd888e8694a49c5db9bb7fe3",
-      "installedAt": "2026-03-10T18:56:29.210Z",
-      "updatedAt": "2026-03-10T18:56:29.210Z"
-    },
-    "persona-hr-coordinator": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-hr-coordinator/SKILL.md",
-      "skillFolderHash": "5ed8b787119a36cbdaf4ba9b5adcac32f34a7545",
-      "installedAt": "2026-03-10T18:56:29.625Z",
-      "updatedAt": "2026-03-10T18:56:29.625Z"
-    },
-    "persona-it-admin": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-it-admin/SKILL.md",
-      "skillFolderHash": "6a2e12c74eec630e75f60e5f6a8f4e14851e96db",
-      "installedAt": "2026-03-10T18:56:30.030Z",
-      "updatedAt": "2026-03-10T18:56:30.030Z"
-    },
-    "persona-project-manager": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-project-manager/SKILL.md",
-      "skillFolderHash": "8e2a9272413994b3ef7ecd6c36723cd547e93cb3",
-      "installedAt": "2026-03-10T18:56:30.443Z",
-      "updatedAt": "2026-03-10T18:56:30.443Z"
-    },
-    "persona-researcher": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-researcher/SKILL.md",
-      "skillFolderHash": "796368d4b27ca16251dcb3840095a7a997bae79a",
-      "installedAt": "2026-03-10T18:56:30.783Z",
-      "updatedAt": "2026-03-10T18:56:30.783Z"
-    },
-    "persona-sales-ops": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-sales-ops/SKILL.md",
-      "skillFolderHash": "b8cb55572fc116cc457f891a3c1658a40f2433aa",
-      "installedAt": "2026-03-10T18:56:31.303Z",
-      "updatedAt": "2026-03-10T18:56:31.303Z"
-    },
-    "persona-team-lead": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/persona-team-lead/SKILL.md",
-      "skillFolderHash": "11fbb2f83f9d4ecf64bb49a02daf881649a8be56",
-      "installedAt": "2026-03-10T18:56:31.652Z",
-      "updatedAt": "2026-03-10T18:56:31.652Z"
     },
     "recipe-backup-sheet-as-csv": {
       "source": "googleworkspace/cli",
@@ -614,15 +398,6 @@
       "skillFolderHash": "56b065ee713faf97aedbc88aad9c3375b9e331f6",
       "installedAt": "2026-03-10T18:56:34.583Z",
       "updatedAt": "2026-03-10T18:56:34.583Z"
-    },
-    "recipe-create-classroom-course": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/recipe-create-classroom-course/SKILL.md",
-      "skillFolderHash": "9e2797a6f51f45187a67c25664812abcc6b1a85d",
-      "installedAt": "2026-03-10T18:56:34.977Z",
-      "updatedAt": "2026-03-10T18:56:34.977Z"
     },
     "recipe-create-doc-from-template": {
       "source": "googleworkspace/cli",
@@ -777,15 +552,6 @@
       "installedAt": "2026-03-10T18:56:42.837Z",
       "updatedAt": "2026-03-10T18:56:42.837Z"
     },
-    "recipe-log-deal-update": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/recipe-log-deal-update/SKILL.md",
-      "skillFolderHash": "050263c67284dd2247f32879ed7b6671920aeb18",
-      "installedAt": "2026-03-10T18:56:43.361Z",
-      "updatedAt": "2026-03-10T18:56:43.361Z"
-    },
     "recipe-organize-drive-folder": {
       "source": "googleworkspace/cli",
       "sourceType": "github",
@@ -803,15 +569,6 @@
       "skillFolderHash": "e9e95de8ef6ad43a819569906d9c98ab76b5cb48",
       "installedAt": "2026-03-10T18:56:44.237Z",
       "updatedAt": "2026-03-10T18:56:44.237Z"
-    },
-    "recipe-post-mortem-setup": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/recipe-post-mortem-setup/SKILL.md",
-      "skillFolderHash": "2d2dad555b099645804d5a6faae00bdd6632ec4b",
-      "installedAt": "2026-03-10T18:56:44.597Z",
-      "updatedAt": "2026-03-10T18:56:44.597Z"
     },
     "recipe-reschedule-meeting": {
       "source": "googleworkspace/cli",
@@ -867,15 +624,6 @@
       "installedAt": "2026-03-10T18:56:47.035Z",
       "updatedAt": "2026-03-10T18:56:47.035Z"
     },
-    "recipe-send-team-announcement": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/recipe-send-team-announcement/SKILL.md",
-      "skillFolderHash": "816e85798d9f9cf5ef02a7448a375fff23fe4a34",
-      "installedAt": "2026-03-10T18:56:47.400Z",
-      "updatedAt": "2026-03-10T18:56:47.400Z"
-    },
     "recipe-share-doc-and-notify": {
       "source": "googleworkspace/cli",
       "sourceType": "github",
@@ -902,24 +650,6 @@
       "skillFolderHash": "785714905e442a7ee1644150e930afa7a1945454",
       "installedAt": "2026-03-10T18:56:48.612Z",
       "updatedAt": "2026-03-10T18:56:48.612Z"
-    },
-    "recipe-sync-contacts-to-sheet": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/recipe-sync-contacts-to-sheet/SKILL.md",
-      "skillFolderHash": "fcab927e5eab95f8cc9f7cf0e7f68d8092d6f1d8",
-      "installedAt": "2026-03-10T18:56:48.967Z",
-      "updatedAt": "2026-03-10T18:56:48.967Z"
-    },
-    "recipe-watch-drive-changes": {
-      "source": "googleworkspace/cli",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/googleworkspace/cli.git",
-      "skillPath": "skills/recipe-watch-drive-changes/SKILL.md",
-      "skillFolderHash": "ab82010c5606d94a4ae6f3d2327c9857c11142ed",
-      "installedAt": "2026-03-10T18:56:49.333Z",
-      "updatedAt": "2026-03-10T18:56:49.333Z"
     },
     "playwriter": {
       "source": "remorses/playwriter",
