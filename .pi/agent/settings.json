@@ -12,6 +12,7 @@
     "npm:@ifi/oh-pi-themes",
     "npm:@heyhuynhgiabuu/pi-pretty",
     "npm:@heyhuynhgiabuu/pi-diff",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:pi-mcp-adapter"
   ]
 }
