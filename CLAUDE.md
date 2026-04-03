@@ -109,7 +109,7 @@ Brewfile                  # ~310 Homebrew dependencies
 .config/
   nvim/                   # LazyVim
   lazygit/                # Git TUI
-  alacritty/              # Terminal (themes in themes/)
+  ghostty/                # Terminal
   ohmyposh/               # Shell prompt
   yazi/                   # File manager
   opencode/               # OpenCode AI config

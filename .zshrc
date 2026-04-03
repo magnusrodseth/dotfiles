@@ -93,7 +93,6 @@ alias vi="nvim"
 alias bim="nvim"
 alias v="nvim"
 alias gitui="lazygit"
-alias tf="terraform"
 alias cp='xcp'
 alias ps="procs"
 alias top="btm"
@@ -111,7 +110,6 @@ alias download-mp3='yt-dlp -x --audio-format mp3 --restrict-filenames -o ~/Deskt
 alias download-mp4='yt-dlp --format bestaudio[ext=m4a] --merge-output-format mp4 --restrict-filenames -o ~/Desktop/%\(title\)s.%\(ext\)s'
 alias o="open ."
 alias obs="open -a Obsidian"
-alias skim='/Applications/Skim.app/Contents/MacOS/Skim'
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
@@ -127,8 +125,6 @@ function ship {
     --no-session-persistence \
     --allowedTools "Bash(git *)"
 }
-alias ocl='OPENCODE_CONFIG_DIR=~/.config/opencode-local opencode'  # Local Ollama + MCPs
-alias solve='cd ~/dev/personal/aoc-2025 && claude --dangerously-skip-permissions "/solve"'
 # sisyphus alias for running the Sisyphus prompt - the ultimate agent harness
 sis() { claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/commands/sisyphus.md)"; }
 
@@ -148,10 +144,6 @@ export LC_ALL=en_US.UTF-8
 
 # Change the config directory
 export XDG_CONFIG_HOME="$HOME/.config"
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
 
 # Shell integrations
 source <(fzf --zsh)
