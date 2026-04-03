@@ -4,10 +4,14 @@
   "defaultModel": "claude-opus-4-6",
   "defaultThinkingLevel": "xhigh",
   "theme": "catppuccin-mocha",
+  "quietStartup": true,
   "packages": [
     "npm:pi-resource-center",
     "git:github.com/magnusrodseth/pi-sounds",
     "npm:@guwidoe/pi-prompt-suggester",
-    "npm:@ifi/oh-pi-themes"
+    "npm:@ifi/oh-pi-themes",
+    "npm:@heyhuynhgiabuu/pi-pretty",
+    "npm:@heyhuynhgiabuu/pi-diff",
+    "npm:pi-web-access"
   ]
 }
