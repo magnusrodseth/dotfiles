@@ -54,6 +54,11 @@ echo "Installing pnpm packages..."
 sh scripts/pnpm/packages.sh install
 echo "pnpm packages installed successfully."
 
+# Install agent skills
+echo "Installing agent skills..."
+sh scripts/skills/packages.sh install
+echo "Agent skills installed successfully."
+
 # Install plugins to Yazi
 echo "Installing Yazi plugins..."
 ya pack -i
