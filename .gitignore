@@ -67,3 +67,9 @@ Library/LaunchAgents/io.podman_desktop.PodmanDesktop.plist
 
 # Raycast runtime
 .config/raycast/extensions/node_modules
+
+# Google Cloud SDK credentials and runtime
+.config/gcloud/
+
+# Google Workspace CLI credentials
+.config/gws/
