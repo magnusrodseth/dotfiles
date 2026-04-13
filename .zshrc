@@ -222,6 +222,12 @@ export PATH="$HOME/.local/bin:$PATH"
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
+# Auto-update pi packages (once daily, background)
+if [[ ! -f /tmp/.pi-updated-$(date +%Y%m%d) ]] && command -v pi &>/dev/null; then
+  pi update &>/dev/null &
+  touch /tmp/.pi-updated-$(date +%Y%m%d)
+fi
+
 # Report CWD to terminal via OSC 7 (fixes Ghostty new tab directory inheritance)
 # Must be at the end of .zshrc so it isn't overridden by plugins
 _osc7_cwd() {
