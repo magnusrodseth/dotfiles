@@ -61,13 +61,20 @@
     "swift-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "vercel-plugin@vercel-vercel-plugin": true
+    "vercel-plugin@vercel-vercel-plugin": true,
+    "mempalace@mempalace": true
   },
   "extraKnownMarketplaces": {
     "vercel-vercel-plugin": {
       "source": {
         "source": "directory",
         "path": "/Users/magnusrodseth/.cache/plugins/github.com-vercel-vercel-plugin"
+      }
+    },
+    "mempalace": {
+      "source": {
+        "source": "github",
+        "repo": "milla-jovovich/mempalace"
       }
     }
   },

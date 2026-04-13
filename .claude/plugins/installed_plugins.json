@@ -91,6 +91,13 @@
         "installedAt": "2026-02-08T08:56:47.640Z",
         "lastUpdated": "2026-02-09T07:21:42.675Z",
         "gitCommitSha": "2cd88e7947b7382e045666abee790c7f55f669f3"
+      },
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/claude-plugins-official/pyright-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-04-05T10:21:03.861Z",
+        "lastUpdated": "2026-04-05T10:21:03.861Z"
       }
     ],
     "gopls-lsp@claude-plugins-official": [
@@ -196,6 +203,16 @@
         "installedAt": "2026-03-28T12:13:38.489Z",
         "lastUpdated": "2026-03-28T12:13:38.489Z",
         "gitCommitSha": "2e79fc9698b0f25253a238f4ac5ab6d3265d266d"
+      }
+    ],
+    "mempalace@mempalace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/mempalace/mempalace/3.0.14",
+        "version": "3.0.14",
+        "installedAt": "2026-04-10T07:03:22.209Z",
+        "lastUpdated": "2026-04-10T07:03:22.209Z",
+        "gitCommitSha": "a036b4300d46fe6d399f8f89347f816462dd2c22"
       }
     ]
   }
