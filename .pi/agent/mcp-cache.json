@@ -1,0 +1,1206 @@
+{
+  "version": 1,
+  "servers": {
+    "context7": {
+      "configHash": "5b9e3b96d774e4a07a0f410782ef89134c1166fb8c1b7631b488994511954fae",
+      "tools": [
+        {
+          "name": "resolve-library-id",
+          "description": "Resolves a package/product name to a Context7-compatible library ID and returns matching libraries.\n\nYou MUST call this function before 'Query Documentation' tool to obtain a valid Context7-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.\n\nEach result includes:\n- Library ID: Context7-compatible identifier (format: /org/project)\n- Name: Library or package name\n- Description: Short summary\n- Code Snippets: Number of available code examples\n- Source Reputation: Authority indicator (High, Medium, Low, or Unknown)\n- Benchmark Score: Quality indicator (100 is the highest score)\n- Versions: List of versions if available. Use one of those versions if the user provides a version in their query. The format of the version is /org/project/version.\n\nFor best results, select libraries based on name match, source reputation, snippet coverage, benchmark score, and relevance to your use case.\n\nSelection Process:\n1. Analyze the query to understand what library/package the user is looking for\n2. Return the most relevant match based on:\n- Name similarity to the query (exact matches prioritized)\n- Description relevance to the query's intent\n- Documentation coverage (prioritize libraries with higher Code Snippet counts)\n- Source reputation (consider libraries with High or Medium reputation more authoritative)\n- Benchmark Score: Quality indicator (100 is the highest score)\n\nResponse Format:\n- Return the selected library ID in a clearly marked section\n- Provide a brief explanation for why this library was chosen\n- If multiple good matches exist, acknowledge this but proceed with the most relevant one\n- If no good matches exist, clearly state this and suggest query refinements\n\nFor ambiguous queries, request clarification before proceeding with a best-guess match.\n\nIMPORTANT: Do not call this tool more than 3 times per question. If you cannot find what you need after 3 calls, use the best result you have.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The question or task you need help with. This is used to rank library results by relevance to what the user is trying to accomplish. The query is sent to the Context7 API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query."
+              },
+              "libraryName": {
+                "type": "string",
+                "description": "Library name to search for and retrieve a Context7-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'."
+              }
+            },
+            "required": [
+              "query",
+              "libraryName"
+            ],
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          }
+        },
+        {
+          "name": "query-docs",
+          "description": "Retrieves and queries up-to-date documentation and code examples from Context7 for any programming library or framework.\n\nYou must call 'Resolve Context7 Library ID' tool first to obtain the exact Context7-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.\n\nIMPORTANT: Do not call this tool more than 3 times per question. If you cannot find what you need after 3 calls, use the best information you have.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "libraryId": {
+                "type": "string",
+                "description": "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolve-library-id' or directly from user query in the format '/org/project' or '/org/project/version'."
+              },
+              "query": {
+                "type": "string",
+                "description": "The question or task you need help with. Be specific and include relevant details. Good: 'How to set up authentication with JWT in Express.js' or 'React useEffect cleanup function examples'. Bad: 'auth' or 'hooks'. The query is sent to the Context7 API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query."
+              }
+            },
+            "required": [
+              "libraryId",
+              "query"
+            ],
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          }
+        }
+      ],
+      "resources": [],
+      "cachedAt": 1776325337260
+    },
+    "piwik-pro": {
+      "configHash": "c9f224fee09fbfec959e317daa91ccdbe4d20f90e6fe38e20b612fdb50c67ebf",
+      "tools": [
+        {
+          "name": "tools_parameters_get",
+          "description": "Get JSON schema for tool parameters.\n\n        This tool provides parameter discovery for MCP tools that use JSON attributes.\n        It returns the complete JSON schema including field types, descriptions,\n        validation rules, and examples for tools that have been refactored to use\n        the simplified JSON attributes interface.\n\n        Args:\n            tool_name: Name of the MCP tool to get parameters for (e.g., \"apps_update\")\n\n        Returns:\n            Dictionary containing JSON schema for the tool's parameters including:\n            - type: Object type definition\n            - properties: Field definitions with types and descriptions\n            - required: List of required fields (usually empty for update tools)\n            - definitions: Enum and complex type definitions\n\n        Example Usage:\n            schema = tools_parameters_get(\"apps_update\")\n            # Returns complete JSON schema with all 19 available fields\n\n        Raises:\n            ValueError: If tool_name is not recognized\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "tool_name": {
+                "title": "Tool Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "tool_name"
+            ],
+            "title": "tools_parameters_getArguments"
+          }
+        },
+        {
+          "name": "apps_list",
+          "description": "List apps from Piwik PRO analytics.\n\n        Retrieves a list of applications (websites/apps) that are being tracked\n        in the Piwik PRO analytics platform.\n\n        Args:\n            limit: Maximum number of apps to return (default: 100, max: 1000)\n            offset: Number of apps to skip (default: 0)\n            search: Search query to filter apps by name\n\n        Returns:\n            Dictionary containing app list and metadata including:\n            - apps: List of app objects with id, name, urls, timezone, currency, etc.\n            - total: Total number of apps available\n            - limit: Number of apps requested\n            - offset: Number of apps skipped\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "default": 100,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "search": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Search"
+              }
+            },
+            "title": "apps_listArguments"
+          }
+        },
+        {
+          "name": "apps_get",
+          "description": "Get detailed information about a specific app.\n\n        Args:\n            app_id: UUID of the app to retrieve\n\n        Returns:\n            Dictionary containing detailed app information including:\n            - id: App UUID\n            - name: App name\n            - urls: List of URLs where the app is available\n            - app_type: Type of application\n            - timezone: App timezone\n            - currency: App currency\n            - gdpr_enabled: Whether GDPR is enabled\n            - gdpr_data_anonymization: Whether GDPR data anonymization is enabled\n            - real_time_dashboards: Whether real-time dashboards are enabled\n            - created_at: App creation datetime\n            - updated_at: App last update datetime\n\n        For more details use also tracker_settings_app_get tool.\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "apps_getArguments"
+          }
+        },
+        {
+          "name": "audiences_list",
+          "description": "List audiences from Piwik PRO CDP.\n\n        Retrieves a list of audiences that are configured in the Piwik PRO\n        Customer Data Platform for the specified app.\n\n        Args:\n            app_id: UUID of the app to list audiences for\n\n        Returns:\n            Dictionary containing audience list including:\n            - audiences: List of audience objects with id, name, description, etc.\n            - total: Total number of audiences available\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "audiences_listArguments"
+          }
+        },
+        {
+          "name": "audiences_get",
+          "description": "Get detailed information about a specific audience.\n\n        Args:\n            app_id: UUID of the app\n            audience_id: UUID of the audience to retrieve\n\n        Returns:\n            Dictionary containing detailed audience information including:\n            - id: Audience UUID\n            - name: Audience name\n            - description: Audience description\n            - membership_duration_days: Duration in days for audience membership\n            - version: Audience version\n            - definition: Audience definition with conditions\n            - author_email: Email of the audience author\n            - is_author: Whether current user is the author\n            - created_at: Audience creation datetime\n            - updated_at: Audience last update datetime\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "audience_id": {
+                "title": "Audience Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id",
+              "audience_id"
+            ],
+            "title": "audiences_getArguments"
+          }
+        },
+        {
+          "name": "activations_attributes_list",
+          "description": "List all CDP attributes available for audience creation.\n\n        This tool returns structured attribute objects containing all available attributes\n        for the specified app. Each AttributeSummary object includes:\n        - column_id: Unique identifier for the attribute\n        - column_name: Human-readable name\n        - column_type: Data type (string, number, datetime, etc.)\n        - supported_operators: List of operators valid for this column type\n        - value_selectors: Supported selectors (first, last, any, none)\n        - value_format: CRITICAL - Format requirements and examples for condition values\n        - column_category: Categories the attribute belongs to\n        - scope: Whether it's an event or profile attribute\n        - immutable: Whether the attribute is read-only\n        - event_data_key: Key for imported data or tracker dimension\n\n        This information is essential for creating audience conditions with correct\n        column_id, operators, value_selectors, and most importantly - correct value formats.\n\n        Args:\n            app_id: UUID of the app to list attributes for\n\n        Returns:\n            AttributeListMCPResponse containing:\n            - attributes: List of AttributeSummary objects with structured metadata\n            - total: Total number of attributes available\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "activations_attributes_listArguments"
+          }
+        },
+        {
+          "name": "tags_list",
+          "description": "List tags for an app in Piwik PRO Tag Manager.\n\n        Args:\n            app_id: UUID of the app\n            limit: Maximum number of tags to return (default: 10)\n            offset: Number of tags to skip (default: 0)\n            filters: Filter by tag name, is_active, template, consent_type, is_prioritized, has_any_triggers, tag_type\n\n        Returns:\n            Dictionary containing tag list and metadata including:\n            - data: List of tag objects with id, name, template, and attributes\n            - meta: Metadata with pagination information\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "filters": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Filters"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "tags_listArguments"
+          }
+        },
+        {
+          "name": "tags_get",
+          "description": "Get detailed information about a specific tag.\n\n        Args:\n            app_id: UUID of the app\n            tag_id: UUID of the tag\n\n        Returns:\n            Dictionary containing tag details including:\n            - data: Tag object with id, name, template, and all attributes\n            - Tag configuration and settings\n\n        Related Tools:\n            - tags_list_triggers(app_id, tag_id) - Get triggers attached to this tag\n            - templates_get_tag(template_name) - Get template info for tag's template\n            - tags_update(app_id, tag_id, attributes) - Update this tag\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "tag_id": {
+                "title": "Tag Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id",
+              "tag_id"
+            ],
+            "title": "tags_getArguments"
+          }
+        },
+        {
+          "name": "tags_list_triggers",
+          "description": "Get list of triggers attached to a specific tag.\n\n        This tool helps you understand what triggers are configured to fire a specific tag,\n        which is essential for debugging and managing tag behavior.\n\n        Args:\n            app_id: UUID of the app\n            tag_id: UUID of the tag to get triggers for\n            limit: Maximum number of triggers to return (optional)\n            offset: Number of triggers to skip for pagination (optional)\n            sort: Sort order - 'name', '-name', 'created_at', '-created_at', etc. (optional)\n            name: Filter by trigger name (partial match, optional)\n            trigger_type: Filter by trigger type like 'page_view', 'click', 'custom_event' (optional)\n\n        Returns:\n            Dictionary containing list of triggers attached to the tag including:\n            - data: Array of trigger objects with id, type, and attributes\n            - meta: Pagination metadata with total count\n            - links: Pagination links for navigation\n\n        Examples:\n            # Get all triggers for a tag\n            tags_list_triggers(\"app-id\", \"tag-id\")\n\n            # Get triggers with pagination\n            tags_list_triggers(\"app-id\", \"tag-id\", limit=10, offset=0)\n\n            # Filter by trigger type\n            tags_list_triggers(\"app-id\", \"tag-id\", trigger_type=\"click\")\n\n            # Sort by name descending\n            tags_list_triggers(\"app-id\", \"tag-id\", sort=\"-name\")\n\n        Use Cases:\n            - Debug why a tag is not firing (check if triggers are attached)\n            - Understand tag behavior by seeing all its triggers\n            - Audit tag configuration for compliance or optimization\n            - Manage trigger-tag relationships in complex setups\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "tag_id": {
+                "title": "Tag Id",
+                "type": "string"
+              },
+              "limit": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Limit"
+              },
+              "offset": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Offset"
+              },
+              "sort": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Sort"
+              },
+              "name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Name"
+              },
+              "trigger_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Trigger Type"
+              }
+            },
+            "required": [
+              "app_id",
+              "tag_id"
+            ],
+            "title": "tags_list_triggersArguments"
+          }
+        },
+        {
+          "name": "triggers_list",
+          "description": "List triggers for an app in Piwik PRO Tag Manager.\n\n        Args:\n            app_id: UUID of the app\n            limit: Maximum number of triggers to return (default: 10)\n            offset: Number of triggers to skip (default: 0)\n            filter_template: Filter by template names\n            filter_is_active: Filter by active status\n\n        Returns:\n            Dictionary containing trigger list and metadata including:\n            - data: List of trigger objects with id, name, template, and attributes\n            - meta: Metadata with pagination information\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "filters": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Filters"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "triggers_listArguments"
+          }
+        },
+        {
+          "name": "triggers_get",
+          "description": "Get detailed information about a specific trigger.\n\n        Args:\n            app_id: UUID of the app\n            trigger_id: UUID of the trigger\n\n        Returns:\n            Dictionary containing trigger details including:\n            - data: Trigger object with id, name, template, and all attributes\n            - Trigger conditions and configuration\n\n        Related Tools:\n            - triggers_list_tags() - See what tags are assigned to this trigger\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "trigger_id": {
+                "title": "Trigger Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id",
+              "trigger_id"
+            ],
+            "title": "triggers_getArguments"
+          }
+        },
+        {
+          "name": "triggers_list_tags",
+          "description": "Get list of tags assigned to a specific trigger.\n\n        This tool helps you understand what tags will be fired when a specific trigger condition is met,\n        which is essential for debugging and managing trigger behavior.\n\n        Args:\n            app_id: UUID of the app\n            trigger_id: UUID of the trigger to get tags for\n            limit: Maximum number of tags to return (optional)\n            offset: Number of tags to skip for pagination (optional)\n            sort: Sort order. Options: 'name', '-name', 'created_at', '-created_at', 'updated_at', '-updated_at'\n            name: Filter by tag name (partial match)\n            is_active: Filter by active status (true/false)\n            template: Filter by tag template (e.g. 'piwik', 'custom_tag', 'google_analytics')\n            consent_type: Filter by consent type ('not_require_consent', 'require_consent',\n                'require_consent_for_cookie')\n            is_prioritized: Filter by prioritized status (true/false)\n\n        Returns:\n            Dictionary containing:\n            - data: List of tag objects assigned to the trigger\n            - meta: Pagination and total count information\n            - Each tag includes: id, name, template, is_active, and other attributes\n\n        Examples:\n            # Get all tags for a trigger\n            triggers_list_tags(app_id=\"123\", trigger_id=\"456\")\n\n            # Get only active custom tags with pagination\n            triggers_list_tags(\n                app_id=\"123\",\n                trigger_id=\"456\",\n                limit=10,\n                is_active=True,\n                template=\"custom_tag\"\n            )\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "trigger_id": {
+                "title": "Trigger Id",
+                "type": "string"
+              },
+              "limit": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Limit"
+              },
+              "offset": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Offset"
+              },
+              "sort": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Sort"
+              },
+              "name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Name"
+              },
+              "is_active": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Is Active"
+              },
+              "template": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Template"
+              },
+              "consent_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Consent Type"
+              },
+              "is_prioritized": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Is Prioritized"
+              }
+            },
+            "required": [
+              "app_id",
+              "trigger_id"
+            ],
+            "title": "triggers_list_tagsArguments"
+          }
+        },
+        {
+          "name": "variables_list",
+          "description": "List variables for an app in Piwik PRO Tag Manager.\n\n        Args:\n            app_id: UUID of the app\n            limit: Maximum number of variables to return (default: 10)\n            offset: Number of variables to skip (default: 0)\n            filters: Filter by variable name, type, and builtin status\n\n        Returns:\n            Dictionary containing variable list and metadata including:\n            - data: List of variable objects with id, name, template, and attributes\n            - meta: Metadata with pagination information\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "filters": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Filters"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "variables_listArguments"
+          }
+        },
+        {
+          "name": "variables_get",
+          "description": "Get detailed information about a specific variable.\n\n        Args:\n            app_id: UUID of the app\n            variable_id: UUID of the variable\n\n        Returns:\n            Dictionary containing variable details including:\n            - data: Variable object with id, name, template, and all attributes\n            - Variable configuration and value settings\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "variable_id": {
+                "title": "Variable Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id",
+              "variable_id"
+            ],
+            "title": "variables_getArguments"
+          }
+        },
+        {
+          "name": "versions_list",
+          "description": "List versions for an app in Piwik PRO Tag Manager.\n\n        Args:\n            app_id: UUID of the app\n            limit: Maximum number of versions to return (default: 10)\n            offset: Number of versions to skip (default: 0)\n\n        Returns:\n            Dictionary containing version list and metadata including:\n            - data: List of version objects with id, name, version_type, and timestamps\n            - meta: Metadata with pagination information\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "versions_listArguments"
+          }
+        },
+        {
+          "name": "versions_get_draft",
+          "description": "Get draft version for an app.\n\n        Args:\n            app_id: UUID of the app\n\n        Returns:\n            Dictionary containing draft version details including:\n            - data: Draft version object with all tags, triggers, variables\n            - Version configuration and metadata\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "versions_get_draftArguments"
+          }
+        },
+        {
+          "name": "versions_get_published",
+          "description": "Get published version for an app.\n\n        Args:\n            app_id: UUID of the app\n\n        Returns:\n            Dictionary containing published version details including:\n            - data: Published version object with all active tags, triggers, variables\n            - Version configuration and metadata\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "versions_get_publishedArguments"
+          }
+        },
+        {
+          "name": "templates_list_tags",
+          "description": "List all available Piwik PRO Tag Manager templates.\n\n        This tool returns a list of all available tag templates that can be used with tags_create.\n        Each template has detailed documentation available via templates_get_tag.\n\n        Returns:\n            Dictionary containing:\n            - available_templates: Mapping of template names to metadata (name_aliases, description)\n            - total_count: Number of available templates\n            - usage_guide: Instructions on how to use templates\n            - note: Information about template documentation\n\n        Examples:\n            # Get list of all available templates\n            templates = templates_list_tags()\n\n            # Then get details for a specific template\n            details = templates_get_tag(template_name='custom_tag')\n\n        Workflow:\n            1. Use templates_list_tags() to see all available templates\n            2. Use templates_get_tag(template_name='NAME') to get specific requirements\n            3. Use tags_create() with the template information to create the tag\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "title": "templates_list_tagsArguments"
+          }
+        },
+        {
+          "name": "templates_get_tag",
+          "description": "Get detailed information about a specific Piwik PRO Tag Manager template.\n\n        This tool provides comprehensive guidance on how to use tag templates with tags_create,\n        including required attributes, examples, and best practices optimized for AI understanding.\n\n        Args:\n            template_name: Name of the template to get details for (e.g., 'custom_tag', 'piwik', 'google_analytics')\n\n        Returns:\n            Dictionary containing complete template information including:\n            - Template description and use cases\n            - Required and optional attributes with detailed explanations\n            - Complete MCP tool usage examples\n            - Best practices and common mistakes\n            - Troubleshooting guide\n\n        Examples:\n            # Get detailed info for custom tag template\n            custom_tag_info = templates_get_tag(template_name='custom_tag')\n\n            # Get info for Piwik PRO analytics template\n            piwik_info = templates_get_tag(template_name='piwik')\n\n            # Get info for Google Analytics template\n            ga_info = templates_get_tag(template_name='google_analytics')\n\n        Workflow:\n            1. Use templates_list_tags() to see all available templates\n            2. Use this tool to get specific requirements for your chosen template\n            3. Use tags_create() with the template information to create the tag\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "template_name": {
+                "title": "Template Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "template_name"
+            ],
+            "title": "templates_get_tagArguments"
+          }
+        },
+        {
+          "name": "templates_list_triggers",
+          "description": "List all available Piwik PRO Tag Manager trigger templates.\n\n        This tool returns a list of all available trigger templates that can be used with triggers_create.\n        Each template has detailed documentation available via templates_get_trigger.\n\n        Returns:\n            Dictionary containing:\n            - available_templates: Mapping of trigger template names to metadata (name_aliases, description)\n            - total_count: Number of available trigger templates\n            - usage_guide: Instructions on how to use trigger templates\n            - note: Information about trigger template documentation\n\n        Examples:\n            # Get list of all available trigger templates\n            templates = templates_list_triggers()\n\n            # Then get details for a specific trigger template\n            details = templates_get_trigger(template_name='page_view')\n\n        Workflow:\n            1. Use templates_list_triggers() to see all available trigger templates\n            2. Use templates_get_trigger(template_name='NAME') to get specific requirements\n            3. Use triggers_create() with the template information to create the trigger\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "title": "templates_list_triggersArguments"
+          }
+        },
+        {
+          "name": "templates_get_trigger",
+          "description": "Get detailed information about a specific Piwik PRO Tag Manager trigger template.\n\n        This tool provides comprehensive guidance on how to use trigger templates with triggers_create,\n        including required attributes, examples, and best practices optimized for AI understanding.\n\n        Args:\n            template_name: Name of the trigger template to get details for\n                (e.g., 'page_view', 'click', 'form_submission')\n\n        Returns:\n            Dictionary containing complete trigger template information including:\n            - Template description and use cases\n            - Required and optional attributes with detailed explanations\n            - Complete MCP tool usage examples\n            - Best practices and common mistakes\n            - Troubleshooting guide\n\n        Examples:\n            # Get detailed info for page view trigger template\n            page_view_info = templates_get_trigger(template_name='page_view')\n\n            # Get info for click trigger template\n            click_info = templates_get_trigger(template_name='click')\n\n            # Get info for form submission trigger template\n            form_info = templates_get_trigger(template_name='form_submission')\n\n        Workflow:\n            1. Use templates_list_triggers() to see all available trigger templates\n            2. Use this tool to get specific requirements for your chosen trigger template\n            3. Use triggers_create() with the template information to create the trigger\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "template_name": {
+                "title": "Template Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "template_name"
+            ],
+            "title": "templates_get_triggerArguments"
+          }
+        },
+        {
+          "name": "templates_list_variables",
+          "description": "List all available Piwik PRO Tag Manager variable templates.\n\n        This tool provides discovery of all available variable templates that can be used with\n        variables_create and variables_update operations. Each template includes comprehensive\n        documentation with field mutability guidance for both create and update scenarios.\n\n        Returns:\n            Dictionary containing:\n            - available_templates: Mapping of template names to metadata (name_aliases, description)\n            - total_count: Number of available templates\n            - usage_guide: Workflow instructions for template discovery and usage\n            - field_mutability: Overview of editable, create-only, and read-only fields\n\n        Examples:\n            # Get all available variable templates\n            templates = templates_list_variables()\n\n            # Example response structure:\n            {\n                \"available_templates\": {\n                    \"data_layer\": {\n                        \"name_aliases\": [\"Data Layer Variable\"],\n                        \"description\": \"Reads values from the data layer object.\"\n                    },\n                    \"custom_javascript\": {\n                        \"name_aliases\": [\"Custom JavaScript Variable\"],\n                        \"description\": \"Computes a value by executing user-defined JavaScript.\"\n                    }\n                },\n                \"total_count\": 3,\n                \"usage_guide\": {\n                    \"discovery_workflow\": [...],\n                    \"create_update_workflow\": {...},\n                    \"field_mutability\": {...}\n                }\n            }\n\n        Workflow:\n            1. Use this tool to see all available variable templates\n            2. Use templates_get_variable() to get specific requirements and mutability info\n            3. Use variables_create() or variables_update() with template information\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "title": "templates_list_variablesArguments"
+          }
+        },
+        {
+          "name": "templates_get_variable",
+          "description": "Get detailed information about a specific Piwik PRO Tag Manager variable template.\n\n        This tool provides comprehensive guidance for using variable templates with both create_variable\n        and update_variable operations. It includes complete field mutability information to help you\n        understand which fields can be modified after creation.\n\n        Args:\n            template_name: Name of the variable template to get details for\n                          Available templates include: 'data_layer', 'custom_javascript', 'constant'\n\n        Returns:\n            Dictionary containing complete variable template information including:\n            - template_name and display_name\n            - description and ai_usage_guide\n            - mcp_usage: Separate guidance for create_variable and update_variable\n            - required_attributes, optional_attributes, read_only_attributes\n            - field_mutability_guide: Detailed explanation of field editability\n            - complete_examples: Working examples for both create and update operations\n            - troubleshooting and best practices\n\n        Examples:\n            # Get dataLayer variable template info\n            template = templates_get_variable(template_name='data_layer')\n\n            # Get custom JavaScript variable template info\n            template = templates_get_variable(template_name='custom_javascript')\n\n        Field Mutability Overview:\n            ✅ Editable: name, is_active, template-specific options (can be updated anytime)\n            ⚠️ Create-only: variable_type (set during creation, immutable after)\n            🚫 Read-only: created_at, updated_at (auto-generated, never user-modifiable)\n\n        Workflow:\n            1. Use templates_list_variables() to see all available templates\n            2. Use this tool to get specific requirements and mutability info for your chosen template\n            3. Use variables_create() with the template information to create variables\n            4. Use variables_update() with editable fields only to update variables\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "template_name": {
+                "title": "Template Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "template_name"
+            ],
+            "title": "templates_get_variableArguments"
+          }
+        },
+        {
+          "name": "tracker_settings_global_get",
+          "description": "Get global tracker settings.\n\n        Returns:\n            Dictionary containing global tracker settings including:\n            - anonymize_visitor_geolocation_level: Geolocation anonymization level\n            - anonymize_visitor_ip_level: IP anonymization level (0-4)\n            - campaign_*_params: Campaign tracking parameters\n            - session_* settings: Session handling configuration\n            - excluded_ips: List of IPs excluded from tracking\n            - excluded_user_agents: User agents excluded from tracking\n            - site_search_query_params: Site search query parameters\n            - site_search_category_params: Site search category parameters\n            - updated_at: Last modification timestamp\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "title": "tracker_settings_global_getArguments"
+          }
+        },
+        {
+          "name": "tracker_settings_app_get",
+          "description": "Get effective tracker settings for a specific app.\n\n        Args:\n            app_id: UUID of the app\n            detailed: When true, include raw app-specific and global inputs alongside resolved settings\n\n        Returns:\n            Dictionary containing:\n            - settings: Resolved effective tracker settings for the app\n            - app_settings: Raw app-level settings when detailed=true\n            - global_settings: Raw global settings when detailed=true\n\n            Resolution rules:\n            - app-specific scalar and boolean values override global values\n            - null app scalar and boolean values fall back to global values\n            - app array values are merged with global array values, preserving app values first\n            - use tracker_settings_global_update to change global defaults explicitly\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "detailed": {
+                "default": false,
+                "title": "Detailed",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "tracker_settings_app_getArguments"
+          }
+        },
+        {
+          "name": "container_settings_get_installation_code",
+          "description": "\n        Get installation code for an app.\n\n        Args:\n            app_id: UUID of the app\n\n        Returns:\n            Object with a single field:\n            - code: Installation code string\n\n        Examples:\n            container_settings_get_installation_code(app_id=\"00000000-0000-4000-8000-000000000000\")\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "container_settings_get_installation_codeArguments"
+          }
+        },
+        {
+          "name": "container_settings_list",
+          "description": "\n        Get container settings for an app.\n\n        Args:\n            app_id: UUID of the app\n\n        Returns:\n            JSON:API response with settings list in 'data' and pagination in 'meta'.\n\n        Examples:\n            container_settings_list(app_id=\"00000000-0000-4000-8000-000000000000\")\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "container_settings_listArguments"
+          }
+        },
+        {
+          "name": "analytics_annotations_list",
+          "description": "\n        List user annotations for an app.\n\n        Args:\n            app_id: App UUID\n            date_from: Optional start date (YYYY-MM-DD)\n            date_to: Optional end date (YYYY-MM-DD)\n            limit: Max number of items\n            offset: Number of items to skip\n\n        Returns:\n            Annotations list and metadata\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              },
+              "date_from": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Date From"
+              },
+              "date_to": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Date To"
+              },
+              "source": {
+                "default": "all",
+                "title": "Source",
+                "type": "string"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "app_id"
+            ],
+            "title": "analytics_annotations_listArguments"
+          }
+        },
+        {
+          "name": "analytics_annotations_get",
+          "description": "\n        Get a user annotation by ID.\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "annotation_id": {
+                "title": "Annotation Id",
+                "type": "string"
+              },
+              "app_id": {
+                "title": "App Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "annotation_id",
+              "app_id"
+            ],
+            "title": "analytics_annotations_getArguments"
+          }
+        },
+        {
+          "name": "analytics_goals_list",
+          "description": "\n        List all goals for a website.\n\n        Args:\n            website_id: Website/App UUID\n            limit: Maximum number of rows to return (default: 10, min: 1, max: 100000)\n            offset: Number of rows to skip (default: 0, min: 0)\n\n        Returns:\n            Goals list with metadata\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "website_id"
+            ],
+            "title": "analytics_goals_listArguments"
+          }
+        },
+        {
+          "name": "analytics_goals_get",
+          "description": "\n        Get a specific goal by ID.\n\n        Args:\n            goal_id: Goal UUID\n            website_id: Website/App UUID\n\n        Returns:\n            Goal resource\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "goal_id": {
+                "title": "Goal Id",
+                "type": "string"
+              },
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "goal_id",
+              "website_id"
+            ],
+            "title": "analytics_goals_getArguments"
+          }
+        },
+        {
+          "name": "analytics_query_execute",
+          "description": "\n        Execute an analytics query against Piwik PRO.\n\n        REQUIRED WORKFLOW - You must follow these steps in order:\n\n        1. Call `analytics_dimensions_list` to get available dimension IDs\n        2. Call `analytics_metrics_list` to get available metric IDs\n        3. Call `analytics_dimensions_details_list` for details on dimensions you plan to use\n        4. Call `analytics_metrics_details_list` for details on metrics you plan to use\n        5. Call this tool with validated column_ids and transformation_ids\n\n        Column IDs and transformation IDs must exactly match values returned by the list and\n        details endpoints. Guessing or inventing IDs will cause query failures.\n\n        DO NOT RUN THIS TOOL BEFORE CHECKING DIMENSIONS AND METRICS DETAILS!\n        Important: Metrics cannot be transformed. Only dimensions accept transformation_id.\n\n        ---\n\n        Args:\n            website_id: UUID of the website/app to query\n            columns: List of column definitions. Each column is a dict with:\n                - column_id (required): Dimension or metric ID from the list endpoints\n                  (in case of calculated metric use always string \"calculated_metric\",\n                  in case of custom channel grouping use always string \"custom_channel_grouping\")\n                - transformation_id (optional): Aggregation function from details endpoint\n                  (e.g., \"sum\", \"count\", \"unique_count\")\n                  Note: Only dimensions support transformations. Metrics cannot be transformed.\n                - calculated_metric_id: only for calculated metrics\n                - custom_channel_grouping_id: only for custom channel groupings\n                - dimension_value_grouping_id: only for transformation_id = 'dimension_value_grouping'\n                - event_type: optional int value only for transformed dimension with scope = 'product'\n                  Allowed values:\n                    Order: 9, Abandoned cart: 10, Product detail view: 22, Add to cart: 23, Remove from cart: 24\n\n            date_from: Start date in YYYY-MM-DD format\n            date_to: End date in YYYY-MM-DD format\n            relative_date: Alternative to date_from/date_to. Options:\n                today, yesterday, last_week, last_month, last_year, last_X_days\n                last_X_days must be in range 1 <= X <= 365\n                For periods beyond the last year use date_from and date_to\n\n            filters: Optional dimension filter group with structure:\n                {\"operator\": \"and\"|\"or\", \"conditions\": [...]}\n\n                Each condition:\n                {\"column_id\": \"...\", \"condition\": {\"operator\": \"<op>\", \"value\": ...}}\n\n                Filter operators:\n                - String: eq, neq, contains, not_contains, starts_with, ends_with, matches, not_matches\n                - Numeric: gt, gte, lt, lte\n                - Null checks: empty, not_empty\n\n                Note: Some operators only work with specific data types.\n                Check dimension/metric details for type compatibility before filtering.\n            metric_filters: as arg 'filters' but for metrics\n            offset: Rows to skip (default: 0)\n            limit: Max rows to return (default: 100, max: 100000)\n            order_by: List of [column_index, \"asc\"|\"desc\"] pairs\n\n        ---\n\n        Reference:\n        - Dimension IDs: analytics_dimensions_list\n        - Metric IDs: analytics_metrics_list\n        - Dimension details (transformations, types): analytics_dimensions_details_list\n        - Metric details (types): analytics_metrics_details_list\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              },
+              "columns": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "title": "Columns",
+                "type": "array"
+              },
+              "date_from": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Date From"
+              },
+              "date_to": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Date To"
+              },
+              "relative_date": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Relative Date"
+              },
+              "filters": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Filters"
+              },
+              "metric_filters": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Metric Filters"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 100,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "order_by": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "enum": [
+                              "asc",
+                              "desc"
+                            ],
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Order By"
+              }
+            },
+            "required": [
+              "website_id",
+              "columns"
+            ],
+            "title": "analytics_query_executeArguments"
+          }
+        },
+        {
+          "name": "analytics_dimensions_list",
+          "description": "\n        List available dimensions for analytics queries.\n\n        Returns all dimensions that can be used as columns in analytics_query_execute.\n        To get details use `analytics_dimensions_details_list`\n        The format of the response:\n        ```\n        {\"dimensions\": [{column_id: column_name}],\n        \"custom_channel_groupings\": [{custom_channel_grouping_id: column_name}]}\n        ```\n        Args:\n            website_id: UUID of the website/app to get dimensions for\n\n        Returns:\n            DimensionsList with all available dimensions and custom channel groupings\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "website_id"
+            ],
+            "title": "analytics_dimensions_listArguments"
+          }
+        },
+        {
+          "name": "analytics_metrics_list",
+          "description": "\n        List available metrics for analytics queries.\n\n        Returns all metrics that can be used as columns in analytics_query_execute.\n        The format of the response:\n        ```\n        {\"metrics\": [{metric_id: metric_name}], ...}, \"calculated_metrics\": [{calculated_metric_id: column_name}]\n        ```\n\n        Args:\n            website_id: UUID of the website/app to get metrics for\n\n        Returns:\n            MetricsList with all available metrics\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "website_id"
+            ],
+            "title": "analytics_metrics_listArguments"
+          }
+        },
+        {
+          "name": "analytics_dimensions_details_list",
+          "description": "\n        List details of provided dimensions.\n\n        Args:\n            website_id: UUID of the website/app to get dimensions for\n            dimensions: list of dimension names\n\n        Returns:\n            The list of all available dimensions with details\n\n        Important: Use enum_values object values instead of keys for queries.\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              },
+              "dimensions": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Dimensions",
+                "type": "array"
+              }
+            },
+            "required": [
+              "website_id",
+              "dimensions"
+            ],
+            "title": "analytics_dimensions_details_listArguments"
+          }
+        },
+        {
+          "name": "analytics_metrics_details_list",
+          "description": "\n        List details of provided metrics.\n\n        Returns all metrics that can be used as columns in analytics_query_execute.\n\n        Args:\n            website_id: UUID of the website/app to get metrics for\n            metrics: list of metric names\n\n        Returns:\n            The list of all available metrics with details\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Metrics",
+                "type": "array"
+              }
+            },
+            "required": [
+              "website_id",
+              "metrics"
+            ],
+            "title": "analytics_metrics_details_listArguments"
+          }
+        },
+        {
+          "name": "analytics_custom_dimensions_list",
+          "description": "\n        List custom dimensions, optionally filtered by scope.\n\n        Args:\n            website_id: Website/App UUID\n            scope: Optional scope filter:\n                   - \"session\": Returns only session-scoped dimensions\n                   - \"event\": Returns only event-scoped dimensions\n                   - \"product\": Returns only product dimensions\n                   - None (default): Returns both standard and product dimensions separately\n            limit: Maximum number of rows to return (default: 10, min: 1, max: 100000)\n                   Note: Only applies to standard dimensions (session/event). Product dimensions\n                   are not paginated by the API.\n            offset: Number of rows to skip (default: 0, min: 0)\n                   Note: Only applies to standard dimensions (session/event).\n\n        Returns:\n            - If scope is \"session\" or \"event\": CustomDimensionsList (filtered by scope)\n            - If scope is \"product\": ProductCustomDimensionsList\n            - If scope is None: UnifiedCustomDimensionsList with both standard and product dimensions\n\n        Raises:\n            RuntimeError: If API request fails\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              },
+              "scope": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "session",
+                      "event",
+                      "product"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Scope"
+              },
+              "limit": {
+                "default": 10,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "website_id"
+            ],
+            "title": "analytics_custom_dimensions_listArguments"
+          }
+        },
+        {
+          "name": "analytics_custom_dimensions_get",
+          "description": "\n        Get a specific custom dimension by ID.\n\n        Note: The scope parameter is required to determine which API to query.\n        If you don't know the scope, use analytics_custom_dimensions_list() first\n        to find the dimension and its scope.\n\n        Args:\n            dimension_id: Custom Dimension UUID\n            website_id: Website/App UUID\n            scope: Dimension scope (required for API routing):\n                   - \"session\" or \"event\": Query standard custom dimensions API\n                   - \"product\": Query product custom dimensions API\n\n        Returns:\n            CustomDimensionItem (for session/event) or ProductCustomDimensionItem (for product)\n\n        Raises:\n            RuntimeError: If dimension not found or API request fails\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "dimension_id": {
+                "title": "Dimension Id",
+                "type": "string"
+              },
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              },
+              "scope": {
+                "enum": [
+                  "session",
+                  "event",
+                  "product"
+                ],
+                "title": "Scope",
+                "type": "string"
+              }
+            },
+            "required": [
+              "dimension_id",
+              "website_id",
+              "scope"
+            ],
+            "title": "analytics_custom_dimensions_getArguments"
+          }
+        },
+        {
+          "name": "analytics_custom_dimensions_get_slots",
+          "description": "\n        Get slot availability statistics for all dimension types.\n\n        This endpoint provides information about how many dimension slots are available,\n        used, and remaining for each scope (session, event, and product).\n\n        Args:\n            website_id: Website/App UUID\n\n        Returns:\n            Slot statistics for all dimension scopes with the following info for each:\n            - available: Total number of slots available\n            - used: Number of slots currently in use\n            - left: Number of slots remaining\n\n        Raises:\n            RuntimeError: If API request fails\n        ",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "website_id": {
+                "title": "Website Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "website_id"
+            ],
+            "title": "analytics_custom_dimensions_get_slotsArguments"
+          }
+        }
+      ],
+      "resources": [],
+      "cachedAt": 1776325337247
+    }
+  }
+}
