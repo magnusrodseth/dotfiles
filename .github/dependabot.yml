@@ -1,0 +1,6 @@
+version: 2
+# Dotfiles repo: package.json/lock files here are vendored from third-party
+# tools (Raycast extensions, opencode, superpowers skills) that manage their
+# own dependencies. Empty updates disables Dependabot version updates and
+# silences alert scanning for ecosystems we don't maintain at this level.
+updates: []
