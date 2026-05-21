@@ -10,6 +10,8 @@ ignored
 .config/zed/prompts
 .config/zed/embeddings
 .config/zed/conversations
+.config/zed/settings.json
+.config/zed/settings_backup.json
 .config/opencode/antigravity-accounts.json
 .agents/
 .agent/
@@ -43,6 +45,7 @@ ignored
 .claude/image-cache/
 .claude/sessions/
 .claude/skills/*/scripts/__pycache__/
+.claude/.last-cleanup
 
 # Windsurf runtime (track User/settings.json only)
 Library/Application Support/Windsurf/*
