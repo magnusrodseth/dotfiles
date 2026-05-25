@@ -59,6 +59,11 @@ echo "Installing agent skills..."
 sh scripts/skills/packages.sh install
 echo "Agent skills installed successfully."
 
+# Link dotfiles-authored skills into ~/.claude/skills/ for global use
+echo "Linking dotfiles skills globally..."
+bash scripts/skills/link-dotfiles-skills.sh
+echo "Dotfiles skills linked successfully."
+
 # Install plugins to Yazi
 echo "Installing Yazi plugins..."
 ya pack -i
