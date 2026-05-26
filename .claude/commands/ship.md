@@ -1,7 +1,6 @@
 ---
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git diff:*), Bash(git commit:*), Bash(git push:*), Bash(git log:*), Bash(git branch:*)
 description: Commit all changes and push to remote
-model: claude-sonnet-4-6
 ---
 
 ## Context
