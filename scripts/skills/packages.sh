@@ -45,6 +45,38 @@ install_packages() {
   # Restore all skills from lock file
   npx skills experimental_install
   echo "Skills restored from lock file."
+
+  # Mirror custom skills from dotfiles into ~/.agents/skills/ so they're
+  # available to both Claude Code (.claude/skills) and other agent runtimes
+  # that read from .agents/skills. Only mirrors real directories; skips
+  # symlinks (those already point the other direction, into .agents/skills).
+  mirror_custom_skills
+}
+
+# Function to symlink custom skills from dotfiles into ~/.agents/skills/
+mirror_custom_skills() {
+  local src_dir="$HOME/dotfiles/.claude/skills"
+  local dest_dir="$HOME/.agents/skills"
+
+  [[ ! -d "$src_dir" ]] && return 0
+  mkdir -p "$dest_dir"
+
+  for skill_path in "$src_dir"/*/; do
+    [[ -L "${skill_path%/}" ]] && continue
+    local skill_name
+    skill_name="$(basename "$skill_path")"
+    local target="$dest_dir/$skill_name"
+
+    if [[ -L "$target" ]]; then
+      continue
+    elif [[ -e "$target" ]]; then
+      echo "Skipping $skill_name: $target exists and is not a symlink"
+      continue
+    fi
+
+    ln -s "${skill_path%/}" "$target"
+    echo "Linked custom skill: $skill_name"
+  done
 }
 
 # Ensure npx is available
