@@ -42,6 +42,7 @@ ignored
 .claude/telemetry/
 .claude/todos/
 .claude/transcripts/
+.claude/usage-data/
 .claude/image-cache/
 .claude/sessions/
 .claude/skills/*/scripts/__pycache__/
@@ -70,9 +71,16 @@ Library/LaunchAgents/io.podman_desktop.PodmanDesktop.plist
 
 # Raycast runtime
 .config/raycast/extensions/node_modules
+.config/raycast/extensions/**/*.js.map
 
 # Google Cloud SDK credentials and runtime
 .config/gcloud/
 
 # Google Workspace CLI credentials
 .config/gws/
+
+# 1Password CLI (device ID is sensitive)
+.config/op/
+
+# ngrok (contains auth token)
+.config/ngrok/ngrok.yml

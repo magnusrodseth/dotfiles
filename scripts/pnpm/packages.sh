@@ -33,13 +33,21 @@ install_packages() {
     exit 1
   fi
 
-  # Install each package listed in the file
+  local -a failures=()
   while IFS= read -r package; do
+    [[ -z "$package" ]] && continue
     if ! pnpm install -g "$package"; then
+      failures+=("$package")
       echo "Failed to install package: $package"
     fi
   done <"$PACKAGES_FILE"
 
+  if (( ${#failures[@]} > 0 )); then
+    echo
+    echo "pnpm install completed with ${#failures[@]} failure(s):"
+    printf '  - %s\n' "${failures[@]}"
+    exit 1
+  fi
   echo "All pnpm global packages from $PACKAGES_FILE have been installed."
 }
 
