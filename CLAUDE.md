@@ -68,7 +68,8 @@ Local secrets go in `zsh/ignored/` (auto-sourced, gitignored).
 
 - **Neovim**: LazyVim config in `.config/nvim/`
 - **VS Code/Cursor**: Settings symlinked from `Library/Application Support/{Code,Cursor}/User/`
-- **Default editor**: Windsurf (`$EDITOR`)
+- **Default editor**: Windsurf (`$EDITOR` in `.zshenv`)
+- Note: `.zshenv` holds env vars + PATH; `.zshrc` holds interactive shell config only.
 
 ### Claude Code Integration
 
@@ -96,7 +97,23 @@ Located at `.config/opencode/`:
 
 Config at `.config/raycast/`. Import via Raycast Settings → Advanced → Import/Export.
 
-**Important**: Do not delete `~/.config/raycast/extensions/` directory.
+**Important**: Do not delete `~/.config/raycast/extensions/` directory. Source maps (`*.js.map`) under it are gitignored.
+
+### AI Agent Configurations
+
+- `.pi/` - Pi coding agent config (`agent/`, `suggester/`)
+- `.config/opencode/` - OpenCode (see above)
+- `.config/superpowers/skills/` - Agent collaboration skills
+- `.claude/` - Claude Code (settings, commands, skills, agents)
+
+### Other top-level directories
+
+- `.tt/` - Theme Suggester themes
+- `.gitkraken/` - GitKraken config + themes
+- `browser/` - Browser extension configs (Dark Reader, Vimium, Zen profile, wallpapers)
+- `images/` - Screenshots used in README
+- `macos/Wallpapers/` - Desktop wallpapers (assets, not stowed)
+- `scripts/macos/` - macOS setup scripts (defaults, App Store install)
 
 ## File Organization
 
@@ -129,3 +146,6 @@ zsh/
 - oh-my-posh is disabled in Apple Terminal
 - bat cache must be rebuilt after theme changes: `bat cache --build`
 - VS Code extensions managed separately via script (not symlinked)
+- `.zshrc` short-circuits for Claude Code shells (`CLAUDECODE=1`) to skip interactive plugin loading
+- Java pinned to `openjdk@21` (the only JDK in `Brewfile`); other versions removed
+- Slow completion-generators (uv, ngrok) are deferred until after first prompt via a precmd hook
