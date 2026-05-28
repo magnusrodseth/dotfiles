@@ -1,10 +1,6 @@
 # Set Tokyo Night color theme
 theme = "tokyonight"
 
-# Set the default working directory to "~/dev"
-# Personal Mac: /Users/magnusrodseth, Gjensidige Mac: /Users/magnus.rodseth
-working-directory = /Users/magnusrodseth/dev
-
 # Set the font
 font-family = "FiraCode Nerd Font Mono"
 font-size = 16
@@ -30,3 +26,7 @@ window-padding-x = 4
 window-padding-y = 4
 window-padding-balance = true
 keybind = shift+enter=text:\n
+
+# Per-machine overrides (gitignored). Create .config/ghostty/config.local with
+# `working-directory = /Users/<username>/dev` on each machine.
+config-file = ?config.local

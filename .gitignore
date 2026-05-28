@@ -2,6 +2,7 @@
 .env
 rest-client
 ignored
+.config/ghostty/config.local
 **/openai.sh
 .config/github-copilot/**
 **/stripe/config.toml
@@ -32,6 +33,7 @@ ignored
 .claude/plugins/blocklist.json
 .claude/plugins/cache/
 .claude/plugins/install-counts-cache.json
+.claude/plugins/plugin-catalog-cache.json
 .claude/plugins/known_marketplaces.json
 .claude/plugins/marketplaces/
 .claude/projects/
@@ -102,3 +104,6 @@ fonts/
 
 # ngrok (contains auth token)
 .config/ngrok/ngrok.yml
+
+# Notion CLI (ntn) runtime
+.config/notion/
