@@ -204,16 +204,6 @@
         "lastUpdated": "2026-03-28T12:13:38.489Z",
         "gitCommitSha": "2e79fc9698b0f25253a238f4ac5ab6d3265d266d"
       }
-    ],
-    "mempalace@mempalace": [
-      {
-        "scope": "user",
-        "installPath": "/Users/magnusrodseth/.claude/plugins/cache/mempalace/mempalace/3.0.14",
-        "version": "3.0.14",
-        "installedAt": "2026-04-10T07:03:22.209Z",
-        "lastUpdated": "2026-04-10T07:03:22.209Z",
-        "gitCommitSha": "a036b4300d46fe6d399f8f89347f816462dd2c22"
-      }
     ]
   }
 }
