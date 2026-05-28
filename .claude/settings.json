@@ -71,17 +71,9 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true,
-    "mempalace@mempalace": true
+    "clangd-lsp@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "mempalace": {
-      "source": {
-        "source": "github",
-        "repo": "milla-jovovich/mempalace"
-      }
-    }
-  },
+  "extraKnownMarketplaces": {},
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
