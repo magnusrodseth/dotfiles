@@ -1,13 +1,5 @@
 # cd `~`
 
-|            **Shell**            |             **Neovim**              |
-| :-----------------------------: | :---------------------------------: |
-|   ![Shell](/images/shell.png)   |    ![Neovim](/images/neovim.png)    |
-|           **Lazygit**           |         **Editing a file**          |
-| ![Lazygit](/images/lazygit.png) | ![Editing a file](/images/file.png) |
-| **Yazi: Terminal file manager** |                                     |
-|    ![Yazi](/images/yazi.png)    |                                     |
-
 ## Table of Contents
 
 - [cd `~`](#cd-)
