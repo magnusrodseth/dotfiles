@@ -69,9 +69,27 @@ Library/Application Support/Windsurf/User/*
 # Podman Desktop
 Library/LaunchAgents/io.podman_desktop.PodmanDesktop.plist
 
+# Podman machine runtime state (generated per-machine, not authored config)
+.config/containers/podman/
+.config/containers/podman-connections.json
+.config/containers/podman-connections.json.lock
+
+# App-generated LaunchAgents (not authored config; apps recreate these)
+Library/LaunchAgents/com.dropbox.*
+Library/LaunchAgents/com.valvesoftware.*
+
+# Editor/tool backup files (git history is the backup)
+*.bak
+
+# Fonts are installed via Homebrew cask (font-fira-code-nerd-font), not vendored
+fonts/
+
 # Raycast runtime
 .config/raycast/extensions/node_modules
 .config/raycast/extensions/**/*.js.map
+# Compiled per-platform binaries (regenerated on extension install)
+.config/raycast/extensions/**/compiled_raycast_rust/
+.config/raycast/extensions/**/assets/webp/
 
 # Google Cloud SDK credentials and runtime
 .config/gcloud/
