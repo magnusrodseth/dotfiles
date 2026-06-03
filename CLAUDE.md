@@ -129,8 +129,7 @@ Config at `.config/raycast/`. Import via Raycast Settings → Advanced → Impor
 ### Other top-level directories
 
 - `.tt/` - Theme Suggester themes
-- `.gitkraken/` - GitKraken config + themes
-- `browser/` - Browser extension configs (Dark Reader, Vimium, Zen profile, wallpapers)
+- `browser/` - Browser extension configs (Dark Reader, Vimium, wallpapers)
 - `images/` - Screenshots used in README
 - `macos/Wallpapers/` - Desktop wallpapers (assets, not stowed)
 - `scripts/macos/` - macOS setup scripts (defaults, App Store install)
