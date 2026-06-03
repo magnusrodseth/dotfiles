@@ -53,8 +53,11 @@ git clone https://github.com/magnusrodseth/dotfiles.git $HOME/dotfiles
 # Navigate to the dotfiles directory
 cd $HOME/dotfiles
 
-# Run the install script
-sh install.sh
+# Run the install script (bash; safe to re-run, exits non-zero if any step fails)
+bash install.sh
+
+# Verify the machine matches the dotfiles afterwards
+bash scripts/doctor.sh
 ```
 
 ## What is `stow`?
@@ -101,7 +104,7 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [`stow`](https://www.gnu.org/software/stow/), for managing dotfiles
 - [`brew`](https://brew.sh), for installing software packages
 - [`git`](https://git-scm.com), for version control
-- [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal
+- [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal (installed automatically via the `font-fira-code-nerd-font` Homebrew cask in the `Brewfile`)
 - [`ghostty`](https://ghostty.org/), for a fast, native terminal emulator
 - [`raycast`](https://www.raycast.com/), for a Spotlight replacement with extensions, window management, etc.
 
