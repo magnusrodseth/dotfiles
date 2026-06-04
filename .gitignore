@@ -36,6 +36,8 @@ ignored
 .claude/plugins/plugin-catalog-cache.json
 .claude/plugins/known_marketplaces.json
 .claude/plugins/marketplaces/
+# Holds machine-specific absolute install paths (differs per machine/username)
+.claude/plugins/installed_plugins.json
 .claude/projects/
 .claude/shell-snapshots/
 .claude/stats-cache.json
@@ -49,6 +51,7 @@ ignored
 .claude/sessions/
 .claude/skills/*/scripts/__pycache__/
 .claude/.last-cleanup
+.claude/.last-update-result.json
 
 # Windsurf runtime (track User/settings.json only)
 Library/Application Support/Windsurf/*
