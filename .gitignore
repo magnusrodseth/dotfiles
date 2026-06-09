@@ -110,3 +110,6 @@ fonts/
 
 # Notion CLI (ntn) runtime
 .config/notion/
+
+# hh-observe (contains Grafana session cookies for prod/test)
+.config/hh-observe/
