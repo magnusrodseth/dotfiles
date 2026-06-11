@@ -123,7 +123,6 @@ Config at `.config/raycast/`. Import via Raycast Settings → Advanced → Impor
 
 - `.pi/` - Pi coding agent config (`agent/`, `suggester/`)
 - `.config/opencode/` - OpenCode (see above)
-- `.config/superpowers/skills/` - Agent collaboration skills
 - `.claude/` - Claude Code (settings, commands, skills, agents)
 
 ### Other top-level directories
@@ -149,7 +148,6 @@ Brewfile                  # ~310 Homebrew dependencies
   ohmyposh/               # Shell prompt
   yazi/                   # File manager
   opencode/               # OpenCode AI config
-  superpowers/skills/     # Agent collaboration skills
 scripts/
   cargo/                  # Rust package management
   pnpm/                   # Node.js package management
