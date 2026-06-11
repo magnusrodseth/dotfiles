@@ -178,3 +178,6 @@ _osc7_cwd() {
   printf '\e]7;file://%s%s\e\\' "$HOST" "$PWD"
 }
 add-zsh-hook precmd _osc7_cwd
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
