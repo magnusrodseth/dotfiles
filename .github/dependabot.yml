@@ -1,6 +1,8 @@
 version: 2
-# Dotfiles repo: package.json/lock files here are vendored from third-party
-# tools (Raycast extensions, opencode, superpowers skills) that manage their
-# own dependencies. Empty updates disables Dependabot version updates and
-# silences alert scanning for ecosystems we don't maintain at this level.
+# Dotfiles repo: the remaining package.json/lock files here are vendored from
+# third-party tools (Raycast extensions) that manage their own dependencies.
+# Empty updates disables Dependabot version-update PRs. NOTE: this does NOT
+# silence Dependabot *alerts* -- those come from the dependency graph, which
+# scans every manifest and cannot exclude paths. Alerts on vendored manifests
+# must be dismissed manually (reason: "not_used") in the Security tab.
 updates: []
