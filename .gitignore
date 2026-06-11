@@ -110,3 +110,9 @@ fonts/
 
 # Notion CLI (ntn) runtime
 .config/notion/
+
+# hh-observe (contains Grafana session cookies for prod/test)
+.config/hh-observe/
+
+# Claude plugin sweep timestamp (machine churn)
+.claude/plugins/.last_inuse_sweep
