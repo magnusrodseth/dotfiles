@@ -77,5 +77,6 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
-  "editorMode": "normal"
+  "editorMode": "normal",
+  "model": "claude-fable-5[1m]"
 }
