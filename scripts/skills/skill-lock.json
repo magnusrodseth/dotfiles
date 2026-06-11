@@ -10,15 +10,6 @@
       "installedAt": "2026-02-09T07:43:51.905Z",
       "updatedAt": "2026-02-09T07:43:51.905Z"
     },
-    "brainstorming": {
-      "source": "obra/superpowers",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/obra/superpowers.git",
-      "skillPath": "skills/brainstorming/SKILL.md",
-      "skillFolderHash": "d28aa4ed67fe5a3f1336f0fcccb1e548c67dc864",
-      "installedAt": "2026-02-16T19:19:34.422Z",
-      "updatedAt": "2026-02-16T19:19:34.422Z"
-    },
     "frontend-slides": {
       "source": "zarazhangrui/frontend-slides",
       "sourceType": "github",
