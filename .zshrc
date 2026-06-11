@@ -180,4 +180,4 @@ _osc7_cwd() {
 add-zsh-hook precmd _osc7_cwd
 
 # bun completions
-[ -s "/Users/magnus.rodseth/.bun/_bun" ] && source "/Users/magnus.rodseth/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
