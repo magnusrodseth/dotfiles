@@ -12,7 +12,7 @@ return {
         leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
       },
       filtered_items = {
-        visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
+        visible = true, -- If you set this to `true`, all "hide" just means "dimmed out"
         hide_dotfiles = false,
         hide_gitignored = false,
       },
