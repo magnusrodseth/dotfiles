@@ -9,8 +9,8 @@
 {
   "icon_theme": {
     "mode": "dark",
-    "light": "Zed (Default)",
-    "dark": "Zed (Default)"
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Macchiato"
   },
   "cli_default_open_behavior": "existing_window",
   "vim_mode": true,
@@ -49,6 +49,9 @@
   },
   "tab_size": 2,
   "format_on_save": "on",
+  "minimap": {
+    "show": "auto"
+  },
   "git": {
     "inline_blame": {
       "enabled": true
