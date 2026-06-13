@@ -19,5 +19,14 @@
       "cmd-9": ["pane::ActivateItem", 8],
       "cmd-0": "pane::ActivateLastItem"
     }
+  },
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      // , -> go to end of file, append a new blank line, stay in insert
+      ",": ["workspace::SendKeystrokes", "shift-g shift-a enter"],
+      // ; -> go to top of file, insert at start of line
+      ";": ["workspace::SendKeystrokes", "g g shift-i"]
+    }
   }
 ]

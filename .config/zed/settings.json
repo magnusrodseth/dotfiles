@@ -49,9 +49,27 @@
   },
   "tab_size": 2,
   "format_on_save": "on",
+  "languages": {
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "TSX": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    }
+  },
   "minimap": {
     "show": "auto"
   },
+  "vertical_scroll_margin": 99,
   "git": {
     "inline_blame": {
       "enabled": true
