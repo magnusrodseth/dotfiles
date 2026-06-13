@@ -38,9 +38,31 @@
   },
   "ui_font_size": 16,
   "buffer_font_size": 15,
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "buffer_font_features": {
+    "calt": true
+  },
   "theme": {
     "mode": "dark",
     "light": "Tokyo Night Light",
     "dark": "Tokyo Night Storm",
+  },
+  "tab_size": 2,
+  "format_on_save": "on",
+  "git": {
+    "inline_blame": {
+      "enabled": true
+    }
+  },
+  "command_aliases": {
+    "W": "w",
+    "Q": "q",
+    "Wq": "wq"
+  },
+  "vim": {
+    "use_system_clipboard": "on_yank",
+    "use_smartcase_find": true,
+    "toggle_relative_line_numbers": true,
+    "highlight_on_yank_duration": 50
   },
 }
