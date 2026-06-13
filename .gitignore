@@ -11,7 +11,6 @@ ignored
 .config/zed/prompts
 .config/zed/embeddings
 .config/zed/conversations
-.config/zed/settings.json
 .config/zed/settings_backup.json
 .config/opencode/antigravity-accounts.json
 # opencode dir is bun-managed locally (untracked package.json/bun.lock); never track npm lockfiles
