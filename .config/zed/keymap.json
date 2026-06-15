@@ -17,7 +17,14 @@
       "cmd-7": ["pane::ActivateItem", 6],
       "cmd-8": ["pane::ActivateItem", 7],
       "cmd-9": ["pane::ActivateItem", 8],
-      "cmd-0": "pane::ActivateLastItem"
+      "cmd-0": "pane::ActivateLastItem",
+      // cmd-b -> toggle the file tree sidebar (project panel is right-docked here)
+      "cmd-b": "workspace::ToggleRightDock",
+      // cmd-j -> toggle the AI agent panel (left-docked here)
+      "cmd-j": "workspace::ToggleLeftDock",
+      // cmd-g cmd-d / cmd-g cmd-r -> ported from Windsurf (go to def / find refs)
+      "cmd-g cmd-d": "editor::GoToDefinition",
+      "cmd-g cmd-r": "editor::FindAllReferences"
     }
   },
   {
