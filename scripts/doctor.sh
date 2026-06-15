@@ -156,6 +156,22 @@ for t in nvim eza zoxide atuin oh-my-posh yazi bat tmux delta fzf zinit; do
   esac
 done
 
+# --- repo hygiene ------------------------------------------------------------
+
+section "Repo hygiene (no runtime/backup cruft tracked)"
+# Tools drop backups (*.bak.*), caches (*-cache.json), and LMDB runtime DBs
+# (*.mdb) into stowed config dirs; a later `git add -A` sweeps them in. These
+# patterns only ever match generated junk, so any hit is a real leak — untrack
+# it and add the path to the relevant .gitignore.
+cruft="$(git ls-files | grep -E '\.bak($|\.)|\.mdb$|-cache\.json$' || true)"
+if [ -z "$cruft" ]; then
+  pass "no tracked .bak/.mdb/*-cache.json cruft"
+else
+  n="$(printf '%s\n' "$cruft" | grep -c .)"
+  fail "$n tracked runtime/backup file(s) (untrack: git rm --cached <path>)"
+  printf '%s\n' "$cruft" | sed 's/^/      /'
+fi
+
 # --- summary -----------------------------------------------------------------
 
 echo ""

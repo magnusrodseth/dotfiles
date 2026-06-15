@@ -166,3 +166,4 @@ zsh/
 - `.zshrc` short-circuits for Claude Code shells (`CLAUDECODE=1`) to skip interactive plugin loading
 - Java pinned to `openjdk@21` (the only JDK in `Brewfile`); other versions removed
 - Slow completion-generators (uv, ngrok) are deferred until after first prompt via a precmd hook
+- When adding a new tool whose config lives in a stowed dir, gitignore its runtime state (caches, `*-cache.json`, `*.mdb`/lock DBs, `*.bak*`) **before** the first commit so it never enters the tree; `doctor.sh`'s "Repo hygiene" check fails loud if any slips through
