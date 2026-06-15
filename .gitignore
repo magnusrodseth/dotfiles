@@ -85,7 +85,9 @@ Library/LaunchAgents/com.dropbox.*
 Library/LaunchAgents/com.valvesoftware.*
 
 # Editor/tool backup files (git history is the backup)
+# Covers dotted-suffix variants too (e.g. *.bak.pre-copilot, *.bak.2026-04-03)
 *.bak
+*.bak.*
 
 # Fonts are installed via Homebrew cask (font-fira-code-nerd-font), not vendored
 fonts/
