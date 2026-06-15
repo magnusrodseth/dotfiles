@@ -28,5 +28,12 @@
       // ; -> go to top of file, insert at start of line
       ";": ["workspace::SendKeystrokes", "g g shift-i"]
     }
+  },
+  {
+    // Markdown-only: render a readable table/preview to the side
+    "context": "Editor && extension == md",
+    "bindings": {
+      "cmd-shift-v": "markdown::OpenPreviewToTheSide"
+    }
   }
 ]
