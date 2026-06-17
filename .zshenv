@@ -24,6 +24,11 @@ export PNPM_HOME="$HOME/Library/pnpm"
 # Android SDK
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 
+# 1Password / SpareBank1 CLI: default to the personal account (two accounts registered)
+export OP_ACCOUNT=my.1password.eu
+export SB1_STORE=op
+export SB1_OP_ACCOUNT=my.1password.eu
+
 # Cargo
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
