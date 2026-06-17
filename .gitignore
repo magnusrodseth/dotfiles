@@ -126,3 +126,11 @@ fonts/
 
 # Claude plugin sweep timestamp (machine churn)
 .claude/plugins/.last_inuse_sweep
+# Raycast vendored extension builds (regenerated on every Raycast update)
+.config/raycast/extensions/**/*.js
+
+# Claude Code runtime session/team state
+.claude/teams/
+
+# Installed (non-dotfiles-authored) skill symlink
+.claude/skills/playwriter
