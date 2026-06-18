@@ -167,7 +167,7 @@ Note that Raycast reads its config and extensions from `~/.config/raycast`, so t
 
 ## Configuring editors
 
-[Zed](https://zed.dev) is my primary editor these days, but [Windsurf](https://windsurf.com/), [Cursor](https://cursor.com/), and [VS Code](https://code.visualstudio.com/) are all installed and configured. (`windsurf -w` is still the default `$EDITOR` used by git and scripts.)
+[Zed](https://zed.dev) is my primary editor these days, but [Windsurf](https://windsurf.com/), [Cursor](https://cursor.com/), and [VS Code](https://code.visualstudio.com/) are all installed and configured. (`zed -w` is the default `$EDITOR` used by git and scripts.)
 
 ### Managing keybindings, settings and snippets
 
