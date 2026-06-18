@@ -12,7 +12,7 @@ export LC_ALL=en_US.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # Default editor (used by git, scripts, etc.)
-export EDITOR="windsurf -w"
+export EDITOR="zed -w"
 export VISUAL="$EDITOR"
 
 # Java

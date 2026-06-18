@@ -88,7 +88,7 @@ Local secrets go in `zsh/ignored/` (auto-sourced, gitignored).
 
 - **Neovim**: LazyVim config in `.config/nvim/`
 - **VS Code/Cursor**: Settings symlinked from `Library/Application Support/{Code,Cursor}/User/`
-- **Default editor**: Windsurf (`$EDITOR` in `.zshenv`)
+- **Default editor**: Zed (`$EDITOR="zed -w"` in `.zshenv`)
 - Note: `.zshenv` holds env vars + PATH; `.zshrc` holds interactive shell config only.
 
 ### Claude Code Integration
