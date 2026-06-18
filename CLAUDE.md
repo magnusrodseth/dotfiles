@@ -99,13 +99,12 @@ Settings in `.claude/settings.json`:
 - Multiple plugins enabled (agent-orchestration, feature-dev, etc.)
 
 Custom commands in `.claude/commands/`:
-- `sisyphus.md` - Full agent workflow (context → explore → design → implement → review)
 - `ship.md` - Automated commit and push
 
 Shell aliases:
 - `clc` → `claude --continue`
+- `clr` → `claude --resume`
 - `ship` → `claude "/ship"`
-- `sis()` → Sisyphus agent harness
 
 ### OpenCode Configuration
 

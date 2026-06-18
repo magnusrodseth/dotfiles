@@ -121,8 +121,10 @@ alias obs="open -a Obsidian"
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
-alias claude="claude --dangerously-skip-permissions"
-alias clc="claude --continue --dangerously-skip-permissions"
+# Interactive Claude runs in auto mode (permissions.defaultMode in settings.json);
+# headless ship below opts into --dangerously-skip-permissions explicitly.
+alias clc="claude --continue"
+alias clr="claude --resume"
 alias pic="pi -c"
 
 # Headless ship: optimized for speed
@@ -134,9 +136,6 @@ function ship {
     --no-session-persistence \
     --allowedTools "Bash(git *)"
 }
-
-# Sisyphus prompt harness
-sis() { claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/commands/sisyphus.md)"; }
 
 # Source custom functions
 if [ -d "$HOME/zsh/functions" ]; then
