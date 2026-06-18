@@ -60,6 +60,16 @@ bash scripts/op-fields.sh "Cargo API Token" Private   # lists labels/types/refs,
   op run --env-file=.env.tpl -- ./your-app      # .env.tpl values are op:// refs
   ```
 - **Inspect an item's structure** without leaking values: `bash scripts/op-fields.sh "<item>" [vault]`.
+- **Open an item in the 1Password desktop app (GUI)** — when the user must view or edit it
+  themselves (e.g. paste a secret you must not handle). Uses a macOS deep link, UUIDs only,
+  no secret read:
+  ```bash
+  bash scripts/op-open.sh "github-readme-stats PAT" Development edit   # action: edit | view (default)
+  ```
+  Raw form: `open "onepassword://view-item/?a=<account_uuid>&v=<vault_uuid>&i=<item_uuid>"`
+  (`edit-item` jumps straight into edit mode). Resolve the UUIDs with:
+  account → `op account list --format=json` (`.account_uuid`, match by `url`);
+  vault + item → `op item get "<title>" --vault <v> --format=json` (`.vault.id`, `.id`).
 - **Create / edit items, documents, SSH, multi-account, JSON output**: see [REFERENCE.md](REFERENCE.md).
 
 ## Shell plugins (cargo, openai)
