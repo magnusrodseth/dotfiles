@@ -8,6 +8,7 @@
     "pr": ""
   },
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "Bash(git -C:*)",
       "Bash(git add:*)",
