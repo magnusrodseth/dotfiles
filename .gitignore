@@ -130,6 +130,9 @@ fonts/
 .claude/plugins/.last_inuse_sweep
 # Raycast vendored extension builds (regenerated on every Raycast update)
 .config/raycast/extensions/**/*.js
+# Extension manifests are regenerated on update (e.g. embedded language lists);
+# the *.js code is already ignored, so these can't reconstruct an extension anyway.
+.config/raycast/extensions/**/package.json
 
 # Claude Code runtime session/team state
 .claude/teams/
