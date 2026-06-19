@@ -1,11 +1,17 @@
 -- color-spans.lua
 -- Enables colored text via bracketed spans: [text]{color="red"}
--- Works with LaTeX/PDF output using xcolor package.
+-- Works with typst (default engine), LaTeX/PDF (xcolor), and HTML output.
 
 function Span(el)
   local color = el.attributes['color']
   if color then
-    if FORMAT:match 'latex' or FORMAT:match 'pdf' then
+    if FORMAT:match 'typst' then
+      return {
+        pandoc.RawInline('typst', '#text(fill: ' .. color .. ')['),
+        pandoc.Span(el.content),
+        pandoc.RawInline('typst', ']')
+      }
+    elseif FORMAT:match 'latex' or FORMAT:match 'pdf' then
       return {
         pandoc.RawInline('latex', '\\textcolor{' .. color .. '}{'),
         pandoc.Span(el.content),
