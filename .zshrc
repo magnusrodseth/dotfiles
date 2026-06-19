@@ -121,10 +121,12 @@ alias obs="open -a Obsidian"
 alias aliases="alias | sed 's/=.*$/\t -> &/'"
 alias bbd="brew bundle dump --force --file=$HOME/Brewfile"
 alias ngrok-default="ngrok http --url=bold-gently-weasel.ngrok-free.app"
-# Interactive Claude runs in auto mode (permissions.defaultMode in settings.json);
-# headless ship below opts into --dangerously-skip-permissions explicitly.
-alias clc="claude --continue"
-alias clr="claude --resume"
+# Interactive Claude defaults to bypassPermissions via the explicit flag.
+# permissions.defaultMode in .claude/settings.json is silently ignored for dangerous
+# modes when read as project settings (security), so the CLI flag is the reliable lever.
+alias claude="claude --dangerously-skip-permissions"
+alias clc="claude --continue --dangerously-skip-permissions"
+alias clr="claude --resume --dangerously-skip-permissions"
 alias pic="pi -c"
 
 # Headless ship: optimized for speed

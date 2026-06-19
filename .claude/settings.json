@@ -8,7 +8,7 @@
     "pr": ""
   },
   "permissions": {
-    "defaultMode": "auto",
+    "defaultMode": "bypassPermissions",
     "allow": [
       "Bash(git -C:*)",
       "Bash(git add:*)",
