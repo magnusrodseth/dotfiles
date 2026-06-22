@@ -20,6 +20,8 @@ ignored
 .cursor/
 .kiro/
 .windsurf/
+# Stray gcloud SDK fragment accidentally created in repo root; never track or stow
+google-cloud-sdk/
 
 # Claude Code runtime
 .claude/backups/
