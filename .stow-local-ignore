@@ -7,7 +7,10 @@ Brewfile
 install.sh
 browser/*
 images/*
+google-cloud-sdk
 \.config/op
+\.claude/skills
+\.claude/plugins/known_marketplaces.json
 \.agents
 \.agent
 \.cursor
