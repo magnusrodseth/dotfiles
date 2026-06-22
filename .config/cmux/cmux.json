@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux-settings.schema.json",
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
   "schemaVersion": 1,
 
   // This file uses JSON with comments (JSONC).
@@ -7,6 +7,60 @@
   // Remove a setting to fall back to the value saved in Settings.
   // cmux creates this template on launch when both settings file locations are missing.
   // ~/.config/cmux/settings.json takes precedence over the Application Support fallback.
+
+  // --- Active overrides ported from the Settings window (cmux NSUserDefaults) ---
+  // File-managed; these win over the GUI. Full template with all options is below.
+
+  "app": {
+    "preferredEditor": "zed"
+  },
+
+  // Hibernate idle agent terminals beyond the live cap to reclaim RAM.
+  // idleSeconds raised from the default 5 (far too aggressive) to 30 min.
+  "terminal": {
+    "agentHibernation": {
+      "enabled": true,
+      "idleSeconds": 1800
+    }
+  },
+
+  "sidebar": {
+    "openPortLinksInCmuxBrowser": false,
+    "openPullRequestLinksInCmuxBrowser": false,
+    "showBranchDirectory": false,
+    "showLog": false,
+    "showNotificationMessage": false,
+    "showPorts": false,
+    "showPullRequests": false,
+    "showSSH": false
+  },
+
+  "sidebarAppearance": {
+    "matchTerminalBackground": true
+  },
+
+  "workspaceColors": {
+    "notificationBadgeColor": "#545A80",
+    "selectionColor": "#545A80"
+  },
+
+  "browser": {
+    "openTerminalLinksInCmuxBrowser": false
+  },
+
+  // AI-summarize each agent session into a workspace/tab name.
+  "automation": {
+    "workspaceAutoNaming": true
+  },
+
+  // selectWorkspaceByNumber = switch sidebar workspaces (cmd+ctrl+1..9; cmd+shift+N avoided — clashes with macOS screenshots)
+  // selectSurfaceByNumber   = switch tabs within a pane/workspace (cmd+1..9)
+  "shortcuts": {
+    "bindings": {
+      "selectWorkspaceByNumber": "cmd+ctrl+1",
+      "selectSurfaceByNumber": "cmd+1"
+    }
+  },
 
   //   "app" : {
   //     "appearance" : "system",
