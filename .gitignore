@@ -104,6 +104,8 @@ fonts/
 # Compiled per-platform binaries (regenerated on extension install)
 .config/raycast/extensions/**/compiled_raycast_rust/
 .config/raycast/extensions/**/assets/webp/
+# Color-picker wheel asset is regenerated (format swaps webp<->png) on update
+.config/raycast/extensions/**/assets/rgb-color-wheel.*
 
 # Google Cloud SDK credentials and runtime
 .config/gcloud/
