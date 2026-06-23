@@ -3,6 +3,10 @@
 Norwegian is his default and most natural register: warmer, more idiomatic, and
 more emoji-forward than his English. Mirror the verbatim samples below.
 
+> Mirror the warmth, greetings, and rhythm - not any "ikke X, men Y" / "it's not
+> X, it's Y" reframes that slip through in these older samples. The **Hard bans**
+> in SKILL.md override the samples.
+
 ## Profile
 
 **Greetings**
@@ -50,7 +54,7 @@ more emoji-forward than his English. Mirror the verbatim samples below.
   engine", "tech lead-prosessen", "busy dager".
 - "dere" for a company/team, "du" casual. Correct æ/ø/å throughout.
 
-## Verbatim samples — casual / DM
+## Verbatim samples - casual / DM
 
 > Hei, Tom-Erik! Det kan vi gjerne 😊 Når kan det passe for deg? Hva med en 30 min prat i morgen en gang?
 
@@ -70,7 +74,7 @@ more emoji-forward than his English. Mirror the verbatim samples below.
 
 > God påske!🐥
 
-## Verbatim samples — professional / email
+## Verbatim samples - professional / email
 
 > God morgen, Øistein!
 >
