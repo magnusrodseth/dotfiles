@@ -55,10 +55,12 @@
 
   // selectWorkspaceByNumber = switch sidebar workspaces (cmd+ctrl+1..9; cmd+shift+N avoided — clashes with macOS screenshots)
   // selectSurfaceByNumber   = switch tabs within a pane/workspace (cmd+1..9)
+  // globalSearch            = unbound (null); its default cmd+opt+f popped the system-wide "Search all windows, panels, browser tabs" overlay
   "shortcuts": {
     "bindings": {
       "selectWorkspaceByNumber": "cmd+ctrl+1",
-      "selectSurfaceByNumber": "cmd+1"
+      "selectSurfaceByNumber": "cmd+1",
+      "globalSearch": null
     }
   },
 
