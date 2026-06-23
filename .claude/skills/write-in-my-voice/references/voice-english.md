@@ -5,6 +5,11 @@ splits sharply by register: **cold/professional outreach** is crisp, emoji-free,
 and front-loaded; **warm/established threads** loosen up with "Hey, [Name]!" and
 the occasional ☺️. Mirror the verbatim samples below.
 
+> Mirror the warmth, greetings, and structure - not any "not X, it's Y" reframes
+> that slip through in these older samples (e.g. "the challenge is not X. It's
+> Y", "This isn't a pitch, it's a tip"). The **Hard bans** in SKILL.md override
+> the samples.
+
 ## Profile
 
 **Greetings**
@@ -18,7 +23,7 @@ the occasional ☺️. Mirror the verbatim samples below.
 - Warm threads often skip the sign-off word and close with an action invite
   ("Let me know if anything else needs adjusting!").
 
-**Identity line (cold outreach)** — he opens cold English pitches with a fixed
+**Identity line (cold outreach)** - he opens cold English pitches with a fixed
 self-intro, then the ask:
 
 - "I'm Magnus Rødseth, a developer [and consultant] based in Oslo building
@@ -52,7 +57,7 @@ self-intro, then the ask:
 - Closes by handing the next move over: "Let me know if you'd like any changes",
   "Don't hesitate to reach out".
 
-## Verbatim samples — warm / established
+## Verbatim samples - warm / established
 
 > Hey, Abbey!
 >
@@ -68,7 +73,7 @@ self-intro, then the ask:
 >
 > Magnus Rødseth
 
-## Verbatim samples — professional / cold outreach
+## Verbatim samples - professional / cold outreach
 
 > Hi Saravana,
 >
