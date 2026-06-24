@@ -35,6 +35,9 @@ these rules (older writing); the rules win. Going forward, never:
 - **Clickbait / inflated openings** ("Barrieren for å skrive kode har kollapset").
   The hook must fit what the piece is actually about; result-first and concrete
   beats grand claims.
+- **The pray emoji 🙏 (any skin tone, e.g. 🙏🏽).** Never use it in any message or
+  register. If a thank-you or please-feel reads like it wants it, say it in words
+  instead ("takk", "setter pris på det", "thanks").
 
 Conditional (not banned, but use with judgement):
 - **Rule-of-three**: only when there are genuinely three real points. Never as
@@ -91,7 +94,7 @@ These hold regardless of language:
 - [ ] **No hard-ban violations**: no "it's not X, it's Y" reframe anywhere, no
       one-sentence dramatic paragraphs, no hype words, no clickbait opening
 - [ ] Greeting/sign-off matches the register (long-form: none - open on the hook, close on a resource list + bio line)
-- [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**) and any emoji is jammed onto the last word with no space ("for tiden😊")
+- [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**) and any emoji is jammed onto the last word with no space ("for tiden😊"); **never the pray emoji 🙏 / 🙏🏽**
 - [ ] No em dashes; æ/ø/å intact; any triad is three real points, not filler
 - [ ] Messages end by handing the next step to the recipient
 - [ ] Reads like the samples, not like generic AI politeness (no "I hope this email finds you well", no "delve")

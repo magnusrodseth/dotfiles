@@ -26,6 +26,9 @@ more emoji-forward than his English. Mirror the verbatim samples below.
   "for tiden😊", "med det🕺", "du😊", "Eden Stack!!❤️".
 - His signature set: 🕺 / 🕺🏽 (very frequent on LinkedIn), 😊, ☺️. Warmer:
   ❤️ 💛 🐥 ⭐️ for friends/family/partner. 🤷 for resigned shrug.
+- When the recipient can take a playful tone, his go-to set is 🤠, 🕺🏽 and 🫶🏽.
+  Use sparingly: max 1-2 per message, never stacked into a string.
+- Never the pray emoji 🙏 / 🙏🏽 (see Hard bans in SKILL.md).
 - Professional/serious email: dial emoji down to one ☺️ or 😊, or none.
 
 **Rhythm & punctuation**
