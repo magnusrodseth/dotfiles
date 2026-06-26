@@ -5,24 +5,58 @@ description: Format a message for Microsoft Teams and copy it to the clipboard a
 
 # Format Teams Message
 
-Format a Markdown message for Microsoft Teams and copy it to the macOS clipboard as HTML.
+Draft a message in Magnus's voice, format it as Markdown for Microsoft Teams, and copy it to the macOS clipboard as HTML.
 
 Teams does **not** parse Markdown on paste. Pasting plain Markdown leaves the raw characters (`**`, `>`, `` ` ``, etc.) visible. To get real formatting, HTML must be placed on the macOS clipboard under the `public.html` flavor. Teams reads that flavor on paste and renders it.
 
 ## Workflow
 
-1. Take the message content (from the user or generated in the conversation).
-2. Ensure it is valid Markdown. Adjust if the input has obvious mistakes that would break the HTML conversion.
-3. Convert Markdown → HTML using `pandoc`.
-4. Place the HTML on the clipboard using `osascript` with the AppKit framework.
-5. Confirm the copy and remind the user to paste into Teams.
+1. **Draft the message in Magnus's voice.** Run the content through the `write-in-my-voice` skill so it reads like he wrote it, not like an AI drafted it (see "Composing the message" below). Skip only if the user pasted final text they want verbatim.
+2. **Append the AI-disclosure footer** (see "AI-disclosure footer" below) as the last line.
+3. Ensure the result is valid Markdown. Adjust if the input has obvious mistakes that would break the HTML conversion.
+4. Convert Markdown → HTML using `pandoc`.
+5. Place the HTML on the clipboard using `osascript` with the AppKit framework.
+6. Confirm the copy and remind the user to paste into Teams.
+
+## Composing the message
+
+Teams messages are outward-facing first-person text, so they go through `write-in-my-voice` (Norwegian or English, register auto-selected). On top of that skill's rules, lean into these for Teams specifically:
+
+- **Smooth, connected sentences.** Favour flowing prose over choppy fragments. Let clauses join with commas, colons, and semicolons (never em dashes) so the message reads naturally start to finish.
+- **English for technical jargon.** Keep technical and product terms in English even inside Norwegian prose: say "deployment", "pull request", "merge", "build", "endpoint", "rollback", "feature flag", "background job" rather than forcing a Norwegian equivalent. Magnus code-switches this way naturally; over-translated technical Norwegian reads stiff and wrong.
+- **Plain Norwegian for everything else.** Only the technical nouns/verbs switch to English. The connective tissue, framing, and tone stay in natural Norwegian with correct æ/ø/å.
+
+## AI-disclosure footer
+
+Every message this skill composes ends with a short italic disclosure. Match the message language:
+
+- **Norwegian:** `*Denne meldingen er skrevet av AI, korrekturlest av meg, og basert på kontekst jeg har hentet inn selv.*`
+- **English:** `*This message was written by AI, proof-read by me, and based on context I gathered myself.*`
+
+**Spacing:** a single blank line is not enough. Teams renders consecutive paragraphs tightly, so the footer crowds the body. Add an explicit empty paragraph above it so there's a real visual gap — a line containing only `&nbsp;`, or a `---` rule for a stronger footer separator:
+
+```markdown
+...last line of the body.
+
+&nbsp;
+
+*Denne meldingen er skrevet av AI, korrekturlest av meg, og basert på kontekst jeg har hentet inn selv.*
+```
+
+If the user supplied the full message verbatim (workflow step 1 skipped), the "written by AI" framing is inaccurate — ask whether they still want the footer before adding it.
 
 ## Implementation
 
 ```bash
-# 1) Write the message to a temp file (use HEREDOC to preserve formatting)
+# 1) Write the voiced message to a temp file (use HEREDOC to preserve formatting).
+#    End with an empty paragraph (&nbsp;) then the italic AI-disclosure footer,
+#    language-matched to the body. The &nbsp; gives a real gap in Teams.
 cat > /tmp/teams-msg.md << 'EOF'
-<MARKDOWN CONTENT GOES HERE>
+<VOICED MARKDOWN CONTENT GOES HERE>
+
+&nbsp;
+
+*Denne meldingen er skrevet av AI, korrekturlest av meg, og basert på kontekst jeg har hentet inn selv.*
 EOF
 
 # 2) Convert to HTML. Use --wrap=none to avoid pandoc inserting hard line breaks.
@@ -71,6 +105,7 @@ After running, confirm with one line: "Kopiert til Teams-clipboard. Lim inn med 
 
 ## Pairing With Other Skills
 
+- **`write-in-my-voice`** drafts the message body before formatting (workflow step 1). This skill always pairs with it unless the user supplied verbatim text.
 - For pure plain-text drafting (no Teams formatting), use `copy-to-clipboard` instead.
 - This skill is the right choice **only** when the destination is Microsoft Teams. For Slack, iMessage, or email, use `copy-to-clipboard`.
 
