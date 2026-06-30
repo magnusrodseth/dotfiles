@@ -1181,16 +1181,6 @@
       "installedAt": "2026-04-29T06:16:37.148Z",
       "updatedAt": "2026-05-18T11:01:07.444Z"
     },
-    "write-a-skill": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/productivity/write-a-skill/SKILL.md",
-      "skillFolderHash": "2f252b35aa238879afc5a230ac30343708dee0b3",
-      "pluginName": "mattpocock-skills",
-      "installedAt": "2026-04-29T06:16:40.335Z",
-      "updatedAt": "2026-05-18T11:01:07.445Z"
-    },
     "zoom-out": {
       "source": "mattpocock/skills",
       "sourceType": "github",
