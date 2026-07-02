@@ -85,6 +85,9 @@ These hold regardless of language:
 - **Low-pressure signals** when appropriate: "Ingen hast", "No rush", "Det
   haster ikke fra min side".
 - **Never em dashes.** For asides use a spaced hyphen " - " or restructure.
+- **Space before every emoji.** Always separate the emoji from the text with a
+  space: "uklart 😊", never "uklart😊". Applies to any emoji in any register.
+  Older verbatim samples jam the emoji onto the last word; this rule wins.
 - **Code-switch naturally.** Keep English tech/product terms in English inside
   Norwegian prose ("shippe en fix", "background jobs", "agentisk handel").
 - **Correct æ/ø/å, always.** Never ASCII-degrade to ae/o/a.
@@ -94,7 +97,7 @@ These hold regardless of language:
 - [ ] **No hard-ban violations**: no "it's not X, it's Y" reframe anywhere, no
       one-sentence dramatic paragraphs, no hype words, no clickbait opening
 - [ ] Greeting/sign-off matches the register (long-form: none - open on the hook, close on a resource list + bio line)
-- [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**) and any emoji is jammed onto the last word with no space ("for tiden😊"); **never the pray emoji 🙏 / 🙏🏽**
+- [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**), every emoji has a space before it ("for tiden 😊", never "for tiden😊"); **never the pray emoji 🙏 / 🙏🏽**
 - [ ] No em dashes; æ/ø/å intact; any triad is three real points, not filler
 - [ ] Messages end by handing the next step to the recipient
 - [ ] Reads like the samples, not like generic AI politeness (no "I hope this email finds you well", no "delve")

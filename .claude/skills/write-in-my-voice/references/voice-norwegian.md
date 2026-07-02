@@ -22,8 +22,10 @@ more emoji-forward than his English. Mirror the verbatim samples below.
 - Casual DMs often have no sign-off, just an emoji on the last line.
 
 **Emoji** (strong signal)
-- Frequent in casual/DM and warm email; jammed onto the last word, no space:
-  "for tiden😊", "med det🕺", "du😊", "Eden Stack!!❤️".
+- Frequent in casual/DM and warm email; always with a space between the text
+  and the emoji: "for tiden 😊", "med det 🕺", "du 😊", "Eden Stack!! ❤️".
+  (The verbatim samples below jam the emoji onto the last word; that is older
+  style - the space rule wins, see SKILL.md.)
 - His signature set: 🕺 / 🕺🏽 (very frequent on LinkedIn), 😊, ☺️. Warmer:
   ❤️ 💛 🐥 ⭐️ for friends/family/partner. 🤷 for resigned shrug.
 - When the recipient can take a playful tone, his go-to set is 🤠, 🕺🏽 and 🫶🏽.
