@@ -33,7 +33,7 @@ self-intro, then the ask:
 **Emoji**
 
 - Professional English email: essentially none.
-- Warm/known threads: a single ☺️ or 😊 slips in, jammed onto the last word
+- Warm/known threads: a single ☺️ or 😊 slips in, with a space before it
   ("any input here ☺️", "whenever it fits you 😊").
 
 **Rhythm & punctuation**
