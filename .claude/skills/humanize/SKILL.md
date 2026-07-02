@@ -1,6 +1,6 @@
 ---
 name: humanize
-description: Detect and rewrite prose that reads as AI-generated. Strips em dashes, curly quotes, AI vocabulary (delve, underscore, tapestry, vibrant, robust), negative parallelisms ("not just X, but Y"), rule-of-three filler, weasel attributions, puffery, didactic disclaimers, and citation artifacts. Use when the user says "humanize this", "de-slop", "make this less AI", "sounds like ChatGPT", "remove AI tells", "rewrite without AI voice", "this reads AI-generated", or pastes prose for cleanup.
+description: Detect and rewrite prose that reads as AI-generated. Strips em dashes, curly quotes, unicode arrows, AI vocabulary (delve, underscore, tapestry, vibrant, robust, quietly), negative parallelisms ("not just X, but Y"), rhetorical question-and-answer, rule-of-three filler, tone tells ("here's the kicker", "let's break this down", "imagine a world where"), weasel attributions, puffery, didactic disclaimers, and citation artifacts. Then rewrites toward human rhythm (sentence-length variance, active voice, concreteness) without fabricating facts. Use when the user says "humanize this", "de-slop", "make this less AI", "make this sound more human", "sounds like ChatGPT", "remove AI tells", "rewrite without AI voice", "this reads AI-generated", or pastes prose for cleanup.
 ---
 
 # Humanize
@@ -27,18 +27,20 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
 
 4. **Ask about Tier 3 decisions.** Use the `AskUserQuestion` tool, one decision at a time, with a recommended option labeled "(Recommended)". Wait for the answer before applying. Cap at 3-4 questions per document; if more high-risk passages exist than that, batch them into a single question ("apply my recommendation to all / ask one by one / leave them").
 
-5. **Re-scan.** Re-run the grep on the rewritten text. Should come back empty.
+5. **Positive-direction pass (for prose, not short messages).** Stripping tells can leave text that is clean but inert. Use [references/rewrite-toward-human.md](references/rewrite-toward-human.md) to restore human rhythm. Apply the Group A structural moves freely (vary sentence length, cut filler transitions, restore active voice, land on the strong word): they change cadence, not content. For the Group B content-and-voice moves (add a concrete number, a first-person note, an emotional edge), **never fabricate**: reshape specifics the author already gave, or flag the gap and ask. Skip this pass for terse factual text or short messages where the machine rhythm isn't the problem.
+
+6. **Re-scan.** Re-run the grep on the rewritten text. Should come back empty.
 
 ## Output
 
-Return the rewritten text. End with a brief summary: counts of Tier 1 fixes (e.g. "4 em dashes, 2 curly quotes"), Tier 2 fixes (e.g. "swapped 3 instances of 'underscore', dropped 2 didactic disclaimers"), and any Tier 3 passages left alone with the reason ("kept the closing paragraph; you confirmed it's the brand voice").
+Return the rewritten text. End with a brief summary: counts of Tier 1 fixes (e.g. "4 em dashes, 2 curly quotes"), Tier 2 fixes (e.g. "swapped 3 instances of 'underscore', dropped 2 didactic disclaimers"), and any Tier 3 passages left alone with the reason ("kept the closing paragraph; you confirmed it's the brand voice"). If you ran a positive-direction pass, note the structural moves ("varied sentence length in the second paragraph, restored active voice twice") and flag any gap you left for the author ("the '40% faster' claim needs a real number, left a marker").
 
 If the text was already clean, say so and return it unchanged. Do not invent tells to justify edits.
 
 ## Rules
 
 - Preserve meaning, facts, structure, and the author's argument. Only change voice.
-- Do not inject personality or flair the original lacked. Humanize means strip, not embellish.
+- Default to stripping, not embellishing. You may restructure for human rhythm (vary sentence length, restore active voice, cut filler transitions, land on the strong word): that changes cadence, not content. But never invent facts, numbers, sources, quotes, anecdotes, or opinions the author didn't supply. If human-sounding prose needs a concrete specific the text lacks, flag the gap or ask. A fabricated detail is worse than a bland one.
 - Replace em dashes with commas, parentheses, colons, semicolons, or two sentences. Never preserve them.
 - Replace curly quotes and apostrophes with straight ASCII (`"`, `'`).
 - Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
@@ -50,21 +52,36 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 When checking a long doc for one category at a time:
 
 ```bash
-# AI vocabulary (GPT-4 era)
-grep -niE '\b(delve|underscore|tapestry|vibrant|pivotal|robust|meticulous|crucial|testament|bolster|garner|interplay|intricate|enduring|landscape)\b' <file>
+# AI vocabulary (GPT-4 era + newer additions)
+grep -niE '\b(delve|underscore|tapestry|vibrant|pivotal|robust|meticulous|crucial|testament|bolster|garner|interplay|intricate|enduring|landscape|certainly|utilize|streamline|harness|paradigm|synergy|ecosystem)\b' <file>
 
-# Negative parallelisms
-grep -niE "not (just|only|merely) .{1,60}\b(but|it'?s)\b" <file>
+# Magic adverbs (lower precision, weigh by density)
+grep -niE '\b(quietly|deeply|fundamentally|remarkably|arguably|profoundly)\b' <file>
+
+# Negative parallelisms (incl. causal variant)
+grep -niE "not (just|only|merely|because) .{1,60}\b(but|it'?s|because)\b" <file>
 
 # Superficial analysis tails
 grep -niE ', (highlighting|underscoring|emphasizing|reflecting|symbolizing|showcasing|fostering|ensuring|contributing to|cultivating)\b' <file>
 
-# Didactic disclaimers
-grep -niE "it'?s (important|crucial|worth) (to )?(note|remember|consider)" <file>
+# Didactic disclaimers + empty-emphasis openers
+grep -niE "it'?s (important|crucial|worth) (to )?(note|remember|consider)|^(Importantly|Interestingly|Notably)," <file>
+
+# Tone / rhetorical transitions
+grep -niE "here'?s (the|what) (kicker|thing|deal|where|most)|let'?s (break|unpack|dive|explore)|think of it (as|like)|imagine a world where" <file>
+
+# Rhetorical question-and-answer ("The X? A Y.")
+grep -niE '\b[A-Z][a-z]+( [a-z]+){0,4}\? [A-Z][a-z]+\.' <file>
+
+# False ranges
+grep -niE '\bfrom [a-z]+ to [a-z]+\b' <file>
 
 # Section summaries
 grep -niE '^(In (summary|conclusion)|Overall),' <file>
 
-# Puffery
-grep -niE '\b(boasts|nestled|in the heart of|vibrant|rich tapestry|stands as|serves as|a testament to)\b' <file>
+# Puffery + grandiose stakes
+grep -niE '\b(boasts|nestled|in the heart of|vibrant|rich tapestry|stands as|serves as|a testament to|reshape (how we|everything)|define the next era|changes everything)\b' <file>
+
+# Unicode decoration (arrows, typed-out symbols). Literal chars so it works with BSD grep too.
+grep -nE '→|⇒|↔' <file>
 ```

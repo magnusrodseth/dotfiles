@@ -38,6 +38,18 @@ Replace the word with a plainer synonym. Don't try to preserve the cadence of th
 
 If a sentence is mostly AI vocabulary with little factual content, delete it. Most "underscore" / "highlight the importance of" sentences add nothing.
 
+## Magic adverbs
+
+Delete the adverb. The sentence almost always says the same thing, more honestly, without it.
+
+| Before | After |
+|---|---|
+| `The tool quietly orchestrates your workflows.` | `The tool orchestrates your workflows.` |
+| `This is a fundamentally different approach.` | `This is a different approach.` (or say how it differs) |
+| `The results were remarkably consistent.` | `The results were consistent.` |
+
+If deleting "quietly" removes the whole point of the sentence, the sentence had no point. Cut it.
+
 ## Negative parallelisms
 
 Strip the setup. Keep the payoff if it has content, drop it if it's empty.
@@ -48,6 +60,26 @@ Strip the setup. Keep the payoff if it has content, drop it if it's empty.
 | `This isn't sourcing, it's framing.` | `This is a framing problem, not a sourcing one.` (or split into two sentences) |
 | `Not only dismissive but also unnecessarily harsh.` | `Dismissive and harsh.` |
 | `Not a career, not a body of work, just an algorithmic moment.` | `Just an algorithmic moment, with no career or body of work behind it.` |
+
+## Dramatic countdown ("Not X. Not Y. Just Z.")
+
+Collapse the countdown into a plain statement of Z.
+
+| Before | After |
+|---|---|
+| `Not a bug. Not a feature. A fundamental design flaw.` | `This is a design flaw.` |
+| `Not ten. Not fifty. Five hundred and twenty-three violations.` | `There are 523 violations.` |
+
+## Rhetorical question-and-answer ("The X? A Y.")
+
+Drop the question, state the answer.
+
+| Before | After |
+|---|---|
+| `The result? Devastating.` | `The result was devastating.` |
+| `The worst part? Nobody saw it coming.` | `Worst of all, nobody saw it coming.` |
+
+Keep a rhetorical question only when it's genuinely doing work (a real pivot the reader is asking too). One is fine; a string of them is the tell.
 
 ## Rule of three
 
@@ -60,6 +92,25 @@ Cut to two, or to one if the third item was filler. Most triplets are padding.
 | `through critique, correction, and clarity` | `through critique and correction` |
 
 If the triplet has genuinely three distinct items (e.g. "Photoshop, Figma, and Sketch"), keep it. The tell is when the three are near-synonyms or vague abstractions.
+
+## False ranges
+
+If the two ends aren't a real spectrum, list the things plainly or name what you mean.
+
+| Before | After |
+|---|---|
+| `From innovation to cultural transformation.` | `Both new products and the way people work.` (say what you actually mean) |
+| `Everything from strategy to execution.` | `Strategy and execution.` |
+
+## Anaphora
+
+Keep one instance of the repeated opening; vary or merge the rest.
+
+| Before | After |
+|---|---|
+| `They assume users will pay. They assume developers will build. They assume ecosystems will emerge.` | `They assume users will pay, developers will build, and ecosystems will emerge.` |
+
+Deliberate anaphora in a speech or a punchy close can stay. Ask if it reads as intentional rhetoric rather than a generation tic.
 
 ## Superficial analysis tails
 
@@ -171,6 +222,74 @@ Before:
 
 After:
 > Vierny supported the artists. Her backing shaped the era.
+
+## Dead metaphor
+
+If one metaphor recurs more than twice, keep the strongest instance and state the rest literally.
+
+Before:
+> Platforms are the doors. Products build walls; platforms build doors. Without doors, the ecosystem has no way in, and every wall is just another wall.
+
+After:
+> Products are closed; platforms let others build on top. Without that opening, there's no ecosystem.
+
+## Tone and rhetorical tells
+
+These usually get deleted, not rewritten. The setup phrase is the tell; the point underneath is often fine on its own.
+
+| Before | After |
+|---|---|
+| `Here's the kicker: the API is rate-limited.` | `The API is rate-limited.` |
+| `Think of it as a Swiss Army knife for your workflow.` | Delete the analogy; describe what it does. |
+| `Imagine a world where every tool has intelligence built in.` | `If every tool had this built in, ...` (or state the claim directly) |
+| `Let's break this down step by step.` | Delete. Just explain it. |
+| `The truth is simple: nobody tested it.` | `Nobody tested it.` |
+| `And yes, I'll be honest, I love this model.` | `I like this model.` (or cut) |
+| `This will fundamentally reshape how we think about everything.` | State the actual, bounded effect. If you can't, cut the sentence. |
+| `This is the classic supervision paradox.` | Describe the problem in plain words; drop the coined label unless it's genuinely established. |
+
+## Unicode arrows
+
+Replace `→` with a word or restructure. Never leave the arrow.
+
+| Before | After |
+|---|---|
+| `Input → Processing → Output` | `Input, then processing, then output.` |
+| `More engagement → more revenue.` | `More engagement means more revenue.` |
+
+## Short punchy fragments
+
+Rejoin fragments into complete sentences with varied length. Don't flatten everything to one rhythm; the goal is variety, not uniformity. Ask first if the staccato is clearly deliberate voice.
+
+Before:
+> He published this. Openly. In a book. As a priest.
+
+After:
+> He published it openly, in a book, as a priest.
+
+## Listicle in a trench coat
+
+Either commit to a real list or write real connected prose. Don't leave the "The first... The second..." scaffolding in disguised paragraphs.
+
+Before:
+> The first wall is the missing API. The second wall is the lack of delegated access. The third wall is the absence of scoped permissions.
+
+After (prose):
+> Three things block it: there's no API, no delegated access, and no scoped permissions.
+
+## One-point dilution and fractal summaries
+
+Cut. If a section restates the thesis with a fresh metaphor but adds no new fact or argument, delete the restatement. Remove per-section previews and recaps that only echo what the prose already says. These are wholesale-deletion candidates, so confirm before cutting large blocks (see risk tiers).
+
+## Historical analogy stacking
+
+Keep at most one example that actually earns its place; delete the rapid-fire roll call.
+
+Before:
+> Apple didn't build Uber. Facebook didn't build Spotify. Stripe didn't build Shopify. AWS didn't build Airbnb.
+
+After:
+> Platform owners rarely build the apps on top of them (AWS didn't build Airbnb).
 
 ## When to leave it alone
 
