@@ -156,6 +156,43 @@ for t in nvim eza zoxide atuin oh-my-posh yazi bat tmux delta fzf zinit; do
   esac
 done
 
+# --- raycast extensions ------------------------------------------------------
+
+section "Raycast extensions (compiled command JS present)"
+# The extensions' *.js/*.js.map/package.json are gitignored (regenerable build
+# output that Raycast re-downloads), so git can't restore them. An interrupted
+# Raycast update or a `git clean -x` can leave an extension with fewer compiled
+# command .js files than it declares commands, which surfaces later as Raycast's
+# "Could not find command's executable JS file". Catch that here: each command
+# object in package.json carries a "mode" field, so the mode count is the
+# expected .js count. Reinstall flagged extensions from the Raycast Store.
+RAYEXT="$HOME/.config/raycast/extensions"
+if [ -d "$RAYEXT" ]; then
+  broken=0; checked=0
+  for pkg in "$RAYEXT"/*/package.json; do
+    [ -e "$pkg" ] || continue
+    dir="$(dirname "$pkg")"
+    ncmd="$(grep -oE '"mode"[[:space:]]*:' "$pkg" | wc -l | tr -d ' ')"
+    [ "$ncmd" -eq 0 ] && continue   # tool-only / non-command extension
+    checked=$((checked + 1))
+    njs="$(find "$dir" -maxdepth 1 -name '*.js' 2>/dev/null | wc -l | tr -d ' ')"
+    if [ "$njs" -lt "$ncmd" ]; then
+      broken=$((broken + 1))
+      title="$(grep -m1 '"title"' "$pkg" | sed -E 's/.*"title"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')"
+      echo "      broken: ${title:-$(basename "$dir")} ($njs/$ncmd command .js files)"
+    fi
+  done
+  if [ "$checked" -eq 0 ]; then
+    warn "no Raycast command extensions found under $RAYEXT"
+  elif [ "$broken" -eq 0 ]; then
+    pass "all $checked command extensions have their compiled JS"
+  else
+    warn "$broken of $checked Raycast extension(s) missing compiled JS (reinstall from Raycast Store)"
+  fi
+else
+  pass "no Raycast extensions dir (skipping)"
+fi
+
 # --- repo hygiene ------------------------------------------------------------
 
 section "Repo hygiene (no runtime/backup cruft tracked)"

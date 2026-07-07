@@ -100,14 +100,17 @@ Library/LaunchAgents/com.valvesoftware.*
 # Fonts are installed via Homebrew cask (font-fira-code-nerd-font), not vendored
 fonts/
 
-# Raycast runtime
-.config/raycast/extensions/node_modules
-.config/raycast/extensions/**/*.js.map
-# Compiled per-platform binaries (regenerated on extension install)
-.config/raycast/extensions/**/compiled_raycast_rust/
-.config/raycast/extensions/**/assets/webp/
-# Color-picker wheel asset is regenerated (format swaps webp<->png) on update
-.config/raycast/extensions/**/assets/rgb-color-wheel.*
+# Raycast extensions are machine-local runtime, restored per-machine by Raycast
+# Cloud Sync (account-tied) — NOT by git. Vendoring them here is worse than
+# useless: the compiled *.js/*.js.map/package.json are gitignored anyway, so a
+# fresh checkout only ever restores icon-only `assets/` folders, which Raycast
+# then reports as "Could not find command's executable JS file". Ignore the whole
+# tree so git is never a source of half-populated extensions. `doctor.sh` checks
+# for extensions missing their compiled JS as the safety net.
+.config/raycast/extensions/
+# Raycast account access token — was committed to this PUBLIC repo (rotate it in
+# Raycast: sign out & back in). Untracked so it can't be re-committed.
+.config/raycast/config.json
 
 # Google Cloud SDK credentials and runtime
 .config/gcloud/
@@ -132,11 +135,6 @@ fonts/
 
 # Claude plugin sweep timestamp (machine churn)
 .claude/plugins/.last_inuse_sweep
-# Raycast vendored extension builds (regenerated on every Raycast update)
-.config/raycast/extensions/**/*.js
-# Extension manifests are regenerated on update (e.g. embedded language lists);
-# the *.js code is already ignored, so these can't reconstruct an extension anyway.
-.config/raycast/extensions/**/package.json
 
 # Claude Code runtime session/team state
 .claude/teams/
