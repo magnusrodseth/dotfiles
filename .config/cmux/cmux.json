@@ -49,8 +49,14 @@
   },
 
   // AI-summarize each agent session into a workspace/tab name.
+  // socketControlMode=password lets shells OUTSIDE cmux drive the socket after they
+  // authenticate with CMUX_SOCKET_PASSWORD (set in zsh/ignored/cmux-socket.sh; source
+  // of truth is 1Password → Private → "cmux socket control"). socketPassword is
+  // intentionally NOT file-managed here: it falls back to the value saved in cmux
+  // Settings > Automation, so the secret stays out of git.
   "automation": {
-    "workspaceAutoNaming": true
+    "workspaceAutoNaming": true,
+    "socketControlMode": "password"
   },
 
   // Workspace is the primary unit of work in cmux, so it gets cmd+num (the app default).
