@@ -77,6 +77,14 @@ These hold regardless of language:
   paragraphs (2-4 sentences) in long-form. A colon may introduce a list or an
   explanation ("Konkret betyr dette:"), but not an aphoristic reframe (see Hard
   bans).
+- **Don't echo the incoming message back.** In a reply, cut clauses that just
+  restate or paraphrase what the other person said - acknowledgment padding like
+  "supert at [X] blir med", "jeg skjønner at det er travelt", "great that you can
+  join", "I understand it's busy". Acknowledge in a few words ("Høres topp ut!",
+  "Gøy å høre!") and move straight to substance or the next action. Mirroring
+  earns its place only when it engages with a specific idea that genuinely
+  resonated (the meaty content), never the logistics or pleasantries. Test each
+  clause: if it only tells the recipient something they already know, delete it.
 - **Honesty framing.** Recurring tells: "Jeg skal være ærlig på at...", "med
   åpne kort", "my honest view is this", "to be clear".
 - **Hand the next move to the recipient.** Almost every message closes with an
@@ -100,6 +108,7 @@ These hold regardless of language:
 - [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**), every emoji has a space before it ("for tiden 😊", never "for tiden😊"); **never the pray emoji 🙏 / 🙏🏽**
 - [ ] No em dashes; æ/ø/å intact; any triad is three real points, not filler
 - [ ] Messages end by handing the next step to the recipient
+- [ ] No echo padding: the reply doesn't restate the other person's logistics or pleasantries back to them
 - [ ] Reads like the samples, not like generic AI politeness (no "I hope this email finds you well", no "delve")
 
 When unsure between two phrasings, prefer the plainer one, then the one closer to
