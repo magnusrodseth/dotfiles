@@ -2,8 +2,11 @@
 # .zshrc: interactive shell config.
 # Env vars and PATH live in .zshenv (sourced earlier, for all shells).
 
-# Skip heavy init for Claude Code shell (env is already set by .zshenv)
-if [[ "$CLAUDECODE" == "1" ]]; then
+# Skip heavy init for Claude Code's non-interactive shells (env is already set by
+# .zshenv). Gate on interactivity too: CLAUDECODE=1 can leak into a real interactive
+# tab (e.g. one spawned from a window running `claude`), and without this check that
+# tab would short-circuit to a bare prompt with no zinit/oh-my-posh/aliases.
+if [[ "$CLAUDECODE" == "1" && ! -o interactive ]]; then
   if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
     for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
       [ -f "$file" ] && source "$file"
