@@ -156,6 +156,29 @@ for t in nvim eza zoxide atuin oh-my-posh yazi bat tmux delta fzf zinit; do
   esac
 done
 
+# --- shell init --------------------------------------------------------------
+
+section "Shell init (.zshrc Claude Code guard)"
+# `claude` injects CLAUDECODE=1 plus .claude/settings.json env (DISABLE_ZOXIDE=1)
+# into everything it spawns, and those vars can leak into real terminals (a tab
+# or the terminal app itself relaunched from inside a session). Interactive
+# shells must scrub the leak so zoxide still hooks cd; non-interactive agent
+# shells must keep skipping heavy init.
+if [ -d "$HOME/.local/share/zinit" ] && command -v zoxide >/dev/null 2>&1; then
+  if CLAUDECODE=1 DISABLE_ZOXIDE=1 zsh -i -c '(( $+functions[__zoxide_z] ))' >/dev/null 2>&1; then
+    pass "interactive shell survives leaked Claude Code env (zoxide hooks cd)"
+  else
+    fail "leaked CLAUDECODE/DISABLE_ZOXIDE disables zoxide in interactive shells"
+  fi
+  if CLAUDECODE=1 zsh -c 'source ~/.zshrc >/dev/null 2>&1; (( $+functions[zinit] )) && exit 1; exit 0' >/dev/null 2>&1; then
+    pass "non-interactive Claude Code shells skip heavy init"
+  else
+    fail "non-interactive Claude Code shell ran full init (guard broken)"
+  fi
+else
+  warn "zinit or zoxide not installed; skipping shell init checks"
+fi
+
 # --- raycast extensions ------------------------------------------------------
 
 section "Raycast extensions (compiled command JS present)"

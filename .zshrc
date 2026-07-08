@@ -6,13 +6,19 @@
 # .zshenv). Gate on interactivity too: CLAUDECODE=1 can leak into a real interactive
 # tab (e.g. one spawned from a window running `claude`), and without this check that
 # tab would short-circuit to a bare prompt with no zinit/oh-my-posh/aliases.
-if [[ "$CLAUDECODE" == "1" && ! -o interactive ]]; then
-  if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
-    for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
-      [ -f "$file" ] && source "$file"
-    done
+if [[ "$CLAUDECODE" == "1" ]]; then
+  if [[ ! -o interactive ]]; then
+    if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
+      for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
+        [ -f "$file" ] && source "$file"
+      done
+    fi
+    return
   fi
-  return
+  # Real interactive tab that inherited Claude's env: the settings.json env
+  # (DISABLE_ZOXIDE=1) leaks along with CLAUDECODE and would silently skip the
+  # zoxide hook below. Scrub both so init behaves like a normal terminal.
+  unset CLAUDECODE DISABLE_ZOXIDE
 fi
 
 # ──────────────────────────────────────────────────────────────────────────────
