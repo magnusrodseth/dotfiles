@@ -39,7 +39,6 @@ export SB1_OP_ACCOUNT=my.1password.eu
 typeset -U path PATH  # dedupe
 path=(
   "$HOME/.local/bin"
-  "$HOME/.codeium/windsurf/bin"
   "$HOME/.antigravity/antigravity/bin"
   "$PNPM_HOME"
   "$HOME/.bun/bin"
@@ -49,7 +48,6 @@ path=(
   "$JAVA_HOME/bin"
   "$ANDROID_HOME/platform-tools"
   "/Library/TeX/texbin"
-  "$HOME/.cache/lm-studio/bin"
   $path
 )
 export PATH
