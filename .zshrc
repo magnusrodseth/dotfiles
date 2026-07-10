@@ -192,3 +192,39 @@ add-zsh-hook precmd _osc7_cwd
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# ── OpenCode GenAI Gateway ────────────────────────────────────────
+
+ocg() {
+    if ! lsof -i :18787 >/dev/null 2>&1; then
+        node ~/.config/opencode-gateway/opencode/genai-proxy.mjs \
+            >>~/.config/opencode-gateway/proxy.log 2>&1 &
+        disown
+        sleep 0.5
+    fi
+
+    XDG_CONFIG_HOME="$HOME/.config/opencode-gateway" \
+    opencode -m genai-gateway/gpt-5.6-terra "$@"
+}
+
+ocg-stop() {
+    local pids
+    pids=$(lsof -ti :18787 2>/dev/null)
+    if [ -n "$pids" ]; then
+        kill $pids 2>/dev/null
+        echo "Proxy stopped."
+    else
+        echo "Proxy not running."
+    fi
+}
+
+ocg-restart() {
+    ocg-stop
+    node ~/.config/opencode-gateway/opencode/genai-proxy.mjs \
+        >>~/.config/opencode-gateway/proxy.log 2>&1 &
+    disown
+    sleep 0.5
+    echo "Proxy restarted."
+}
+
+# ── End OpenCode GenAI Gateway ────────────────────────────────────
