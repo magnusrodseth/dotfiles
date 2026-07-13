@@ -32,11 +32,12 @@ Steps, in order:
 6. VS Code extensions from `scripts/vscode/vscode_extensions.txt`
 7. Agent skills from `scripts/skills/skill-lock.json`
 8. Link dotfiles-authored skills into `~/.claude/skills/`
-9. Yazi plugins
-10. macOS App Store apps
-11. tmux plugin manager (tpm) setup
-12. macOS system defaults
-13. bat cache build
+9. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit validates skills)
+10. Yazi plugins
+11. macOS App Store apps
+12. tmux plugin manager (tpm) setup
+13. macOS system defaults
+14. bat cache build
 
 After installing, run `bash scripts/doctor.sh` to verify the machine matches
 the dotfiles' desired state. `doctor.sh` only reads state; it prints a ✓/✗
@@ -56,6 +57,7 @@ brew bundle                              # Install Homebrew packages (incl. font
 ./scripts/pnpm/packages.sh install       # Install pnpm packages
 ./scripts/vscode/extensions.sh install   # Install VS Code extensions
 ./scripts/skills/packages.sh install     # Restore agent skills from lock file
+./scripts/skills/validate-skills.sh --links  # Validate SKILL.md frontmatter + symlinks
 
 # Export current packages to lists
 ./scripts/cargo/packages.sh export

@@ -135,6 +135,19 @@ if [ -f "$HOME/.agents/.skill-lock.json" ]; then
 else
   fail "~/.agents/.skill-lock.json missing (run: bash scripts/skills/packages.sh install)"
 fi
+# A malformed SKILL.md or a dangling skill symlink silently drops the skill
+# from Claude Code; validate-skills.sh is the loud failure for both.
+if out="$(bash scripts/skills/validate-skills.sh --links 2>&1)"; then
+  pass "$out"
+else
+  fail "skill validation (run: bash scripts/skills/validate-skills.sh --links)"
+  printf '%s\n' "$out" | sed 's/^/      /'
+fi
+if [ "$(git config core.hooksPath)" = "scripts/githooks" ]; then
+  pass "git pre-commit hook enabled (core.hooksPath)"
+else
+  fail "git hooks not enabled (run: git config core.hooksPath scripts/githooks)"
+fi
 
 # --- fonts -------------------------------------------------------------------
 

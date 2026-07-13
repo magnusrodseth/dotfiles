@@ -1505,6 +1505,15 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-04-29T06:00:04.968Z",
       "updatedAt": "2026-04-29T06:00:04.968Z"
+    },
+    "skatteetaten-shared": {
+      "source": "magnusrodseth/skatteetaten-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/magnusrodseth/skatteetaten-cli.git",
+      "skillPath": "skills/skatteetaten-shared/SKILL.md",
+      "skillFolderHash": "a520d624d7d229746982d9d1dacb50b496ad1d8e",
+      "installedAt": "2026-07-09T10:33:22.181Z",
+      "updatedAt": "2026-07-09T10:33:22.181Z"
     }
   },
   "dismissed": {

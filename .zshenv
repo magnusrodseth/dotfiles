@@ -29,6 +29,10 @@ export OP_ACCOUNT=my.1password.eu
 export SB1_STORE=op
 export SB1_OP_ACCOUNT=my.1password.eu
 
+# 1Password / Skatteetaten CLI (skt): same personal account
+export SKT_STORE=op
+export SKT_OP_ACCOUNT=my.1password.eu
+
 # Cargo
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 

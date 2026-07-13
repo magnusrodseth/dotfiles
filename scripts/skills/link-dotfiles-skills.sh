@@ -4,6 +4,11 @@
 # ~/.claude/skills/ so they are available globally, not just in the
 # dotfiles project. Safe to rerun. Skips entries that are already
 # correctly linked. Warns (does not overwrite) on conflicts.
+#
+# Also prunes: managed links in ~/.claude/skills/ (those pointing into
+# dotfiles/.claude/skills) whose target no longer resolves are removed,
+# so deleted/renamed skills don't leave dangling links behind. Real
+# files and foreign symlinks are never touched.
 
 set -eu
 
@@ -53,4 +58,18 @@ for entry in "$SRC"/*; do
   linked=$((linked + 1))
 done
 
-echo "Done: $linked linked, $skipped already correct, $conflicts conflicts"
+pruned=0
+
+for target in "$DEST"/*; do
+  [ -L "$target" ] || continue
+  case "$(readlink "$target")" in
+    *dotfiles/.claude/skills/*) ;;   # managed by this script
+    *) continue ;;                   # foreign symlink; leave alone
+  esac
+  [ -e "$target" ] && continue       # still resolves
+  rm "$target"
+  echo "pruned $(basename "$target") (target gone)"
+  pruned=$((pruned + 1))
+done
+
+echo "Done: $linked linked, $skipped already correct, $conflicts conflicts, $pruned pruned"

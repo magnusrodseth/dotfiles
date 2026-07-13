@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#
+# Repo-managed pre-commit hook. Enabled via:
+#   git config core.hooksPath scripts/githooks
+# (install.sh does this; it is per-clone config, not global.)
+#
+# Validates authored agent skills so a malformed SKILL.md can never be
+# committed. Deliberately skips --links: symlink resolution is machine
+# state, checked by doctor.sh instead.
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+bash scripts/skills/validate-skills.sh
