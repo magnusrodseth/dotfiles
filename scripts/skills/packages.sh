@@ -16,15 +16,45 @@ show_help() {
   echo "  help       Display this help and exit"
 }
 
+SKILLS_DIR="$HOME/.agents/skills"
+VENDOR_DIR="$HOME/dotfiles/.claude/skills"
+
+require_jq() {
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "jq not found. Install it first (brew install jq)."
+    exit 1
+  fi
+}
+
+# A skill is "vendored" when .claude/skills/<name> is a real directory rather
+# than a symlink into ~/.agents/skills. Those are forks committed to the repo;
+# `skills add` would overwrite them, so the lock entry is provenance only and
+# must never drive an install.
+is_vendored() {
+  [[ -d "$VENDOR_DIR/$1" && ! -L "$VENDOR_DIR/$1" ]]
+}
+
 # Function to export current lock file to dotfiles
 export_packages() {
   if [[ ! -f "$LOCK_DEST" ]]; then
     echo "No skill-lock.json found at $LOCK_DEST"
     exit 1
   fi
+  require_jq
 
-  cp "$LOCK_DEST" "$LOCK_SOURCE"
-  echo "skill-lock.json exported to $LOCK_SOURCE"
+  # The live lock only knows about skills `skills add` installed, so a plain
+  # copy would silently drop the entries for vendored forks. Carry those over
+  # from the tracked lock so their provenance survives the round trip.
+  local carried
+  carried="$(jq -r '.skills | keys[]' "$LOCK_SOURCE" | while read -r skill; do
+    is_vendored "$skill" && echo "$skill"
+  done | jq -Rs 'split("\n") | map(select(length > 0))')"
+
+  jq --argjson carried "$carried" --slurpfile tracked "$LOCK_SOURCE" '
+    .skills = (($tracked[0].skills | with_entries(select(.key | IN($carried[])))) + .skills)
+  ' "$LOCK_DEST" >"$LOCK_SOURCE.tmp" && mv "$LOCK_SOURCE.tmp" "$LOCK_SOURCE"
+
+  echo "skill-lock.json exported to $LOCK_SOURCE ($(jq '.skills | length' "$LOCK_SOURCE") skills)"
 }
 
 # Function to restore skills from lock file
@@ -34,16 +64,55 @@ install_packages() {
     echo "Run '$0 export' first to snapshot your current skills."
     exit 1
   fi
+  require_jq
+  mkdir -p "$SKILLS_DIR"
 
-  # Ensure destination directory exists
-  mkdir -p "$(dirname "$LOCK_DEST")"
+  # `skills experimental_install` only restores PROJECT skills from a
+  # project-local skills-lock.json. It ignores the global lock entirely, so
+  # driving it from here silently installed nothing. Install global skills
+  # explicitly instead, one `skills add` per source repo so each is cloned once.
+  local work
+  work="$(mktemp)"
+  local skill source skipped=0
+  while IFS=$'\t' read -r skill source; do
+    if [[ -e "$SKILLS_DIR/$skill" ]]; then
+      skipped=$((skipped + 1))
+    elif is_vendored "$skill"; then
+      echo "Skipping $skill: vendored in .claude/skills"
+      skipped=$((skipped + 1))
+    else
+      printf '%s\t%s\n' "$source" "$skill" >>"$work"
+    fi
+  done < <(jq -r '.skills | to_entries[] | "\(.key)\t\(.value.source)"' "$LOCK_SOURCE")
 
-  # Copy lock file to where npx skills expects it
-  cp "$LOCK_SOURCE" "$LOCK_DEST"
-  echo "Copied skill-lock.json to $LOCK_DEST"
+  if [[ ! -s "$work" ]]; then
+    echo "All $skipped skills from the lock are already present."
+  else
+    local repo
+    for repo in $(cut -f1 "$work" | sort -u); do
+      local -a flags=()
+      while IFS= read -r skill; do
+        flags+=(-s "$skill")
+      done < <(awk -F'\t' -v r="$repo" '$1 == r { print $2 }' "$work")
+      echo "Installing $((${#flags[@]} / 2)) skill(s) from $repo"
+      npx skills add "$repo" -g -y "${flags[@]}" >/dev/null 2>&1 ||
+        echo "WARN: 'skills add $repo' failed"
+    done
+  fi
+  rm -f "$work"
 
-  # Restore all skills from lock file
-  npx skills experimental_install
+  # Report honestly: anything the lock promises that is still not on disk.
+  local missing=0
+  for skill in $(jq -r '.skills | keys[]' "$LOCK_SOURCE"); do
+    if [[ ! -e "$SKILLS_DIR/$skill" ]] && ! is_vendored "$skill"; then
+      echo "MISSING: $skill"
+      missing=$((missing + 1))
+    fi
+  done
+  if ((missing > 0)); then
+    echo "$missing skill(s) from the lock could not be installed."
+    return 1
+  fi
   echo "Skills restored from lock file."
 
   # Mirror custom skills from dotfiles into ~/.agents/skills/ so they're
