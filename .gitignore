@@ -150,3 +150,9 @@ fonts/
 .config/devin/skills/*
 !.config/devin/skills/slack-messaging
 !.config/devin/skills/slack-search
+
+# Pi prompt-suggester per-project session/log state (machine churn)
+.pi/agent/prompt-suggester/
+
+# Homebrew runtime state (cask trust cache and its lock)
+.config/homebrew/

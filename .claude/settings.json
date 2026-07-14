@@ -88,6 +88,5 @@
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
-  "editorMode": "normal",
-  "model": "claude-fable-5[1m]"
+  "editorMode": "normal"
 }
