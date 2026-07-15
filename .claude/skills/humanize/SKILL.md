@@ -7,6 +7,15 @@ description: Detect and rewrite prose that reads as AI-generated. Strips em dash
 
 Rewrite prose to remove AI tells. Preserve meaning, strip the cadence.
 
+## The two layers
+
+AI-ness lives at two levels, and they are not equally durable.
+
+- **Surface layer** (vocabulary, punctuation, sentence rhythm, paragraph scaffolding): the tells in [references/tells.md](references/tells.md). Cheap to detect and cheap to remove, but transient. Newer models shed them on their own, and a light edit strips the rest.
+- **Discourse layer** (whether the piece took a real, contestable position; whether it holds genuine tension; whether its specifics are named and concrete): the moves in [references/rewrite-toward-human.md](references/rewrite-toward-human.md).
+
+Stripping the surface layer is necessary but not sufficient. In a controlled test, running AI text through exactly this kind of span-level artifact removal (clichés, purple prose, redundant exposition) moved a discourse-level detector by only 1.6 points: the structural fingerprint survived the scrub (Russell et al., 2026; see [references/sources.md](references/sources.md)). So for anything longer than a short message, treat the positive-direction pass (step 5) as load-bearing work, not a finishing gloss. If a passage has no point of view, no amount of tell-stripping will make it read human.
+
 ## When to invoke
 
 User pastes text and asks to clean it up, flags something as sounding like AI or ChatGPT, asks for "tells" to be removed, or asks for general humanizing of a paragraph, email, blog post, doc, or message.
@@ -27,7 +36,7 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
 
 4. **Ask about Tier 3 decisions.** Use the `AskUserQuestion` tool, one decision at a time, with a recommended option labeled "(Recommended)". Wait for the answer before applying. Cap at 3-4 questions per document; if more high-risk passages exist than that, batch them into a single question ("apply my recommendation to all / ask one by one / leave them").
 
-5. **Positive-direction pass (for prose, not short messages).** Stripping tells can leave text that is clean but inert. Use [references/rewrite-toward-human.md](references/rewrite-toward-human.md) to restore human rhythm. Apply the Group A structural moves freely (vary sentence length, cut filler transitions, restore active voice, land on the strong word): they change cadence, not content. For the Group B content-and-voice moves (add a concrete number, a first-person note, an emotional edge), **never fabricate**: reshape specifics the author already gave, or flag the gap and ask. Skip this pass for terse factual text or short messages where the machine rhythm isn't the problem.
+5. **Positive-direction pass (the load-bearing layer; for prose, not short messages).** Stripping tells only removes the transient surface signal (see The two layers above); this pass addresses the durable one, and for anything longer than a short message it is where the real work happens. Clean text can still be inert. Use [references/rewrite-toward-human.md](references/rewrite-toward-human.md) to restore human rhythm. Apply the Group A structural moves freely (vary sentence length, cut filler transitions, restore active voice, land on the strong word): they change cadence, not content. For the Group B content-and-voice moves (add a concrete number, a first-person note, an emotional edge), **never fabricate**: reshape specifics the author already gave, or flag the gap and ask. Skip this pass for terse factual text or short messages where the machine rhythm isn't the problem.
 
 6. **Re-scan.** Re-run the grep on the rewritten text. Should come back empty.
 

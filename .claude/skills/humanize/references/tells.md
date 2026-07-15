@@ -239,6 +239,28 @@ Whole sections or paragraphs repeated near-verbatim in one piece, a giveaway of 
 ### Historical analogy stacking
 Rapid-fire lists of companies or eras to borrow authority, common in tech writing. "Apple didn't build Uber. Facebook didn't build Spotify. Stripe didn't build Shopify." Or "every major shift, the web, mobile, social, cloud, followed the same pattern."
 
+## Discourse-level tells (what survives a vocab scrub)
+
+The tells above live in word choice, punctuation, and paragraph scaffolding. These live one level up, in the shape of the thinking, and they are the ones a light edit does not remove. Empirically, running AI prose through surface artifact removal barely moves a discourse-level classifier (Russell et al., 2026; see [sources.md](sources.md)). All four are **Tier 3** (see [risk-tiers.md](risk-tiers.md)): they touch meaning and voice, so ask before rewriting.
+
+These were surfaced by a study of AI vs. human fiction, but the patterns transfer to any reflective or narrative-leaning non-fiction (blog posts, essays, personal writing). They do not apply to terse factual text or short messages.
+
+### Embodied-emotion over-writing
+The strongest single tell in the study: AI renders feeling as physical sensation (a tightening chest, cold sweat, a dimming room) instead of naming it, at more than double the human rate. "Show, don't tell" run to compulsion. The signal is when *every* emotional beat is staged through the body and nothing is ever stated plainly.
+
+Tell: fear rendered as "his throat closed and the light seemed to drain from the room" where "he was afraid" is what the passage needs. Fix: name it, or keep one embodied beat and cut the rest.
+
+### Over-explaining the theme (moralizing)
+AI states the takeaway out loud. A reflective piece ends with the narrator or author spelling out the lesson, in case the reader missed it. Humans trust the reader to infer it. Related to the surface tells "pedagogical voice" and "asserting obviousness", but this one is about handing over the *point of the whole piece*, not one sentence.
+
+Tell: a closing paragraph that restates "what this really shows us is...". Fix: end on the concrete thing and let the meaning land on its own.
+
+### Vague allusion instead of the named specific
+AI gestures at references without naming them: "a famous physicist", "one major study", "a well-known framework". Humans name the physicist, cite the study, call the brand. This is the concreteness move (see [rewrite-toward-human.md](rewrite-toward-human.md)) sharpened: the tell is specifically the *unnamed* reference where a name exists. Fix only if the author knows the specific; never invent one.
+
+### Too-tidy resolution
+AI resolves everything. Loose ends get tied, tension collapses into acceptance, the ending reassures. Human writing leaves more unresolved and sits with ambiguity. In non-fiction this shows up as an essay that wraps in a neat bow and answers every question it raised. Tell: the piece has no remaining tension by the last line. Fix: keep the genuine open question instead of resolving it for effect, but only if the author's own view is actually unresolved; do not manufacture doubt.
+
 ## Citation artifacts (hard tells)
 
 These are near-proof of AI involvement. Grep for them.

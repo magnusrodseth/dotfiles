@@ -78,6 +78,10 @@ Don't delete a whole section without asking, even if it reeks of AI.
 
 The Group B moves in [rewrite-toward-human.md](rewrite-toward-human.md) add or reshape content, so they carry the highest risk. Adding a concrete number, a first-person note, or an emotional edge is a Tier 3 action at most, and only ever by reshaping what the author already gave or by asking. Never invent a fact, figure, source, quote, or anecdote to make prose sound more human. When a passage would read human only with a specific the text lacks, flag the gap; do not fill it yourself.
 
+### Discourse-level tells (structural, high voice-risk)
+
+The four discourse-level tells in [tells.md](tells.md), embodied-emotion over-writing, over-explaining the theme, vague-allusion-instead-of-named-specific, and too-tidy resolution, all touch meaning, stance, or the shape of the piece. Treat them as Tier 3: ask before rewriting. For the named-specific fix, never invent a reference the author didn't supply; for the resolution fix, never manufacture doubt the author doesn't hold. They apply to reflective and narrative-leaning prose, not to short messages or terse factual text.
+
 ### Structural choices that could go either way
 
 - Converting a list to prose, or vice versa, when both are defensible
