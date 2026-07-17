@@ -273,6 +273,8 @@ CACHES=(
   "$HOME/.cache/huggingface:30:review + rm unused models in ~/.cache/huggingface/hub"
   "$HOME/.bun/install/cache:30:bun pm cache rm  (full clear; run from a dir with a package.json)"
   "$HOME/Library/Caches/pnpm:15:pnpm store prune"
+  "$HOME/.npm:15:npm cache clean --force  (does NOT cover ~/.npm/_npx - rm that separately)"
+  "$HOME/Library/pnpm/store:25:pnpm store prune - but see the version-orphan note below"
 )
 for entry in "${CACHES[@]}"; do
   cpath="${entry%%:*}"; rest="${entry#*:}"
@@ -296,6 +298,33 @@ for entry in "${CACHES[@]}"; do
     pass "$label ${gb}GB (< ${limit}GB)"
   fi
 done
+
+# pnpm bumps its store version and silently abandons the old one in place. On 17.07.2026
+# `~/Library/pnpm/store` held BOTH v10/v3 (active, 5.5 GB) and a top-level v3 (15 GB,
+# untouched since 12.02.2025) left behind by an older pnpm. `pnpm store prune` only ever
+# looks at the ACTIVE store, so it reported "Removed 0 packages" against 20 GB and no pnpm
+# command will ever reclaim the orphan. The size check above cannot catch this on its own
+# (a legitimately busy store is also big), so compare what pnpm says it uses against what
+# is actually on disk.
+if command -v pnpm >/dev/null 2>&1 && [ -d "$HOME/Library/pnpm/store" ]; then
+  active="$(pnpm store path 2>/dev/null)"
+  if [ -n "$active" ]; then
+    # pnpm store path returns .../store/v10/v3; the version dir we care about is its parent.
+    activever="$(dirname "$active")"
+    orphans=""
+    for d in "$HOME"/Library/pnpm/store/*; do
+      [ -d "$d" ] || continue
+      [ "$d" = "$activever" ] && continue
+      osz="$(du -sk "$d" 2>/dev/null | awk '{print $1}')"
+      [ -n "$osz" ] && [ "$osz" -gt 1048576 ] && orphans="$orphans ${d##*/}($((osz / 1024 / 1024))GB)"
+    done
+    if [ -n "$orphans" ]; then
+      warn "abandoned pnpm store version(s):$orphans - active is ${activever##*/}; rm the others"
+    else
+      pass "pnpm store has no abandoned version dirs (active: ${activever##*/})"
+    fi
+  fi
+fi
 
 # uv predates the Brewfile entry on this machine: a stale standalone-installer copy
 # in ~/.cargo/bin is what went 2 years without an upgrade. /opt/homebrew/bin precedes
