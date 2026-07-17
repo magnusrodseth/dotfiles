@@ -143,6 +143,17 @@ else
   fail "skill validation (run: bash scripts/skills/validate-skills.sh --links)"
   printf '%s\n' "$out" | sed 's/^/      /'
 fi
+# validate-skills.sh only reads this repo. ~/.claude/skills is what Claude Code
+# actually loads, and it drifts from the repo silently: `skills add` writes real
+# dirs straight into it, which shadow the repo's copies and are invisible here.
+# check-skill-integrity.sh reads the live tree and catches what that hides -
+# skills reproducible from nowhere, dead links, and lock entries with no skill.
+if out="$(bash scripts/skills/check-skill-integrity.sh 2>&1)"; then
+  pass "$out"
+else
+  fail "skill integrity (run: bash scripts/skills/check-skill-integrity.sh)"
+  printf '%s\n' "$out" | sed 's/^/      /'
+fi
 if [ "$(git config core.hooksPath)" = "scripts/githooks" ]; then
   pass "git pre-commit hook enabled (core.hooksPath)"
 else
@@ -172,16 +183,24 @@ done
 # --- shell init --------------------------------------------------------------
 
 section "Shell init (.zshrc Claude Code guard)"
-# `claude` injects CLAUDECODE=1 plus .claude/settings.json env (DISABLE_ZOXIDE=1)
-# into everything it spawns, and those vars can leak into real terminals (a tab
-# or the terminal app itself relaunched from inside a session). Interactive
-# shells must scrub the leak so zoxide still hooks cd; non-interactive agent
-# shells must keep skipping heavy init.
+# `claude` injects CLAUDECODE=1, CLAUDE_CODE_CHILD_SESSION=1, session vars, plus
+# .claude/settings.json env (DISABLE_ZOXIDE=1) into everything it spawns, and
+# those vars can leak into real terminals (a tab or the terminal app itself
+# relaunched from inside a session). Interactive shells must scrub the leak:
+# DISABLE_ZOXIDE kills the cd hook, and CLAUDE_CODE_CHILD_SESSION makes a new
+# `claude` skip transcript persistence (invisible to --continue/--resume).
+# Non-interactive agent shells must keep skipping heavy init.
 if [ -d "$HOME/.local/share/zinit" ] && command -v zoxide >/dev/null 2>&1; then
   if CLAUDECODE=1 DISABLE_ZOXIDE=1 zsh -i -c '(( $+functions[__zoxide_z] ))' >/dev/null 2>&1; then
     pass "interactive shell survives leaked Claude Code env (zoxide hooks cd)"
   else
     fail "leaked CLAUDECODE/DISABLE_ZOXIDE disables zoxide in interactive shells"
+  fi
+  if CLAUDECODE=1 CLAUDE_CODE_CHILD_SESSION=1 CLAUDE_CODE_SESSION_ID=dead-beef \
+     zsh -i -c '[[ -z "$CLAUDECODE" && -z "$CLAUDE_CODE_CHILD_SESSION" && -z "$CLAUDE_CODE_SESSION_ID" ]]' >/dev/null 2>&1; then
+    pass "interactive shell scrubs child-session vars (claude --continue/--resume see new sessions)"
+  else
+    fail "leaked CLAUDE_CODE_CHILD_SESSION survives; claude started here won't persist sessions"
   fi
   if CLAUDECODE=1 zsh -c 'source ~/.zshrc >/dev/null 2>&1; (( $+functions[zinit] )) && exit 1; exit 0' >/dev/null 2>&1; then
     pass "non-interactive Claude Code shells skip heavy init"
@@ -227,6 +246,65 @@ if [ -d "$RAYEXT" ]; then
   fi
 else
   pass "no Raycast extensions dir (skipping)"
+fi
+
+# --- cache hygiene -----------------------------------------------------------
+
+section "Cache hygiene (unbounded caches)"
+# Some tools have no cache eviction policy at all, so their cache grows without
+# limit until a disk fills. This bit them for real on 17.07.2026: the machine hit
+# 97% full and ~/.cache/uv alone held 105 GB (3.4M files, every torch version ever
+# installed), because uv's docs are explicit that `uv cache prune` is something you
+# "run periodically" - there is no max-size setting to configure. ~/.cache/huggingface
+# is the same shape: model weights are never evicted, and it had reached 112 GB of
+# models untouched since early 2025.
+#
+# These are WARNs, not FAILs: a large cache is not a broken machine, it's a nudge to
+# run the prune command before the disk gets tight. Thresholds are ~3x a healthy size,
+# so a green machine stays quiet and a runaway gets caught long before 97%.
+#
+# `bun pm cache rm` is a full clear, not a prune - bun has no surgical equivalent of
+# `uv cache prune`, so its threshold is set higher: clearing it costs a re-download of
+# everything, which is a worse trade than uv's.
+#
+# Format: <path>:<warn-threshold-GB>:<reclaim command>
+CACHES=(
+  "$HOME/.cache/uv:20:uv cache prune"
+  "$HOME/.cache/huggingface:30:review + rm unused models in ~/.cache/huggingface/hub"
+  "$HOME/.bun/install/cache:30:bun pm cache rm  (full clear; run from a dir with a package.json)"
+  "$HOME/Library/Caches/pnpm:15:pnpm store prune"
+)
+for entry in "${CACHES[@]}"; do
+  cpath="${entry%%:*}"; rest="${entry#*:}"
+  limit="${rest%%:*}"; cmd="${rest#*:}"
+  label="~${cpath#$HOME}"
+  if [ ! -d "$cpath" ]; then
+    pass "$label (absent)"
+    continue
+  fi
+  # `du -sk` keeps this to one stat pass and avoids parsing du's human-readable
+  # units; -k is POSIX and always kibibytes, so the math is unambiguous.
+  kb="$(du -sk "$cpath" 2>/dev/null | awk '{print $1}')"
+  if [ -z "$kb" ]; then
+    warn "$label (could not measure)"
+    continue
+  fi
+  gb=$((kb / 1024 / 1024))
+  if [ "$gb" -ge "$limit" ]; then
+    warn "$label is ${gb}GB (>= ${limit}GB) - reclaim with: $cmd"
+  else
+    pass "$label ${gb}GB (< ${limit}GB)"
+  fi
+done
+
+# uv predates the Brewfile entry on this machine: a stale standalone-installer copy
+# in ~/.cargo/bin is what went 2 years without an upgrade. /opt/homebrew/bin precedes
+# ~/.cargo/bin in PATH so brew's copy wins, but the old binary lingering is a trap for
+# anything that hardcodes the path or reorders PATH.
+if [ -e "$HOME/.cargo/bin/uv" ]; then
+  warn "stale ~/.cargo/bin/uv shadow copy (brew owns uv now; rm ~/.cargo/bin/uv ~/.cargo/bin/uvx)"
+else
+  pass "no stale ~/.cargo/bin/uv"
 fi
 
 # --- repo hygiene ------------------------------------------------------------

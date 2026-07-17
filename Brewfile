@@ -30,6 +30,11 @@ brew "pnpm"
 brew "poetry"
 brew "python@3.11"
 brew "python@3.12"
+# uv must stay brew-managed. It was previously installed by Astral's standalone
+# script into ~/.cargo/bin, where nothing upgraded it: it sat at 0.4.28 (Oct
+# 2024) for ~2 years while its cache grew to 105 GB unchecked. brew puts it on
+# `brew upgrade` and makes `brew bundle check` (doctor.sh) notice its absence.
+brew "uv"
 brew "oven-sh/bun/bun"
 
 # === Databases ===

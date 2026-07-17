@@ -75,7 +75,7 @@ brew bundle                              # Install Homebrew packages (incl. font
 `.stow-local-ignore` excludes from symlinking:
 - `fonts/`, `vscode/`, `macos/`, `scripts/`, `browser/`
 - `Brewfile`, `install.sh`
-- Most of `Library/` except VS Code/Cursor User settings
+- Most of `Library/` except VS Code User settings
 
 ### Shell (Zsh)
 
@@ -89,7 +89,7 @@ Local secrets go in `zsh/ignored/` (auto-sourced, gitignored).
 ### Editor Configurations
 
 - **Neovim**: LazyVim config in `.config/nvim/`
-- **VS Code/Cursor**: Settings symlinked from `Library/Application Support/{Code,Cursor}/User/`
+- **VS Code**: Settings symlinked from `Library/Application Support/Code/User/`
 - **Default editor**: Zed (`$EDITOR="zed -w"` in `.zshenv`)
 - Note: `.zshenv` holds env vars + PATH; `.zshrc` holds interactive shell config only.
 

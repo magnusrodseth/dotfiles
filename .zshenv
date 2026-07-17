@@ -43,7 +43,6 @@ export SKT_OP_ACCOUNT=my.1password.eu
 typeset -U path PATH  # dedupe
 path=(
   "$HOME/.local/bin"
-  "$HOME/.antigravity/antigravity/bin"
   "$PNPM_HOME"
   "$HOME/.bun/bin"
   "$HOME/.deno/bin"

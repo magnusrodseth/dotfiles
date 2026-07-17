@@ -103,7 +103,7 @@ Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for m
 - [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal (installed automatically via the `font-fira-code-nerd-font` Homebrew cask in the `Brewfile`)
 - [`ghostty`](https://ghostty.org/), for a fast, native terminal emulator
 - [`raycast`](https://www.raycast.com/), for a Spotlight replacement with extensions, window management, etc.
-- [`zed`](https://zed.dev), the primary code editor (with [`windsurf`](https://windsurf.com/), [`cursor`](https://cursor.com/), and [`vscode`](https://code.visualstudio.com/) also configured)
+- [`zed`](https://zed.dev), the primary code editor (with [`vscode`](https://code.visualstudio.com/) also configured)
 - [`brave`](https://brave.com/), the web browser
 - [Claude Code](https://www.anthropic.com/claude-code), for AI-assisted development (skills, agents, and commands live under [`.claude`](/.claude))
 
@@ -167,15 +167,18 @@ Note that Raycast reads its config and extensions from `~/.config/raycast`, so t
 
 ## Configuring editors
 
-[Zed](https://zed.dev) is my primary editor these days, but [Windsurf](https://windsurf.com/), [Cursor](https://cursor.com/), and [VS Code](https://code.visualstudio.com/) are all installed and configured. (`zed -w` is the default `$EDITOR` used by git and scripts.)
+[Zed](https://zed.dev) is my primary editor, with [VS Code](https://code.visualstudio.com/) also configured. (`zed -w` is the default `$EDITOR` used by git and scripts.)
 
 ### Managing keybindings, settings and snippets
 
 On macOS, editor configuration lives under `~/Library/Application Support/<Editor>/User/`, so it's mirrored in this repo and symlinked by `stow`:
 
 - **VS Code** is mirrored most fully: settings, keybindings, and snippets.
-- **Cursor** and **Windsurf** mirror their settings (and Windsurf its keybindings).
 - **Zed** tracks its [`keymap.json`](/.config/zed/keymap.json); its `settings.json` is intentionally gitignored.
+
+Cursor and Windsurf were both mirrored here until 17.07.2026. Both apps were uninstalled
+long before that and only their settings kept being stowed, so the entries were dropped.
+Re-add a `Library/Application Support/<Editor>/User/settings.json` if either comes back.
 
 Running `stow .` as detailed above symlinks all of these to the correct locations.
 
