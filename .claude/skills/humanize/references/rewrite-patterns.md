@@ -15,6 +15,19 @@ Replace with comma, parentheses, colon, semicolon, or split into two sentences. 
 
 Rule: if there are more than two em dashes in a short paragraph, the rhythm itself is the tell. Vary the replacements so the rewrite doesn't read like search-and-replace.
 
+## Emphatic / appositive colon
+
+Recast the emphatic colon as a full sentence, or bridge with a connective ("namely" / ", nemlig", ", altså", ", for eksempel", ", for"). If the following sentence already explains the point, just drop the appositive.
+
+| Before | After |
+|---|---|
+| `This is about one thing: placement.` | `This is about placement.` |
+| `The three actors are simple: engineer, agent, code.` | `There are three actors, namely the engineer, the agent, and the code.` |
+| `Dette handler om plassering: rett aktør på rett node.` | `Dette handler om plassering. Der en deterministisk sjekk holder, bør du ikke sette en agent til å gjette.` |
+| `Retningen stemmer: tyngdepunktet flytter oppover.` | `Retningen stemmer, for tyngdepunktet flytter oppover.` |
+
+Leave alone: colons that introduce a real list, a following figure/block, an attribution ("Kilde:", "Figure 2:"), or a fixed opener ("For ordens skyld:", "Konkret:"). Vary the fix so it doesn't read like search-and-replace.
+
 ## Curly quotes and apostrophes
 
 Replace every `"` `"` `'` `'` `'` with straight ASCII `"` and `'`. Mechanical.

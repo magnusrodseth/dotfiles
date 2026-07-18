@@ -82,7 +82,7 @@ If the user pre-approves with phrases like "just generate it", "go ahead", "no n
 
 The `styles/` subdirectory holds named style presets the user has saved as favorites. Each file documents the visual DNA, trigger keywords, and a reusable prompt fragment for one named aesthetic.
 
-When the user references a style by name or uses any of its trigger keywords (e.g. "editorial illustration", "the post 35 look", "magazine style", "Economist vibe", "like The Atlantic"), read the matching file and weave its reusable prompt fragment into the prompt you build, then add the subject-specific details on top. List the current presets with `ls ~/.claude/skills/image-generation/styles/` if you are unsure which one applies.
+When the user references a style by name or uses any of its trigger keywords (e.g. "editorial illustration", "the post 35 look", "magazine style", "Economist vibe", "like The Atlantic", "app mascot", "app icon", "app branding"), read the matching file and weave its reusable prompt fragment into the prompt you build, then add the subject-specific details on top. List the current presets with `ls ~/.claude/skills/image-generation/styles/` if you are unsure which one applies.
 
 ## Parameters
 

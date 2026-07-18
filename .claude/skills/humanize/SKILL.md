@@ -93,4 +93,7 @@ grep -niE '\b(boasts|nestled|in the heart of|vibrant|rich tapestry|stands as|ser
 
 # Unicode decoration (arrows, typed-out symbols). Literal chars so it works with BSD grep too.
 grep -nE '→|⇒|↔' <file>
+
+# Emphatic / appositive colon (candidates only; judge each). Excludes URLs, image/alt lines, frontmatter keys, attributions, list intros, fixed openers.
+grep -nE '[[:alpha:]]+: [[:alpha:]]' <file> | grep -vE 'https?://|!\[|^[0-9]+:(title|date|author|tags|description|draft|slug|type|created|aliases|status|related|source|linkedin_teaser):|Kilde:|Figure [0-9]|Figur [0-9]|For ordens skyld:|Konkret:|^[0-9]*: *[-*]'
 ```

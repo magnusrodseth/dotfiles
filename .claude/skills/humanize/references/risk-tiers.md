@@ -33,6 +33,7 @@ Changes that almost never alter meaning. Apply them, but tell the user what you 
 - **Anaphora**: collapse three-plus repeated sentence openings into one, keeping a single instance
 - **Section summaries** ("In conclusion", "In summary", "Overall") in documents under ~5 paragraphs
 - **Inline-header bullet lists** (`- **Foo**: bar`) when 3-4 lines of prose would read better
+- **Emphatic / appositive colons** used mid-prose for a punchy restatement (`This is about one thing: X`) → recast as a full sentence or bridge with a connective (", namely", ", nemlig", ", for"). Leave list-introduction, figure/attribution ("Kilde:"), and fixed-opener ("For ordens skyld:") colons untouched
 
 ## Tier 3: ask before changing
 

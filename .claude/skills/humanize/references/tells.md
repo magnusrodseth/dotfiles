@@ -176,6 +176,13 @@ LLMs overuse em dashes, especially in places where a human would pick a comma, p
 
 A few em dashes in long-form essay writing is normal. Dense em-dash use in short-form text (emails, comments, short paragraphs) is a strong signal, especially when combined with negative parallelisms.
 
+### Emphatic / appositive colon
+A colon dropped mid-paragraph to deliver a punchy point or to restate the clause for emphasis, where a plain sentence would read better: "This is about one thing: placement." "The answer is simple: ..." "Dette handler om plassering: rett aktør på rett node." The colon-as-drumroll is a listicle/sales cadence; a human more often writes a full sentence or bridges with a connective word ("namely", ", nemlig", ", altså", ", for eksempel", ", for").
+
+Density matters: one or two in a long piece is fine, but a per-section drumroll is the tell. Same family as the em dash, and it often shows up right where the em dash was scrubbed out.
+
+Not this tell (leave alone): a colon introducing a genuine multi-item list or a block/figure that follows; a source or label attribution ("Kilde: ...", "Figure 2: ..."); a fixed idiomatic opener ("For ordens skyld: ...", "Konkret: ...").
+
 ### Curly quotes and apostrophes
 `"..."`, `'...'`, `'` (right single quote as apostrophe). ChatGPT and DeepSeek output curlies by default. Claude and Gemini don't.
 
