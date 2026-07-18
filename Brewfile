@@ -5,16 +5,22 @@
 # overwrite this structure, so prefer manual edits when adding new packages.
 
 # === Taps ===
-# anomalyco, facebook/fb and tbckr are untrusted (not in ~/.config/homebrew/
-# trust.json). Homebrew silently omits untrusted taps from `brew bundle dump`,
-# so opencode, idb-companion and sgpt were invisible to every drift check until
-# their install receipts were read directly. Trust them to make them visible:
-#   brew trust --formula anomalyco/tap/opencode facebook/fb/idb-companion tbckr/tap/sgpt
+# `trusted:` below is not decoration. Homebrew 6 requires trust for non-official
+# taps, and it omits untrusted taps from `brew bundle dump` silently, with no
+# warning and no error. opencode, idb-companion and sgpt were therefore invisible
+# to every dump-vs-Brewfile drift check until their INSTALL_RECEIPT.json files
+# were read directly. Enumerate on-request formulae from receipts, not from dump.
+#
+# Trust otherwise lives only in ~/.config/homebrew/trust.json, which is untracked
+# and machine-local, so a fresh clone would silently lose it and go blind again.
+# Declaring it here makes it reproducible and reviewable in a diff. Note the two
+# forms: `trusted: true` on a formula, and `trusted: { formulae: [...] }` on a
+# tap (which is how a tap added by URL, like doppler, resolves).
 tap "anomalyco/tap"
 tap "aws/tap"
 tap "beeftornado/rmtree"
 tap "dopplerhq/cli"
-tap "dopplerhq/doppler"
+tap "dopplerhq/doppler", trusted: { formulae: ["doppler"] }
 tap "facebook/fb"
 tap "hashicorp/tap"
 tap "homebrew/bundle"
@@ -53,7 +59,7 @@ brew "python@3.12"
 # 2024) for ~2 years while its cache grew to 105 GB unchecked. brew puts it on
 # `brew upgrade` and makes `brew bundle check` (doctor.sh) notice its absence.
 brew "uv"
-brew "oven-sh/bun/bun"
+brew "oven-sh/bun/bun", trusted: true
 
 # === Databases ===
 brew "supabase"
@@ -115,10 +121,10 @@ brew "git-filter-repo"
 brew "git-lfs"
 brew "gh"
 brew "gradle"
+brew "facebook/fb/idb-companion", trusted: true
 brew "just"
-brew "facebook/fb/idb-companion"
 brew "lazygit"
-brew "mobile-dev-inc/tap/maestro"
+brew "mobile-dev-inc/tap/maestro", trusted: true
 brew "mole"
 brew "mosh"
 brew "neovim"
@@ -161,9 +167,9 @@ brew "flyctl"
 brew "railway"
 brew "terraform"
 brew "dopplerhq/cli/doppler"
-brew "hashicorp/tap/terraform-ls"
-brew "jesseduffield/lazydocker/lazydocker"
-brew "stripe/stripe-cli/stripe"
+brew "hashicorp/tap/terraform-ls", trusted: true
+brew "jesseduffield/lazydocker/lazydocker", trusted: true
+brew "stripe/stripe-cli/stripe", trusted: true
 
 # === Docs, content, media ===
 brew "biber"
@@ -184,12 +190,12 @@ brew "typst"
 brew "aichat"
 brew "ollama"
 brew "whisper-cpp"
-brew "anomalyco/tap/opencode"
-brew "tbckr/tap/sgpt"
+brew "anomalyco/tap/opencode", trusted: true
+brew "tbckr/tap/sgpt", trusted: true
 
 # === Mac App Store & shell ===
 brew "mas"
-brew "jandedobbeleer/oh-my-posh/oh-my-posh"
+brew "jandedobbeleer/oh-my-posh/oh-my-posh", trusted: true
 
 # === Casks ===
 cask "1password"
