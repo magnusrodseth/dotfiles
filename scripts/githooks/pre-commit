@@ -7,6 +7,12 @@
 # Validates authored agent skills so a malformed SKILL.md can never be
 # committed. Deliberately skips --links: symlink resolution is machine
 # state, checked by doctor.sh instead.
+#
+# Also blocks a commit whose scripts reference files git does not carry. Both
+# checks read the index, so they judge what is being committed, not what
+# happens to be lying around the working tree.
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
-bash scripts/skills/validate-skills.sh
+
+bash scripts/skills/validate-skills.sh || exit 1
+bash scripts/check-script-refs.sh || exit 1

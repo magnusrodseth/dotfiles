@@ -352,6 +352,29 @@ else
   printf '%s\n' "$cruft" | sed 's/^/      /'
 fi
 
+# The check above is directional: it catches generated junk leaking INTO the
+# tree. The two below catch the opposite failure, authored work that never made
+# it out of the working directory - which is how doctor.sh itself shipped a call
+# to an untracked check-skill-integrity.sh and stayed broken on every clone.
+if out="$(bash scripts/check-script-refs.sh 2>&1)"; then
+  pass "every referenced repo script is tracked"
+else
+  fail "script reference(s) point at untracked files"
+  printf '%s\n' "$out" | sed 's/^/      /'
+fi
+
+# Untracked work under scripts/ and .claude/skills/ is often legitimately in
+# progress, so this warns rather than fails. It is the signal that a skill or
+# script exists on this machine and nowhere else - one disk failure from gone.
+stray="$(git ls-files --others --exclude-standard --directory -- scripts .claude/skills || true)"
+if [ -z "$stray" ]; then
+  pass "no untracked scripts or skills"
+else
+  n="$(printf '%s\n' "$stray" | grep -c .)"
+  warn "$n untracked path(s) under scripts/ or .claude/skills/ (exists only here)"
+  printf '%s\n' "$stray" | sed 's/^/      /'
+fi
+
 # --- summary -----------------------------------------------------------------
 
 echo ""

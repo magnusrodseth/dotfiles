@@ -1,6 +1,6 @@
 ---
 name: empirical-research
-description: Appraise whether an empirical claim actually holds and by how much, against primary literature rather than search-result summaries. Runs a mandatory refutation pass, tiers every source, restates findings at the user's own parameters, and reports a claims table with reasoned confidence. Use when a question turns on whether something is true: does X actually work, is this benchmark meaningful, does this supplement/protocol/framework/product deliver its claimed effect, is this study any good, is this vendor claim real. NOT for API or library documentation (use find-docs). NOT for gathering uncontested facts into a repo note (use research). NOT for recalling what the user already wrote (use read-up-on).
+description: Appraise whether an empirical claim actually holds and by how much, against primary sources rather than search-result summaries. Runs a mandatory refutation pass, tiers every source, restates findings at the user's own parameters, and reports a claims table with reasoned confidence. Use when a question turns on whether something is true: does X actually work, is this benchmark meaningful, does this supplement/protocol/framework/product deliver its claimed effect, is this study any good, is this vendor claim real. NOT for API or library documentation (use find-docs). NOT for gathering uncontested facts into a repo note (use research). NOT for recalling what the user already wrote (use read-up-on).
 ---
 
 # Empirical Research
@@ -35,15 +35,20 @@ Where the primary parameters allow it, **recompute at the user's numbers and sho
 
 ## Source tiers
 
-| Tier | What |
-|---|---|
-| **T1** | Systematic review or meta-analysis of RCTs |
-| **T2** | Individual RCT; peer-reviewed narrative review |
-| **T3** | Observational, cohort, questionnaire, case series |
-| **T4** | Mechanism, bench, in-vitro, expert opinion, guideline with no cited evidence |
-| **T5** | Vendor material, marketing, content-marketing blog, press release |
+**Name what ground truth is for this domain before tiering anything**, then rank by proximity to it. There is no universal hierarchy.
 
-**T5 may never support an efficacy claim.** It is admissible only for uncontested specification facts (a material's refractive index, a published API limit, a product's stated dimensions). Naming the tier in the output is what stops a marketing blog from hiding behind confident phrasing.
+| Domain | T1, ground truth | Descending | Bottom |
+|---|---|---|---|
+| Medicine, nutrition, psychology | Systematic review or meta-analysis of RCTs | Single RCT → cohort → questionnaire → mechanism | Vendor material |
+| Classical physics, algorithms, numerics | Derivation from conserved quantities, or a proof | Simulation → measurement → practitioner report | Vendor material |
+| Software performance | Reproducible benchmark on the user's own config | Third-party benchmark → vendor benchmark → anecdote | Marketing |
+| Engineering and design practice | Postmortem with data, or a talk by the implementer | Practitioner consensus → single dev report | Marketing |
+
+Two invariants:
+
+**Bottom tier may never support an efficacy claim.** It is admissible only for uncontested specification facts (a material's refractive index, a published API limit, a stated dimension). Naming the tier in the output is what stops a marketing blog hiding behind confident phrasing.
+
+**Mechanism is not automatically weak.** In biomedicine a mechanism is a hypothesis awaiting outcome evidence. In classical mechanics a derivation *is* the ground truth and playtesting is the noisy proxy. Importing the biomedical ranking into a derivable domain misranks every claim, putting the strongest evidence at the bottom.
 
 ## Verdicts
 
@@ -76,25 +81,39 @@ Fabricating these cells is a bigger lie than vague prose, and each is checkable 
 
 ## Retrieval
 
-Free, no API key, `curl` and `jq` only. Prefer these over web search for anything with a DOI.
+`curl` and `jq` only. Keys are **optional and free**; use one when the env var is set, carry on without it when not. Prefer these over web search for anything with a DOI.
 
 ```bash
 # Abstract, open-access status, retraction flag, citation count
-curl -s "https://api.openalex.org/works/doi:$DOI" | jq '{title,oa:.open_access.oa_url,retracted:.is_retracted,cited:.cited_by_count}'
+curl -s "https://api.openalex.org/works/doi:$DOI${OPENALEX_API_KEY:+&api_key=$OPENALEX_API_KEY}" \
+  | jq '{title,oa:.open_access.oa_url,retracted:.is_retracted,cited:.cited_by_count}'
 
 # Full abstract (works when the publisher blocks direct fetch)
-curl -s "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:%22$DOI%22&format=json&resultType=core" | jq -r '.resultList.result[0].abstractText'
+curl -s "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:%22$DOI%22&format=json&resultType=core" \
+  | jq -r '.resultList.result[0].abstractText'
 
-# Search by topic
-curl -s "https://api.semanticscholar.org/graph/v1/paper/search?query=$Q&fields=title,abstract,year,venue,citationCount,externalIds&limit=10" | jq '.data[]'
+# Known title → use filter=title.search. Plain search= fuzzy-matches the whole corpus and returns noise
+curl -s "https://api.openalex.org/works?filter=title.search:$TITLE&per-page=5" \
+  | jq -r '.results[] | "\(.publication_year) [\(.cited_by_count)] \(.title)"'
 
 # Who cited this, i.e. who challenged it  (step 4, Deep)
-curl -s "https://api.semanticscholar.org/graph/v1/paper/DOI:$DOI/citations?fields=title,year,venue&limit=20" | jq -r '.data[] | "\(.citingPaper.year)  \(.citingPaper.title)"'
+curl -s "https://api.semanticscholar.org/graph/v1/paper/DOI:$DOI/citations?fields=title,year,venue&limit=20" \
+  | jq -r '.data[] | "\(.citingPaper.year)  \(.citingPaper.title)"'
 ```
+
+**Quotas, verified not assumed.** OpenAlex serves unauthenticated at $0.10/day, roughly 1000 calls; a free key gives 10×. Live budget is in the response headers (`x-ratelimit-remaining`, `x-ratelimit-remaining-usd`), so check there rather than guessing. Semantic Scholar's anonymous pool is shared across all users and **throttles unpredictably: a 429 is transient, not a block.** Back off and retry once before routing around it; a free key trades burst for a guaranteed 1 RPS.
 
 **Fallback chain, in order:** the APIs above → `WebSearch` (orientation only) → `WebFetch` → the **playwriter** skill for anything returning 403 or sitting behind Cloudflare.
 
 **A paywall never ends the attempt.** Walk the chain. If full text stays unreachable, use the abstract and say the full text was not read, rather than quietly citing a paper you only saw summarised.
+
+### Domains with no literature
+
+Many questions have no papers at all. Game feel, engineering practice, tooling, product behaviour. The academic APIs return nothing useful and their absence is **not** evidence of absence.
+
+Go to that domain's primary sources instead: conference talks by the people who shipped it (GDC, SIGGRAPH, Strange Loop), engine or library **source code**, specifications and RFCs, postmortems with data, and issue trackers. An implementer describing their own system outranks a third-party blog summarising it.
+
+Watch for jargon collisions when searching. A domain term that also names a physical object will return patents and retail listings; add domain words to the query rather than assuming the topic is unstudied.
 
 ## Worked example
 

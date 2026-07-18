@@ -40,7 +40,7 @@ Reporting the literature's 0.4 D would have been a faithful citation of a real n
 
 | Claim | Verdict | Best source (tier) | Refutation attempt | Confidence + why |
 |---|---|---|---|---|
-| Spectacle and contact Rx are the same number | Refuted | Vertex relation, standard optics (T4 mechanism, uncontested) | Checked whether the difference is clinically ignorable below ±4.00 D: it is usually treated so, user sits at the boundary | High: deterministic calculation, not an empirical effect |
+| Spectacle and contact Rx are the same number | Refuted | Vertex relation (**T1 for this claim**: geometric optics, so the derivation is ground truth, not a mechanism awaiting evidence) | Checked whether the difference is clinically ignorable below ±4.00 D: it is usually treated so, user sits at the boundary | High: deterministic calculation, not an empirical effect |
 | Contacts raise near accommodative demand | Demonstrated, but ~0.20 D at this user's -3.50, not the 0.4 D of the literature's -5.00 D example | Ocular motor triad study (T2) | Searched for a contrary mechanism; none found | High for direction, high for magnitude since recomputed at the user's own parameters |
 | Blue filters reduce eye strain | Refuted | Cochrane 2023, 17 RCTs (T1) | Citation graph: found a 2025 T3 questionnaire claiming benefit. Lower tier, does not overturn | High: T1 systematic review, and its strongest challenger is three tiers below it |
 | Low plus add helps non-presbyopes | Contested, leaning no | 6-month RCT: no difference vs single vision (T2). CLEDA: subjective preference (T2) | Both directions actively sought and both reported | Medium: real evidence both ways; preference is real, measured benefit over single vision is not |
