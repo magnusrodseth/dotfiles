@@ -3,10 +3,10 @@
 # Env vars and PATH live in .zshenv (sourced earlier, for all shells).
 
 # Skip heavy init for Claude Code's non-interactive shells (env is already set by
-# .zshenv). Gate on interactivity too: CLAUDECODE=1 can leak into a real interactive
+# .zshenv). Gate on interactivity too: Claude's env can leak into a real interactive
 # tab (e.g. one spawned from a window running `claude`), and without this check that
 # tab would short-circuit to a bare prompt with no zinit/oh-my-posh/aliases.
-if [[ "$CLAUDECODE" == "1" ]]; then
+if [[ "$CLAUDECODE" == "1" || -n "$CLAUDE_CODE_CHILD_SESSION" ]]; then
   if [[ ! -o interactive ]]; then
     if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
       for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
@@ -15,10 +15,13 @@ if [[ "$CLAUDECODE" == "1" ]]; then
     fi
     return
   fi
-  # Real interactive tab that inherited Claude's env: the settings.json env
-  # (DISABLE_ZOXIDE=1) leaks along with CLAUDECODE and would silently skip the
-  # zoxide hook below. Scrub both so init behaves like a normal terminal.
-  unset CLAUDECODE DISABLE_ZOXIDE
+  # Real interactive tab that inherited Claude's env: scrub the whole family.
+  # DISABLE_ZOXIDE (settings.json env) would silently skip the zoxide hook below;
+  # CLAUDE_CODE_CHILD_SESSION makes a `claude` started here think it's a nested
+  # child session, so it skips transcript persistence and is invisible to
+  # --continue/--resume; CLAUDE_EFFORT silently changes new sessions' effort.
+  unset CLAUDECODE DISABLE_ZOXIDE CLAUDE_CODE_CHILD_SESSION \
+        CLAUDE_CODE_SESSION_ID CLAUDE_CODE_ENTRYPOINT CLAUDE_EFFORT
 fi
 
 # ──────────────────────────────────────────────────────────────────────────────
