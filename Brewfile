@@ -132,7 +132,6 @@ brew "railway"
 brew "terraform"
 brew "dopplerhq/cli/doppler"
 brew "hashicorp/tap/terraform-ls"
-brew "hashicorp/tap/vault"
 brew "jesseduffield/lazydocker/lazydocker"
 brew "stripe/stripe-cli/stripe"
 
