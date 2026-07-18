@@ -79,8 +79,11 @@ if command -v brew >/dev/null 2>&1; then
     # upgrade them, so name the command that does.
     fail "${missing:-some} Brewfile dependencies missing or outdated (brew bundle install; brew upgrade)"
     # Formulae from untrusted taps cannot be version-checked at all, so brew
-    # lists them as needing an update whatever their real state. They inflate
-    # the count above; say so rather than letting the number look exact.
+    # lists them as needing an update whatever their real state. That does not
+    # make the total inflated, as first assumed here: when the 7 untrusted taps
+    # on this machine were trusted, every one turned out to be genuinely
+    # outdated and the count held at 114. What it makes them is guesses rather
+    # than checks. Flag them so the number can be believed, not discounted.
     untrusted="$(printf '%s\n' "$out" \
       | grep -oE 'whether [^ ]+ is outdated' | awk '{print $2}' | sort -u || true)"
     if [ -n "$untrusted" ]; then
