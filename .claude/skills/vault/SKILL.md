@@ -11,11 +11,17 @@ Can be invoked from ANY project on the machine.
 
 ## Configuration
 
-```
-VAULT="$HOME/dev/personal/vault"
+Resolve the vault location first, then use `$VAULT` everywhere below:
+
+```bash
+if [ -d "$HOME/dev/personal/vault" ]; then
+    VAULT="$HOME/dev/personal/vault"          # local machine (any cwd)
+else
+    VAULT="${CLAUDE_PROJECT_DIR:-$PWD}"       # cloud session: the repo IS the vault
+fi
 ```
 
-Expand `$HOME` to the user's actual home directory.
+Expand `$HOME` to the user's actual home directory. The fallback matters in Claude Code cloud/web sessions, where the vault is cloned to a sandbox path and `$HOME/dev/personal/vault` does not exist. On a local machine the first branch always wins, so behaviour there is unchanged.
 
 ## Workflow
 

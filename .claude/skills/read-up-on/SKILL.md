@@ -11,11 +11,21 @@ Can be invoked from ANY project on the machine.
 
 ## Configuration
 
-```
-VAULT="$HOME/dev/personal/vault"
+Resolve the vault location first, then use `$VAULT` everywhere below:
+
+```bash
+if [ -d "$HOME/dev/personal/vault" ]; then
+    VAULT="$HOME/dev/personal/vault"          # local machine (any cwd)
+else
+    VAULT="${CLAUDE_PROJECT_DIR:-$PWD}"       # cloud session: the repo IS the vault
+fi
 ```
 
-All searches below run against `$VAULT`, regardless of the current working directory. The vault's auto-memory lives at `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` (glob it; the project dir name encodes the username, which differs between machines).
+The fallback matters in Claude Code cloud/web sessions, where the vault is cloned to a sandbox path and `$HOME/dev/personal/vault` does not exist. On a local machine the first branch always wins, so behaviour there is unchanged.
+
+All searches below run against `$VAULT`, regardless of the current working directory.
+
+The vault's auto-memory lives at `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` (glob it; the project dir name encodes the username, which differs between machines). **This path does not exist in cloud sessions** — if the glob matches nothing, skip the auto-memory step and rely on the notes and git history instead. Do not treat its absence as an error.
 
 ## When to use
 
