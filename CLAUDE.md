@@ -165,6 +165,6 @@ zsh/
 - bat cache must be rebuilt after theme changes: `bat cache --build`
 - VS Code extensions managed separately via script (not symlinked)
 - `.zshrc` short-circuits for Claude Code shells (`CLAUDECODE=1`) to skip interactive plugin loading
-- Java pinned to `openjdk@21` (the only JDK in `Brewfile`); other versions removed
+- Four JDKs are installed, not one: `openjdk@11` (required by `pdftk-java`), `openjdk@17` (a leftover nothing depends on), `openjdk@21` (pulled in by `kotlin-language-server`), and a plain `openjdk` 26 as a dependency. All three versioned ones are declared in `Brewfile` so the state shows up in a diff. This line previously claimed @21 was pinned as the only JDK, which had not been true for some time
 - Slow completion-generators (uv, ngrok) are deferred until after first prompt via a precmd hook
 - When adding a new tool whose config lives in a stowed dir, gitignore its runtime state (caches, `*-cache.json`, `*.mdb`/lock DBs, `*.bak*`) **before** the first commit so it never enters the tree; `doctor.sh`'s "Repo hygiene" check fails loud if any slips through
