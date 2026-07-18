@@ -152,7 +152,6 @@ brew "typst"
 
 # === AI / ML ===
 brew "aichat"
-brew "huggingface-cli"
 brew "ollama"
 
 # === Mac App Store & shell ===
