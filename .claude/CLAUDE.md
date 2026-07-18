@@ -4,7 +4,10 @@ Cross-cutting repos I refer to from anywhere (paths are `$HOME`-relative; identi
 
 - `~/dev/personal/vault`: Obsidian second brain. Notes, people, projects, meetings, health, travel, Personlig Økonomi. Read its `CLAUDE.md` before writing to it. Use the `read-up-on` skill for briefings, the `vault` skill for capturing knowledge.
 - `~/dev/personal/presentations`: all my talks and slide decks (TanStack Start app, deployed to presentations.magnusrodseth.com). Read its `AGENTS.md` before working in it. Use the `scaffold-presentation` skill to create new decks.
-- `~/dotfiles`: machine config, stow-managed. All user-scope agent skills live in `.claude/skills/` here (`~/.claude` is a symlink into this repo).
+- `~/dotfiles`: machine config, stow-managed. Skills I author live in `~/dotfiles/.claude/skills/` as real dirs; skills installed via `npx skills` land in `~/.agents/skills/` and are symlinked into dotfiles from there.
+  - `~/.claude` is a real directory, NOT a symlink to `~/dotfiles/.claude`. Stow links individual entries into the repo (`CLAUDE.md`, `RTK.md`, `commands`), but `~/.claude/skills/` is a real dir managed per-entry by `scripts/skills/link-dotfiles-skills.sh`.
+  - `~/.claude/skills/` is therefore a mix: symlinks into dotfiles, plus real dirs written directly by `npx skills`. Those real dirs shadow the dotfiles copies (the link script skips an entry that already exists) and drift from them silently.
+  - **When checking whether a skill is current, read `~/.claude/skills/<name>` -- that is the copy that actually loads.** `~/.agents/skills/<name>` may be stale or ahead of it.
 
 ## Dev Server
 
