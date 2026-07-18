@@ -67,8 +67,26 @@ if command -v brew >/dev/null 2>&1; then
   if brew bundle check --file="$DOTFILES/Brewfile" >/dev/null 2>&1; then
     pass "all Brewfile dependencies satisfied"
   else
-    missing="$(brew bundle check --file="$DOTFILES/Brewfile" --verbose 2>/dev/null | grep -c '→')"
-    fail "${missing:-some} Brewfile dependencies missing (run: brew bundle install)"
+    # brew writes its "→ <name> needs to be installed or updated." lines to
+    # STDERR. Discarding stderr here (as this check used to) made the count
+    # always 0, so the check failed while reporting "0 dependencies missing" -
+    # red with a number that disproved it, which is how you train someone to
+    # stop reading red.
+    out="$(brew bundle check --file="$DOTFILES/Brewfile" --verbose 2>&1)"
+    missing="$(printf '%s\n' "$out" | grep -c '→' || true)"
+    # "or outdated" is load-bearing: most hits are installed but behind (git,
+    # zsh and stow all report here), not absent. brew bundle install does not
+    # upgrade them, so name the command that does.
+    fail "${missing:-some} Brewfile dependencies missing or outdated (brew bundle install; brew upgrade)"
+    # Formulae from untrusted taps cannot be version-checked at all, so brew
+    # lists them as needing an update whatever their real state. They inflate
+    # the count above; say so rather than letting the number look exact.
+    untrusted="$(printf '%s\n' "$out" \
+      | grep -oE 'whether [^ ]+ is outdated' | awk '{print $2}' | sort -u || true)"
+    if [ -n "$untrusted" ]; then
+      n_untrusted="$(printf '%s\n' "$untrusted" | grep -c . || true)"
+      warn "$n_untrusted of those are unverifiable (untrusted tap; brew trust --formula <name>)"
+    fi
   fi
 else
   fail "brew not installed; cannot check Brewfile"
