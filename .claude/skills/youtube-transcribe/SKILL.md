@@ -1,60 +1,113 @@
 ---
 name: youtube-transcribe
-description: Transcribe YouTube videos and extract key information using yt-dlp. Use when the user shares a YouTube URL and wants to transcribe it, summarize it, extract key points, or dump learnings from a video. Triggers on YouTube links (youtube.com/watch, youtu.be) combined with requests to "transcribe", "summarize", "watch", "extract", "key points", "notes from this video", or "what does this video say".
+description: Transcribe YouTube videos and extract key information using yt-dlp, optionally pulling verified screenshots of the video's visual explanations. Use when the user shares a YouTube URL and wants to transcribe it, summarize it, extract key points, take screenshots or frames from it, or dump learnings from a video. Triggers on YouTube links (youtube.com/watch, youtu.be) combined with requests to "transcribe", "summarize", "watch", "extract", "key points", "notes from this video", "screenshots", "frames", or "what does this video say".
 ---
 
 # YouTube Transcribe
 
-Transcribe YouTube videos using `yt-dlp` subtitle extraction. Requires `yt-dlp` installed via Homebrew (`brew install yt-dlp`).
+Turn a YouTube video into a note. Two tracks: the **transcript track** (always) and the **frame track** (when the video teaches visually). Requires `yt-dlp` and `ffmpeg`.
 
-## Workflow
+## Track 1: Transcript
 
-### 1. Get Video Metadata
-
-```bash
-yt-dlp --print title --print channel --print description --print duration_string "<URL>"
-```
-
-Prints title, channel, description, and duration on separate lines.
-
-### 2. Download Subtitles
-
-Try manual subs first (higher quality), fall back to auto-generated:
+### 1. Metadata
 
 ```bash
-# Try manual subs first
-yt-dlp --write-sub --sub-lang en --skip-download --sub-format vtt -o "/tmp/yt_transcript" "<URL>" 2>&1
-
-# If no manual subs, use auto-generated
-yt-dlp --write-auto-sub --sub-lang en --skip-download --sub-format vtt -o "/tmp/yt_transcript" "<URL>"
+yt-dlp --print title --print channel --print duration_string --print description "<URL>"
 ```
 
-- `--skip-download` avoids downloading the actual video
-- Output: `/tmp/yt_transcript.en.vtt`
-- For other languages, change `--sub-lang` (e.g. `no` for Norwegian)
+### 2. Subtitles
 
-List available languages if needed:
+Manual subs first (punctuated, higher quality), auto-generated as fallback:
 
 ```bash
-yt-dlp --list-subs "<URL>"
+cd "$SCRATCH"   # scratchpad dir, not the vault
+yt-dlp --write-sub --sub-lang en --skip-download --sub-format vtt -o "yt" "<URL>"
+# nothing written? then:
+yt-dlp --write-auto-sub --sub-lang en --skip-download --sub-format vtt -o "yt" "<URL>"
 ```
 
-### 3. Clean VTT into Readable Text
+Output: `yt.en.vtt`. Other languages via `--sub-lang no`; list them with `yt-dlp --list-subs "<URL>"`.
+
+### 3. Clean into prose
 
 ```bash
-cat /tmp/yt_transcript.en.vtt | sed '/^$/d' | sed '/^WEBVTT/d' | sed '/^Kind:/d' | sed '/^Language:/d' | sed '/^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/d' | sed '/^NOTE/d' | sed 's/<[^>]*>//g' | awk '!seen[$0]++'
+python3 <skill_dir>/scripts/vtt.py text yt.en.vtt > clean.txt
 ```
 
-This removes VTT headers, timestamps, NOTE lines, HTML tags, and deduplicates repeated lines. For long transcripts, pipe through `head -N` / `tail -n +N` to read in chunks.
+**Use the script, do not hand-roll a `sed`/`awk` pipeline.** A prior version of this skill inlined `awk '!seen[$0]++'`, and when the skill is invoked with a URL argument the `$0` is interpolated with that URL before the agent reads it, so the dedup silently no-ops and every line comes out doubled. The script also decodes `&lt;b&gt;`-style escaped markup, which a plain tag-stripping `sed` leaves as literal text.
 
-### 4. Clean Up
+### 4. Write the note
+
+Summarise in your own words, quote the handful of lines you actually cite, and link into related notes. **Do not paste the entire transcript into the note.** It bloats the vault, and the synthesis is the thing worth keeping. Keep `clean.txt` in the scratchpad for the duration of the writing, then let it go.
+
+## Track 2: Frames
+
+Worth doing when the video explains things **visually**: diagrams, on-screen equations, side-by-side comparisons, UI walkthroughs, charts. Skip for talking-head interviews and podcasts, where frames add nothing.
+
+### 1. Download the video
 
 ```bash
-rm /tmp/yt_transcript.en.vtt
+yt-dlp -f "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080]" -o "video.mp4" "<URL>"
 ```
 
-## Notes
+Run it in the background for anything over ~10 minutes; a 29-minute 1080p video is roughly 160 MB and takes a minute or two.
 
-- `yt-dlp` version warnings are safe to ignore
-- Auto-generated subs lack punctuation and speaker labels; infer from context
-- The `awk '!seen[$0]++'` dedup is essential because VTT repeats lines across overlapping cue windows
+### 2. Map concepts to timestamps
+
+Pick the phrases the speaker says *at* each visual moment, then look them up:
+
+```bash
+python3 <skill_dir>/scripts/vtt.py find yt.en.vtt \
+    "the blades of the pupil" "more grain in the Iso 800" "Priority Modes exist in the center"
+```
+
+Prints `00:03:30 | the blades of the pupil diaphragm opening and closing.` for each hit, and reports misses on stderr so a silent miss cannot be mistaken for a match.
+
+### 3. Extract candidates
+
+Seek a beat or two **after** the phrase; a graphic usually appears as it is being explained, not on the first syllable.
+
+```bash
+mkdir -p frames
+while IFS='|' read -r ts name; do
+  ffmpeg -loglevel error -ss "$ts" -i video.mp4 -frames:v 1 -q:v 2 "frames/$name.jpg" -y
+done <<'EOF'
+00:03:32|aperture-blades-diaphragm
+00:10:14|iso-125-vs-800-grain
+EOF
+```
+
+Descriptive kebab-case names describing the *content*, never `frame-01`.
+
+### 4. LOOK at every frame before shipping it
+
+**This step is mandatory and is the whole point.** Read each extracted image and confirm it actually shows what the transcript implied. Expect roughly one in five to miss: video cuts away, the graphic has not appeared yet, or the speaker is describing a result rather than showing the control.
+
+For each candidate: keep it, re-extract at a shifted timestamp, or drop it.
+
+**Never ship an unverified frame, and never caption a frame with a claim it does not support.** A wrong screenshot is worse than no screenshot, because a caption lends it false authority. If a concept resists capture after a retry or two, drop it and say so rather than approximating.
+
+### 5. Save and embed
+
+Into a per-video subdirectory, then embed each frame at the exact claim it supports, with a timestamp in the caption:
+
+```markdown
+![[three-exposure-tiers.jpg]]
+*The three prints he opens with (00:10): underexposed, correct, creatively correct.*
+```
+
+For an Obsidian vault: `Attachments/<Video Title - Channel>/`.
+
+### 6. Clean up
+
+```bash
+rm -f video.mp4        # the big one; do not leave 160 MB in the scratchpad
+```
+
+## Environment notes
+
+- Works in **Claude Code on the web/mobile** as well as locally, provided the environment's setup script installs `yt-dlp` and `ffmpeg` and YouTube is on the domain allowlist. Reading frames back uses ordinary image reading, which cloud sessions support.
+- A `403` on the CONNECT verb in cloud is often a **transient proxy failure, not an allowlist error**. Re-run once before debugging configuration; an allowlist rejection fails deterministically every time.
+- `yt-dlp` version warnings are safe to ignore. If extraction breaks oddly, update it first, since YouTube changes break old versions regularly.
+- Auto-generated subs lack punctuation and speaker labels; infer from context and say so in the note if the quotes are reconstructed.
+- Do all downloading and extraction in a scratchpad directory. Only verified, named frames belong in the vault.
