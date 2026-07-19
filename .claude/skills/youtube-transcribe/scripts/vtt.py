@@ -32,7 +32,16 @@ import sys
 
 
 def parse(path):
-    """Return [(timestamp, text)] with markup stripped and entities decoded."""
+    """Return [(timestamp, [line, ...])] with markup stripped and entities decoded.
+
+    Line structure is PRESERVED rather than flattened to a single string. Auto-
+    generated YouTube captions use rolling cue windows: each cue repeats the
+    previous cue's line and appends one new one. Flattening here would make
+    every cue body unique, so the caller's dedup could never fire and the
+    transcript would come out with each line repeated two or three times.
+    Manual subtitles are one line per cue and hide this entirely, so it only
+    shows up on the auto-generated fallback path.
+    """
     raw = open(path, encoding="utf-8").read()
     blocks = re.findall(
         r"(\d\d:\d\d:\d\d)\.\d\d\d --> [\d:.]+.*?\n(.*?)(?=\n\n|\Z)", raw, re.S
@@ -41,18 +50,19 @@ def parse(path):
     for ts, body in blocks:
         body = html.unescape(body)          # &lt;b&gt; -> <b>
         body = re.sub(r"<[^>]*>", "", body)  # then strip all tags
-        body = " ".join(body.split())
-        if body:
-            out.append((ts, body))
+        lines = [" ".join(l.split()) for l in body.split("\n")]
+        lines = [l for l in lines if l]
+        if lines:
+            out.append((ts, lines))
     return out
 
 
 def cmd_text(path):
     seen, lines = set(), []
     for _, body in parse(path):
-        # VTT repeats lines across overlapping cue windows; dedup by content.
-        for line in body.split("\n"):
-            if line and line not in seen:
+        # Dedup at LINE level: rolling cue windows repeat lines across cues.
+        for line in body:
+            if line not in seen:
                 seen.add(line)
                 lines.append(line)
     text = " ".join(lines)
@@ -65,7 +75,8 @@ def cmd_text(path):
 
 def cmd_find(path, phrases):
     cues, hit = parse(path), set()
-    for ts, body in cues:
+    for ts, lines in cues:
+        body = " ".join(lines)
         for p in phrases:
             if p.lower() in body.lower() and p not in hit:
                 hit.add(p)
