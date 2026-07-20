@@ -26,6 +26,15 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
    ```bash
    grep -nE 'utm_source=(chatgpt|openai|copilot)|referrer=grok\.com|:contentReference|oai_citation|turn0(search|image|news|file)|grok_render_citation|grok-card|attached_file:[0-9]|attributableIndex|【[0-9]+†|20[0-9]{2}-XX-XX' <file>
    ```
+   In the same pass, run the emphatic/appositive-colon grep from the ad-hoc list
+   below. It is mandatory on every invocation, including narrow or scoped passes:
+   a scope like "em-dash and vocabulary only" limits which rewrites you apply, not
+   which scans you run, and colon overuse is exactly the tell that hides behind an
+   em-dash ban. Judge each hit: a colon introducing a genuine list, a quotation, or
+   a code block stays; an appositive "X: Y" doing the job of a banned em dash gets
+   recast as a full sentence; a labeled opener repeated across sections ("Regelen:
+   ..." again and again) is template scaffolding and gets varied or dropped. Report
+   the colon findings even when the requested scope did not name them.
 
 2. **Triage.** Read against [references/tells.md](references/tells.md) and classify each candidate change by risk tier (see [references/risk-tiers.md](references/risk-tiers.md)):
    - **Tier 1** (mechanical, can't change meaning): apply silently. Em dashes, curly quotes, hard-tell markers, placeholder text.
@@ -50,7 +59,7 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 
 - Preserve meaning, facts, structure, and the author's argument. Only change voice.
 - Default to stripping, not embellishing. You may restructure for human rhythm (vary sentence length, restore active voice, cut filler transitions, land on the strong word): that changes cadence, not content. But never invent facts, numbers, sources, quotes, anecdotes, or opinions the author didn't supply. If human-sounding prose needs a concrete specific the text lacks, flag the gap or ask. A fabricated detail is worse than a bland one.
-- Replace em dashes with commas, parentheses, colons, semicolons, or two sentences. Never preserve them.
+- Replace em dashes with two sentences, a comma, or parentheses. Do not swap them for colons by default: the colon-instead-of-em-dash habit produces the emphatic-colon tell, and the author's standing preference is full sentences. A colon earns its place only before a genuine list or a quotation. Never preserve the em dash itself.
 - Replace curly quotes and apostrophes with straight ASCII (`"`, `'`).
 - Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
 - Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate).
@@ -58,7 +67,7 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 
 ## Ad-hoc greps for specific tells
 
-When checking a long doc for one category at a time:
+When checking a long doc for one category at a time. Exception: the emphatic/appositive-colon grep below is not ad-hoc - it runs in step 1 on every pass:
 
 ```bash
 # AI vocabulary (GPT-4 era + newer additions)

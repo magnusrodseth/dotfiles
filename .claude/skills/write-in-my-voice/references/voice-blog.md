@@ -54,8 +54,11 @@ and confirmed it reads as him. When in doubt, match its rhythm and restraint.
 
 ## Punctuation & surface
 
-- **No em dashes.** Colons (to introduce a list/explanation), parentheses, and
-  plain sentences do the work. Spaced double-hyphen `--` only inside link lists.
+- **No em dashes, and no colons doing their job.** Plain sentences do the work
+  first, with parentheses for glosses. A colon only introduces a genuine list or
+  a quotation, kept scarce - never an appositive punchline ("X: Y"), never a
+  repeated labeled opener ("Regelen: ..." section after section). Spaced
+  double-hyphen `--` only inside link lists.
 - **No emoji in prose.** Section icons or in-code pointers only, and even those
   rarely. The running text is emoji-free.
 - Correct æ/ø/å throughout. Underscore-italics for single-word emphasis is fine,

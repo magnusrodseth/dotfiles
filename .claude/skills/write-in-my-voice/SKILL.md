@@ -74,9 +74,12 @@ These hold regardless of language:
   period, a no, a constraint) but cushion it with genuine warmth and specific
   compliments. Never cold, never over-apologetic.
 - **Short sentences, tight rhythm.** Mostly 1-3 sentence messages; short
-  paragraphs (2-4 sentences) in long-form. A colon may introduce a list or an
-  explanation ("Konkret betyr dette:"), but not an aphoristic reframe (see Hard
-  bans).
+  paragraphs (2-4 sentences) in long-form. A colon earns its place only before a
+  genuine list or a quotation. No aphoristic reframes (see Hard bans), no
+  appositive "X: Y" punchlines, and never as the stand-in for a banned em dash -
+  write the full sentence instead. Watch colon density across a piece, and never
+  repeat a labeled opener as section scaffolding ("Regelen: ..." section after
+  section).
 - **Don't echo the incoming message back.** In a reply, cut clauses that just
   restate or paraphrase what the other person said - acknowledgment padding like
   "supert at [X] blir med", "jeg skjønner at det er travelt", "great that you can
@@ -92,7 +95,8 @@ These hold regardless of language:
   to reach out". A proposed concrete time/place counts.
 - **Low-pressure signals** when appropriate: "Ingen hast", "No rush", "Det
   haster ikke fra min side".
-- **Never em dashes.** For asides use a spaced hyphen " - " or restructure.
+- **Never em dashes.** For asides use a spaced hyphen " - " or restructure. Do
+  not promote a colon into the em dash's old job; prefer the full sentence.
 - **Space before every emoji.** Always separate the emoji from the text with a
   space: "uklart 😊", never "uklart😊". Applies to any emoji in any register.
   Older verbatim samples jam the emoji onto the last word; this rule wins.
@@ -106,7 +110,7 @@ These hold regardless of language:
       one-sentence dramatic paragraphs, no hype words, no clickbait opening
 - [ ] Greeting/sign-off matches the register (long-form: none - open on the hook, close on a resource list + bio line)
 - [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**), every emoji has a space before it ("for tiden 😊", never "for tiden😊"); **never the pray emoji 🙏 / 🙏🏽**
-- [ ] No em dashes; æ/ø/å intact; any triad is three real points, not filler
+- [ ] No em dashes, and no colons doing em-dash work (genuine lists and quotations only, density low); æ/ø/å intact; any triad is three real points, not filler
 - [ ] Messages end by handing the next step to the recipient
 - [ ] No echo padding: the reply doesn't restate the other person's logistics or pleasantries back to them
 - [ ] Reads like the samples, not like generic AI politeness (no "I hope this email finds you well", no "delve")
@@ -117,9 +121,10 @@ a verbatim sample. Don't invent catchphrases.
 ## Working with /humanize
 
 His prose already passes the highest-signal AI tests (no em dashes, none of the
-English slop vocab). So run `/humanize` on his text **narrowly**: apply its em-dash,
+English slop vocab). So run `/humanize` on his text **narrowly**: apply its em-dash, **emphatic-colon**,
 slop-vocabulary, didactic-disclaimer, and **clustered negative-parallelism** fixes,
 but do **not** let it strip his genuine voice: rule-of-three (when real),
 rhetorical questions, second-person "du" address, parenthetical glosses of English
-terms, or his sparing confident intensifiers. The one place the two fully agree:
-kill "it's not X, it's Y". Both this skill and humanize ban it.
+terms, or his sparing confident intensifiers. Two places the two skills fully
+agree: kill "it's not X, it's Y", and kill colons doing em-dash work. Humanize
+scans for the emphatic colon on every pass, narrow or not.
