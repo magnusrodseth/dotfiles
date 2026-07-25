@@ -8,17 +8,6 @@
     "pr": ""
   },
   "permissions": {
-    "allow": [
-      "Bash(git -C:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git push)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(playwright-cli:*)"
-    ],
     "defaultMode": "bypassPermissions"
   },
   "hooks": {
@@ -59,11 +48,6 @@
         ]
       }
     ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bunx -y ccstatusline@latest",
-    "padding": 0
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
