@@ -1016,6 +1016,15 @@
       "skillFolderHash": "1378aa506439f26c809dbcfc61515cbd70f93d69",
       "installedAt": "2026-07-09T14:57:10.616Z",
       "updatedAt": "2026-07-09T14:57:10.616Z"
+    },
+    "imsg": {
+      "source": "steipete/imsg",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/steipete/imsg.git",
+      "skillPath": ".agents/skills/imsg/SKILL.md",
+      "skillFolderHash": "7cbe87d80846fc9cb4de63e71fe0c6822835b327",
+      "installedAt": "2026-07-22T08:00:03.027Z",
+      "updatedAt": "2026-07-22T08:00:03.027Z"
     }
   },
   "lastSelectedAgents": [
