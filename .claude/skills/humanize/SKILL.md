@@ -1,6 +1,6 @@
 ---
 name: humanize
-description: Detect and rewrite prose that reads as AI-generated. Strips em dashes, curly quotes, unicode arrows, AI vocabulary (delve, underscore, tapestry, vibrant, robust, quietly), negative parallelisms ("not just X, but Y"), rhetorical question-and-answer, rule-of-three filler, tone tells ("here's the kicker", "let's break this down", "imagine a world where"), weasel attributions, puffery, didactic disclaimers, and citation artifacts. Then rewrites toward human rhythm (sentence-length variance, active voice, concreteness) without fabricating facts. Use when the user says "humanize this", "de-slop", "make this less AI", "make this sound more human", "sounds like ChatGPT", "remove AI tells", "rewrite without AI voice", "this reads AI-generated", or pastes prose for cleanup.
+description: "Detect and rewrite prose that reads as AI-generated: em dashes, AI vocabulary, negative parallelisms, rule-of-three filler, puffery, tone tells. Use for \"humanize this\", \"de-slop\", \"sounds like ChatGPT\", \"make this less AI\"."
 ---
 
 # Humanize

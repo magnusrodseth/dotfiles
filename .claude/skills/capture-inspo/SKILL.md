@@ -1,6 +1,6 @@
 ---
 name: capture-inspo
-description: Capture full-page screenshots of real websites by aesthetic/vibe/mood, then save them as design inspiration ready to upload to Claude Design's design-system generator. Drives the user's own Chrome via the playwriter skill to browse curated galleries (Land-book, Lapa Ninja, Awwwards, Mobbin), shortlist candidates the user picks, and write full-page captures to ~/screenshots/inspo/. Use when the user wants design inspiration screenshots, says "capture inspo", "find sites with an X vibe/aesthetic/mood", wants reference shots for a design system or a Claude Design upload, or asks to screenshot landing pages by visual style.
+description: "Capture full-page screenshots of real sites by aesthetic or vibe as design inspiration, driving your own Chrome via playwriter over Land-book, Lapa Ninja, Awwwards and Mobbin. Use for \"capture inspo\"."
 ---
 
 # Capture Inspo

@@ -1,6 +1,6 @@
 ---
 name: image-processing
-description: Process images in TypeScript/JavaScript using Bun's built-in Bun.Image API — resize, crop, rotate, flip, compress, convert formats (JPEG/PNG/WebP/HEIC/AVIF), generate blurry placeholders (LQIP/ThumbHash), and read metadata. Use when the user mentions image processing, resizing, cropping, downsizing, compressing, thumbnails, converting image formats, WebP/AVIF/HEIC conversion, image optimization, placeholder/LQIP/blur-up, EXIF/orientation, palette/indexed PNG, stripping metadata, or working with images from S3, file uploads, or clipboards in a Bun project. Also trigger on "make this image smaller", "thumbnail this", "convert to webp", "generate a blur placeholder", or any chained image pipeline task. Replaces sharp on Bun.
+description: "Process images in TS/JS with Bun's Bun.Image API: resize, crop, rotate, compress, convert (JPEG/PNG/WebP/HEIC/AVIF), thumbnails, LQIP/ThumbHash placeholders, EXIF. Replaces sharp on Bun."
 ---
 
 # Image Processing with Bun.Image

@@ -1,16 +1,6 @@
 ---
 name: learn-codebase
-description: >-
-  Learn a codebase by reading its actual source — on GitHub or already on disk —
-  to find the one contextual answer you need: how a pattern is really implemented,
-  an org's internal conventions, or how two things are wired together. Use when
-  pointed at a repo URL (public like pmndrs/zustand or org-internal like a
-  gjensidige/* repo) to understand it; when you need a repo's idiomatic pattern to
-  copy; when answering "how does <repo> do X" or "how is X done across X and Y";
-  or when an unfamiliar dependency must be understood from source. Checks local
-  clones under ~/dev and a ~/.learn-codebase cache before cloning. For the published
-  API docs of a named library, prefer find-docs — this is for the source itself, and
-  for private or undocumented repos that find-docs cannot reach.
+description: "Understand a codebase by reading its actual source, on GitHub or on disk: how a pattern is really implemented, an org's conventions, how two things are wired. Use for \"how does <repo> do X\". For published API docs prefer find-docs."
 ---
 
 # Learn a Codebase

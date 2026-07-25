@@ -1,6 +1,6 @@
 ---
 name: tanstack-seo
-description: "Complete SEO setup for TanStack Router / TanStack Start projects. Covers: dynamic OG image generation with Satori + Resvg, centralized SEO config and meta tag helpers, structured data (JSON-LD) for Organization/WebSite/Article/FAQ/Breadcrumb/Software schemas, dynamic XML sitemap, robots.txt, llms.txt for AI crawlers, per-route head functions with canonical URLs, Twitter Cards, Open Graph tags, web manifest, and favicon configuration. Use when setting up SEO for a new TanStack project, adding OG image generation, creating sitemaps, adding structured data, implementing meta tags, or optimizing a TanStack site for search engines and social sharing."
+description: "Complete SEO setup for TanStack Router/Start: OG image generation (Satori + Resvg), meta helpers, JSON-LD structured data, sitemap, robots.txt, llms.txt, canonical URLs, Twitter Cards, web manifest."
 ---
 
 # TanStack SEO

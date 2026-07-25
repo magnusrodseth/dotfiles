@@ -1,6 +1,6 @@
 ---
 name: empirical-research
-description: Appraise whether an empirical claim actually holds and by how much, against primary sources rather than search-result summaries. Runs a mandatory refutation pass, tiers every source, restates findings at the user's own parameters, and reports a claims table with reasoned confidence. Use when a question turns on whether something is true: does X actually work, is this benchmark meaningful, does this supplement/protocol/framework/product deliver its claimed effect, is this study any good, is this vendor claim real. NOT for API or library documentation (use find-docs). NOT for gathering uncontested facts into a repo note (use research). NOT for recalling what the user already wrote (use read-up-on).
+description: "Appraise whether an empirical claim actually holds, against primary sources, with a mandatory refutation pass and tiered sources. Use for \"does X actually work\", benchmark and vendor claims. Not for API docs (find-docs)."
 ---
 
 # Empirical Research

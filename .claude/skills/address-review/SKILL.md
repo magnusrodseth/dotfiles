@@ -1,7 +1,6 @@
 ---
 name: address-review
-description: |
-  Take a GitHub pull request's code review feedback end to end: check out the PR, fetch review summaries and unresolved inline threads from any reviewer (bots like Copilot and humans alike), investigate the codebase to judge each comment, apply agreed fixes, commit and push, then reply to each thread and resolve where appropriate. Pauses for approval before any GitHub write, asks before dismissing a comment it disagrees with, and leaves human-opened threads for the human to resolve unless told otherwise. Use when the user asks to "address the review", "address review comments", "go through the PR feedback", "address the Copilot review", handle/triage a PR review, or reply to and resolve review threads on a PR.
+description: "Take a GitHub PR's review feedback end to end: fetch unresolved threads from bots and humans, judge each, apply fixes, push, then reply and resolve. Use for \"address the review\" or \"go through the PR feedback\"."
 version: 0.2.0
 ---
 

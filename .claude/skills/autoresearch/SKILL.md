@@ -1,15 +1,6 @@
 ---
 name: autoresearch
-description: >-
-  Autonomous hill-climbing on any measurable problem: qualify the four legs
-  (mutable artifact, quantitative metric, bounded eval, keep/discard), grill
-  the user into a written protocol, freeze an evaluation referee, then run a
-  mutate-evaluate-keep/revert loop until the stopping condition fires.
-  Generalizes karpathy/autoresearch beyond ML training to tests passed,
-  latency, bundle size, prompt scores, cost: any metric a script can print.
-  Use /autoresearch to set up and start a run, /autoresearch continue to
-  resume an existing run, or /loop /autoresearch continue for self-paced
-  long runs.
+description: "Autonomous hill-climbing on any measurable problem: qualify the four legs, freeze an eval referee, then loop mutate-evaluate-keep/revert until the stopping condition fires. Works on tests, latency, bundle size, cost."
 disable-model-invocation: true
 ---
 
