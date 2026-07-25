@@ -73,6 +73,25 @@ Strip the setup. Keep the payoff if it has content, drop it if it's empty.
 | `This isn't sourcing, it's framing.` | `This is a framing problem, not a sourcing one.` (or split into two sentences) |
 | `Not only dismissive but also unnecessarily harsh.` | `Dismissive and harsh.` |
 | `Not a career, not a body of work, just an algorithmic moment.` | `Just an algorithmic moment, with no career or body of work behind it.` |
+| `Forget the frameworks. Focus on the constraints.` | `Start from the constraints.` |
+| `It was never about the tooling. It was always about the review loop.` | `The review loop is what decides this.` |
+
+The fix rule for every shape: delete the rejected half, then write the surviving claim as a direct sentence. If the positive claim can't stand alone, it was never the point.
+
+### Softened reframes
+
+The same move with the negation dissolved. Cut the concessive setup and keep the claim.
+
+| Before | After |
+|---|---|
+| `Most teams think they have a hiring problem. In reality, their standards are unclear.` | `The team's standards are unclear.` |
+| `On the surface, this is a caching bug. The deeper issue is the data model.` | `The data model is what's broken here. It shows up as a caching bug.` |
+| `While the API may seem complete, it actually lacks pagination.` | `The API has no pagination.` |
+| `Is this a productivity problem? No. It's an attention problem.` | `Attention is the constraint.` |
+
+Reframe headings get the same treatment. "Not a tool. A system." becomes "The system". "The real problem" becomes whatever the problem actually is.
+
+Keep contrast that carries information: "The meeting is on Tuesday, not Thursday."
 
 ## Dramatic countdown ("Not X. Not Y. Just Z.")
 
@@ -245,6 +264,33 @@ Before:
 
 After:
 > Products are closed; platforms let others build on top. Without that opening, there's no ecosystem.
+
+## Craft-metaphor verbs
+
+Replace the craft verb with the literal action. The rewrite is usually more specific, because the metaphor was hiding the fact that no specific was ever given.
+
+| Before | After |
+|---|---|
+| `We sharpened the positioning.` | `We cut two of the four claims.` |
+| `Observability was bolted on afterwards.` | `Observability was added after launch.` |
+| `The strategy is woven through every team.` | `Every team has a target from the strategy.` |
+| `Let me unpack the tradeoff.` | `The tradeoff is between latency and cost.` |
+| `These constraints are baked into the protocol.` | `The protocol requires these constraints.` |
+| `The findings surfaced a gap in coverage.` | `The findings showed tests never covered the retry path.` |
+
+Judge by density, not by sight of the word. One craft verb in a long piece is ordinary English, and several of these have literal senses (a map that is mapped, a frame that is framed). A cluster of them, or one standing in for a specific the author has, is the tell. If the literal rewrite needs a fact the text doesn't contain, flag the gap rather than inventing the detail.
+
+## Analogy budget
+
+Apply the permission test in [tells.md](tells.md). When an analogy fails it, delete it and describe the thing.
+
+| Before | After |
+|---|---|
+| `Your onboarding is a leaky bucket.` | `42% of users drop on step 2, where the form asks for billing before showing the product.` |
+| `The strategy is a compass for the org.` | `The strategy says which customers to ignore.` |
+| `Think of the queue as a post office.` | `The queue holds jobs until a worker is free.` |
+
+Cutting a single decorative analogy is Tier 2. Reworking one the whole piece is built on is Tier 3, so ask.
 
 ## Tone and rhetorical tells
 

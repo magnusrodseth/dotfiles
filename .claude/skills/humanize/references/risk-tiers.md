@@ -24,12 +24,16 @@ These are non-debatable. If the user pasted them, they didn't mean to.
 Changes that almost never alter meaning. Apply them, but tell the user what you did in the closing summary so they can spot-check.
 
 - **AI vocabulary swaps** when the surrounding sentence is generic: `delve`, `underscore` (figurative), `tapestry`, `vibrant`, `intricate`, `pivotal`, `meticulous`, `garner`, `bolster`, `foster`, `showcase`, `leverage` (as a verb), `landscape` (abstract sense), `utilize`, `streamline`, `harness`, `certainly`, `paradigm`, `synergy`, `ecosystem` (as vague abstraction)
+- **Product-marketing vocabulary** used decoratively, where deleting the word costs the sentence nothing: `seamless`, `unlock`, `empower`, `elevate`, `supercharge`, `frictionless`, `effortless`, `game-changer`, `revolutionize`, `cutting-edge`, `best-in-class`, `groundbreaking`, `unparalleled`, `transformative`, `reimagine`, `democratize`, `turnkey`, `plug-and-play`, `future-proof`, `look no further`, `rest assured`, `deep dive`. Drops to Tier 3 in marketing copy (see below) and when the word is the correct technical term (`scalable` about real scaling, `intuitive` in HCI, `data-driven` about an actual method)
+- **Craft-metaphor verbs** standing in for an action the text already describes: `sharpened`, `distilled`, `crystallized`, `stitched together`, `woven`, `carved out`, `cemented`, `amplified`, `stripped back`, `sanded down`. Swap in the literal verb. Judge by density; `framed`, `mapped`, `unpacked`, `surfaced`, `anchored`, `baked in`, `bolted on` have ordinary literal senses and often stay. If the literal rewrite needs a fact the text lacks, flag the gap instead
+- **Decorative analogies** that fail the permission test in [tells.md](tells.md), where the literal statement is shorter and clearer
 - **Copulative restoration**: "X serves as a hub" → "X is a hub"; "the gallery features four spaces" → "the gallery has four spaces"
 - **Superficial analysis tails** that add no factual content: `, highlighting the importance of...`, `, reflecting broader trends...`, `, contributing to the development of...`, `, fostering a sense of...`
 - **Weasel attributions** with no named source: "experts argue", "industry reports suggest", "observers have noted" → either name a source or delete
 - **Didactic disclaimers**: "it's important to note", "it's worth noting", "it's crucial to remember"; and empty-emphasis openers "Importantly,", "Interestingly,", "Notably,"
 - **Tone-setup transitions** where the setup is the tell and the point survives without it: "Here's the kicker:", "Here's the thing:", "Let's break this down", "Let's unpack this", "Think of it as...", "Imagine a world where..." → delete the setup, keep the point
 - **Rhetorical question-and-answer** ("The result? Devastating." → "The result was devastating."), **dramatic countdown** ("Not X. Not Y. Just Z." → plain statement), and **false ranges** ("from innovation to transformation" → name the actual things)
+- **Softened reframes** where the concessive setup carries no information ("Most people think X. In reality, Y." → "Y.", "On the surface X, but really Y" → state Y). Keep contrast that corrects a real fact, date, number, name, or scope
 - **Anaphora**: collapse three-plus repeated sentence openings into one, keeping a single instance
 - **Section summaries** ("In conclusion", "In summary", "Overall") in documents under ~5 paragraphs
 - **Inline-header bullet lists** (`- **Foo**: bar`) when 3-4 lines of prose would read better
@@ -54,7 +58,8 @@ Some AI-vocab words have legitimate technical meanings. Ask when context is ambi
 
 ### Tone the user may have wanted
 
-- **Marketing copy** where some puffery or grandiose stakes ("will define the next era") is intentional brand voice
+- **Marketing copy** where some puffery, grandiose stakes ("will define the next era"), or product-marketing vocabulary ("seamless", "effortless") is intentional brand voice. Landing pages and launch posts are the main case: the register is a deliberate choice, so ask before flattening it
+- **A load-bearing analogy** the whole piece is built on. Cutting one decorative comparison is Tier 2; dismantling the central figure is a structural rewrite
 - **Speeches, poetry, song lyrics, headlines** where rule-of-three, anaphora, or negative parallelism is rhetorical, not AI cadence
 - **Personal essays** where the author's voice happens to use em dashes or "not just X, but Y" deliberately
 - **Sales-flavored prose** that's supposed to be punchy

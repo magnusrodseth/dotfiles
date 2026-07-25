@@ -114,6 +114,7 @@ These hold regardless of language:
 - [ ] Messages end by handing the next step to the recipient
 - [ ] No echo padding: the reply doesn't restate the other person's logistics or pleasantries back to them
 - [ ] Reads like the samples, not like generic AI politeness (no "I hope this email finds you well", no "delve")
+- [ ] **Long-form only: no voice drift.** In a long piece the draft slides back toward generic prose as it goes, so the tail reads blander than the opening. Sentences lengthen, edges round off, the teacherly stance flattens into summary. Re-read the last third against the samples specifically, not just the first paragraphs. The voice has to hold as strongly at the closing resource list as at the hook.
 
 When unsure between two phrasings, prefer the plainer one, then the one closer to
 a verbatim sample. Don't invent catchphrases.

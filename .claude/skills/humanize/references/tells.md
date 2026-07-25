@@ -34,6 +34,23 @@ Variants to catch:
 - **Em-dash dismissal:** "X, not Y" ("It's backwards, not bold").
 - **Cross-sentence reframe:** the same noun negated then repositioned across two sentences. "The question isn't X. The question is Y."
 
+Other shapes with the same setup-payoff move: *Forget X. Focus on Y. / Less X, more Y. / X is dead. Y is the future. / Stop thinking X. Start thinking Y. / You don't need X. You need Y. / It was never about X. It was always about Y.*
+
+#### Softened reframes (the ones that evade a "not" grep)
+The same structure with the negation dissolved into a concessive opener. These are the hardest variant to catch mechanically, because the word "not" never appears. The test is structural: does the passage set up a frame only to dismiss and upgrade it?
+
+Watch for: *While X may seem..., Although X appears..., Sure, X..., At first glance, X..., On the surface, X..., Most people think X..., Conventional wisdom says X..., Everyone talks about X...* followed by a pivot.
+
+The pivot words that do the work: *but, yet, actually, really, instead, rather, ultimately, in reality, the truth is, what matters is, the real, the deeper, the hidden, the overlooked.*
+
+Examples:
+- "Most teams think they have a hiring problem. In reality, their standards are unclear."
+- "On the surface, this is a caching bug. The deeper issue is the data model."
+
+Also appears as headings ("The real problem", "From chaos to clarity", "Not a tool. A system."). Use a direct heading instead.
+
+**Allowed contrast:** correcting a specific factual, legal, technical, date, number, name, or scope error. "The meeting is on Tuesday, not Thursday." The ban targets contrast used for drama or manufactured insight, never contrast that carries real information.
+
 ### Dramatic countdown ("Not X. Not Y. Just Z.")
 Negating two or more things in staccato before revealing the "real" one. Builds false tension and a false sense of narrowing to the truth. A cousin of negative parallelism and rule-of-three, but distinctive enough to name.
 
@@ -97,7 +114,13 @@ Watch for: *Here's the kicker, Here's the thing, Here's where it gets interestin
 ### Patronizing analogy
 Reaching for a simplifying metaphor the reader didn't need. The model defaults to teacher mode and assumes a metaphor is always clarifying (often it's less clear than the plain statement).
 
-Watch for: *Think of it as..., Think of it like..., It's like a... (for X), It's basically a...*
+Watch for: *Think of it as..., Think of it like..., It's like a... (for X), It's basically a..., Imagine, Picture, As if, As though, Works like, Acts like, Functions as, The X of Y, A bridge between, A lens for, A roadmap for, The engine of, The backbone of, The DNA of.*
+
+**Budget.** Machine prose reaches for an analogy at every abstraction, so density alone is diagnostic. Roughly: none needed under 800 words, at most one per 800 to 1500, one per 1500 beyond that. Never stack two figures on one idea.
+
+**Permission test.** Keep an analogy only if every one of these holds. The subject is genuinely unfamiliar, abstract, or technical; the analogy makes it easier rather than prettier; it is shorter than the literal explanation; it is exact enough not to mislead; it reads normally aloud. If any fails, write it literally. This is a judgement call on tone, so a load-bearing analogy is Tier 3, ask before cutting.
+
+**Overused figurative families** for abstract work: journey, battlefield, machine-for-people, ecosystem, engine/fuel, map/compass, signal/noise (unless literal), iceberg, north star, flywheel, scaffolding, plumbing, gardening, chess, sports, puzzle.
 
 ### Futurism invitation
 Selling an argument by asking the reader to picture a wonderful hypothetical, usually followed by a list of good things that happen if you accept the premise.
@@ -144,6 +167,13 @@ Specific words overused by LLMs. Density matters: one is coincidence, five acros
 
 **Also era-spanning:** certainly, utilize, streamline, harness, paradigm, synergy, ecosystem, framework (when used as a vague abstraction rather than a named thing).
 
+#### Product-marketing register
+A separate cluster from the encyclopedic vocabulary above, and the one that shows up in landing pages, launch posts, README intros, and app-store copy. Same rule applies: one is coincidence, a cluster is signal. Cut the decoration and state what the thing does.
+
+seamless, unlock, empower, elevate, supercharge, frictionless, effortless, game-changer, revolutionize, revolutionary, cutting-edge, state-of-the-art, best-in-class, groundbreaking, breakthrough, unparalleled, unprecedented, transformative, disruptive, reimagine, redefine, democratize, scalable, turnkey, plug-and-play, future-proof, intuitive, holistic, data-driven, actionable, mission-critical, visionary, pioneering, versatile, embark, dive into, deep dive, look no further, rest assured.
+
+Note the register trap. Some of these are the correct technical word in the right context: *scalable* about an actual scaling property, *intuitive* in an HCI paper, *data-driven* describing a real methodology. The tell is decorative use, where deleting the word costs the sentence nothing.
+
 ### Magic adverbs
 An adverb dropped in to make a mundane claim feel significant or subtly powerful. "Quietly" is the flagship. The word implies hidden importance the sentence never earns.
 
@@ -165,6 +195,15 @@ Example: a paragraph that calls one thing "Soviet artistic constraints", then "s
 
 ### Dead metaphor (the opposite failure)
 Latching onto one metaphor and beating it into the ground for a whole piece. A human introduces a metaphor, uses it, and moves on; AI repeats the same figure 5-10 times ("primitives", "walls and doors", "the ecosystem needs ecosystems"). Where elegant variation over-synonymizes, this over-repeats a single image.
+
+### Craft-metaphor verbs for abstract work
+Physical-craft verbs applied to ideas, strategy, products, and arguments. The model reaches for them because they sound considered, and they cost nothing to write because they assert care without describing any action. A current tell, and it survives every vocabulary scrub aimed at the GPT-4 word list.
+
+Watch for: *sanded down, bolted on, stripped back, stitched together, woven, layered, carved out, baked in, distilled, unpacked, crystallized, sharpened, surfaced, amplified, anchored, framed, mapped, cemented, bridged.*
+
+Lower precision than the vocabulary lists, and deliberately so. Several of these (framed, mapped, unpacked, surfaced, anchored) are ordinary words with literal senses, and *baked in* and *bolted on* are near-idiomatic in software. Weigh by density and by whether a literal verb would say more: cut, added, removed, changed, joined, caused, showed, explained, reduced, clarified, fixed, named, listed, compared, chose, rejected.
+
+Tell: "we sharpened the positioning" where "we cut two of the four claims" is the actual thing that happened. The craft verb is standing in for the specific.
 
 ### "Concrete" as a defensive tic
 When defending text against AI accusations, models lean on "concrete": "no concrete evidence", "without concrete examples". Specific to defensive contexts.
