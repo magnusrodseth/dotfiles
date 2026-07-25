@@ -1,0 +1,29 @@
+# rtk hook scope.
+#
+# rtk compresses command output before it reaches the agent, and the compression
+# is uneven in a way that matters. Measured on this machine (rtk gain, 15442
+# commands, 28.9M tokens saved overall):
+#
+#   eslint   99.8%   ps aux  98.9%   curl  96.8%   vitest  91.1%
+#   ls -la   71.1%   git diff 27.5%  grep  21.7%   read    12.4%
+#
+# The top group is where a summary is genuinely the useful form. The bottom group
+# is where completeness is load-bearing and the saving is smallest, so it takes
+# most of the risk for least of the benefit. A du sweep of ~/Library/Caches once
+# came back as a plausible-looking sorted list that was missing rows from the
+# middle, which cost roughly 23GB of unaccounted disk across two audits.
+#
+# Excluded below: anything used to establish completeness, counts, sizes or exact
+# file contents. Everything else still goes through rtk.
+#
+# Note: redirecting to a file (`cmd > out.txt`) bypasses rtk entirely, which is a
+# cleaner escape hatch than `rtk proxy` when you want raw output.
+[hooks]
+exclude_commands = [
+  "grep", "rg", "find", "fd",
+  "du", "df", "wc",
+  "ls", "eza",
+  "diff",
+  "cat", "bat", "head", "tail",
+  "sort", "uniq",
+]
