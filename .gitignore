@@ -156,3 +156,13 @@ fonts/
 
 # Homebrew runtime state (cask trust cache and its lock)
 .config/homebrew/
+
+# Codex. `~/.codex` is a real directory holding mostly runtime state (sessions,
+# sqlite logs, plugin caches, shell snapshots). Default-deny, then allow only the
+# hand-authored files that are worth stowing. Two must never be tracked:
+#   auth.json   OAuth tokens
+#   config.toml live API keys (GEMINI_API_KEY, X-Goog-Api-Key) plus machine churn
+#               from marketplace timestamps and per-project trust levels
+.codex/*
+!.codex/AGENTS.md
+!.codex/hooks.json

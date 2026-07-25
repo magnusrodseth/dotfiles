@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Bottle.aiff"
+          },
+          {
+            "type": "command",
+            "command": "echo '⚠️  STOP CHECK: Is the task FULLY complete? All errors fixed? All todos done? If not, continue working.'"
+          }
+        ]
+      }
+    ]
+  }
+}
