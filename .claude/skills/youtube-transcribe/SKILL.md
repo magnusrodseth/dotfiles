@@ -36,6 +36,16 @@ python3 <skill_dir>/scripts/vtt.py text yt.en.vtt > clean.txt
 
 **Use the script, do not hand-roll a `sed`/`awk` pipeline.** A prior version of this skill inlined `awk '!seen[$0]++'`, and when the skill is invoked with a URL argument the `$0` is interpolated with that URL before the agent reads it, so the dedup silently no-ops and every line comes out doubled. The script also decodes `&lt;b&gt;`-style escaped markup, which a plain tag-stripping `sed` leaves as literal text.
 
+**Then check the transcript is complete before writing anything.** Speech runs roughly 130-190 words per minute, so `wc -w clean.txt` divided by the runtime should land in that band:
+
+```bash
+wc -w clean.txt   # expect ~130-190 words per minute of runtime
+```
+
+Well under it means content was lost, not that the speaker was slow. Confirm by comparing the last line of `clean.txt` against the last cue in the VTT (`grep -o "^[0-9:.]* --> [0-9:.]*" yt.en.vtt | tail -1`); a transcript ending mid-sentence is the tell.
+
+This is not hypothetical. `cmd_text` used `re.findall(r"[^.!?]*[.!?]+", text)`, which only returns chunks *ending* in punctuation and silently discards the tail after the final one. Auto-captions carry almost no punctuation, so the pathological case is a **single stray period**: it stops the `or [text]` fallback from firing while truncating everything after it. On a 19:40 video whose only period came from "...seagull grade 3." at the 10-minute mark, 51% of the transcript vanished and the output still read as a complete, plausible transcript. Fixed in `vtt.py`, but keep the check: a half-transcript is invisible in the output and produces a confidently wrong note.
+
 ### 4. Write the note
 
 Summarise in your own words, quote the handful of lines you actually cite, and link into related notes. **Do not paste the entire transcript into the note.** It bloats the vault, and the synthesis is the thing worth keeping. Keep `clean.txt` in the scratchpad for the duration of the writing, then let it go.

@@ -67,7 +67,20 @@ def cmd_text(path):
                 lines.append(line)
     text = " ".join(lines)
     # Group into paragraphs so the result is readable and quotable.
-    sentences = re.findall(r"[^.!?]*[.!?]+", text) or [text]
+    #
+    # `findall` only returns chunks that END in punctuation, so whatever
+    # follows the final `.`/`!`/`?` is not a match and must be appended by
+    # hand. Auto-generated captions carry almost no punctuation, which makes
+    # the pathological case a SINGLE stray period: it stops the `or [text]`
+    # fallback from firing while truncating everything after it. That silently
+    # ate 51% of a 19-minute transcript (the tail after "...seagull grade 3.")
+    # and the output still read as a complete, plausible transcript.
+    sentences = re.findall(r"[^.!?]*[.!?]+", text)
+    consumed = sum(len(s) for s in sentences)
+    if text[consumed:].strip():
+        sentences.append(text[consumed:])
+    if not sentences:
+        sentences = [text]
     for i in range(0, len(sentences), 12):
         print(" ".join(s.strip() for s in sentences[i : i + 12]))
         print()
