@@ -1,4 +1,12 @@
 ### Custom ignores
+# Repo-root CLAUDE.md documents THIS repo. Stowing it put a copy at ~/CLAUDE.md,
+# and since $HOME is an ancestor of every project, Claude Code loaded the whole
+# dotfiles guide (Homebrew, stow, Brewfile, zsh, Raycast, JDKs) into every session
+# in every project: ~1700 tokens of irrelevant context everywhere. Unstowed
+# 25.07.2026 so it applies only when working inside ~/dotfiles.
+# The intentionally-global instructions live in .claude/CLAUDE.md, which stows to
+# ~/.claude/CLAUDE.md. Do not confuse the two.
+CLAUDE.md
 fonts
 vscode
 macos
