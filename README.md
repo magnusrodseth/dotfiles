@@ -143,7 +143,7 @@ For more information on the zsh-related tools, refer to [this YouTube video](htt
 A large part of this repo is now [Claude Code](https://www.anthropic.com/claude-code) configuration, all under [`.claude`](/.claude):
 
 - **Skills** ([`.claude/skills`](/.claude/skills)) are restored from a lock file rather than committed wholesale. `scripts/skills/packages.sh install` reads [`skill-lock.json`](/scripts/skills/skill-lock.json) and reinstalls every skill on a new machine; `scripts/skills/link-dotfiles-skills.sh` symlinks the dotfiles-authored skills into `~/.claude/skills`.
-- **Agents** ([`.claude/agents`](/.claude/agents)), **commands** ([`.claude/commands`](/.claude/commands)), and **rules** ([`.claude/rules`](/.claude/rules)) are committed directly.
+- **Commands** ([`.claude/commands`](/.claude/commands)) and **rules** ([`.claude/rules`](/.claude/rules)) are committed directly.
 - [`CLAUDE.md`](/CLAUDE.md) documents the repo for Claude Code and is the canonical setup runbook.
 
 ## Keeping packages in sync
@@ -153,7 +153,7 @@ Packages aren't symlinked; they're declared in lists and (re)installed from them
 ```sh
 bash scripts/cargo/packages.sh export   # or: install
 bash scripts/pnpm/packages.sh export    # or: install
-bash scripts/vscode/extensions.sh export # or: install
+bash scripts/npm/packages.sh export     # or: install
 bash scripts/skills/packages.sh export  # or: install
 ```
 
@@ -163,7 +163,13 @@ Run `bash scripts/doctor.sh` at any time to see, at a glance, which packages, sy
 
 The Raycast configuration is stored in [`.config/raycast`](/.config/raycast), in the most recent `*.rayconfig` file. After installing Raycast, open Settings using `CMD + ,` > `Advanced` > `Import / Export` > `Import` > `Select File`. Select the most up-to-date file from the folder.
 
-Note that Raycast reads its config and extensions from `~/.config/raycast`, so the [`extensions`](/.config/raycast/extensions/) located in the `dotfiles` are required to be there. **Do not delete the `extensions` directory**.
+Extensions are **not** in this repo. The whole `.config/raycast/extensions/`
+tree is gitignored, because Raycast's compiled command JS is gitignored too, so
+a fresh checkout would restore only icon-only `assets/` folders that Raycast
+reports as "Could not find command's executable JS file". Extensions come back
+per-machine from **Raycast Cloud Sync**: sign in after importing the
+`*.rayconfig` and they repopulate. `bash scripts/doctor.sh` flags any extension
+sitting on disk without its compiled JS.
 
 ## Configuring editors
 
@@ -174,7 +180,7 @@ Note that Raycast reads its config and extensions from `~/.config/raycast`, so t
 On macOS, editor configuration lives under `~/Library/Application Support/<Editor>/User/`, so it's mirrored in this repo and symlinked by `stow`:
 
 - **VS Code** is mirrored most fully: settings, keybindings, and snippets.
-- **Zed** tracks its [`keymap.json`](/.config/zed/keymap.json); its `settings.json` is intentionally gitignored.
+- **Zed** tracks both its [`keymap.json`](/.config/zed/keymap.json) and its [`settings.json`](/.config/zed/settings.json). Its conversation, prompt and embedding state is gitignored.
 
 Cursor and Windsurf were both mirrored here until 17.07.2026. Both apps were uninstalled
 long before that and only their settings kept being stowed, so the entries were dropped.
@@ -184,17 +190,23 @@ Running `stow .` as detailed above symlinks all of these to the correct location
 
 ### Managing extensions
 
-Extensions aren't symlinked (the `~/.vscode/extensions` directory is large). Instead, [`scripts/vscode/extensions.sh`](/scripts/vscode/extensions.sh) **exports** the installed extension list to [`vscode_extensions.txt`](/scripts/vscode/vscode_extensions.txt) and **installs** them on a new machine.
+Extensions aren't symlinked (the `~/.vscode/extensions` directory is large).
+They are declared as `vscode "publisher.name"` entries in the
+[`Brewfile`](/Brewfile) and installed by `brew bundle`, alongside every other
+package.
 
 ```sh
-# Export extensions
-bash scripts/vscode/extensions.sh export
+# Install (along with all formulae and casks)
+brew bundle --file=Brewfile
 
-# Install extensions
-bash scripts/vscode/extensions.sh install
+# List what is installed, to compare against the Brewfile
+code --list-extensions
 ```
 
-> The extension list is maintained manually: re-run `export` after installing new extensions so the list stays current. I don't install extensions often, so this isn't much of a chore.
+> There used to be a second manifest under `scripts/vscode/` with its own
+> export/install script. It drifted two years out of date while the Brewfile
+> block stayed exact, and `doctor.sh` was checking the stale one, so it was
+> removed. One source of truth.
 
 ## Configuring Brave Browser
 

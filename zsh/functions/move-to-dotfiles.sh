@@ -1,36 +1,69 @@
 #!/bin/zsh
 
-# Function to move a file or directory to the mirrored location in $HOME/dotfiles
+# Move a file or directory into its mirrored location in $HOME/dotfiles, then
+# stow it back so the original path becomes a symlink into the repo.
+#
+# Three bugs this version fixes:
+#   - A relative argument was never resolved, so `move-to-dotfiles foo.json` run
+#     from ~/.config/zed wrote to ~/dotfiles/foo.json rather than
+#     ~/dotfiles/.config/zed/foo.json, silently and with no error.
+#   - A path outside $HOME produced a destination built from the full absolute
+#     path, e.g. ~/dotfiles/etc/hosts.
+#   - `mv` overwrote an existing destination without asking.
+# It also no longer changes your current directory as a side effect.
 move-to-dotfiles() {
   if [ $# -eq 0 ]; then
     echo "Usage: move-to-dotfiles <file_or_directory>"
     return 1
   fi
 
-  local src_path="$1"
   local dest_dir="$HOME/dotfiles"
-  local relative_path
-  local dest_path
+  local src_path abs_path relative_path dest_path
 
-  # Check if the source exists
+  src_path="$1"
+
   if [ ! -e "$src_path" ]; then
-    echo "Error: $src_path does not exist."
+    echo "Error: $src_path does not exist." >&2
     return 1
   fi
 
-  # Calculate the relative path from $HOME
-  relative_path="${src_path/#$HOME\//}"
+  # Resolve to an absolute path without resolving the final component, so a
+  # symlink argument is reported as such below rather than followed.
+  abs_path="$(cd "$(dirname "$src_path")" && pwd)/$(basename "$src_path")"
+
+  case "$abs_path" in
+    "$dest_dir"/*)
+      echo "Error: $abs_path is already inside $dest_dir." >&2
+      return 1
+      ;;
+    "$HOME"/*)
+      relative_path="${abs_path#$HOME/}"
+      ;;
+    *)
+      echo "Error: $abs_path is outside \$HOME; stow can only mirror paths under it." >&2
+      return 1
+      ;;
+  esac
+
   dest_path="$dest_dir/$relative_path"
 
-  # Create the destination directory if it doesn't exist
-  mkdir -p "$(dirname "$dest_path")"
+  if [ -L "$abs_path" ]; then
+    echo "Error: $abs_path is already a symlink (probably already stowed)." >&2
+    return 1
+  fi
 
-  # Move the file/directory to the destination
-  mv "$src_path" "$dest_path"
+  if [ -e "$dest_path" ]; then
+    echo "Error: $dest_path already exists. Move or remove it first." >&2
+    return 1
+  fi
 
-  # Navigate to $HOME/dotfiles and run stow
-  (cd "$HOME/dotfiles" && stow .)
+  mkdir -p "$(dirname "$dest_path")" || return 1
+  mv "$abs_path" "$dest_path" || return 1
+  echo "Moved to $dest_path"
 
-  # Move back to the original directory
-  cd "$(dirname "$src_path")"
+  (cd "$dest_dir" && stow .) || {
+    echo "Warning: stow failed; the file now exists only at $dest_path." >&2
+    return 1
+  }
+  echo "Stowed. $abs_path is now a symlink."
 }

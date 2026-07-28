@@ -46,15 +46,40 @@ check_cmd git  "git"
 # --- symlinks ----------------------------------------------------------------
 
 section "Stow symlinks (should resolve into $DOTFILES)"
+# A dangling symlink used to report green here: `[ ! -e ]` is true for a broken
+# link but `[ ! -L ]` is false, so the guard fell through to the elif, which only
+# asked whether the link *text* mentions dotfiles. Resolution is now checked.
+# Two bugs this replaces:
+#   - A dangling symlink reported green. `[ ! -e ]` is true for a broken link but
+#     `[ ! -L ]` is false, so the guard fell through to a branch that only asked
+#     whether the link *text* mentioned dotfiles.
+#   - Stow folds whole directories, so ~/.config/ghostty is a single symlink and
+#     the config file inside it is a plain file. Testing the leaf for -L reported
+#     "exists but is not a dotfiles symlink" for a correctly stowed file.
+# Resolving the real path handles both: what matters is that the path ends up
+# inside the repo, whether it is linked directly or through a folded parent.
 check_link() {
-  local target="$HOME/$1"
-  if [ ! -e "$target" ] && [ ! -L "$target" ]; then
-    fail "$1 (missing)"
-  elif [ -L "$target" ] && [[ "$(readlink "$target")" == *"dotfiles"* ]]; then
-    pass "$1"
-  else
-    warn "$1 (exists but is not a dotfiles symlink)"
+  local rel="$1" target="$HOME/$1" real
+  if [ ! -e "$target" ]; then
+    if [ -L "$target" ]; then
+      fail "$rel (dangling symlink -> $(readlink "$target"))"
+    else
+      fail "$rel (missing)"
+    fi
+    return
   fi
+  # /bin/realpath resolves the leaf symlink AND every parent, which is what
+  # makes the folded-directory case work. Present on macOS 13+; the fallback
+  # only resolves parents, so it degrades to a warning rather than a false pass.
+  if command -v realpath >/dev/null 2>&1; then
+    real="$(realpath "$target" 2>/dev/null)"
+  else
+    real="$(cd "$(dirname "$target")" && pwd -P)/$(basename "$target")"
+  fi
+  case "$real" in
+    "$DOTFILES"/*) pass "$rel" ;;
+    *)             warn "$rel (exists but does not resolve into $DOTFILES)" ;;
+  esac
 }
 for f in .zshrc .zshenv .gitconfig .tmux.conf .config/nvim .config/ghostty/config; do
   check_link "$f"
@@ -131,6 +156,29 @@ else
   fail "pnpm not installed"
 fi
 
+# --- npm global packages -----------------------------------------------------
+
+# These live under nvm's node prefix, not the pnpm store, so the pnpm check
+# above cannot see them. 63 installed skills call `gws`, which was undeclared
+# and unchecked until 28.07.2026: install.sh restored every gws-* skill and each
+# one failed at its first command on a fresh machine.
+section "npm global packages"
+if command -v npm >/dev/null 2>&1; then
+  nglobal="$(npm root -g 2>/dev/null)"
+  if [ -d "$nglobal" ]; then
+    missing=0
+    while IFS= read -r pkg; do
+      [ -z "$pkg" ] && continue
+      if [ -e "$nglobal/$pkg" ]; then :; else echo "      missing: $pkg"; missing=$((missing + 1)); fi
+    done < <(list_lines scripts/npm/npm_packages.txt)
+    [ "$missing" -eq 0 ] && pass "all npm global packages installed" || fail "$missing npm package(s) missing"
+  else
+    warn "npm global root not found ($nglobal); skipping package check"
+  fi
+else
+  fail "npm not installed (node/nvm missing)"
+fi
+
 # --- vscode extensions -------------------------------------------------------
 
 # Extensions are declared in the Brewfile's `vscode` block and installed by
@@ -199,7 +247,8 @@ fi
 # --- key tools on PATH -------------------------------------------------------
 
 section "Key CLI tools"
-for t in nvim eza zoxide atuin oh-my-posh yazi bat tmux delta fzf zinit; do
+for t in nvim eza zoxide atuin oh-my-posh yazi bat tmux delta fzf zinit \
+         gws ctx7 gitleaks exiftool typst; do
   case "$t" in
     zinit) [ -d "$HOME/.local/share/zinit" ] && pass "zinit" || warn "zinit (loaded by .zshrc; absent until first interactive shell)";;
     *)     check_cmd "$t";;
@@ -363,6 +412,32 @@ else
 fi
 
 # --- repo hygiene ------------------------------------------------------------
+
+section "Provisioning regressions"
+# install.sh must never source ~/.zshenv. That file is zsh (typeset -U path,
+# path=( ... )), and sourcing it from bash under `set -u` killed every install
+# run before step 1 for as long as both files existed. Assert the trap is not
+# re-armed rather than assert .zshenv is bash-safe: it is a zsh file and should
+# stay one.
+if grep -qE '^[^#]*(source|\.)[[:space:]]+"?\$HOME/\.zshenv' install.sh 2>/dev/null; then
+  fail "install.sh sources ~/.zshenv again (bash 3.2 dies on it; use bootstrap_env)"
+else
+  pass "install.sh does not source ~/.zshenv"
+fi
+# Submodules back .tmux.conf's plugin list; an uninitialised one gives a tmux
+# that errors on every launch while everything else looks green.
+if [ -f "$DOTFILES/.tmux/plugins/tpm/tpm" ]; then
+  pass "tmux submodules checked out"
+else
+  fail "tpm submodule not checked out (git submodule update --init --recursive)"
+fi
+# A tracked symlink that does not resolve is repo content, not machine state.
+broken_links="$(bash scripts/skills/validate-skills.sh 2>&1 | grep -c 'broken symlink' || true)"
+if [ "${broken_links:-0}" -eq 0 ]; then
+  pass "no broken tracked symlinks"
+else
+  fail "$broken_links broken tracked symlink(s) (bash scripts/skills/validate-skills.sh)"
+fi
 
 section "Repo hygiene (no runtime/backup cruft tracked)"
 # Tools drop backups (*.bak.*), caches (*-cache.json), and LMDB runtime DBs

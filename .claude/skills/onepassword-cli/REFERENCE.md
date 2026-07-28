@@ -2,23 +2,20 @@
 
 Fuller catalog for tasks beyond the SKILL.md quick paths. All examples assume
 `export OP_ACCOUNT=my.1password.eu` (personal) unless noted. Add `--account
-capragroup.1password.eu` for work. Confirm exact flags with `op <cmd> --help` —
-they drift between versions (this machine: `op` 2.30.0).
+<work-addr>` for work; get it from `op account list`. Confirm exact flags with
+`op <cmd> --help`, they drift between versions (this machine: `op` 2.30.0).
 
 ## Accounts & auth
 
 ```bash
 op account list                         # all configured accounts (addr, email, user id)
-op whoami --account my.1password.eu     # may say "not signed in" under app integration — fine
+op whoami --account my.1password.eu     # may say "not signed in" under app integration; fine
 op signin --account my.1password.eu     # only needed if NOT using desktop app integration
 ```
 
-Known accounts on this machine:
-
-| Role     | Sign-in address         | Email                     |
-|----------|-------------------------|---------------------------|
-| Personal | `my.1password.eu`       | magnus.rodseth@gmail.com  |
-| Work     | `capragroup.1password.eu` | mar@capraconsulting.no  |
+Known accounts on this machine: one personal (`my.1password.eu`) and one work
+account. Run `op account list` for addresses and emails. The work tenant and work
+email are deliberately not written down here because this repo is public.
 
 Target an account per command with `--account <addr>`, or for a whole session with
 `export OP_ACCOUNT=<addr>`. Keep work and personal explicit so secrets don't cross.
@@ -28,7 +25,7 @@ Target an account per command with `--account <addr>`, or for a whole session wi
 ```bash
 op vault list
 op vault get Development
-op vault list --account capragroup.1password.eu   # work vaults
+op vault list --account "$WORK_ACCOUNT"           # work vaults (see op account list)
 ```
 
 ## Finding & reading items

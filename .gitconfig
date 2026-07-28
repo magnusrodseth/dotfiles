@@ -18,3 +18,18 @@
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [init]
 	defaultBranch = main
+# git-delta is in the Brewfile and doctor.sh checks the binary is present, but
+# nothing ever pointed git at it, so every diff rendered with the plain pager
+# while CLAUDE.md claimed delta was the pager. Wired up 28.07.2026.
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	side-by-side = false
+[merge]
+	conflictstyle = zdiff3
+[diff]
+	colorMoved = default

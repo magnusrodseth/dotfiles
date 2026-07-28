@@ -1,6 +1,6 @@
 ---
 name: onepassword-cli
-description: Use the 1Password CLI (`op`) to read secrets, list and inspect vaults/items, inject secrets into env files and commands, and create/edit items on Magnus's accounts (personal `my.1password.eu`, work `capragroup.1password.eu`). Use when the user mentions 1Password, the `op` command, secret references (`op://...`), needs an API key/token/credential pulled from a vault, wants to feed secrets into `.env` files or commands via `op run`/`op inject`, or asks to find, read, create, or edit a vault item.
+description: Use the 1Password CLI (`op`) to read secrets, list and inspect vaults/items, inject secrets into env files and commands, and create/edit items on Magnus's accounts (a personal account and a work account). Use when the user mentions 1Password, the `op` command, secret references (`op://...`), needs an API key/token/credential pulled from a vault, wants to feed secrets into `.env` files or commands via `op run`/`op inject`, or asks to find, read, create, or edit a vault item.
 user-invokable: true
 ---
 
@@ -13,8 +13,10 @@ rule: **resolve secrets into commands/files, never echo them into the terminal.*
 ## This machine's setup
 
 - **Two accounts** (target with `--account <addr>` or `export OP_ACCOUNT=<addr>`):
-  - Personal (**default for personal work**): `my.1password.eu` (magnus.rodseth@gmail.com)
-  - Work: `capragroup.1password.eu` (mar@capraconsulting.no)
+  - Personal (**default for personal work**): `my.1password.eu`
+  - Work: run `op account list` for the address. It is deliberately not written
+    down here: this repo is public, and the employer's tenant plus work email do
+    not belong in it. `op account list` is also the only source that stays right.
 - **Personal vaults**: `Development`, `Private` (holds most logins + all API credentials),
   `Shared`, `Shared Notes`.
 - **Auth quirks** (expected, not bugs):
