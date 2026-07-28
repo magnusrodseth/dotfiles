@@ -77,6 +77,12 @@ exclude_commands = [
     "sort", "uniq",
     "git",
     "cargo",
+    # brew joins them for the same reason, found during the 28.07.2026 upgrade of
+    # 211 formulae: the log printed "Warning: These files were overwritten during
+    # the `brew link` step:" with the file list dropped, and repeated a single
+    # error six times. Upgrade output is exactly the kind you have to be able to
+    # trust line-for-line when deciding whether a machine is still healthy.
+    "brew",
 ]
 transparent_prefixes = []
 

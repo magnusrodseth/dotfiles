@@ -38,11 +38,10 @@ Steps, in order:
 9. Link dotfiles-authored skills into `~/.claude/skills/`
 10. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
     validates skills, checks script refs, and gitleaks-scans the staged diff)
-11. Yazi plugins
-12. macOS App Store apps
-13. tmux plugin manager (tpm) setup
-14. macOS system defaults
-15. bat cache build
+11. macOS App Store apps
+12. tmux plugin manager (tpm) setup
+13. macOS system defaults
+14. bat cache build
 
 install.sh must never source `~/.zshenv`. It did until 28.07.2026, and since
 that file is zsh (`typeset -U path`, `path=( ... )`), bash 3.2 died on it under
@@ -196,7 +195,6 @@ Brewfile                  # 18 taps, 141 formulae, 34 casks, 99 VS Code extensio
   lazygit/                # Git TUI
   ghostty/                # Terminal
   ohmyposh/               # Shell prompt
-  yazi/                   # File manager
   opencode/               # OpenCode AI config
 scripts/
   cargo/                  # Rust package management

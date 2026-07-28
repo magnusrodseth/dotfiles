@@ -1,6 +1,6 @@
 ---
 name: manage-dotfiles-config
-description: Safely edit tool config files in this dotfiles repo (Zed, Neovim, Ghostty, Yazi, tmux, lazygit, etc.) by looking up real current docs for exact option/keybind/action names instead of guessing, then validating per file format. Use when changing editor or terminal settings or keybindings, adding/remapping a shortcut, toggling a panel/dock, or whenever the user references a config file like keymap.json, settings.json, init.lua, config.toml, or asks "what's the action/option for X in <tool>".
+description: Safely edit tool config files in this dotfiles repo (Zed, Neovim, Ghostty, tmux, lazygit, etc.) by looking up real current docs for exact option/keybind/action names instead of guessing, then validating per file format. Use when changing editor or terminal settings or keybindings, adding/remapping a shortcut, toggling a panel/dock, or whenever the user references a config file like keymap.json, settings.json, init.lua, config.toml, or asks "what's the action/option for X in <tool>".
 user-invokable: true
 ---
 
@@ -27,7 +27,6 @@ config key or action identifier from memory — they drift between versions.
 | Zed | `~/.config/zed/keymap.json`, `settings.json` | JSONC | lib `/websites/zed_dev` — query for action ids / setting keys |
 | Neovim (LazyVim) | `~/.config/nvim/lua/**` | Lua | `ctx7 library "Neovim"` / `"LazyVim"` |
 | Ghostty | `~/.config/ghostty/config` | key=value | `ctx7 library "Ghostty"` |
-| Yazi | `~/.config/yazi/keymap.toml`, `yazi.toml` | TOML | `ctx7 library "Yazi"` |
 | tmux | `~/.tmux.conf` | tmux conf | `ctx7 library "tmux"` |
 | lazygit | `~/.config/lazygit/config.yml` | YAML | `ctx7 library "lazygit"` |
 

@@ -46,9 +46,6 @@ check_cmd git  "git"
 # --- symlinks ----------------------------------------------------------------
 
 section "Stow symlinks (should resolve into $DOTFILES)"
-# A dangling symlink used to report green here: `[ ! -e ]` is true for a broken
-# link but `[ ! -L ]` is false, so the guard fell through to the elif, which only
-# asked whether the link *text* mentions dotfiles. Resolution is now checked.
 # Two bugs this replaces:
 #   - A dangling symlink reported green. `[ ! -e ]` is true for a broken link but
 #     `[ ! -L ]` is false, so the guard fell through to a branch that only asked
@@ -247,7 +244,7 @@ fi
 # --- key tools on PATH -------------------------------------------------------
 
 section "Key CLI tools"
-for t in nvim eza zoxide atuin oh-my-posh yazi bat tmux delta fzf zinit \
+for t in nvim eza zoxide atuin oh-my-posh bat tmux delta fzf zinit \
          gws ctx7 gitleaks exiftool typst; do
   case "$t" in
     zinit) [ -d "$HOME/.local/share/zinit" ] && pass "zinit" || warn "zinit (loaded by .zshrc; absent until first interactive shell)";;

@@ -61,7 +61,7 @@ ensure_stow() {
 run_step "Ensure Homebrew is installed" ensure_homebrew
 run_step "Ensure stow is installed" ensure_stow
 
-# Load env + PATH so tools installed below (cargo, pnpm, ya, tmux, mas, ...) are
+# Load env + PATH so tools installed below (cargo, pnpm, tmux, mas, ...) are
 # resolvable in this non-interactive shell.
 #
 # This deliberately does NOT source ~/.zshenv, which is what it used to do.
@@ -107,7 +107,6 @@ npm_packages()        { bash scripts/npm/packages.sh install; }
 agent_skills()        { bash scripts/skills/packages.sh install; }
 link_dotfiles_skills(){ bash scripts/skills/link-dotfiles-skills.sh; }
 git_hooks()           { git config core.hooksPath scripts/githooks; }
-yazi_plugins()        { ya pack -i; }
 app_store_apps()      { bash scripts/macos/install-app-store-apps.sh; }
 tmux_plugins() {
   # tpm needs a running server with at least one session. The previous version
@@ -136,7 +135,6 @@ run_step "Install npm global packages"        npm_packages
 run_step "Install agent skills"               agent_skills
 run_step "Link dotfiles skills globally"      link_dotfiles_skills
 run_step "Enable repo git hooks"              git_hooks
-run_step "Install Yazi plugins"               yazi_plugins
 run_step "Install App Store apps"             app_store_apps
 run_step "Install tmux (tpm) plugins"         tmux_plugins
 run_step "Configure macOS defaults"           macos_defaults

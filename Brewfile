@@ -150,7 +150,6 @@ brew "tmux"
 brew "tree"
 brew "wget"
 brew "xcodegen"
-brew "yazi"
 brew "yt-dlp"
 brew "zoxide"
 brew "zsh"
@@ -191,7 +190,7 @@ brew "herdr"
 
 # === Docs, content, media ===
 brew "biber"
-# Drives the image/EXIF previewer in .config/yazi/yazi.toml.
+# Used by the Raycast strip-exif command (.config/raycast/extensions/).
 brew "exiftool"
 brew "ffmpeg"
 brew "ghostscript"
