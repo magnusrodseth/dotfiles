@@ -18,7 +18,9 @@ export VISUAL="$EDITOR"
 # Java
 export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
 
-# pnpm
+# pnpm. Both entries are needed: pnpm <=9 put global shims directly in
+# $PNPM_HOME, pnpm 11 puts them in $PNPM_HOME/bin. Old shims still live in the
+# former, so dropping either breaks half the global CLIs.
 export PNPM_HOME="$HOME/Library/pnpm"
 
 # Android SDK
@@ -44,6 +46,7 @@ typeset -U path PATH  # dedupe
 path=(
   "$HOME/.local/bin"
   "$PNPM_HOME"
+  "$PNPM_HOME/bin"
   "$HOME/.bun/bin"
   "$HOME/.deno/bin"
   "$HOME/.cargo/bin"
