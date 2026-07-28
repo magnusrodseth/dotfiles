@@ -159,18 +159,30 @@ fi
 # above cannot see them. 63 installed skills call `gws`, which was undeclared
 # and unchecked until 28.07.2026: install.sh restored every gws-* skill and each
 # one failed at its first command on a fresh machine.
+# There is more than one global node_modules on this machine: brew's node and
+# every nvm-managed node have their own. `npm root -g` only reports the active
+# one, so checking just that path reported 16 packages "missing" the moment
+# brew's node became the default, even though every binary still resolved from
+# nvm's bin on PATH. Search all known roots instead.
 section "npm global packages"
 if command -v npm >/dev/null 2>&1; then
-  nglobal="$(npm root -g 2>/dev/null)"
-  if [ -d "$nglobal" ]; then
+  roots=()
+  r="$(npm root -g 2>/dev/null)"; [ -d "$r" ] && roots+=("$r")
+  for n in "$HOME"/.nvm/versions/node/*/lib/node_modules; do
+    [ -d "$n" ] && roots+=("$n")
+  done
+  if [ "${#roots[@]}" -eq 0 ]; then
+    warn "no global node_modules found; skipping package check"
+  else
     missing=0
     while IFS= read -r pkg; do
       [ -z "$pkg" ] && continue
-      if [ -e "$nglobal/$pkg" ]; then :; else echo "      missing: $pkg"; missing=$((missing + 1)); fi
+      found=0
+      for r in "${roots[@]}"; do [ -e "$r/$pkg" ] && { found=1; break; }; done
+      [ "$found" -eq 1 ] || { echo "      missing: $pkg"; missing=$((missing + 1)); }
     done < <(list_lines scripts/npm/npm_packages.txt)
-    [ "$missing" -eq 0 ] && pass "all npm global packages installed" || fail "$missing npm package(s) missing"
-  else
-    warn "npm global root not found ($nglobal); skipping package check"
+    [ "$missing" -eq 0 ] && pass "all npm global packages installed (${#roots[@]} root(s) searched)" \
+      || fail "$missing npm package(s) missing"
   fi
 else
   fail "npm not installed (node/nvm missing)"
