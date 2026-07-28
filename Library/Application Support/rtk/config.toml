@@ -1,0 +1,88 @@
+# rtk configuration.
+#
+# THIS is the file rtk reads. `rtk config` prints its path:
+#   ~/Library/Application Support/rtk/config.toml
+#
+# There used to be a carefully-reasoned copy at .config/rtk/config.toml in this
+# repo, stowed to ~/.config/rtk/config.toml. rtk never looked at it. Its whole
+# exclude_commands list was inert for as long as it existed, while the live
+# config here had `exclude_commands = []`. Removed 28.07.2026; do not recreate
+# it, because two files that look authoritative and disagree is worse than one.
+#
+# Everything below except [hooks] mirrors rtk's own defaults, so this file can be
+# diffed against `rtk config` after an rtk upgrade.
+
+[tracking]
+enabled = true
+history_days = 90
+
+[display]
+colors = true
+emoji = true
+max_width = 120
+
+[filters]
+ignore_dirs = [
+    ".git",
+    "node_modules",
+    "target",
+    "__pycache__",
+    ".venv",
+    "vendor",
+]
+ignore_files = [
+    "*.lock",
+    "*.min.js",
+    "*.min.css",
+]
+
+[tee]
+enabled = true
+mode = "failures"
+max_files = 20
+max_file_size = 1048576
+
+[telemetry]
+enabled = false
+consent_given = false
+consent_date = "2026-04-20T06:36:22.321405+00:00"
+
+[hooks]
+# rtk rewrites agent commands and compresses their output. That is a good trade
+# for most commands and a bad one for any command whose job is to establish
+# completeness: a truncated result looks exactly like a complete one, because
+# nothing marks the omission. A du sweep of ~/Library/Caches once came back as a
+# plausible sorted list missing rows from the middle, costing roughly 23GB of
+# unaccounted disk across two audits.
+#
+# git is the sharpest case. `git log --all --name-only` reported 46 unique paths
+# in this repo against 1639 unfiltered, silently. During the 28.07.2026 audit
+# that made the first credential sweep of this repo's history report zero hits;
+# re-running through `rtk proxy` surfaced a Sanity authToken, an ngrok authtoken
+# and a Context7 API key, all reachable from origin/main on a public repo.
+# `cargo install --list` was reduced to a one-line progress summary, which hid
+# 25 installed crates including a stale git-source uv.
+#
+# Excluded: anything used to establish completeness, counts, sizes, or exact
+# file contents. Everything else still goes through rtk.
+#
+# Note: redirecting to a file (`cmd > out.txt`) bypasses rtk entirely, which is
+# a cleaner escape hatch than `rtk proxy` when you want raw output.
+exclude_commands = [
+    "grep", "rg", "find", "fd",
+    "du", "df", "wc",
+    "ls", "eza",
+    "diff",
+    "cat", "bat", "head", "tail",
+    "sort", "uniq",
+    "git",
+    "cargo",
+]
+transparent_prefixes = []
+
+[limits]
+grep_max_results = 200
+grep_max_per_file = 25
+status_max_files = 15
+status_max_untracked = 10
+passthrough_max_chars = 2000

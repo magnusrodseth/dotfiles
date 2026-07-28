@@ -100,6 +100,59 @@ for entry in "$SKILLS_DIR"/*; do
   [ "$had_err" -eq 0 ] && validated=$((validated + 1))
 done
 
+# Tracked symlinks, anywhere in the repo, not just under .claude/skills.
+#
+# 13 broken symlinks were committed and shipped in every fresh clone: ten under
+# .pi/agent/skills/, two under .config/devin/skills/ (allowlisted in .gitignore
+# and described there as "authored"), and one under .config/opencode/skills/
+# that was a single ../ short and resolved inside the repo instead of ~/.agents.
+# The loop above could not see any of them: it only reads one directory, and it
+# only looks at links at all when given --links.
+#
+# A link whose target resolves INSIDE the repo is repo content and must always
+# resolve. A link pointing outside the repo (into ~/.agents, say) is machine
+# state, so it is only enforced under --links, same as the loop above.
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# Resolve <link-dir>/<target> lexically, without touching the filesystem. `cd`
+# cannot be used here: a link is broken precisely when its target is missing,
+# and often the target's parent is missing too, so `cd` fails and every link
+# would be misclassified as pointing outside the repo.
+resolve_lexically() {
+  awk -v base="$1" -v tgt="$2" '
+    BEGIN {
+      if (tgt ~ /^\//) { print tgt; exit }
+      n = split(base "/" tgt, part, "/")
+      top = 0
+      for (i = 1; i <= n; i++) {
+        p = part[i]
+        if (p == "" || p == ".") continue
+        if (p == "..") { if (top > 0 && out[top] != "..") top--; else out[++top] = ".." }
+        else out[++top] = p
+      }
+      s = ""
+      for (i = 1; i <= top; i++) s = (s == "" ? out[i] : s "/" out[i])
+      print s
+    }'
+}
+
+while IFS= read -r link; do
+  [ -n "$link" ] || continue
+  [ -e "$REPO_ROOT/$link" ] && continue
+
+  raw="$(readlink "$REPO_ROOT/$link")"
+  resolved="$(resolve_lexically "$(dirname "$link")" "$raw")"
+  case "$resolved" in
+    ../* | /*)
+      # Escapes the repo: machine state, same policy as the loop above.
+      [ "$CHECK_LINKS" -eq 1 ] && err "$link: broken symlink ($raw)" ;;
+    *)
+      err "$link: broken symlink into the repo ($raw)" ;;
+  esac
+done <<EOF
+$(git -C "$REPO_ROOT" ls-files -s 2>/dev/null | awk '$1 == "120000" { $1=$2=$3=""; sub(/^[ \t]+/, ""); print }')
+EOF
+
 # Duplicate names across authored skills.
 dupes="$(printf '%s' "$names" | sort | awk -F'\t' '
   $1 == prev { print "- duplicate skill name \"" $1 "\" in " dir " and " $2 }
