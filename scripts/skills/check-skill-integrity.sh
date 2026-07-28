@@ -16,12 +16,30 @@
 #      weight; the skill silently does not load.
 #   3. PHANTOMS - the lock promises a skill that is absent from disk. A fresh
 #      `packages.sh install` would try to restore it and report MISSING.
+#   4. STALE - a skill's docs describe an older release than the binary that is
+#      actually installed. The skill loads fine and reads as authoritative, so
+#      this is the quietest failure of the four: you follow documentation for
+#      flags that no longer match the tool. Observed 28.07.2026, when gws-gmail
+#      still documented only --to/--subject/--body and sent us down a hand-rolled
+#      MIME path, while the installed gws 0.22.5 had --attach and --draft all
+#      along. Drift is routine (upstream ships, docs lag), so it WARNS on stdout
+#      and never fails the exit code - doctor.sh must not go red for this.
 #
 # Read-only: reports, never mutates. Run standalone or from doctor.sh.
 #
-# Usage: check-skill-integrity.sh
+# Usage: check-skill-integrity.sh [--drift]
+#          (no args) full integrity check, drift appended as a warning
+#          --drift   only the version-drift check; silent when clean
 
 set -uo pipefail
+
+MODE="full"
+if [ "${1:-}" = "--drift" ]; then
+  MODE="drift"
+elif [ -n "${1:-}" ]; then
+  echo "usage: check-skill-integrity.sh [--drift]" >&2
+  exit 2
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DOTFILES_SKILLS="$(cd "$SCRIPT_DIR/../../.claude/skills" && pwd)"
@@ -34,10 +52,75 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 
-python3 - "$DOTFILES_SKILLS" "$LOCK" "$LIVE_SKILLS" "$AGENTS_SKILLS" <<'PY'
-import json, os, sys
+python3 - "$DOTFILES_SKILLS" "$LOCK" "$LIVE_SKILLS" "$AGENTS_SKILLS" "$MODE" <<'PY'
+import json, os, sys, re, glob, subprocess
 
-dotfiles_skills, lock_path, live_skills, agents_skills = sys.argv[1:5]
+dotfiles_skills, lock_path, live_skills, agents_skills, mode = sys.argv[1:6]
+
+
+def find_drift(root):
+    """Compare each skill's documented version against the binary it declares.
+
+    Skills generated from a CLI carry both `version:` and the backing binary in
+    `requires.bins`, which makes the comparison mechanical. Skills without both
+    are simply invisible here - there is nothing to compare them to.
+    """
+    claims = {}  # binary -> {version -> [skill, ...]}
+    for p in glob.glob(os.path.join(root, "*", "SKILL.md")):
+        try:
+            s = open(p, encoding="utf-8", errors="replace").read()
+        except OSError:
+            continue
+        if not s.startswith("---"):
+            continue
+        parts = s.split("---", 2)
+        if len(parts) < 3:
+            continue
+        fm = parts[1]
+        ver = re.search(r"^\s*version:\s*[\"']?([\w.\-]+)", fm, re.M)
+        # bins is either a YAML list or an inline JSON array
+        b = re.search(r"bins:\s*(?:\n\s*-\s*([\w-]+)|\[\s*\"?([\w-]+)\"?)", fm)
+        if not (ver and b):
+            continue
+        binary = b.group(1) or b.group(2)
+        name = os.path.basename(os.path.dirname(p))
+        claims.setdefault(binary, {}).setdefault(ver.group(1), []).append(name)
+
+    drift = []
+    for binary, by_ver in sorted(claims.items()):
+        try:
+            r = subprocess.run([binary, "--version"], capture_output=True,
+                               text=True, timeout=10)
+        except (OSError, subprocess.SubprocessError):
+            continue  # not installed / not runnable: nothing to compare
+        out = (r.stdout or "") + " " + (r.stderr or "")
+        m = re.search(r"\d+\.\d+(?:\.\d+)?", out)
+        if not m:
+            continue
+        installed = m.group(0)
+        for ver, skills in sorted(by_ver.items()):
+            if ver != installed:
+                drift.append((binary, installed, ver, sorted(skills)))
+    return drift
+
+
+def print_drift(drift, stream):
+    print(f"- {len(drift)} skill doc(s) describe a different release than the "
+          f"installed binary (docs may omit newer flags):", file=stream)
+    for binary, installed, documented, skills in drift:
+        shown = ", ".join(skills[:4]) + (f" +{len(skills) - 4} more" if len(skills) > 4 else "")
+        print(f"    {binary}: binary {installed}, docs {documented}  ({shown})",
+              file=stream)
+    print("    fix: npx skills update -g -y   "
+          "(embedded skills may need reinstalling from the app instead)",
+          file=stream)
+
+
+if mode == "drift":
+    d = find_drift(live_skills)
+    if d:
+        print_drift(d, sys.stdout)
+    sys.exit(0)
 
 def die(msg):
     print(msg, file=sys.stderr)
@@ -108,4 +191,10 @@ live = sum(
     if os.path.exists(os.path.realpath(f"{live_skills}/{s}"))
 )
 print(f"Skill integrity OK ({live} live, {len(authored)} authored, {len(lock)} locked).")
+
+# Drift is routine rather than rot, so it rides on stdout and leaves the exit
+# code alone. doctor.sh surfaces this text under its pass line.
+drift = find_drift(live_skills)
+if drift:
+    print_drift(drift, sys.stdout)
 PY
