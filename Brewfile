@@ -119,6 +119,10 @@ brew "git"
 brew "git-delta"
 brew "git-filter-repo"
 brew "git-lfs"
+# Staged-diff secret scan, wired into scripts/githooks/pre-commit. This repo is
+# public and has leaked four credentials (Sanity, ngrok, Context7, Spotify);
+# every other invariant here is enforced by a script, so this one is too.
+brew "gitleaks"
 brew "gh"
 brew "gradle"
 brew "facebook/fb/idb-companion", trusted: true

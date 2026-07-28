@@ -1,0 +1,47 @@
+# gitleaks config for this repo. Used by scripts/githooks/pre-commit, which
+# scans the staged diff on every commit.
+#
+# Why this exists: the repo is public and leaked four credentials before the
+# 28.07.2026 purge (Sanity authToken, ngrok authtoken, Context7 API key inside
+# .claude/backups/, spotify-tui client_secret). The default ruleset catches all
+# four; this file only removes noise so the signal stays trustworthy.
+#
+# Keep the allowlist narrow. An entry here is a promise that the path can never
+# hold a real credential. If that stops being true, delete the entry.
+
+[extend]
+useDefault = true
+
+[[rules]]
+# The generic-api-key rule misses this one: the value is a bare token with no
+# `key =` prefix on the same line. It is exactly the shape that went public for
+# 14 months, so match it explicitly.
+id = "sanity-cli-auth-token"
+description = "Sanity CLI authToken"
+regex = '''(?i)"authToken"\s*:\s*"(sk[a-zA-Z0-9]{40,})"'''
+secretGroup = 1
+keywords = ["authtoken"]
+
+[[allowlists]]
+description = "Editor keybindings: \"key\": \"shift+cmd+enter\" trips generic-api-key"
+regexTarget = "match"
+paths = [
+  '''(^|/)keybindings\.json$''',
+]
+regexes = [
+  '''"key"\s*:\s*"[a-z0-9+ ]+"''',
+]
+
+[[allowlists]]
+description = "Vendored third-party trees: not our code, not our credentials"
+paths = [
+  '''(^|/)node_modules/''',
+  '''^\.config/raycast/extensions/''',
+]
+
+[[allowlists]]
+description = "Documented placeholders shipped by upstream extension authors"
+regexTarget = "line"
+regexes = [
+  '''"placeholder"\s*:\s*"ntn_[A-Za-z0-9]+"''',
+]

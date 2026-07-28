@@ -6,7 +6,17 @@
 # 25.07.2026 so it applies only when working inside ~/dotfiles.
 # The intentionally-global instructions live in .claude/CLAUDE.md, which stows to
 # ~/.claude/CLAUDE.md. Do not confuse the two.
-CLAUDE.md
+#
+# BOTH patterns must stay anchored with ^/ . A pattern containing no "/" is
+# compiled by stow into a *segment* regexp and tested against every path
+# component (Stow.pm::ignore), so a bare `CLAUDE.md` here also matched
+# .claude/CLAUDE.md and silently refused to stow the global instructions: on a
+# machine where ~/.claude already exists as a real dir, stow linked RTK.md,
+# commands, rules and settings.json but skipped the one file that @-imports
+# RTK.md. Anchored 28.07.2026. AGENTS.md is a symlink to CLAUDE.md and was
+# reinstating the identical ~/AGENTS.md leak for every agent that reads it.
+^/CLAUDE\.md$
+^/AGENTS\.md$
 fonts
 vscode
 macos

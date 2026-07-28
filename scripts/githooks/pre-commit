@@ -11,8 +11,26 @@
 # Also blocks a commit whose scripts reference files git does not carry. Both
 # checks read the index, so they judge what is being committed, not what
 # happens to be lying around the working tree.
+#
+# Finally, scans the staged diff for credentials. This repo is public, and
+# "no credential enters the tree" was the one invariant enforced by attention
+# rather than by a script. Attention lost four times: a Sanity authToken (public
+# 13.05.2025 - 28.07.2026), an ngrok authtoken, a Context7 API key in
+# .claude/backups/, and a spotify-tui client_secret. Known false positives are
+# listed in .gitleaksignore.
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
 bash scripts/skills/validate-skills.sh || exit 1
 bash scripts/check-script-refs.sh || exit 1
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --staged --redact --no-banner --exit-code 1 || {
+    echo "pre-commit: gitleaks found a credential in the staged diff." >&2
+    echo "  Fix it, or add a justified entry to .gitleaksignore." >&2
+    exit 1
+  }
+else
+  echo "pre-commit: gitleaks not installed; staged diff NOT scanned for secrets." >&2
+  echo "  Install it with 'brew install gitleaks' (declared in Brewfile)." >&2
+fi

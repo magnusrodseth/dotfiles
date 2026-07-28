@@ -25,7 +25,10 @@ ignored
 # Stray gcloud SDK fragment accidentally created in repo root; never track or stow
 google-cloud-sdk/
 
-# Claude Code runtime
+# Claude Code runtime.
+# backups/ holds verbatim ~/.claude.json copies, MCP request headers included.
+# Five carried a live CONTEXT7_API_KEY and stayed reachable from origin/main
+# until the 28.07.2026 history purge. Treat it as credential material.
 .claude/backups/
 .claude/cache/
 .claude/debug/
@@ -123,8 +126,24 @@ fonts/
 # 1Password CLI (device ID is sensitive)
 .config/op/
 
-# ngrok (contains auth token)
-.config/ngrok/ngrok.yml
+# ngrok (contains auth token). The authtoken was committed and reachable from
+# origin/main until the 28.07.2026 history purge; the whole dir is denied now.
+.config/ngrok/
+
+# Sanity CLI. config.json holds a live `authToken` that authenticates as the
+# account against every project it can reach. It was tracked and public from
+# 388b81b (13.05.2025) until the 28.07.2026 purge. Never track this again;
+# `sanity login` recreates it locally.
+.config/sanity/
+
+# spotify-tui (client_id + client_secret). Also purged 28.07.2026.
+.config/spotify-tui/
+
+# gh CLI. hosts.yml has no token today because the macOS keyring holds it, but
+# it is the exact file `gh` falls back to writing `oauth_token:` into when the
+# keyring is unavailable. Default-deny, then allow the authored prefs back.
+.config/gh/*
+!.config/gh/config.yml
 
 # Context7 CLI (contains API credentials)
 .config/context7/

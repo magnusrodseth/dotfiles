@@ -48,6 +48,10 @@ ensure_homebrew() {
   if ! command -v brew >/dev/null 2>&1; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+  # Put brew on PATH for the rest of THIS run, not just for future shells.
+  # Without this, ensure_stow below cannot find the brew it just installed.
+  # shellcheck disable=SC1090
+  [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 }
 
 ensure_stow() {
@@ -58,13 +62,34 @@ run_step "Ensure Homebrew is installed" ensure_homebrew
 run_step "Ensure stow is installed" ensure_stow
 
 # Load env + PATH so tools installed below (cargo, pnpm, ya, tmux, mas, ...) are
-# resolvable in this non-interactive shell. .zshenv holds PATH/env only; we
-# deliberately do NOT source the interactive .zshrc here.
-# shellcheck disable=SC1090
-[ -f "$HOME/.zshenv" ] && source "$HOME/.zshenv"
+# resolvable in this non-interactive shell.
+#
+# This deliberately does NOT source ~/.zshenv, which is what it used to do.
+# .zshenv is zsh (`typeset -U path`, `path=( ... )` array); sourcing it from
+# bash under `set -u` printed two syntax errors and then killed the whole run on
+# `path: unbound variable`, before a single one of the 13 steps below executed.
+# macOS ships bash 3.2 and nothing here installs another, so that abort hit
+# every invocation on any machine where ~/.zshenv already existed.
+#
+# The two files must therefore be kept in sync by hand. doctor.sh asserts that
+# `bash -c 'set -uo pipefail; . ~/.zshenv'` stays broken-by-design rather than
+# silently becoming load-bearing again.
+bootstrap_env() {
+  export PNPM_HOME="$HOME/Library/pnpm"
+  export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+  # shellcheck disable=SC1091
+  [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+  # shellcheck disable=SC1091
+  [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+  PATH="$HOME/.local/bin:$PNPM_HOME:$HOME/.bun/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$HOME/.dotnet/tools:$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:/Library/TeX/texbin:$PATH"
+  export PATH
+}
+bootstrap_env
 
 # --- steps -------------------------------------------------------------------
 
+init_submodules()     { git submodule update --init --recursive; }
 stow_symlinks()       { stow --restow .; }
 brew_packages()       { brew bundle install --file="$DOTFILES/Brewfile"; }
 cargo_packages()      { bash scripts/cargo/packages.sh install; }
@@ -83,6 +108,7 @@ tmux_plugins() {
 macos_defaults()      { bash scripts/macos/defaults.sh; }
 bat_cache()           { bat cache --build; }
 
+run_step "Init git submodules"                init_submodules
 run_step "Create symlinks with stow"          stow_symlinks
 run_step "Install Homebrew packages"          brew_packages
 run_step "Install Cargo packages"             cargo_packages
