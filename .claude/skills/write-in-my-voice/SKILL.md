@@ -16,6 +16,13 @@ DMs, social posts, cold outreach, replies, testimonials, intros, and blog posts 
 long-form articles. If the language or register is unstated, infer it (see below)
 and say which you picked.
 
+**LinkedIn feed posts go to
+[write-linkedin-post](../write-linkedin-post/SKILL.md) instead.** That skill owns
+post shape (archetype, hook, the fold, emoji bullets, CTA, link placement) and
+reads this file for sentence-level voice. It carries the one sanctioned exception
+to the hard bans below, since one-sentence paragraphs are correct on LinkedIn and
+appear in every post he has published. LinkedIn *DMs* stay here.
+
 ## Hard bans - apply to EVERY register
 
 These override the verbatim samples. The samples are real and some of them break
