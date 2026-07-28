@@ -33,27 +33,21 @@ tap "oven-sh/bun"
 tap "steipete/tap"
 tap "stripe/stripe-cli"
 tap "supabase/tap"
-tap "tbckr/tap"
 
 # === Languages & SDKs ===
-brew "asdf"
 brew "deno"
-brew "fnm"
 brew "go"
 brew "kotlin"
 brew "node"
-# Three JDKs are installed on request, not one. @21 is pulled in by
-# kotlin-language-server, @11 is required by pdftk-java, and @17 is a leftover
-# nothing depends on. Declared so the real state is visible in the diff rather
-# than drifting silently; a plain openjdk (26) is also present as a dependency.
+# Two versioned JDKs remain: @21 is pulled in by kotlin-language-server, @11 is
+# required by pdftk-java. @17 was a leftover with no consumer and was removed on
+# 28.07.2026. A plain openjdk (26) is also present as a dependency.
 brew "openjdk@11"
-brew "openjdk@17"
 brew "openjdk@21"
 brew "perl"
 brew "pipx"
 brew "pnpm"
 brew "poetry"
-brew "python@3.11"
 brew "python@3.12"
 # uv must stay brew-managed. It was previously installed by Astral's standalone
 # script into ~/.cargo/bin, where nothing upgraded it: it sat at 0.4.28 (Oct
@@ -69,11 +63,8 @@ brew "supabase"
 brew "arm-none-eabi-gcc"
 brew "berkeley-db", link: true
 brew "cffi"
-brew "cmake"
-brew "emscripten"
 brew "cocoapods"
 brew "cryptography"
-brew "gcc"
 brew "glib"
 brew "cairo"
 brew "harfbuzz"
@@ -88,7 +79,6 @@ brew "libtiff"
 brew "libxslt"
 brew "luajit"
 brew "make"
-brew "meson"
 brew "netpbm"
 brew "pango"
 brew "pkgconf"
@@ -96,7 +86,6 @@ brew "portaudio"
 brew "pycparser"
 brew "qemu"
 brew "tree-sitter"
-brew "unbound"
 brew "webp"
 brew "jpeg-xl"
 brew "aom"
@@ -109,13 +98,11 @@ brew "gnutls"
 brew "ast-grep"
 brew "atuin"
 brew "bat"
-brew "bitwarden-cli"
 brew "bottom"
 brew "cmatrix"
 brew "eza"
 brew "fd"
 brew "fzf"
-brew "gawk"
 brew "git"
 brew "git-delta"
 brew "git-filter-repo"
@@ -139,23 +126,14 @@ brew "rm-improved"
 brew "rtk"
 brew "ruff"
 brew "rust-analyzer"
-# Deprecated upstream as unmaintained; Homebrew disables it on 2027-01-18, after
-# which `brew bundle install` will fail on this line. Replace it before then
-# (ookla's `speedtest` via the teamookla/speedtest tap is the usual successor)
-# and update the `speedtest` alias in .zshrc.
-brew "speedtest-cli"
 brew "stow"
-brew "tlrc"
 brew "tmux"
 brew "tree"
-brew "wget"
 brew "xcodegen"
 brew "yt-dlp"
 brew "zoxide"
 brew "zsh"
-brew "zsh-completions"
 brew "jq"
-brew "gnupg"
 brew "keyring"
 brew "mkcert"
 brew "telnet"
@@ -170,8 +148,6 @@ brew "yaml-language-server"
 brew "act"
 brew "awscli"
 brew "azure-cli"
-brew "certbot"
-brew "flyctl"
 brew "railway"
 # Must stay fully qualified with trusted:. terraform left homebrew-core over the
 # BSL relicense, so a bare `brew "terraform"` resolves to hashicorp/tap and dies
@@ -206,11 +182,9 @@ brew "tesseract"
 brew "typst"
 
 # === AI / ML ===
-brew "aichat"
 brew "ollama"
 brew "whisper-cpp"
 brew "anomalyco/tap/opencode", trusted: true
-brew "tbckr/tap/sgpt", trusted: true
 
 # === Mac App Store & shell ===
 brew "mas"
