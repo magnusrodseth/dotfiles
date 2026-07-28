@@ -133,6 +133,11 @@ fi
 
 # --- vscode extensions -------------------------------------------------------
 
+# Extensions are declared in the Brewfile's `vscode` block and installed by
+# `brew bundle`. There used to be a second manifest at
+# scripts/vscode/vscode_extensions.txt with its own installer; it drifted two
+# years out of date while the Brewfile block stayed exact, and this check read
+# the stale one. Removed 28.07.2026: one source of truth.
 section "VS Code extensions"
 if command -v code >/dev/null 2>&1; then
   installed="$(code --list-extensions 2>/dev/null | tr '[:upper:]' '[:lower:]')"
@@ -141,7 +146,7 @@ if command -v code >/dev/null 2>&1; then
     [ -z "$ext" ] && continue
     total=$((total + 1))
     grep -qx "$(echo "$ext" | tr '[:upper:]' '[:lower:]')" <<<"$installed" || missing=$((missing + 1))
-  done < <(list_lines scripts/vscode/vscode_extensions.txt)
+  done < <(grep '^vscode "' Brewfile | sed 's/^vscode "//; s/"$//')
   [ "$missing" -eq 0 ] && pass "all $total VS Code extensions installed" || warn "$missing of $total VS Code extensions missing"
 else
   warn "'code' CLI not on PATH (skipping; install from VS Code: Shell Command)"

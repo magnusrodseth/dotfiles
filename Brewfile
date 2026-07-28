@@ -30,6 +30,7 @@ tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit"
 tap "mobile-dev-inc/tap"
 tap "oven-sh/bun"
+tap "steipete/tap"
 tap "stripe/stripe-cli"
 tap "supabase/tap"
 tap "tbckr/tap"
@@ -169,14 +170,25 @@ brew "azure-cli"
 brew "certbot"
 brew "flyctl"
 brew "railway"
-brew "terraform"
+# Must stay fully qualified with trusted:. terraform left homebrew-core over the
+# BSL relicense, so a bare `brew "terraform"` resolves to hashicorp/tap and dies
+# with "Refusing to load formula from untrusted tap", which aborted
+# `brew bundle cleanup` entirely, leaving this file with no drift check at all.
+brew "hashicorp/tap/terraform", trusted: true
 brew "dopplerhq/cli/doppler"
 brew "hashicorp/tap/terraform-ls", trusted: true
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "stripe/stripe-cli/stripe", trusted: true
+# Backs the `imsg` skill declared in scripts/skills/skill-lock.json; without
+# it the skill installs fine and then fails at its first command.
+brew "steipete/tap/imsg", trusted: true
+# Terminal agent multiplexer (herdr.dev), installed on request.
+brew "herdr"
 
 # === Docs, content, media ===
 brew "biber"
+# Drives the image/EXIF previewer in .config/yazi/yazi.toml.
+brew "exiftool"
 brew "ffmpeg"
 brew "ghostscript"
 brew "graphviz"

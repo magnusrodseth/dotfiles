@@ -1,4 +1,22 @@
 #!/bin/bash
+#
+# macOS system defaults.
+#
+# install.sh's run_step reports whatever this script exits with, and until
+# 28.07.2026 that was always the status of the last `echo`, so a rejected
+# `defaults write` (wrong type, renamed key, missing TCC permission) was
+# reported as "ok". The wrapper below shadows the `defaults` builtin lookup for
+# all 22 call sites at once, counts real failures, and main() exits non-zero.
+# Do not rename it, and do not call /usr/bin/defaults directly below.
+
+DEFAULTS_FAILURES=()
+
+defaults() {
+  if ! /usr/bin/defaults "$@"; then
+    DEFAULTS_FAILURES+=("defaults $*")
+    return 1
+  fi
+}
 
 # Close any open System Preferences panes, to prevent them from overriding settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
@@ -158,6 +176,13 @@ main() {
     configure_keyboard
     configure_mission_control
     configure_screensaver
+
+    if [ "${#DEFAULTS_FAILURES[@]}" -gt 0 ]; then
+        echo "" >&2
+        echo "❌ ${#DEFAULTS_FAILURES[@]} setting(s) failed to apply:" >&2
+        printf '  - %s\n' "${DEFAULTS_FAILURES[@]}" >&2
+        return 1
+    fi
 
     echo "✅ macOS configuration completed."
     echo "ℹ️ Some changes may require a restart to take effect."

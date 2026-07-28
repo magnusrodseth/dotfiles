@@ -94,7 +94,7 @@ stow_symlinks()       { stow --restow .; }
 brew_packages()       { brew bundle install --file="$DOTFILES/Brewfile"; }
 cargo_packages()      { bash scripts/cargo/packages.sh install; }
 pnpm_packages()       { bash scripts/pnpm/packages.sh install; }
-vscode_extensions()   { bash scripts/vscode/extensions.sh install; }
+npm_packages()        { bash scripts/npm/packages.sh install; }
 agent_skills()        { bash scripts/skills/packages.sh install; }
 link_dotfiles_skills(){ bash scripts/skills/link-dotfiles-skills.sh; }
 git_hooks()           { git config core.hooksPath scripts/githooks; }
@@ -113,7 +113,7 @@ run_step "Create symlinks with stow"          stow_symlinks
 run_step "Install Homebrew packages"          brew_packages
 run_step "Install Cargo packages"             cargo_packages
 run_step "Install pnpm packages"              pnpm_packages
-run_step "Install VS Code extensions"         vscode_extensions
+run_step "Install npm global packages"        npm_packages
 run_step "Install agent skills"               agent_skills
 run_step "Link dotfiles skills globally"      link_dotfiles_skills
 run_step "Enable repo git hooks"              git_hooks

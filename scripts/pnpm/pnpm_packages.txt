@@ -1,5 +1,7 @@
-@playwright/cli
+@chhoumann/bunnai
+@mintlify/cli
 eas-cli
+expo-cli
 pnpm
 turbo
 vercel

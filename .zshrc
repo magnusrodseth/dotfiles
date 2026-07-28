@@ -9,7 +9,7 @@
 if [[ "$CLAUDECODE" == "1" || -n "$CLAUDE_CODE_CHILD_SESSION" ]]; then
   if [[ ! -o interactive ]]; then
     if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
-      for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
+      for file in "$HOME/dotfiles/zsh/ignored"/*.sh(N); do
         [ -f "$file" ] && source "$file"
       done
     fi
@@ -54,8 +54,11 @@ zinit ice wait'0' lucid
 zinit light lukechilds/zsh-nvm
 zinit ice wait'1' lucid depth=1
 zinit light jeffreytse/zsh-vi-mode
-zinit ice wait'1' lucid
-zinit load atuinsh/atuin
+# atuin is NOT loaded as a zinit plugin. `zinit load atuinsh/atuin` cloned 49 MB
+# of Rust source to source a 148-byte shim, and the binary already comes from
+# the Brewfile. It is initialised in zvm_after_init_commands below, because
+# zsh-vi-mode rebuilds the viins keymap after .zshrc finishes and would
+# otherwise discard atuin's ^R binding.
 
 # Snippets
 zinit snippet OMZP::git
@@ -91,6 +94,24 @@ add-zsh-hook precmd _defer_completions
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
+
+# zsh-vi-mode runs zvm_init from precmd, i.e. AFTER .zshrc has finished, and it
+# rebuilds the viins keymap from scratch. Everything bound above was therefore
+# silently thrown away about a second into every interactive shell: ^P and ^N
+# fell back to up/down-line-or-history, ^[w became undefined-key, and ^R landed
+# on zsh's builtin incremental search rather than atuin, which made the
+# cross-machine history this repo installs and syncs effectively write-only.
+#
+# zvm_after_init_commands is read by zvm_init, so re-apply everything there.
+# Order matters: fzf binds ^R, ^T and ^[c, then atuin takes ^R back. The plain
+# bindkeys above stay as the fallback for when zsh-vi-mode is not loaded.
+zvm_after_init_commands+=(
+  'bindkey "^p" history-search-backward'
+  'bindkey "^n" history-search-forward'
+  'bindkey "^[w" kill-region'
+  'source <(fzf --zsh)'
+  'eval "$(atuin init zsh)"'
+)
 
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -153,7 +174,7 @@ function ship {
 
 # Source custom functions
 if [ -d "$HOME/zsh/functions" ]; then
-    for file in "$HOME/zsh/functions"/*.sh; do
+    for file in "$HOME/zsh/functions"/*.sh(N); do
         [ -f "$file" ] && source "$file"
     done
 fi
@@ -171,7 +192,7 @@ fi
 
 # Source ignored/local secrets
 if [ -d "$HOME/dotfiles/zsh/ignored" ]; then
-    for file in "$HOME/dotfiles/zsh/ignored"/*.sh; do
+    for file in "$HOME/dotfiles/zsh/ignored"/*.sh(N); do
         [ -f "$file" ] && source "$file"
     done
 fi
