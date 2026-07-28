@@ -92,7 +92,16 @@ bootstrap_env
 init_submodules()     { git submodule update --init --recursive; }
 stow_symlinks()       { stow --restow .; }
 brew_packages()       { brew bundle install --file="$DOTFILES/Brewfile"; }
-cargo_packages()      { bash scripts/cargo/packages.sh install; }
+cargo_packages() {
+  # Nothing in the declared state installs Rust, so on a fresh machine this step
+  # used to hit rustup's interactive installer and block forever on stdin.
+  if ! command -v cargo >/dev/null 2>&1; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path || return 1
+    # shellcheck disable=SC1091
+    [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+  fi
+  bash scripts/cargo/packages.sh install
+}
 pnpm_packages()       { bash scripts/pnpm/packages.sh install; }
 npm_packages()        { bash scripts/npm/packages.sh install; }
 agent_skills()        { bash scripts/skills/packages.sh install; }
@@ -101,9 +110,19 @@ git_hooks()           { git config core.hooksPath scripts/githooks; }
 yazi_plugins()        { ya pack -i; }
 app_store_apps()      { bash scripts/macos/install-app-store-apps.sh; }
 tmux_plugins() {
-  tmux start-server
-  tmux new-session -d
+  # tpm needs a running server with at least one session. The previous version
+  # called `tmux new-session -d` and never cleaned up, leaking one detached
+  # orphan session per install run. Use a named throwaway and always kill it.
+  tmux start-server || return 1
+  local created=0
+  if ! tmux has-session -t dotfiles-tpm-install 2>/dev/null; then
+    tmux new-session -d -s dotfiles-tpm-install || return 1
+    created=1
+  fi
   sh "$HOME/.tmux/plugins/tpm/scripts/install_plugins.sh"
+  local rc=$?
+  [ "$created" -eq 1 ] && tmux kill-session -t dotfiles-tpm-install 2>/dev/null
+  return $rc
 }
 macos_defaults()      { bash scripts/macos/defaults.sh; }
 bat_cache()           { bat cache --build; }

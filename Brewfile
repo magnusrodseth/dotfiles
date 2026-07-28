@@ -139,6 +139,10 @@ brew "rm-improved"
 brew "rtk"
 brew "ruff"
 brew "rust-analyzer"
+# Deprecated upstream as unmaintained; Homebrew disables it on 2027-01-18, after
+# which `brew bundle install` will fail on this line. Replace it before then
+# (ookla's `speedtest` via the teamookla/speedtest tap is the usual successor)
+# and update the `speedtest` alias in .zshrc.
 brew "speedtest-cli"
 brew "stow"
 brew "tlrc"

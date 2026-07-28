@@ -35,10 +35,11 @@ google-cloud-sdk
 \.kiro
 \.windsurf
 
-### Include only the select files from the User directory under Library/Application Support/Code
-!Library/Application Support/Code/User/keybindings.json
-!Library/Application Support/Code/User/settings.json
-!Library/Application Support/Code/User/snippets/*
+### NOTE: stow has no negation syntax. The three `!`-prefixed lines that used to
+### sit here looked like an allowlist for Library/Application Support/Code/User,
+### but stow compiled them as ordinary regexps that match nothing, so they
+### excluded nothing and granted nothing. All of Library/ is stowed, which is the
+### actual behaviour and is what CLAUDE.md now documents. Removed 28.07.2026.
 
 ### Default ignores
 
@@ -58,6 +59,7 @@ _darcs
 \.gitignore
 \.gitmodules
 
+\.DS_Store   # Finder metadata; never symlink into $HOME
 .+~          # emacs backup files
 \#.*\#       # emacs autosave files
 
