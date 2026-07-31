@@ -5,9 +5,15 @@ client repos and this dotfiles repo is public, so repo names, PR numbers and
 branch names are anonymised. The mechanic is the entire lesson; the identifiers
 carried nothing.
 
-## A two-PR stack and the auto-close on merge
+## A two-PR hand-rolled chain and the auto-close on merge
 
-**The stack**, built in dependency order `B1 → B2`:
+This predates GitHub's native stacked pull requests (public preview 30.07.2026).
+It is a **hand-rolled chain**: two ordinary PRs whose bases happened to point at
+each other, with GitHub unaware they were related. The failure below is specific
+to that world. In a native stack, merging the bottom retargets the layer above
+automatically and #B would never have closed.
+
+**The chain**, built in dependency order `B1 → B2`:
 
 ```
 main  ←  B1 #A                    ←  B2 #B
@@ -39,7 +45,12 @@ git push --force-with-lease                      # #B's diff back to child-layer
 
 #B stays open the whole time. No reopen, no lost thread.
 
-## Cross-repo dependency (not a git stack)
+**What a native stack does instead.** `gh stack link <B1-branch> <B2-branch>`
+would have made the pair a real stack. Then `gh stack merge <B1-PR> --yes`
+merges the bottom and rebases #B onto `main` in the same operation. There is
+nothing to retarget by hand, so nothing to forget.
+
+## Cross-repo dependency (not a stack)
 
 The same feature also needed two PRs in **other repos**: one granting a workload
 role, and one opening egress plus setting an endpoint env var, before the
