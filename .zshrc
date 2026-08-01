@@ -251,6 +251,3 @@ ocg-restart() {
 }
 
 # ── End OpenCode GenAI Gateway ────────────────────────────────────
-
-# Resend CLI
-export PATH="$HOME/.resend/bin:$PATH"

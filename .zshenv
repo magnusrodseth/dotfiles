@@ -49,6 +49,7 @@ path=(
   "$PNPM_HOME/bin"
   "$HOME/.bun/bin"
   "$HOME/.deno/bin"
+  "$HOME/.resend/bin"
   "$HOME/.cargo/bin"
   "$HOME/.dotnet/tools"
   "$JAVA_HOME/bin"

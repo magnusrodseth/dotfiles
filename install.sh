@@ -82,7 +82,7 @@ bootstrap_env() {
   [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
   # shellcheck disable=SC1091
   [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
-  PATH="$HOME/.local/bin:$PNPM_HOME:$PNPM_HOME/bin:$HOME/.bun/bin:$HOME/.deno/bin:$HOME/.cargo/bin:$HOME/.dotnet/tools:$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:/Library/TeX/texbin:$PATH"
+  PATH="$HOME/.local/bin:$PNPM_HOME:$PNPM_HOME/bin:$HOME/.bun/bin:$HOME/.deno/bin:$HOME/.resend/bin:$HOME/.cargo/bin:$HOME/.dotnet/tools:$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:/Library/TeX/texbin:$PATH"
   export PATH
 }
 bootstrap_env
