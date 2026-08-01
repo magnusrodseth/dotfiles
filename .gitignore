@@ -160,6 +160,13 @@ fonts/
 # hh-observe (contains Grafana session cookies for prod/test)
 .config/hh-observe/
 
+# npm `configstore` runtime state: telemetry opt-out flags and update-check
+# timestamps that the owning CLI rewrites on its own schedule (lighthouse,
+# @google/gemini-cli). Nothing here is authored config. gemini-cli.json had
+# already leaked in and was carrying a stale lastUpdateCheck epoch; doctor.sh's
+# cruft regex only matches .bak/.mdb/*-cache.json, so these names slip past it.
+.config/configstore/
+
 # Claude plugin sweep timestamp (machine churn)
 .claude/plugins/.last_inuse_sweep
 
