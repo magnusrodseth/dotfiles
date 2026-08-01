@@ -98,7 +98,7 @@ When the user references a style by name or uses any of its trigger keywords (e.
 | `--output` | `image_<ts>_<i>.<ext>` | output path; with `--n>1`, `_<i>` is appended before the extension |
 | `--edit-image` | (none) | path to an input image; repeatable, max 16 |
 | `--mask` | (none) | PNG mask file; transparent pixels mark editable regions (edit mode only) |
-| `--input-fidelity` | `low` | `low`, `high` (edit mode only) |
+| `--input-fidelity` | `low` | `low`, `high` (edit mode only; **not supported by `gpt-image-2`**, the default model, which rejects it with HTTP 400. The script now warns and drops it. Use `--model gpt-image-1` if you need it.) |
 | `--compression` | `100` | `0`-`100` (jpeg/webp only) |
 
 ## Notes

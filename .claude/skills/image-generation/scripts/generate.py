@@ -64,6 +64,7 @@ def parse_args() -> argparse.Namespace:
                    help="Path to input image. Repeat up to 16 to enter edit mode.")
     p.add_argument("--mask", default=None,
                    help="PNG mask (transparent = editable). Edit mode only.")
+    # NOTE: not supported by gpt-image-2 (the default model); ignored there.
     p.add_argument("--input-fidelity", default=None, choices=["low", "high"],
                    help="Edit mode only. Higher preserves more of the source.")
     return p.parse_args()
@@ -179,7 +180,19 @@ def edit(args: argparse.Namespace, api_key: str) -> dict:
     if args.compression is not None:
         fields.append(("output_compression", str(args.compression)))
     if args.input_fidelity:
-        fields.append(("input_fidelity", args.input_fidelity))
+        # gpt-image-2 rejects input_fidelity outright:
+        #   "The model 'gpt-image-2' does not support the 'input_fidelity'
+        #    parameter." (HTTP 400, code invalid_input_fidelity_model)
+        # Verified 31.07.2026. Dropping it with a loud warning beats failing
+        # the whole call, which in a batch means producing nothing at all.
+        if args.model == "gpt-image-2":
+            print(
+                f"warning: --input-fidelity is not supported by {args.model}; "
+                "ignoring it. Pass --model gpt-image-1 if you need it.",
+                file=sys.stderr,
+            )
+        else:
+            fields.append(("input_fidelity", args.input_fidelity))
 
     files: list[tuple[str, Path]] = [("image[]" if len(images) > 1 else "image", p)
                                      for p in images]
