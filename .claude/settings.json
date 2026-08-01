@@ -62,6 +62,10 @@
       }
     }
   },
+  "statusLine": {
+    "type": "command",
+    "command": "jq -r '\"\\(.context_window.remaining_percentage // 100 | floor)% context left\"'"
+  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "tui": "fullscreen",
