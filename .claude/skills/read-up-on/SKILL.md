@@ -25,7 +25,12 @@ The fallback matters in Claude Code cloud/web sessions, where the vault is clone
 
 All searches below run against `$VAULT`, regardless of the current working directory.
 
-The vault's auto-memory lives at `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` (glob it; the project dir name encodes the username, which differs between machines). **This path does not exist in cloud sessions** — if the glob matches nothing, skip the auto-memory step and rely on the notes and git history instead. Do not treat its absence as an error.
+The vault's auto-memory lives at `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` (glob it; the project dir name encodes the username, which differs between machines). **This path does not exist in cloud sessions.** If the glob matches nothing, skip the auto-memory step and rely on the notes and git history instead. Do not treat its absence as an error.
+
+> [!important] Auto-memory is a pointer layer, never a fact source
+> Since 01.08.2026 the split is: **memory holds what is true about the agent and the tooling, the vault holds what is true about Magnus's life.** Memory files whose frontmatter says `type: pointer` contain no facts at all, only the path of the vault note that owns the topic.
+>
+> Use memory to find *which note to open*, then get every fact from the note. Never quote a project, person, date or number out of memory. That layer went stale silently for five days and claimed a compensation figure 500 000 NOK above the real one, while the vault had it right the whole time.
 
 ## When to use
 
@@ -49,7 +54,7 @@ Cast a wide net. Norwegian + English variants matter; many vault notes are in No
 
 - **Filename matches**: `find "$VAULT" -iname "*<keyword>*" -type f` for each keyword variant
 - **Full-text grep**: `grep -r -l -i "<keyword>" --include="*.md" "$VAULT"` for each variant
-- **Auto-memory**: read `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` and any topic-related memory files next to it
+- **Auto-memory, for pointers only**: read `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` and any topic-related memory files next to it, to learn *which vault note owns the topic*. Take no facts from them
 - **Recent activity**: `git -C "$VAULT" log --since="30 days ago" --name-only --pretty=format: -- "*.md" | grep -i <keyword>` to surface recent edits
 
 ### 2. Rank candidates
@@ -61,7 +66,7 @@ Score each match. Read the top 5-10.
 | Filename matches the topic | +++ |
 | Lives in `Projects/` or `Meetings/` | ++ |
 | Lives in `Personal/People/` (for person topics) | +++ |
-| Mentioned in auto-memory | ++ |
+| Named as canonical by auto-memory | ++ (as a pointer to the note, not as a fact) |
 | Edited in the last 14 days | ++ |
 | Lives in `Learning/` or `Notes/` | + |
 | Single passing mention | - (skip) |
