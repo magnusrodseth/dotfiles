@@ -1,0 +1,263 @@
+# Extensions that should open in the editor (see file-associations.sh).
+#
+# One extension per line, no leading dot. Blank lines and #-comments ignored.
+# Order is irrelevant; grouping is for humans reading the diff.
+#
+# Before adding a line, check what the extension actually resolves to:
+#
+#   bash scripts/macos/file-associations.sh check <ext>
+#
+# macOS binds handlers to UTIs, not to extensions, and several developer
+# extensions are squatted on by an unrelated media or document type. Binding
+# those steals the real file type too. The deliberate exclusions are listed at
+# the bottom of this file - read them before "fixing" a missing extension.
+
+# --- web / javascript --------------------------------------------------------
+js
+cjs
+mjs
+jsx
+ts
+tsx
+mts
+cts
+vue
+svelte
+astro
+json
+jsonc
+json5
+map
+
+# --- stylesheets -------------------------------------------------------------
+css
+scss
+sass
+less
+styl
+postcss
+
+# --- markup / prose ----------------------------------------------------------
+md
+markdown
+mdx
+rst
+adoc
+asciidoc
+txt
+text
+tex
+bib
+org
+norg
+typ
+
+# --- systems -----------------------------------------------------------------
+c
+h
+cc
+cpp
+cxx
+c++
+hpp
+hh
+hxx
+h++
+m
+mm
+rs
+go
+zig
+swift
+d
+nim
+odin
+
+# --- jvm / .net --------------------------------------------------------------
+java
+kt
+kts
+scala
+sc
+clj
+cljs
+cljc
+edn
+groovy
+gradle
+cs
+fsx
+vb
+
+# --- scripting ---------------------------------------------------------------
+py
+pyi
+pyw
+rb
+rake
+gemspec
+php
+pl
+pm
+lua
+tcl
+jl
+dart
+ex
+erl
+hrl
+hs
+lhs
+ml
+mli
+cr
+re
+
+# --- shell -------------------------------------------------------------------
+sh
+bash
+zsh
+fish
+ksh
+csh
+ps1
+psm1
+bat
+cmd
+nu
+
+# --- config / data -----------------------------------------------------------
+toml
+yaml
+yml
+ini
+cfg
+conf
+config
+properties
+env
+editorconfig
+plist
+xml
+csv
+tsv
+sql
+graphql
+gql
+proto
+thrift
+avsc
+lock
+nix
+hcl
+tf
+tfvars
+tfstate
+dockerfile
+containerfile
+service
+desktop
+gitconfig
+gitignore
+gitattributes
+npmrc
+nvmrc
+babelrc
+eslintrc
+prettierrc
+dockerignore
+
+# --- build -------------------------------------------------------------------
+mk
+make
+cmake
+bazel
+bzl
+just
+ninja
+podspec
+rockspec
+cabal
+sbt
+pom
+
+# --- templating --------------------------------------------------------------
+hbs
+mustache
+ejs
+pug
+jinja
+j2
+twig
+erb
+haml
+slim
+razor
+cshtml
+blade
+tpl
+liquid
+
+# --- schema / infra / misc ---------------------------------------------------
+ipynb
+log
+diff
+patch
+http
+rest
+har
+pem
+crt
+asc
+applescript
+vim
+el
+lisp
+scm
+rkt
+f90
+f95
+for
+cob
+pas
+asm
+s
+wat
+sol
+move
+cairo
+prisma
+dbml
+snap
+spec
+feature
+robot
+dhall
+jsonnet
+libsonnet
+kdl
+ron
+pkl
+
+# --- deliberately NOT bound --------------------------------------------------
+#
+# Each of these is a real developer extension that is ALSO the extension of an
+# unrelated file type macOS already handles correctly. Binding the editor to
+# the UTI would hijack the other type, because the binding is per-UTI and the
+# UTI is the other type's.
+#
+#   key    Keynote presentation (com.apple.iwork.keynote.sffkey), not an SSH key
+#   pub    MS Publisher document, not an SSH public key
+#   exs    Logic/GarageBand sampler instrument, not Elixir script
+#   fs     GLSL fragment shader (org.khronos.glsl.fragment-shader), not F#
+#   r      Rez source (com.apple.rez-source), not R
+#   cue    Audio cue sheet (VLC), not CUE lang
+#   scpt   Compiled AppleScript - a binary; Script Editor must open it
+#   wasm   Binary
+#   srt    Subtitles - VLC
+#   ass    Subtitles - VLC
+#   vtt    Subtitles - VLC
+#
+# html, htm and xhtml are excluded by preference, not by collision: double-
+# clicking an .html file previews it in the browser, which is usually what is
+# wanted. Add them here if that changes.

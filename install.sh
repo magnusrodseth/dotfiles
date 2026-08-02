@@ -124,6 +124,7 @@ tmux_plugins() {
   return $rc
 }
 macos_defaults()      { bash scripts/macos/defaults.sh; }
+file_associations()   { bash scripts/macos/file-associations.sh apply; }
 bat_cache()           { bat cache --build; }
 
 run_step "Init git submodules"                init_submodules
@@ -138,6 +139,10 @@ run_step "Enable repo git hooks"              git_hooks
 run_step "Install App Store apps"             app_store_apps
 run_step "Install tmux (tpm) plugins"         tmux_plugins
 run_step "Configure macOS defaults"           macos_defaults
+# After the casks, deliberately: this points file types at the editor, and the
+# apps it takes them away from (VS Code, Xcode) must be installed first or they
+# reclaim the bindings the next time LaunchServices rescans them.
+run_step "Set default apps for file types"    file_associations
 run_step "Build bat cache"                    bat_cache
 
 # --- summary -----------------------------------------------------------------

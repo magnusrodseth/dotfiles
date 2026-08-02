@@ -253,6 +253,22 @@ else
   fail "FiraCode Nerd Font missing (run: brew install --cask font-fira-code-nerd-font)"
 fi
 
+# --- default apps for file types ---------------------------------------------
+
+section "Default apps for developer file types"
+# Drift here is normal and self-inflicted: installing or updating an app that
+# claims a type (VS Code, Xcode, a JetBrains IDE) hands the binding back to it.
+# Re-running the apply step takes it back, so this warns rather than fails.
+if ! command -v swift >/dev/null 2>&1; then
+  warn "swift missing, cannot verify (xcode-select --install)"
+elif out="$(bash scripts/macos/file-associations.sh status 2>&1)"; then
+  pass "$(printf '%s\n' "$out" | awk -F': *' '/^correct/{print $2}') file types open in the editor"
+else
+  n="$(printf '%s\n' "$out" | awk -F': *' '/^to change/{print $2}')"
+  warn "$n drifted (fix: bash scripts/macos/file-associations.sh apply)"
+  printf '%s\n' "$out" | sed -n '5,12p' | sed 's/^/      /'
+fi
+
 # --- key tools on PATH -------------------------------------------------------
 
 section "Key CLI tools"
