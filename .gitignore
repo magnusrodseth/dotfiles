@@ -190,6 +190,9 @@ fonts/
 # Pi prompt-suggester per-project session/log state (machine churn)
 .pi/agent/prompt-suggester/
 
+# Pi per-project trust decisions (machine-local absolute paths)
+.pi/agent/trust.json
+
 # Homebrew runtime state (cask trust cache and its lock)
 .config/homebrew/
 
