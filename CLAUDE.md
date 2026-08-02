@@ -41,7 +41,8 @@ Steps, in order:
 11. macOS App Store apps
 12. tmux plugin manager (tpm) setup
 13. macOS system defaults
-14. bat cache build
+14. Default apps for developer file types (`scripts/macos/file-associations.sh`)
+15. bat cache build
 
 install.sh must never source `~/.zshenv`. It did until 28.07.2026, and since
 that file is zsh (`typeset -U path`, `path=( ... )`), bash 3.2 died on it under
@@ -51,8 +52,9 @@ keep it in sync with `.zshenv` by hand.
 After installing, run `bash scripts/doctor.sh` to verify the machine matches
 the dotfiles' desired state. `doctor.sh` only reads state; it prints a ✓/✗
 checklist (symlinks, Brewfile, cargo/pnpm/npm/VS Code packages, skills, fonts, key
-CLI tools) and exits non-zero if anything is missing. This is the convergence
-target: run install → run doctor → fix what's red → repeat until green.
+CLI tools, file-type defaults) and exits non-zero if anything is missing. This is
+the convergence target: run install → run doctor → fix what's red → repeat until
+green.
 
 ## Key Commands
 
@@ -80,6 +82,11 @@ brew bundle cleanup --file=Brewfile           # dry run without --force
 
 # macOS defaults
 bash scripts/macos/defaults.sh
+
+# Default apps for developer file types (Get Info > Change All, scripted)
+bash scripts/macos/file-associations.sh status      # drift, exit 1 if any
+bash scripts/macos/file-associations.sh apply       # converge (~95s, silent)
+bash scripts/macos/file-associations.sh check ts    # explain one extension
 ```
 
 ## Architecture
@@ -150,6 +157,51 @@ Located at `.config/opencode/`:
 - MCP servers: Playwright (local), Context7 (remote)
 - Custom agents defined in `oh-my-opencode.json` (oracle, librarian, explore, etc.)
 
+### Default apps for file types
+
+`scripts/macos/file-associations.txt` lists ~205 developer extensions that
+should open in Zed; `file-associations.sh apply` points them all there.
+
+macOS stores what "Get Info → Change All" does in
+`~/Library/Preferences/com.apple.launchservices.secure.plist`, and that file is
+deliberately **not** tracked. It is a binary plist (useless in a diff), it is
+TCC-protected (a terminal without Full Disk Access cannot even read it), it is
+owned by the `lsd` daemon, which caches it in memory and overwrites hand-edits,
+and it mixes these bindings with browser/mail/URL-scheme defaults. Intent is
+declared in the `.txt` instead and applied through the LaunchServices API.
+
+Four things about this are non-obvious, and all four were learned the hard way:
+
+- **Bindings are per-UTI, not per-extension.** Several developer extensions are
+  squatted on by an unrelated type: `.key` is a Keynote presentation, `.pub` an
+  MS Publisher document, `.exs` a Logic sampler instrument, `.fs` a GLSL
+  fragment shader. Binding those steals the real type. They are listed as
+  exclusions at the bottom of the `.txt`, and the engine independently refuses
+  any extension resolving to a movie/audio/image/presentation UTI. `.ts` and
+  `.mts` are the two deliberate exceptions (they are MPEG-2 transport stream and
+  AVCHD video to macOS), allowlisted in `mediaAllowed`.
+- **It must run through `/usr/bin/swift`.** The identical
+  `LSSetDefaultRoleHandlerForContentType` call from an ad-hoc-signed binary
+  raises a modal "keep using X?" panel per extension. `duti` is ad-hoc-signed,
+  so a full run there is ~84 dialogs; through Apple-signed `/usr/bin/swift` the
+  same calls apply silently. `duti` was tried and rejected for this, and because
+  it cannot set dynamic UTIs at all (error -50 on roughly half the list) and
+  reports success for a bundle ID matching no installed app.
+- **The API is asynchronous.** It returns `noErr` when `lsd` *accepts* the
+  change, not when it applies it; the daemon then drains at ~1.7 UTIs/sec, so a
+  full run takes ~95s. Reading back sooner reports the old handlers and looks
+  like total failure. `apply` polls to convergence instead of sleeping.
+- **Extensions no app declares still work.** ~88 of these (`.nix`, `.svelte`,
+  `.tf`, `.zig`) resolve to dynamic `dyn.*` UTIs that no installed app claims.
+  They bind fine and silently, since there is no incumbent to displace.
+
+Drift is expected: installing or updating VS Code, Xcode or a JetBrains IDE
+hands bindings back. `doctor.sh` warns rather than fails, and `apply` is
+idempotent, so re-running is the fix.
+
+`.html`/`.htm` are excluded by preference, not collision, so double-clicking
+still previews in the browser.
+
 ### Raycast
 
 Config at `.config/raycast/`. Import the `*.rayconfig` via Raycast Settings →
@@ -180,7 +232,8 @@ access token that was once committed to this public repo.
 - `.tt/` - Theme Suggester themes
 - `browser/` - Browser extension configs (Dark Reader, Vimium, wallpapers)
 - `macos/Wallpapers/` - Desktop wallpapers (assets, not stowed)
-- `scripts/macos/` - macOS setup scripts (defaults, App Store install)
+- `scripts/macos/` - macOS setup scripts (defaults, App Store install, file
+  associations)
 
 ## File Organization
 
