@@ -30,6 +30,17 @@
   },
   "agent": {
     "dock": "left",
+    // Equivalent of Claude Code's --dangerously-skip-permissions: no approval
+    // prompt for any tool, including the `skill` tool. `always_deny` still wins
+    // over this, so keep the rm -rf guard below as the one hard stop.
+    "tool_permissions": {
+      "default": "allow",
+      "tools": {
+        "terminal": {
+          "always_deny": [{ "pattern": "rm\\s+-[a-zA-Z]*[rR][a-zA-Z]*f?\\s+/" }]
+        }
+      }
+    },
     "favorite_models": [],
     "model_parameters": []
   },

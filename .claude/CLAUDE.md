@@ -6,8 +6,9 @@ Cross-cutting repos I refer to from anywhere (paths are `$HOME`-relative; identi
 - `~/dev/personal/presentations`: all my talks and slide decks (TanStack Start app, deployed to presentations.magnusrodseth.com). Read its `AGENTS.md` before working in it. Use the `scaffold-presentation` skill to create new decks.
 - `~/dotfiles`: machine config, stow-managed. Skills I author live in `~/dotfiles/.claude/skills/` as real dirs; skills installed via `npx skills` land in `~/.agents/skills/` and are symlinked into dotfiles from there.
   - `~/.claude` is a real directory, NOT a symlink to `~/dotfiles/.claude`. Stow links individual entries into the repo (`CLAUDE.md`, `RTK.md`, `commands`), but `~/.claude/skills/` is a real dir managed per-entry by `scripts/skills/link-dotfiles-skills.sh`.
-  - `~/.claude/skills/` is therefore a mix: symlinks into dotfiles, plus real dirs written directly by `npx skills`. Those real dirs shadow the dotfiles copies (the link script skips an entry that already exists) and drift from them silently.
-  - **When checking whether a skill is current, read `~/.claude/skills/<name>` -- that is the copy that actually loads.** `~/.agents/skills/<name>` may be stale or ahead of it.
+  - **`~/.agents/skills/<name>` is the source of truth for every skill.** It is either a real dir (installed, provenance in `skill-lock.json`) or a symlink into `~/dotfiles/.claude/skills/` (authored). `~/.claude/skills/<name>` is ALWAYS just a symlink to `../../.agents/skills/<name>`. Read `~/.agents/skills/<name>` when checking whether a skill is current.
+  - Reason: Claude Code reads only `~/.claude/skills`, while Codex, the ChatGPT app, and **Zed** read only `~/.agents/skills`. Zed's scan is flat, one level deep, and never looks at `.claude` at all. Mirroring one root into the other is what stops the tools disagreeing.
+  - Until 02.08.2026 the two roots were linked independently, so `npx skills` real dirs shadowed the dotfiles copies silently: 42 skills had diverged, 4 with real content differences. `check-skill-integrity.sh` now fails on any `.claude` entry that is not a mirror symlink, and on any authored skill shadowed by an installed copy.
 
 ## Dev Server
 

@@ -18,6 +18,26 @@ A skill exists to make a stochastic agent **predictable**: the same *process* ev
 3. **Draft** - SKILL.md plus any bundled reference files or scripts.
 4. **Review with user** - present the draft and ask: Does this cover your use cases? Anything missing or unclear? Should any section be more/less detailed?
 
+## 0. Where it goes on disk
+
+**`.agents/skills/` is the source of truth. Never write a skill into `.claude/skills/` directly.** Three agents read these roots and only one reads `.claude`: Claude Code reads `~/.claude/skills`, while Codex, the ChatGPT app, and **Zed read only `~/.agents/skills`** (Zed's scan is flat, one level, and never looks at `.claude`). A skill authored into `.claude` alone is invisible to two of the three.
+
+| Kind | Create at | Then |
+|---|---|---|
+| Global, throwaway or machine-local | `~/.agents/skills/<name>/SKILL.md` | `ln -s ../../.agents/skills/<name> ~/.claude/skills/<name>` |
+| Global, kept in git (the usual case) | `~/dotfiles/.claude/skills/<name>/SKILL.md` | `bash ~/dotfiles/scripts/skills/link-dotfiles-skills.sh` (links into `~/.agents`, then mirrors to `~/.claude`) |
+| Project-local | `<project>/.agents/skills/<name>/SKILL.md` | `ln -s ../../.agents/skills/<name> <project>/.claude/skills/<name>` |
+
+The dotfiles repo keeps authored skills under its own `.claude/skills/` because that is the stow-managed authoring home; the link script is what makes `~/.agents` canonical at runtime. Never hand-create an entry in `~/.claude/skills/`: `check-skill-integrity.sh` fails on any entry there that is not a symlink to `../../.agents/skills/<name>`.
+
+**Do not vendor a skill that `skill-lock.json` already installs.** The installed copy wins in every agent and the committed one becomes dead code. The pre-commit hook rejects this.
+
+Constraints worth honoring so the skill loads everywhere, not just in Claude Code (Zed enforces these strictly and drops the skill outright on a violation):
+
+- `name`: `[a-z0-9-]` only, 1-64 chars, no leading or trailing hyphen, and matching the directory name.
+- `description`: non-empty, and keep it under 1024 bytes. Every skill's `name + description` shares a fixed 50KB catalog budget; past it, skills are dropped by path order, not by size.
+- Only `name`, `description`, and `disable-model-invocation` are portable. `allowed-tools`, `user-invocable`, and `argument-hint` are silently ignored outside Claude Code, so never rely on them for correctness.
+
 ## 1. Trigger: who invokes it
 
 Any skill can be invoked by name. The real choice is whether the *agent* can also fire it on its own.

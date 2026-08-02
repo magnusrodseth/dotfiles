@@ -35,9 +35,11 @@ Steps, in order:
 7. npm global packages from `scripts/npm/npm_packages.txt` (this is where `gws`,
    `ctx7`, `agent-browser` and `playwriter` come from; skills depend on them)
 8. Agent skills from `scripts/skills/skill-lock.json`
-9. Link dotfiles-authored skills into `~/.claude/skills/`
+9. Link dotfiles-authored skills into `~/.agents/skills/`, then mirror that
+   whole root into `~/.claude/skills/`
 10. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
-    validates skills, checks script refs, and gitleaks-scans the staged diff)
+    validates skills, rejects skills that duplicate a lock entry, checks script
+    refs, and gitleaks-scans the staged diff)
 11. macOS App Store apps
 12. tmux plugin manager (tpm) setup
 13. macOS system defaults
@@ -156,6 +158,35 @@ Shell aliases (all pass `--dangerously-skip-permissions` explicitly):
 Located at `.config/opencode/`:
 - MCP servers: Playwright (local), Context7 (remote)
 - Custom agents defined in `oh-my-opencode.json` (oracle, librarian, explore, etc.)
+
+### Agent skill roots
+
+One rule, enforced by `scripts/skills/link-dotfiles-skills.sh`:
+
+```
+~/.agents/skills/<name>   canonical: real dir (installed, see skill-lock.json)
+                          or symlink into ~/dotfiles/.claude/skills (authored)
+~/.claude/skills/<name>   ALWAYS a symlink -> ../../.agents/skills/<name>
+```
+
+Three agents read these and only one reads `.claude`: Claude Code reads
+`~/.claude/skills`; Codex, the ChatGPT app, and **Zed** read `~/.agents/skills`.
+Zed is the strict one, it scans only `.agents/skills`, exactly one level deep,
+and rejects a skill outright if `name` is not `[a-z0-9-]{1,64}` or `description`
+is empty. Every skill's `name + description` also shares a fixed 50KB catalog
+budget, and on overflow Zed drops everything after the offender in path order
+rather than just the large ones. `check-skill-integrity.sh` warns from 85%.
+
+Authored skills still live in this repo under `.claude/skills/` (the
+stow-managed authoring home); the link script is what makes `~/.agents`
+canonical at runtime. Never vendor a skill that `skill-lock.json` already
+installs: the installed copy wins in every agent and the committed one becomes
+dead code. `scripts/skills/check-staged-skills.sh` rejects that at commit time.
+
+Before 02.08.2026 the two roots were linked independently and `npx skills` real
+dirs silently shadowed the dotfiles copies. 42 skills had diverged, 4 of them
+with real content differences that made Claude Code and Zed load different text
+for the same skill name.
 
 ### Default apps for file types
 

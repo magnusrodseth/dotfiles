@@ -162,6 +162,34 @@ phantoms = sorted(
     and not os.path.isdir(f"{live_skills}/{s}")
 )
 
+# MIRROR - ~/.claude/skills must be a pure mirror of ~/.agents/skills. Zed and
+# Codex read only .agents; Claude Code reads only .claude. If the two roots can
+# hold independent content they will, and the tools silently disagree about what
+# a skill says. Enforced as one rule: every .claude entry is a symlink to
+# ../../.agents/skills/<name>, and the two name sets are identical.
+agents_names = set(os.listdir(agents_skills)) if os.path.isdir(agents_skills) else set()
+live_names = set(os.listdir(live_skills))
+mirror_bad = []
+for s in sorted(live_names):
+    p = f"{live_skills}/{s}"
+    want = f"../../.agents/skills/{s}"
+    if not os.path.islink(p):
+        mirror_bad.append((s, "real path, expected a symlink into ~/.agents"))
+    elif os.readlink(p) != want:
+        mirror_bad.append((s, f"-> {os.readlink(p)}, expected {want}"))
+for s in sorted(agents_names - live_names):
+    mirror_bad.append((s, "present in ~/.agents but missing from ~/.claude"))
+for s in sorted(live_names - agents_names):
+    mirror_bad.append((s, "present in ~/.claude but missing from ~/.agents"))
+
+# SHADOWED - an authored skill whose ~/.agents entry is a real directory. The
+# installed copy wins in every agent, so the git-tracked copy is dead code that
+# still reads as the source of truth. 42 of these had accumulated by 02.08.2026.
+shadowed = sorted(
+    s for s in authored
+    if os.path.exists(f"{agents_skills}/{s}") and not os.path.islink(f"{agents_skills}/{s}")
+)
+
 problems = 0
 if orphans:
     problems += 1
@@ -181,6 +209,22 @@ if phantoms:
           f"(run: bash scripts/skills/packages.sh export):", file=sys.stderr)
     for s in phantoms:
         print(f"    {s}", file=sys.stderr)
+if mirror_bad:
+    problems += 1
+    print(f"- {len(mirror_bad)} entr(ies) break the ~/.claude -> ~/.agents mirror "
+          f"(tools would load different content; run: "
+          f"bash scripts/skills/link-dotfiles-skills.sh):", file=sys.stderr)
+    for s, why in mirror_bad:
+        print(f"    {s}: {why}", file=sys.stderr)
+if shadowed:
+    problems += 1
+    print(f"- {len(shadowed)} authored skill(s) shadowed by an installed copy in "
+          f"~/.agents (the git-tracked copy loads nowhere):", file=sys.stderr)
+    for s in shadowed:
+        print(f"    {s}", file=sys.stderr)
+    print("    fix: keep whichever copy is newer, then delete the other "
+          "(git rm .claude/skills/<name>, or replace the ~/.agents real dir "
+          "with a link into dotfiles)", file=sys.stderr)
 
 if problems:
     print(f"Skill integrity failed ({problems} problem class(es)).", file=sys.stderr)
@@ -191,6 +235,52 @@ live = sum(
     if os.path.exists(os.path.realpath(f"{live_skills}/{s}"))
 )
 print(f"Skill integrity OK ({live} live, {len(authored)} authored, {len(lock)} locked).")
+
+# Zed caps the skill CATALOG - the sum of every model-invocable skill's
+# name + description - at a fixed 50KB, and the overflow is a cliff rather than
+# a filter: once one skill does not fit, every skill after it in path-sort order
+# is dropped too (crates/agent/src/agent.rs::select_catalog_skills). So crossing
+# the cap does not cost you the verbose skills, it costs you everything
+# alphabetically downstream of the straw that broke it. Warn early, at 85%.
+ZED_CATALOG_CAP = 50 * 1024
+ZED_WARN_AT = 0.85
+
+
+def zed_catalog_bytes(root):
+    total, counted = 0, 0
+    for p in sorted(glob.glob(os.path.join(root, "*", "SKILL.md"))):
+        try:
+            s = open(p, encoding="utf-8", errors="replace").read().lstrip()
+        except OSError:
+            continue
+        if not s.startswith("---"):
+            continue
+        lines = s.split("\n")
+        end = next((i for i, l in enumerate(lines[1:], 1) if l.rstrip() == "---"), None)
+        if end is None:
+            continue
+        fm = "\n".join(lines[1:end])
+        if re.search(r"^disable-model-invocation:\s*true", fm, re.M):
+            continue  # excluded from the catalog entirely
+        name = re.search(r"^name:\s*(.+)$", fm, re.M)
+        desc = re.search(r"^description:(.*?)(?=^[A-Za-z0-9_-]+:|\Z)", fm, re.S | re.M)
+        if not (name and desc):
+            continue
+        n = name.group(1).strip().strip("\"'")
+        d = " ".join(desc.group(1).split()).strip().strip("\"'")
+        total += len(n.encode()) + len(d.encode())
+        counted += 1
+    return total, counted
+
+
+used, n_cat = zed_catalog_bytes(agents_skills)
+pct = used / ZED_CATALOG_CAP
+if pct >= ZED_WARN_AT:
+    print(f"- Zed skill catalog at {used}B of {ZED_CATALOG_CAP}B ({pct:.0%}) across "
+          f"{n_cat} skills. Past 100% Zed drops every skill after the first "
+          f"overflow in path order, not just the big ones.")
+    print("    fix: shorten the longest descriptions, or set "
+          "disable-model-invocation: true on slash-command-only skills")
 
 # Drift is routine rather than rot, so it rides on stdout and leaves the exit
 # code alone. doctor.sh surfaces this text under its pass line.

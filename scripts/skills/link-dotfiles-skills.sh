@@ -1,44 +1,47 @@
 #!/bin/bash
 
-# Idempotently symlink every skill in ~/dotfiles/.claude/skills/ into the
-# user-scope skill roots so they are available globally, not just in the
-# dotfiles project. Safe to rerun. Skips entries that are already correctly
-# linked. Warns (does not overwrite) on conflicts.
+# Maintain the two user-scope skill roots. Safe to rerun; idempotent.
 #
-# TWO ROOTS, because two agents scan different directories:
+# LAYOUT (one rule, no exceptions):
+#
+#   ~/.agents/skills/<name>   CANONICAL. Either a real directory (installed by
+#                             `npx skills`, provenance in skill-lock.json) or a
+#                             symlink into ~/dotfiles/.claude/skills (authored).
+#   ~/.claude/skills/<name>   ALWAYS a symlink -> ../../.agents/skills/<name>
+#
+# Three agents read these, and they disagree about where to look:
 #   ~/.claude/skills   Claude Code
-#   ~/.agents/skills   Codex CLI and the ChatGPT app (same codex binary)
-# Codex never reads ~/.claude/skills. Linking into one root only is why 46
-# dotfiles-authored skills were invisible to Codex until 25.07.2026. Verified
-# with `codex debug prompt-input`, which renders the skill roots it actually
-# scans; it follows these symlinks and reports the resolved dotfiles path.
+#   ~/.agents/skills   Codex CLI, the ChatGPT app, and Zed's agent panel
+# Zed is the strictest: it scans ONLY .agents/skills, one level deep, and will
+# not look at .claude/skills at all (see crates/agent_skills/README.md upstream).
+# That is why .agents is canonical and .claude is a pure mirror of it.
 #
-# Both roots sit two levels below $HOME, so one relative link target is
-# correct for both. Keep it that way when adding a root.
+# This replaced an older design that linked dotfiles into BOTH roots
+# independently. That design let the two roots disagree: `npx skills` writes a
+# real dir into ~/.agents, the old script saw a real path and skipped it, and
+# the dotfiles copy kept loading in Claude Code while Codex and Zed loaded the
+# installed one. On 02.08.2026 that had produced 42 shadowed skills, 4 of them
+# with genuinely different content. Mirroring one root into the other makes
+# that class of drift unrepresentable.
 #
-# Also prunes: managed links (those pointing into dotfiles/.claude/skills)
-# whose target no longer resolves are removed, so deleted/renamed skills
-# don't leave dangling links behind. Real files and foreign symlinks are
-# never touched.
+# Prunes managed links whose target is gone, so deleted or renamed skills do
+# not leave dangling entries. Real directories and foreign symlinks in
+# ~/.agents are never touched: they are lock-file territory.
 
 set -eu
 
 SRC="$HOME/dotfiles/.claude/skills"
-DESTS="$HOME/.claude/skills $HOME/.agents/skills"
+AGENTS="$HOME/.agents/skills"
+CLAUDE="$HOME/.claude/skills"
 
 if [ ! -d "$SRC" ]; then
   echo "Source dir not found: $SRC"
   exit 1
 fi
 
-total_linked=0
-total_skipped=0
-total_conflicts=0
-total_pruned=0
+mkdir -p "$AGENTS" "$CLAUDE"
 
-for DEST in $DESTS; do
-
-mkdir -p "$DEST"
+# --- 1. authored skills: dotfiles -> ~/.agents/skills -------------------------
 
 linked=0
 skipped=0
@@ -47,38 +50,36 @@ conflicts=0
 for entry in "$SRC"/*; do
   [ -e "$entry" ] || continue
   name="$(basename "$entry")"
-  target="$DEST/$name"
-  expected_resolved="$(cd "$SRC" && pwd -P)/$name"
+  target="$AGENTS/$name"
+  expected="../../dotfiles/.claude/skills/$name"
 
   if [ -L "$target" ]; then
-    actual_resolved="$(readlink "$target")"
-    case "$actual_resolved" in
-      /*) resolved="$actual_resolved" ;;
-      *)  resolved="$(cd "$DEST" && cd "$(dirname "$actual_resolved")" 2>/dev/null && pwd -P)/$(basename "$actual_resolved")" ;;
-    esac
-    if [ "$resolved" = "$expected_resolved" ]; then
+    if [ "$(readlink "$target")" = "$expected" ]; then
       skipped=$((skipped + 1))
-      continue
+    else
+      echo "WARN: $target -> $(readlink "$target") (expected $expected); skipping"
+      conflicts=$((conflicts + 1))
     fi
-    echo "WARN: $target -> $actual_resolved (expected $expected_resolved); skipping"
-    conflicts=$((conflicts + 1))
     continue
   fi
 
   if [ -e "$target" ]; then
-    echo "WARN: $target exists as a real path; skipping"
+    # A real dir here means `npx skills` installed the same name. The installed
+    # copy wins (it is the one three agents already load); the dotfiles copy is
+    # a duplicate that should be removed from the repo. check-skill-integrity.sh
+    # reports these so they do not accumulate silently.
+    echo "WARN: $target is a real dir (installed copy shadows the dotfiles one); skipping"
     conflicts=$((conflicts + 1))
     continue
   fi
 
-  ln -s "../../dotfiles/.claude/skills/$name" "$target"
-  echo "linked $name -> $DEST"
+  ln -s "$expected" "$target"
+  echo "linked $name -> ~/.agents/skills"
   linked=$((linked + 1))
 done
 
 pruned=0
-
-for target in "$DEST"/*; do
+for target in "$AGENTS"/*; do
   [ -L "$target" ] || continue
   case "$(readlink "$target")" in
     *dotfiles/.claude/skills/*) ;;   # managed by this script
@@ -86,17 +87,49 @@ for target in "$DEST"/*; do
   esac
   [ -e "$target" ] && continue       # still resolves
   rm "$target"
-  echo "pruned $(basename "$target") from $DEST (target gone)"
+  echo "pruned $(basename "$target") from ~/.agents/skills (target gone)"
   pruned=$((pruned + 1))
 done
 
-echo "$DEST: $linked linked, $skipped already correct, $conflicts conflicts, $pruned pruned"
+echo "~/.agents/skills: $linked linked, $skipped already correct, $conflicts conflicts, $pruned pruned"
 
-total_linked=$((total_linked + linked))
-total_skipped=$((total_skipped + skipped))
-total_conflicts=$((total_conflicts + conflicts))
-total_pruned=$((total_pruned + pruned))
+# --- 2. mirror: ~/.agents/skills -> ~/.claude/skills --------------------------
+#
+# Every entry, whatever its kind. Claude Code then loads exactly what Codex and
+# Zed load, by construction.
 
+mirrored=0
+mir_ok=0
+
+for entry in "$AGENTS"/*; do
+  [ -e "$entry" ] || [ -L "$entry" ] || continue
+  name="$(basename "$entry")"
+  target="$CLAUDE/$name"
+  expected="../../.agents/skills/$name"
+
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$expected" ]; then
+    mir_ok=$((mir_ok + 1))
+    continue
+  fi
+
+  rm -rf "$target"
+  ln -s "$expected" "$target"
+  echo "mirrored $name -> ~/.claude/skills"
+  mirrored=$((mirrored + 1))
 done
 
-echo "Done: $total_linked linked, $total_skipped already correct, $total_conflicts conflicts, $total_pruned pruned"
+mir_pruned=0
+for target in "$CLAUDE"/*; do
+  [ -L "$target" ] || continue
+  case "$(readlink "$target")" in
+    ../../.agents/skills/*) ;;
+    *) continue ;;
+  esac
+  [ -e "$target" ] && continue
+  rm "$target"
+  echo "pruned $(basename "$target") from ~/.claude/skills (target gone)"
+  mir_pruned=$((mir_pruned + 1))
+done
+
+echo "~/.claude/skills: $mirrored mirrored, $mir_ok already correct, $mir_pruned pruned"
+echo "Done."
