@@ -23,17 +23,28 @@ import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
 /** A shell prompt in a rounded frame: chevron plus underline, after Lucide's
  *  `terminal` icon. The underline sits below and right of the chevron tip, as
- *  in the source SVG (chevron y=5..17, rule at y=19, x=12..20). */
+ *  in the source SVG (chevron y=5..17, rule at y=19, x=12..20).
+ *
+ *  The chevron steps two columns per row because terminal cells are about
+ *  twice as tall as they are wide; one column per row renders as a near
+ *  vertical wobble rather than a point. Each row's trailing half-block meets
+ *  the next row's leading half-block across the row boundary, so the arms read
+ *  as one continuous stroke instead of a staircase.
+ *
+ *  Corners are the light rounded glyphs with heavy edges between them. Unicode
+ *  has no heavy rounded corner, and rounded corners were worth more than a
+ *  perfectly matched join weight. */
 const LOGO = [
-	"╭────────────────╮",
-	"│  ▚             │",
-	"│   ▚            │",
-	"│    ▚           │",
-	"│    ▞           │",
-	"│   ▞            │",
-	"│  ▞             │",
-	"│        ▄▄▄▄▄▄  │",
-	"╰────────────────╯",
+	"╭━━━━━━━━━━━━━━━━━━╮",
+	"┃  ██▄             ┃",
+	"┃    ▀██▄          ┃",
+	"┃       ▀██▄       ┃",
+	"┃          █▖      ┃",
+	"┃       ▄██▀       ┃",
+	"┃    ▄██▀          ┃",
+	"┃  ██▀             ┃",
+	"┃           █████  ┃",
+	"╰━━━━━━━━━━━━━━━━━━╯",
 ];
 const LOGO_WIDTH = Math.max(...LOGO.map((row) => visibleWidth(row)));
 const LOGO_GAP = "   ";
