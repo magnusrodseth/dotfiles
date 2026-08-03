@@ -2,7 +2,11 @@
 
 **Date:** 2026-08-03
 
-**Status:** Design approved; implementation not started
+**Status:** Implemented 2026-08-03. Two deviations from the design below, both
+recorded inline: the local extension needed `.pi/.gitignore` restructured to be
+trackable at all, and the approved footer collided with a second `setFooter`
+owner that the design did not account for (`compact-footer.ts` in
+`git:github.com/magnusrodseth/pi-extensions`), now filtered out per-resource.
 
 ## Goal
 
@@ -66,14 +70,32 @@ This cannot achieve grouped one-line tool activity, the approved header, the min
 
 ### Header
 
-The header uses cc-my-pi's animated four-row π mascot, not Claude's crab logo. It contains only:
+The header uses an animated logo, not Claude's crab logo. cc-my-pi's own header
+is disabled, so the logo is drawn locally. A π mascot was tried first and
+rejected: at terminal resolution it read as "a bar on two legs" rather than as
+the glyph. The shipped logo is a shell prompt in a rounded frame, after Lucide's
+`terminal` icon, which says "coding agent" more directly than a maths symbol.
+Proportions follow the source SVG: chevron spanning y=5..17, underline at y=19
+from x=12..20, so the rule sits below and right of the chevron tip rather than
+level with it.
+
+The three text fields sit vertically centred against the logo. It contains only:
 
 ```text
-▐██▄███▄█▌  Pi v<version>
- ▐██▌ ▐██▌  GPT-5.6 Sol with high effort · GitHub Copilot
- ▐██▌ ▐██▌  ~/current/working/directory
- ▝██▘ ▝██▙
+╭────────────────╮
+│  ▚             │
+│   ▚            │
+│    ▚           │   Pi v<version>
+│    ▞           │   GPT-5.6 Sol with high effort · GitHub Copilot
+│   ▞            │   ~/current/working/directory
+│  ▞             │
+│        ▄▄▄▄▄▄  │
+╰────────────────╯
 ```
+
+The reveal animation is deliberately finite (the logo draws itself row by row,
+then the timer clears). A header timer that never stops would re-render the
+whole TUI forever for a logo that scrolls away after the first turn.
 
 Values are dynamic:
 

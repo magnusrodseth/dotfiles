@@ -2,7 +2,11 @@ agent/auth.json
 agent/sessions/
 agent/git/
 agent/taskplane/
-agent/extensions/
+# Installed extensions are pi-managed, except the dotfiles-authored ones.
+# Must be `extensions/*` rather than `extensions/`: git never descends into an
+# excluded directory, so a negation under one is silently dead.
+agent/extensions/*
+!agent/extensions/claude-parity/
 agent/themes/
 suggester/
 taskplane.json
@@ -13,3 +17,6 @@ agents/
 agent/fff/
 agent/pi-pretty/fff/
 agent/mcp-cache.json
+agent/mcp-npx-cache.json
+agent/models-store.json
+cc-my-pi-update-check.json
