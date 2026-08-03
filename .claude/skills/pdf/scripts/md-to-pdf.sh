@@ -28,20 +28,28 @@ TOC=false
 HIGHLIGHT_STYLE="tango"
 TITLE_COLOR="1e293b"      # xelatex/eisvogel title-page background only
 TEXT_COLOR="ffffff"       # xelatex/eisvogel title-page text only
-MAINFONT=""              # empty => engine default font
+MAINFONT=""              # empty => DEFAULT_TYPST_MAINFONT if present, else engine default
 MONOFONT=""              # empty => engine default mono font
-FONTSIZE="11pt"
-MARGIN="1in"
+FONTSIZE="10pt"
+MARGIN="0.8in"
 MERMAID=false
 NO_TITLEPAGE=false
 FILES=()
+
+# House style (typst engine). Override per-run with the matching flags.
+DEFAULT_TYPST_MAINFONT="Helvetica Neue"  # used only when actually installed
+HEADING_COLOR="123a5c"    # dark slate blue for headings
+LINK_COLOR="0b57d0"       # readable blue for links
+TABLE_FONTSIZE="8.8pt"    # tables step down so wide ones fit the text block
+TYPOGRAPHY=true           # table alignment + non-breaking numbers lua filter
 
 usage() {
   echo "Usage: $0 -o OUTPUT [-t TITLE] [-s SUBTITLE] [-a AUTHOR] [-d DATE]"
   echo "          [--engine typst|xelatex] [--lang CODE] [--toc] [--mermaid]"
   echo "          [--no-titlepage] [--mainfont NAME] [--monofont NAME]"
-  echo "          [--fontsize 11pt] [--margin 1in] [--highlight-style tango]"
-  echo "          FILE [FILE ...]"
+  echo "          [--fontsize 10pt] [--margin 0.8in] [--highlight-style tango]"
+  echo "          [--heading-color HEX] [--link-color HEX] [--table-fontsize SIZE]"
+  echo "          [--no-typography] FILE [FILE ...]"
   exit 1
 }
 
@@ -62,6 +70,10 @@ while [[ $# -gt 0 ]]; do
     --monofont) MONOFONT="$2"; shift 2 ;;
     --fontsize) FONTSIZE="$2"; shift 2 ;;
     --margin) MARGIN="$2"; shift 2 ;;
+    --heading-color) HEADING_COLOR="${2#\#}"; shift 2 ;;
+    --link-color) LINK_COLOR="${2#\#}"; shift 2 ;;
+    --table-fontsize) TABLE_FONTSIZE="$2"; shift 2 ;;
+    --no-typography) TYPOGRAPHY=false; shift ;;
     --mermaid) MERMAID=true; shift ;;
     --no-titlepage) NO_TITLEPAGE=true; shift ;;
     -h|--help) usage ;;
@@ -123,6 +135,7 @@ CMD=(pandoc "$ASSEMBLED" -o "$OUTPUT"
   --metadata "date=$DATE"
   --metadata "lang=$LANG_CODE"
 )
+[[ "$TYPOGRAPHY" == true ]] && CMD+=(--lua-filter="$SCRIPT_DIR/table-typography.lua")
 [[ -n "$SUBTITLE" ]] && CMD+=(--metadata "subtitle=$SUBTITLE")
 [[ -n "$AUTHOR" ]] && CMD+=(--metadata "author=$AUTHOR")
 [[ "$TOC" == true ]] && CMD+=(--toc --toc-depth=3)
@@ -136,13 +149,43 @@ fi
 
 if [[ "$ENGINE" == "typst" ]]; then
   # --- Default path: pandoc's built-in typst template ---
+  #
+  # House style. The table rule is the important one: pandoc's typst template
+  # justifies every paragraph, and justification inside a narrow table cell
+  # produces stretched word spacing and hyphenation like "Torremoli-nos".
+  # Turning justification and hyphenation off inside tables (only) fixes it.
+  read -r -d '' TYPST_HEADER <<EOF || true
+#show link: set text(fill: rgb("#${LINK_COLOR}"))
+#show heading: set text(fill: rgb("#${HEADING_COLOR}"))
+#show heading.where(level: 1): set block(above: 1.7em, below: 0.9em)
+#show table: it => {
+  set par(justify: false, leading: 0.55em)
+  set text(hyphenate: false, size: ${TABLE_FONTSIZE})
+  it
+}
+#show table.cell.where(y: 0): set text(weight: "bold")
+EOF
+
   CMD+=(--pdf-engine=typst
     -V "margin-x=$MARGIN"
     -V "margin-y=$MARGIN"
     -V "fontsize=$FONTSIZE"
-    -V "header-includes=#show link: set text(fill: blue)"
+    -V "header-includes=$TYPST_HEADER"
   )
-  [[ -n "$MAINFONT" ]] && CMD+=(-V "mainfont=$MAINFONT")
+
+  # Prefer the house sans, but only when it is actually installed, so this
+  # still renders on a machine without it instead of failing.
+  # Note: a here-string, not a pipe. Under `set -o pipefail`, `grep -q` closes
+  # the pipe on its first match and the producer dies with SIGPIPE (141), so a
+  # piped version reports "not found" precisely when the font IS installed.
+  TYPST_FONT="$MAINFONT"
+  if [[ -z "$TYPST_FONT" ]]; then
+    AVAILABLE_FONTS="$(typst fonts 2>/dev/null || true)"
+    if grep -qxF "$DEFAULT_TYPST_MAINFONT" <<<"$AVAILABLE_FONTS"; then
+      TYPST_FONT="$DEFAULT_TYPST_MAINFONT"
+    fi
+  fi
+  [[ -n "$TYPST_FONT" ]] && CMD+=(-V "mainfont=$TYPST_FONT")
   [[ -n "$MONOFONT" ]] && CMD+=(-V "monofont=$MONOFONT")
   # The typst template renders title/subtitle/author/date as a heading block.
   # --no-titlepage is a no-op here (there is no separate colored title page).

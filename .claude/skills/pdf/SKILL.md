@@ -40,9 +40,46 @@ bash ~/.claude/skills/pdf/scripts/md-to-pdf.sh \
   input.md
 ```
 
-Defaults to the typst engine. Hyperlinks render blue automatically. For the
-branded colored title page instead, add `--engine xelatex` (requires the optional
-LaTeX install above).
+Defaults to the typst engine and to the house style below. For the branded
+colored title page instead, add `--engine xelatex` (requires the optional LaTeX
+install above).
+
+## House Style (typst default)
+
+`md-to-pdf.sh` ships an opinionated default look. It is tuned for dense,
+table-heavy documents that get read on screen and sent to other people. You get
+it by doing nothing; every part is overridable.
+
+| Setting | Default | Why |
+|---|---|---|
+| Body font | Helvetica Neue, 10pt | Sans reads better on screen than the typst serif default. Falls back to the engine font when Helvetica Neue is not installed, so this stays portable. |
+| Margins | 0.8in | 1in wastes width that wide tables need. |
+| Headings | `#123a5c` dark slate blue | Sections findable when skimming, without looking like a rainbow. |
+| Links | `#0b57d0` blue | Readable when printed in greyscale, unlike pure `blue`. |
+| Tables | 8.8pt, ragged right, no hyphenation | The important one, see below. |
+| Table header row | Bold | Header stays distinct once the body text is small. |
+
+**The table rule is what matters most.** Pandoc's typst template justifies every
+paragraph, including inside table cells. In a narrow cell that produces stretched
+word spacing and hyphenation like `Torremoli-nos` or `Web Sum-mit`. Turning
+justification and hyphenation off *inside tables only* fixes it while leaving
+body prose justified.
+
+Three more fixes come from `table-typography.lua`, applied by default:
+
+1. **Columns written `|---|` are left-aligned, not centered.** Pandoc marks them
+   `AlignDefault` and the typst writer centers them; centered prose in a table
+   reads badly. Columns that explicitly ask with `|:---|` or `|---:|` are left
+   alone, so right-aligned number columns still work.
+2. **Numbers do not break across lines.** `10 400` is three tokens to pandoc, so a
+   narrow cell splits it into `10 400-11` / `500`. Thousands groups are joined
+   with a non-breaking space.
+3. **A cell starting `16.` is not turned into a list.** That is enumeration syntax
+   in typst's *own* markup, so such a cell silently renders with `16.` on one line
+   and the rest indented below. Pandoc emits it as ordinary text, so this only
+   ever shows up in the PDF. A non-breaking space after the marker defuses it.
+
+Disable all three with `--no-typography`.
 
 ### Script Flags
 
@@ -57,10 +94,14 @@ LaTeX install above).
 | `--lang` | en | Document language code (e.g. `nb` for Norwegian Bokmål) |
 | `--toc` | off | Include table of contents |
 | `--highlight-style` | tango | Code syntax theme |
-| `--mainfont` | engine default | Body font (e.g. "Helvetica Neue") |
+| `--mainfont` | Helvetica Neue if installed | Body font, e.g. "Iowan Old Style" |
 | `--monofont` | engine default | Code font (e.g. "Menlo") |
-| `--fontsize` | 11pt | Font size |
-| `--margin` | 1in | Page margins |
+| `--fontsize` | 10pt | Body font size |
+| `--margin` | 0.8in | Page margins |
+| `--heading-color` | 123a5c | Heading hex, with or without `#` (**typst only**) |
+| `--link-color` | 0b57d0 | Link hex, with or without `#` (**typst only**) |
+| `--table-fontsize` | 8.8pt | Table text size (**typst only**) |
+| `--no-typography` | off | Turn off table alignment / non-breaking number fixes |
 | `--mermaid` | off | Pre-render mermaid diagrams (requires mmdc) |
 | `--title-color` | 1e293b | Title-page background hex (**xelatex only**) |
 | `--text-color` | ffffff | Title-page text hex (**xelatex only**) |
@@ -91,10 +132,20 @@ pandoc input.md -o output.pdf \
   --syntax-highlighting=tango \
   --toc --toc-depth=3 \
   --lua-filter=~/.claude/skills/pdf/scripts/color-spans.lua \
-  -V margin-x=2cm \
-  -V margin-y=2.2cm \
-  -V fontsize=11pt \
-  -V 'header-includes=#show link: set text(fill: blue)' \
+  --lua-filter=~/.claude/skills/pdf/scripts/table-typography.lua \
+  -V margin-x=0.8in \
+  -V margin-y=0.8in \
+  -V fontsize=10pt \
+  -V mainfont="Helvetica Neue" \
+  -V 'header-includes=#show link: set text(fill: rgb("#0b57d0"))
+#show heading: set text(fill: rgb("#123a5c"))
+#show heading.where(level: 1): set block(above: 1.7em, below: 0.9em)
+#show table: it => {
+  set par(justify: false, leading: 0.55em)
+  set text(hyphenate: false, size: 8.8pt)
+  it
+}
+#show table.cell.where(y: 0): set text(weight: "bold")' \
   --metadata title="Title" \
   --metadata subtitle="Subtitle" \
   --metadata author="Author" \
@@ -102,8 +153,14 @@ pandoc input.md -o output.pdf \
   --metadata lang=nb
 ```
 
-The `header-includes` show rule is what makes links blue under typst. Drop it for
-default black links.
+`header-includes` is raw typst injected into the preamble, and it is where the
+whole house style lives. It is multi-line: keep it in single quotes so the `#`
+show rules survive the shell.
+
+**Do not detect fonts with `typst fonts | grep -q`.** Under `set -o pipefail`,
+`grep -q` closes the pipe on its first match and `typst` dies with SIGPIPE, so
+the pipeline reports failure exactly when the font *is* installed. Read the list
+into a variable and use a here-string, as `md-to-pdf.sh` does.
 
 ### typst variables (via `-V`)
 
@@ -166,4 +223,5 @@ Available syntax themes: `pygments`, `tango`, `espresso`, `zenburn`, `kate`,
 |------|---------|
 | `scripts/md-to-pdf.sh` | One-command markdown to PDF export (typst default, `--engine xelatex` optional) |
 | `scripts/color-spans.lua` | Enables `[text]{color="red"}` syntax (typst + LaTeX + HTML) |
+| `scripts/table-typography.lua` | Left-aligns default columns, keeps numbers unbroken, stops `16.` cells becoming lists |
 | `scripts/render-mermaid.sh` | Pre-renders mermaid blocks to SVG |
