@@ -1,6 +1,13 @@
 ---
 name: cmux-orchestration
-description: Verified corrections and recipes for driving cmux agent fleets from the CLI (workspaces, panes, surfaces, send/read, notify, browser). Layers on top of the cmux-shipped skills (cmux-cli, cmux-workspace) with the gotchas that actually bite. Use when spawning or orchestrating cmux workspaces/panes/agents programmatically, building an agent team, driving cmux from an external terminal, or when a cmux CLI call returns "not_found: Surface not found", "Access denied", "Unsupported browser subcommand", or a deprecation hint.
+description: >-
+  Verified corrections and recipes for driving cmux agent fleets from the CLI
+  (workspaces, panes, surfaces, send/read, notify, browser). Layers on top of
+  the cmux-shipped skills (cmux-cli, cmux-workspace) with the gotchas that
+  actually bite. Use when spawning or orchestrating cmux workspaces/panes/agents
+  programmatically, building an agent team, driving cmux from an external
+  terminal, or when a cmux CLI call returns "not_found: Surface not found",
+  "Access denied", "Unsupported browser subcommand", or a deprecation hint.
 ---
 
 # cmux-orchestration

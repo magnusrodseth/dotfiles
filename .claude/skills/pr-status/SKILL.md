@@ -1,6 +1,11 @@
 ---
 name: pr-status
-description: Report mergeability and review/CI status for GitHub pull requests in a compact dashboard. Use when checking whether a PR is mergeable, blocked, or ready to merge; when asked for "PR status", "review status", "is it mergeable", "what's blocking this PR", "are my PRs ready", or to check CI/check status across one or many PRs and repos. Read-only: does not merge, approve, or resolve comments.
+description: >-
+  Report mergeability and review/CI status for GitHub pull requests in a compact
+  dashboard. Use when checking whether a PR is mergeable, blocked, or ready to
+  merge; when asked for "PR status", "review status", "is it mergeable", "what's
+  blocking this PR", "are my PRs ready", or to check CI/check status across one
+  or many PRs and repos. Read-only: does not merge, approve, or resolve comments.
 ---
 
 # PR Status

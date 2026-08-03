@@ -1,6 +1,10 @@
 ---
 name: cmux-team
-description: Boot a three-tier cmux agent team (an orchestrator lead plus plan/build/test worker panes) for the current repo, named after a feature, all driven over the cmux socket. Run it from a terminal surface INSIDE cmux. Usage: /cmux-team <feature-slug>.
+description: >-
+  Boot a three-tier cmux agent team (an orchestrator lead plus plan/build/test
+  worker panes) for the current repo, named after a feature, all driven over the
+  cmux socket. Run it from a terminal surface INSIDE cmux. Usage: /cmux-team
+  <feature-slug>.
 disable-model-invocation: true
 ---
 
