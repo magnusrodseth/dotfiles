@@ -21,30 +21,33 @@ import type { ExtensionAPI, ExtensionContext, Theme, ThemeColor } from "@earendi
 import { keyText, VERSION } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
-/** A shell prompt in a rounded frame: chevron plus underline, after Lucide's
- *  `terminal` icon. The underline sits below and right of the chevron tip, as
- *  in the source SVG (chevron y=5..17, rule at y=19, x=12..20).
+/** A shell prompt in a rounded frame: chevron plus underline.
  *
- *  The chevron steps two columns per row because terminal cells are about
- *  twice as tall as they are wide; one column per row renders as a near
- *  vertical wobble rather than a point. Each row's trailing half-block meets
- *  the next row's leading half-block across the row boundary, so the arms read
- *  as one continuous stroke instead of a staircase.
+ *  Generated, not drawn by hand. Regenerate with:
+ *
+ *      python3 scripts/pi/svg-to-ascii.py --cols 24 --rows 12 --radius 1.2
+ *
+ *  The glyph is Lucide's `terminal` icon sampled at half-block resolution, so
+ *  each cell carries an upper and lower half (▀ ▄ █). A terminal cell is about
+ *  twice as tall as it is wide, which makes a half-cell roughly square, so a
+ *  24x24 sample grid reproduces the icon's aspect honestly. Hand-drawing this
+ *  went wrong twice: at one column per row the chevron renders as a vertical
+ *  wobble rather than a point, and eyeballed stepping reads as a staircase.
  *
  *  Corners are the light rounded glyphs with heavy edges between them. Unicode
  *  has no heavy rounded corner, and rounded corners were worth more than a
  *  perfectly matched join weight. */
 const LOGO = [
-	"╭━━━━━━━━━━━━━━━━━━╮",
-	"┃  ██▄             ┃",
-	"┃    ▀██▄          ┃",
-	"┃       ▀██▄       ┃",
-	"┃          █▖      ┃",
-	"┃       ▄██▀       ┃",
-	"┃    ▄██▀          ┃",
-	"┃  ██▀             ┃",
-	"┃           █████  ┃",
-	"╰━━━━━━━━━━━━━━━━━━╯",
+	"╭━━━━━━━━━━━━━━━━━━━━━━╮",
+	"┃  ██▄                 ┃",
+	"┃   ▀██▄               ┃",
+	"┃     ▀██▄             ┃",
+	"┃       ███            ┃",
+	"┃     ▄██▀             ┃",
+	"┃   ▄██▀               ┃",
+	"┃  ██▀                 ┃",
+	"┃          ██████████  ┃",
+	"╰━━━━━━━━━━━━━━━━━━━━━━╯",
 ];
 const LOGO_WIDTH = Math.max(...LOGO.map((row) => visibleWidth(row)));
 const LOGO_GAP = "   ";

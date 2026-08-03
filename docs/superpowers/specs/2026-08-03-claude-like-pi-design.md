@@ -82,30 +82,43 @@ level with it.
 The three text fields sit vertically centred against the logo. It contains only:
 
 ```text
-╭━━━━━━━━━━━━━━━━━━╮
-┃  ██▄             ┃
-┃    ▀██▄          ┃
-┃       ▀██▄       ┃   Pi v<version>
-┃          █▖      ┃   GPT-5.6 Sol with high effort · GitHub Copilot
-┃       ▄██▀       ┃   ~/current/working/directory
-┃    ▄██▀          ┃
-┃  ██▀             ┃
-┃           █████  ┃
-╰━━━━━━━━━━━━━━━━━━╯
+╭━━━━━━━━━━━━━━━━━━━━━━╮
+┃  ██▄                 ┃
+┃   ▀██▄               ┃
+┃     ▀██▄             ┃   Pi v<version>
+┃       ███            ┃   GPT-5.6 Sol with high effort · GitHub Copilot
+┃     ▄██▀             ┃   ~/current/working/directory
+┃   ▄██▀               ┃
+┃  ██▀                 ┃
+┃          ██████████  ┃
+╰━━━━━━━━━━━━━━━━━━━━━━╯
 ```
 
-Two rendering constraints drove the final glyphs, both learned by drawing it
-wrong first:
+**The logo is generated, not drawn.** `scripts/pi/svg-to-ascii.py` renders
+Lucide's `terminal` SVG directly:
 
-- **The chevron steps two columns per row.** Terminal cells are roughly twice as
-  tall as they are wide, so a one-column-per-row diagonal renders as a
-  near-vertical wobble, not a point. Each row's trailing half-block meets the
-  next row's leading half-block across the row boundary, which makes the arms a
-  continuous stroke rather than a staircase of solid pairs.
-- **The frame mixes weights on purpose.** Unicode has no heavy *rounded* corner:
-  `╭╮╰╯` exist only at light weight, and `┏┓┗┛` are heavy but square. Rounded
-  corners were worth more than a matched join, so light corners carry heavy
-  edges.
+```bash
+python3 scripts/pi/svg-to-ascii.py --cols 24 --rows 12 --radius 1.2 --ts
+```
+
+The SVG is two stroked polylines with round caps, so coverage is analytic (a
+point is ink when its distance to either polyline is within the stroke radius),
+which needs no rasteriser and leaves no anti-aliasing to threshold. Sampling is
+at half-block resolution, mapping each cell's upper and lower half to `▀ ▄ █`.
+A terminal cell is about twice as tall as it is wide, so a half-cell is roughly
+square and a 24x24 sample grid reproduces the icon's aspect honestly.
+
+This replaced two hand-drawn attempts, both wrong in ways that are obvious in
+hindsight and were not obvious while drawing:
+
+- At one column per row a diagonal renders as a near-vertical wobble, not a
+  point, because of that same 2:1 cell aspect.
+- Eyeballed two-column stepping fixes the angle but reads as a staircase of
+  solid pairs rather than a stroke.
+
+The frame does mix weights on purpose: Unicode has no heavy *rounded* corner
+(`╭╮╰╯` are light only, `┏┓┗┛` are heavy but square), and rounded corners were
+worth more than a matched join.
 
 The reveal animation is deliberately finite (the logo draws itself row by row,
 then the timer clears). A header timer that never stops would re-render the
