@@ -136,18 +136,27 @@ fi
 
 section "pnpm global packages"
 if command -v pnpm >/dev/null 2>&1; then
-  # `pnpm ls -g` is unreliable when global-dir is unset; inspect the global
-  # node_modules directly (handles scoped names like @scope/pkg via -e).
-  gdir="$(pnpm root -g 2>/dev/null)"
-  if [ -d "$gdir" ]; then
+  # Ask pnpm what is installed rather than inspecting the global node_modules.
+  # This check used to walk `pnpm root -g` directly, because `pnpm ls -g` then
+  # omitted the `dependencies` key. pnpm 11 (03.08.2026) reversed both facts: it
+  # gives every global install its own hash-named directory under global/v11
+  # instead of one node_modules full of package names, so every declared package
+  # looked missing, and it restored `dependencies` in the JSON.
+  installed="$(pnpm ls -g --depth=0 --json 2>/dev/null | jq -r '.[0].dependencies // {} | keys[]' 2>/dev/null)"
+  if [ -n "$installed" ]; then
     missing=0
     while IFS= read -r pkg; do
       [ -z "$pkg" ] && continue
-      if [ -e "$gdir/$pkg" ]; then :; else echo "      missing: $pkg"; missing=$((missing + 1)); fi
+      # pnpm is brew-managed here and refuses to install itself globally, so it
+      # can never appear in the global list. It was dropped from the manifest on
+      # 03.08.2026; this guard only matters if an export from another machine
+      # puts it back, which would otherwise report a permanently missing package.
+      [ "$pkg" = "pnpm" ] && continue
+      if printf '%s\n' "$installed" | grep -qxF "$pkg"; then :; else echo "      missing: $pkg"; missing=$((missing + 1)); fi
     done < <(list_lines scripts/pnpm/pnpm_packages.txt)
     [ "$missing" -eq 0 ] && pass "all pnpm packages installed" || fail "$missing pnpm package(s) missing"
   else
-    warn "pnpm global dir not found ($gdir); skipping package check"
+    warn "could not read pnpm global packages; skipping package check"
   fi
 else
   fail "pnpm not installed"
@@ -408,9 +417,23 @@ done
 # is actually on disk.
 if command -v pnpm >/dev/null 2>&1 && [ -d "$HOME/Library/pnpm/store" ]; then
   active="$(pnpm store path 2>/dev/null)"
-  if [ -n "$active" ]; then
-    # pnpm store path returns .../store/v10/v3; the version dir we care about is its parent.
-    activever="$(dirname "$active")"
+  storeroot="$HOME/Library/pnpm/store"
+  # Resolve the version dir as whichever entry directly under $storeroot contains
+  # the active store, rather than assuming a fixed depth. `pnpm store path`
+  # returned .../store/v10/v3 under pnpm 10, so a single `dirname` was correct;
+  # pnpm 11 (03.08.2026) returns .../store/v11, where the same `dirname` yields
+  # $storeroot itself, matches no entry, and so reported the one live store as
+  # abandoned -- telling the reader to rm the 2GB store pnpm was actively using.
+  activever=""
+  case "$active" in
+    "$storeroot"/*)
+      activever="$active"
+      while [ "$(dirname "$activever")" != "$storeroot" ]; do
+        activever="$(dirname "$activever")"
+      done
+      ;;
+  esac
+  if [ -n "$activever" ]; then
     orphans=""
     for d in "$HOME"/Library/pnpm/store/*; do
       [ -d "$d" ] || continue

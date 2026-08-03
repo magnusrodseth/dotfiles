@@ -21,28 +21,29 @@ show_help() {
 
 # Function to export installed pnpm global packages
 #
-# Reads the global package.json directly, which is the same source doctor.sh
-# trusts. It does NOT use `pnpm list --global --json`: current pnpm omits the
-# `dependencies` key entirely from that output, so `jq '.[0].dependencies'`
-# errored, printed nothing, and the `>` redirect had already truncated the
-# manifest to zero bytes. That destroyed the file and still exited 0, printing
-# "packages have been exported".
+# Reads `pnpm ls -g --json`, which is the same source doctor.sh trusts.
+#
+# This used to read the global package.json at `dirname $(pnpm root -g)`, for a
+# good reason at the time: pnpm then omitted the `dependencies` key from the
+# JSON, so `jq '.[0].dependencies'` errored, printed nothing, and the `>`
+# redirect had already truncated the manifest to zero bytes -- destroying the
+# file while still exiting 0 and printing "packages have been exported".
+#
+# pnpm 11 (03.08.2026) invalidated the replacement instead. It no longer keeps
+# one global node_modules with package-name entries; each install gets its own
+# hash-named directory under global/v11, and there is no global/package.json at
+# all, so the read failed outright. The same release fixed the JSON, which now
+# does carry `dependencies`, so that is the supported source again.
 #
 # Writes via a temp file so the manifest is only replaced by a verified,
 # non-empty result. Never redirect straight onto $PACKAGES_FILE here.
 export_packages() {
-  local gdir pkgjson tmp
-  gdir="$(pnpm root -g 2>/dev/null)" || { echo "pnpm root -g failed" >&2; exit 1; }
-  pkgjson="$(dirname "$gdir")/package.json"
-  if [[ ! -f "$pkgjson" ]]; then
-    echo "No global package.json at $pkgjson; refusing to touch $PACKAGES_FILE" >&2
-    exit 1
-  fi
-
+  local tmp
   tmp="$(mktemp)"
-  if ! jq -er '.dependencies // {} | keys[]' "$pkgjson" | sort >"$tmp"; then
+  if ! pnpm ls -g --depth=0 --json 2>/dev/null |
+    jq -er '.[0].dependencies // {} | keys[]' | sort >"$tmp"; then
     rm -f "$tmp"
-    echo "Failed to read dependencies from $pkgjson; $PACKAGES_FILE left untouched" >&2
+    echo "Failed to read global packages from pnpm; $PACKAGES_FILE left untouched" >&2
     exit 1
   fi
   if [[ ! -s "$tmp" ]]; then

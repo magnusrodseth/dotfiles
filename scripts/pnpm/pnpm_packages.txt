@@ -2,6 +2,5 @@
 @mintlify/cli
 eas-cli
 expo-cli
-pnpm
 turbo
 vercel
