@@ -20,7 +20,7 @@ Package one installed skill into a `.zip` inside a fresh temp folder and open th
    bash "<this-skill-base-dir>/scripts/share-skill.sh" <skill-name>
    ```
 
-   The script resolves the skill (searching `./.claude/skills`, `$CLAUDE_CONFIG_DIR/skills`, then `~/.claude/skills`), dereferences symlinks so the archive is self-contained, excludes junk (`.DS_Store`, `.git`, `*-cache*`, `node_modules`, `__pycache__`), zips it, drops the zip in a fresh temp folder, and opens that folder in Finder. Pass a full path instead of a name if the skill lives elsewhere.
+   The script takes either a bare name (`humanize`), a slash-command name (`/humanize`), or a path, absolute or relative, to a directory holding a `SKILL.md`. A path is tried verbatim first, so an absolute path works from any working directory. Failing that it searches `./.claude/skills`, `./.agents/skills`, `$CLAUDE_CONFIG_DIR/skills`, `~/.claude/skills` and `~/.agents/skills`. It then dereferences symlinks so the archive is self-contained, excludes junk (`.DS_Store`, `.git`, `*-cache*`, `node_modules`, `__pycache__`), zips it, drops the zip in a fresh temp folder, and opens that folder in Finder.
 
 3. **Report** the `Zip:` and `Folder:` paths from the script output. Tell the user Finder is open on that folder, and that a recipient installs the skill by unzipping into `~/.claude/skills/` (personal) or a project's `.claude/skills/` (project), then starting a new session.
 

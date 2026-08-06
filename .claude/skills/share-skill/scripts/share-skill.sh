@@ -10,16 +10,27 @@ if [ $# -lt 1 ] || [ -z "${1:-}" ]; then
   exit 2
 fi
 
-# Normalize: strip a leading slash the user might include (e.g. "/humanize").
-name="${1#/}"
+arg="$1"
+# Users write both "/humanize" (slash-command style) and a real path. Stripping the
+# leading slash unconditionally broke every absolute path, so try the argument
+# verbatim first and only then the slash-stripped form.
+name="${arg#/}"
 
 # Resolve the skill directory: a direct path first, then known skill locations.
+# ~/.agents/skills is canonical (Codex, Zed, OpenCode read only that root);
+# ~/.claude/skills mirrors it for Claude Code. Search both.
 skill_dir=""
-if [ -f "$name/SKILL.md" ]; then
-  skill_dir="$name"
-else
+for candidate in "$arg" "$name"; do
+  if [ -f "$candidate/SKILL.md" ]; then
+    skill_dir="$candidate"
+    break
+  fi
+done
+
+if [ -z "$skill_dir" ]; then
   config_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-  for base in "./.claude/skills" "$config_dir/skills" "$HOME/.claude/skills"; do
+  for base in "./.claude/skills" "./.agents/skills" "$config_dir/skills" \
+              "$HOME/.claude/skills" "$HOME/.agents/skills"; do
     if [ -f "$base/$name/SKILL.md" ]; then
       skill_dir="$base/$name"
       break
@@ -28,7 +39,8 @@ else
 fi
 
 if [ -z "$skill_dir" ]; then
-  echo "error: no skill named '$name' with a SKILL.md found in ./.claude/skills, \$CLAUDE_CONFIG_DIR/skills, or ~/.claude/skills" >&2
+  echo "error: no skill '$arg' with a SKILL.md found. Looked at that path directly, and in" >&2
+  echo "       ./.claude/skills, ./.agents/skills, \$CLAUDE_CONFIG_DIR/skills, ~/.claude/skills, ~/.agents/skills" >&2
   exit 1
 fi
 
