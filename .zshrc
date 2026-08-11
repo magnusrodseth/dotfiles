@@ -160,6 +160,7 @@ alias claude="claude --dangerously-skip-permissions"
 alias clc="claude --continue --dangerously-skip-permissions"
 alias clr="claude --resume --dangerously-skip-permissions"
 alias pic="pi -c"
+alias pir="pi -r"
 
 # Headless ship: optimized for speed
 unalias ship 2>/dev/null
