@@ -20,3 +20,7 @@ agent/mcp-cache.json
 agent/mcp-npx-cache.json
 agent/models-store.json
 cc-my-pi-update-check.json
+
+# Crash dumps. Written on a pi crash, holds a stack trace plus whatever was in
+# scope at the time, and is never read back by anything.
+agent/pi-crash.log

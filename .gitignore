@@ -200,6 +200,12 @@ fonts/
 # telemetry-enabled marker file here; nothing in this dir is authored config.
 .config/1Password/
 
+# cmux. Only cmux.json is authored config. The surface-resume approval secret is
+# a per-machine token cmux regenerates on demand, and it sits in a stowed dir, so
+# a careless `git add .` in this public repo would publish it. Deny the dotfile
+# rather than the directory: cmux.json lives alongside it and stays tracked.
+.config/cmux/.surface-resume-approval-secret
+
 # Codex. `~/.codex` is a real directory holding mostly runtime state (sessions,
 # sqlite logs, plugin caches, shell snapshots). Default-deny, then allow only the
 # hand-authored files that are worth stowing. Two must never be tracked:
