@@ -58,9 +58,13 @@ cd "$DOTFILES" || { echo "sync-rules: cannot cd to $DOTFILES" >&2; exit 1; }
 RULES_DIR="scripts/agents/rules"
 
 # <target path>:<comma-separated rule names>
+#
+# OpenCode is deliberately thin. It carries only the two rules that change what
+# it does on every task; the rest would be prompt weight for no behaviour. Widen
+# its list only on purpose, not for symmetry with the other two.
 MANIFEST="
-.claude/CLAUDE.md:writing-style,context7
-.codex/AGENTS.md:writing-style,context7
+.claude/CLAUDE.md:dev-server,task-completion,writing-style,norwegian,context7
+.codex/AGENTS.md:dev-server,task-completion,writing-style,norwegian,context7
 .config/opencode/AGENTS.md:writing-style,context7
 "
 

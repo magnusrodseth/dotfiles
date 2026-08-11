@@ -12,15 +12,18 @@ Cross-cutting repos I refer to from anywhere (paths are `$HOME`-relative; identi
 
 ## Dev Server
 
+<!-- rules:dev-server -->
 If a project ships an agent-friendly dev command (a background launcher with
 idempotent status/stop, e.g. `make dev` / `make dev-status` / `make dev-stop`
 in hei-huset-agent), use it: those are safe for me to start, query, and stop.
 Otherwise, when servers are run manually in separate terminals, assume they're
 already running and don't launch them in the foreground (a foreground `dev`
 blocks indefinitely).
+<!-- /rules:dev-server -->
 
 ## Task Completion Rules
 
+<!-- rules:task-completion -->
 **NEVER stop a task prematurely.** If you start something, finish it.
 
 - Do not stop with "I've made progress, let me pause here" or "I'll update the todo and stop"
@@ -36,6 +39,7 @@ blocks indefinitely).
 - Tests pass (if applicable)
 - All todo items marked complete
 - The original request is fully satisfied, not partially
+<!-- /rules:task-completion -->
 
 ## Writing Style
 
@@ -49,7 +53,9 @@ blocks indefinitely).
 
 ## Norwegian Text
 
+<!-- rules:norwegian -->
 - When working with Norwegian text, always ensure correct grammar and spelling, including proper use of **æ, ø, å** (and **Æ, Ø, Å**). Verify these characters are not accidentally replaced with ae, o, a or other ASCII equivalents.
+<!-- /rules:norwegian -->
 
 ## Context7
 

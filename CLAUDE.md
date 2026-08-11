@@ -201,13 +201,17 @@ Instructions that must apply in every agent live once, in
 each agent's own instruction file by `scripts/agents/sync-rules.sh`:
 
 ```
-scripts/agents/rules/writing-style.md   source of truth
-scripts/agents/rules/context7.md
-        |
-        +--> .claude/CLAUDE.md            Claude Code
-        +--> .codex/AGENTS.md             Codex
-        +--> .config/opencode/AGENTS.md   OpenCode
+scripts/agents/rules/          .claude/  .codex/  opencode/
+  dev-server.md                   x         x
+  task-completion.md              x         x
+  writing-style.md                x         x         x
+  norwegian.md                    x         x
+  context7.md                     x         x         x
 ```
+
+Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
+carries only the two rules that change what it does on every task. Widen its
+list on purpose, not for symmetry.
 
 The target file owns the `##` heading and the position. The script owns only the
 bytes between `<!-- rules:<name> -->` and `<!-- /rules:<name> -->`, and rewrites
@@ -233,9 +237,13 @@ Three things are deliberate here:
   had the rule in neither place. One delivery mechanism, three targets, nothing
   undocumented in the path.
 
-`## Norwegian Text` and `## Task Completion Rules` are still hand-duplicated
-across `.claude/CLAUDE.md` and `.codex/AGENTS.md`. They are the obvious next
-candidates to move into `scripts/agents/rules/`.
+What is deliberately **not** shared: `## Personal Hubs` and `## RTK`. Both differ
+between Claude Code and Codex on purpose. The Codex copy of Personal Hubs is
+written in second person to Codex and carries the "Skills you can and cannot
+see" section about its 19-22k character skill-catalog budget; the Codex copy of
+RTK explains why it is inlined rather than imported. Flattening either into one
+shared body would lose that. The test for sharing a section is not its size, it
+is whether the text is addressed to one agent.
 
 ### Default apps for file types
 
