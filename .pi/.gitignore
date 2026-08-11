@@ -24,3 +24,17 @@ cc-my-pi-update-check.json
 # Crash dumps. Written on a pi crash, holds a stack trace plus whatever was in
 # scope at the time, and is never read back by anything.
 agent/pi-crash.log
+
+# Pi's newer top-level skill root, as opposed to the tracked agent/skills/ above.
+# Leading slash matters: a bare `skills/` is a segment pattern and would swallow
+# agent/skills/ too, silently untracking those 33 reproducible symlinks.
+#
+# Only entry so far is pptx, a symlink to ~/.agents/skills/pptx that is in
+# neither skill-lock.json nor git, so it resolves on this machine and nowhere
+# else. Tracking it bare would recreate the dangling-symlink class purged on
+# 28.07.2026 (see the .config/devin/skills/ note in the root .gitignore);
+# writing-great-skills is the surviving instance and doctor still fails on it.
+# Vendoring it is not an option either: the skill is Anthropic proprietary and
+# its LICENSE.txt forbids retaining copies outside the Services, reproduction,
+# and distribution to third parties. This repo is public.
+/skills/
