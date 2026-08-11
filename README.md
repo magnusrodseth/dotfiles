@@ -142,7 +142,7 @@ For more information on the zsh-related tools, refer to [this YouTube video](htt
 A large part of this repo is now [Claude Code](https://www.anthropic.com/claude-code) configuration, all under [`.claude`](/.claude):
 
 - **Skills** ([`.claude/skills`](/.claude/skills)) are restored from a lock file rather than committed wholesale. `scripts/skills/packages.sh install` reads [`skill-lock.json`](/scripts/skills/skill-lock.json) and reinstalls every skill on a new machine; `scripts/skills/link-dotfiles-skills.sh` symlinks the dotfiles-authored skills into `~/.claude/skills`.
-- **Commands** ([`.claude/commands`](/.claude/commands)) and **rules** ([`.claude/rules`](/.claude/rules)) are committed directly.
+- **Commands** ([`.claude/commands`](/.claude/commands)) and **shared agent rules** ([`scripts/agents/rules`](/scripts/agents/rules)) are committed directly.
 - [`CLAUDE.md`](/CLAUDE.md) documents the repo for Claude Code and is the canonical setup runbook.
 
 ## Keeping packages in sync

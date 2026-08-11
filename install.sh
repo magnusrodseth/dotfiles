@@ -90,6 +90,11 @@ bootstrap_env
 # --- steps -------------------------------------------------------------------
 
 init_submodules()     { git submodule update --init --recursive; }
+# Writes into this repo, not into $HOME: it splices scripts/agents/rules/*.md
+# into the three agent instruction files, which are then stowed like anything
+# else. A dirty tree after install therefore means a rule source changed and a
+# target was behind. Commit the result.
+sync_agent_rules()    { bash scripts/agents/sync-rules.sh sync; }
 stow_symlinks()       { stow --restow .; }
 brew_packages()       { brew bundle install --file="$DOTFILES/Brewfile"; }
 cargo_packages() {
@@ -128,6 +133,7 @@ file_associations()   { bash scripts/macos/file-associations.sh apply; }
 bat_cache()           { bat cache --build; }
 
 run_step "Init git submodules"                init_submodules
+run_step "Sync shared agent rules"            sync_agent_rules
 run_step "Create symlinks with stow"          stow_symlinks
 run_step "Install Homebrew packages"          brew_packages
 run_step "Install Cargo packages"             cargo_packages

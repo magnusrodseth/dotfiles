@@ -27,24 +27,27 @@ Steps, in order:
 1. Ensure Homebrew, ensure stow
 2. Init git submodules (`.tmux/plugins/*`; without this a fresh clone gets a
    broken tmux and a failing tpm step)
-3. Stow symlinks (`stow --restow .`)
-4. Homebrew packages from `Brewfile` (fonts via `font-fira-code-nerd-font`, and
+3. Sync shared agent rules into the three agent instruction files
+   (`scripts/agents/sync-rules.sh sync`); runs before stow so the spliced
+   content is what gets symlinked
+4. Stow symlinks (`stow --restow .`)
+5. Homebrew packages from `Brewfile` (fonts via `font-fira-code-nerd-font`, and
    VS Code extensions via the `vscode` entries)
-5. Cargo packages from `scripts/cargo/cargo_packages.txt`
-6. pnpm packages from `scripts/pnpm/pnpm_packages.txt`
-7. npm global packages from `scripts/npm/npm_packages.txt` (this is where `gws`,
+6. Cargo packages from `scripts/cargo/cargo_packages.txt`
+7. pnpm packages from `scripts/pnpm/pnpm_packages.txt`
+8. npm global packages from `scripts/npm/npm_packages.txt` (this is where `gws`,
    `ctx7`, `agent-browser` and `playwriter` come from; skills depend on them)
-8. Agent skills from `scripts/skills/skill-lock.json`
-9. Link dotfiles-authored skills into `~/.agents/skills/`, then mirror that
+9. Agent skills from `scripts/skills/skill-lock.json`
+10. Link dotfiles-authored skills into `~/.agents/skills/`, then mirror that
    whole root into `~/.claude/skills/`
-10. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
+11. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
     validates skills, rejects skills that duplicate a lock entry, checks script
     refs, and gitleaks-scans the staged diff)
-11. macOS App Store apps
-12. tmux plugin manager (tpm) setup
-13. macOS system defaults
-14. Default apps for developer file types (`scripts/macos/file-associations.sh`)
-15. bat cache build
+12. macOS App Store apps
+13. tmux plugin manager (tpm) setup
+14. macOS system defaults
+15. Default apps for developer file types (`scripts/macos/file-associations.sh`)
+16. bat cache build
 
 install.sh must never source `~/.zshenv`. It did until 28.07.2026, and since
 that file is zsh (`typeset -U path`, `path=( ... )`), bash 3.2 died on it under
@@ -72,6 +75,9 @@ bash scripts/pnpm/packages.sh install         # Install pnpm packages
 bash scripts/npm/packages.sh install          # Install npm global packages
 bash scripts/skills/packages.sh install       # Restore agent skills from lock file
 bash scripts/skills/validate-skills.sh --links  # SKILL.md frontmatter + symlinks
+
+bash scripts/agents/sync-rules.sh sync             # splice shared rules into agent files
+bash scripts/agents/sync-rules.sh check            # drift check, exit 1 if behind
 
 # Export current packages to lists
 bash scripts/cargo/packages.sh export
@@ -187,6 +193,49 @@ Before 02.08.2026 the two roots were linked independently and `npx skills` real
 dirs silently shadowed the dotfiles copies. 42 skills had diverged, 4 of them
 with real content differences that made Claude Code and Zed load different text
 for the same skill name.
+
+### Shared agent rules
+
+Instructions that must apply in every agent live once, in
+`scripts/agents/rules/<name>.md` (body only, no heading), and are spliced into
+each agent's own instruction file by `scripts/agents/sync-rules.sh`:
+
+```
+scripts/agents/rules/writing-style.md   source of truth
+scripts/agents/rules/context7.md
+        |
+        +--> .claude/CLAUDE.md            Claude Code
+        +--> .codex/AGENTS.md             Codex
+        +--> .config/opencode/AGENTS.md   OpenCode
+```
+
+The target file owns the `##` heading and the position. The script owns only the
+bytes between `<!-- rules:<name> -->` and `<!-- /rules:<name> -->`, and rewrites
+them verbatim from the source. `sync` converges, `check` exits non-zero on drift
+and is wired into `doctor.sh`. A rule file that no target lists is also an error:
+it reaches no agent at all.
+
+Three things are deliberate here:
+
+- **Sources live under `scripts/`** because `.stow-local-ignore` already excludes
+  that whole directory. Only the spliced copies reach `$HOME`, so there is no
+  second path by which an agent could pick up a rule.
+- **Not a symlink and not an import.** Codex expands neither. `.codex/AGENTS.md`
+  ended with a bare `@RTK.md` for months and Codex received three literal
+  characters, so those rules applied nowhere (verified 25.07.2026 with `codex
+  debug prompt-input`). The same class of silent failure is what `check` exists
+  to catch.
+- **Claude Code is spliced like everything else**, even though it auto-loads
+  `~/.claude/rules/*.md` with no `@import` and could have read the sources
+  directly. That free ride was the original design and lasted one afternoon: on
+  11.08.2026 the em-dash rule moved out of `.claude/CLAUDE.md` into a new file
+  under `.claude/rules/`, and because stow had not yet linked it, Claude Code
+  had the rule in neither place. One delivery mechanism, three targets, nothing
+  undocumented in the path.
+
+`## Norwegian Text` and `## Task Completion Rules` are still hand-duplicated
+across `.claude/CLAUDE.md` and `.codex/AGENTS.md`. They are the obvious next
+candidates to move into `scripts/agents/rules/`.
 
 ### Default apps for file types
 

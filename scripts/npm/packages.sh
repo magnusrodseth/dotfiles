@@ -7,7 +7,7 @@
 # entirely until 28.07.2026, which meant a fresh machine restored all 62 gws-*
 # and recipe-* skills from skill-lock.json and then had every one of them fail
 # at its first command, because `gws` itself was never installed. `ctx7` (the
-# CLI .claude/rules/context7.md mandates), `agent-browser`, `playwriter` and the
+# CLI scripts/agents/rules/context7.md mandates), `agent-browser`, `playwriter` and the
 # typescript language server were missing for the same reason.
 #
 # npm and corepack are deliberately excluded: they ship with node, and pinning

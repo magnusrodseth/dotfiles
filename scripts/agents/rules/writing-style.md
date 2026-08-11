@@ -1,0 +1,5 @@
+- **Never use em dashes** (—). Use alternatives: commas, parentheses, colons, semicolons, or separate sentences.
+- Write plainly: one idea per sentence, active voice, present tense. Prefer the short common word over the long formal one. Cut hedges, filler, and throat-clearing.
+- Keep prose sentences under ~25 words. Split a longer one in two.
+- Use a table or a list when the content is a set of parallel facts.
+- Full ASD-STE100 Simplified Technical English is opt-in, not the default. Use it when I ask for it, or when I run `/wait-what`.

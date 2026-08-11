@@ -252,6 +252,23 @@ else
   fail "git hooks not enabled (run: git config core.hooksPath scripts/githooks)"
 fi
 
+# --- shared agent rules ------------------------------------------------------
+
+section "Shared agent rules"
+# One rule source, three agent files that cannot import it. The failure this
+# guards is silent by construction: a rule edited at the source and never
+# spliced applies in no agent, and nothing at runtime complains.
+if out="$(bash scripts/agents/sync-rules.sh check 2>&1)"; then
+  pass "$out"
+else
+  fail "agent rules drifted (run: bash scripts/agents/sync-rules.sh sync)"
+  printf '%s\n' "$out" | sed 's/^/      /'
+fi
+# The spliced files are only useful where the agent reads them.
+for f in .claude/CLAUDE.md .codex/AGENTS.md .config/opencode/AGENTS.md; do
+  check_link "$f"
+done
+
 # --- fonts -------------------------------------------------------------------
 
 section "Fonts"
