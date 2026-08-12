@@ -1162,16 +1162,6 @@
       "installedAt": "2026-04-29T06:16:43.741Z",
       "updatedAt": "2026-05-18T11:01:07.445Z"
     },
-    "handoff": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/productivity/handoff/SKILL.md",
-      "skillFolderHash": "184d485ae68a2132893a94239b2b85d253e6152b",
-      "pluginName": "mattpocock-skills",
-      "installedAt": "2026-05-18T11:01:07.440Z",
-      "updatedAt": "2026-08-06T06:43:03.808Z"
-    },
     "prototype": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -1527,15 +1517,6 @@
       "skillPath": "skills/engineering/wizard/SKILL.md",
       "skillFolderHash": "3b367a2a8b77590f38612c9b02dcd8b71387689f",
       "pluginName": "mattpocock-skills",
-      "installedAt": "2026-08-06T06:43:03.799Z",
-      "updatedAt": "2026-08-06T06:43:03.799Z"
-    },
-    "claude-handoff": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/mattpocock/skills.git",
-      "skillPath": "skills/in-progress/claude-handoff/SKILL.md",
-      "skillFolderHash": "b312afac556f7229717dbd9b786d77bc160c8649",
       "installedAt": "2026-08-06T06:43:03.799Z",
       "updatedAt": "2026-08-06T06:43:03.799Z"
     },
