@@ -79,6 +79,13 @@ bash scripts/skills/validate-skills.sh --links  # SKILL.md frontmatter + symlink
 bash scripts/agents/sync-rules.sh sync             # splice shared rules into agent files
 bash scripts/agents/sync-rules.sh check            # drift check, exit 1 if behind
 
+# pi packages (also runs at login and daily from launchd)
+bash scripts/pi/update-extensions.sh          # pi update --extensions, then re-apply patches
+bash scripts/pi/patch-cc-my-pi.sh --check     # are the cc-my-pi patches still applied?
+
+# cmux agent hooks work only if the control socket authenticates
+cmux ping                                     # PONG, or the missing half (see the cmux section)
+
 # Export current packages to lists
 bash scripts/cargo/packages.sh export
 bash scripts/pnpm/packages.sh export
@@ -304,11 +311,68 @@ signing in. `doctor.sh` checks for extensions missing their compiled JS as the
 safety net. `.config/raycast/config.json` is untracked too: it holds an account
 access token that was once committed to this public repo.
 
+### cmux
+
+`.config/cmux/cmux.json` is tracked and declares intent.
+`.config/cmux/.surface-resume-approval-secret` is gitignored machine state.
+
+**Every agent hook rides the control socket.** `cmux hooks setup` generates one
+bridge per agent (pi's is `.pi/agent/extensions/cmux-session.ts`, marked DO NOT
+EDIT and upgraded in place by cmux), and each bridge shells out to the CLI:
+`cmux hooks <agent> <event>` for session lifecycle, `cmux surface resume
+set|clear` for the binding that restores a session into its pane.
+
+`automation.socketControlMode` is `password`, and `automation.socketPassword` is
+deliberately left unset in `cmux.json` because this repo is public. The CLI looks
+for the secret in three places, in order: `--password`, `CMUX_SOCKET_PASSWORD`,
+then the value saved app-side in cmux **Settings > Automation**. Two of those are
+machine-local and neither survives a clone:
+
+- `zsh/ignored/cmux-socket.sh` exports `CMUX_SOCKET_PASSWORD` (gitignored; source
+  of truth is 1Password > Private > "cmux socket control")
+- the same value pasted into Settings > Automation
+
+The app-side copy is the load-bearing one. Once it is saved, any shell on the
+machine authenticates with no env var at all; with neither in place, every hook
+call exits 1.
+
+Nothing about that failure is loud. The pi bridge stays silent on exit 69 ("that
+surface is gone") and warns on anything else through `console.warn`, and pi's
+fullscreen TUI paints over warnings raised mid-session. So the only visible
+symptom is two JSON lines beside the prompt at shutdown, which read like launch
+noise from the session just started:
+
+```
+{"source":"cmux-pi-extension","message":"cmux hook command failed","subcommand":"stop","status":1}
+{"source":"cmux-pi-extension","message":"failed to clear Pi resume binding","status":1}
+```
+
+This machine ran with every agent hook dead until 17.08.2026, because the mode
+was `password` with no password saved on either side. `cmux ping` answering
+`PONG` is the entire check; `doctor.sh` asserts it and classifies each rejection,
+since "no socket password is configured", "Invalid password" and "Authentication
+required" are three different missing pieces with three different fixes. The
+escape hatch is `socketControlMode: "cmuxOnly"` (the schema default), which needs
+no secret anywhere, at the cost of shells outside cmux losing socket control.
+
 ### AI Agent Configurations
 
 - `.pi/` - Pi coding agent config (`agent/`, `suggester/`). Roughly 475 MB on
   disk, almost all of it `.pi/agent/npm/node_modules`, which has its own
   `.gitignore` (`*` plus `!.gitignore`) so it stays invisible to git.
+- `.pi/agent/git/` holds the packages pi installed from git, and pi updates them
+  with `git reset --hard`, so a local edit there does not survive an update. The
+  two cc-my-pi rendering patches this setup relies on (a solid code-fence frame
+  instead of dotted, and inline unified diffs at every width, neither of which
+  has a setting) are therefore declared in `scripts/pi/patch-cc-my-pi.sh` and
+  re-applied by `scripts/pi/update-extensions.sh` after every update. The patcher
+  is idempotent, has a `--check` mode, and fails naming the patch when upstream
+  rewrites that code rather than leaving a half-patched file behind.
+- cc-my-pi also sat frozen at 1.3.2 for weeks while that daily updater reported
+  success: the checkout tracked `origin/master`, which upstream abandoned when it
+  moved to `main`. A git package whose branch stops receiving commits keeps
+  updating cleanly forever. `git rev-parse HEAD` against `git ls-remote origin
+  HEAD` is what catches it.
 - `.config/opencode/` - OpenCode (see above)
 - `.claude/` - Claude Code (settings, commands, skills)
 - `.codex/`, `.agents/`, `.agent/`, `.cursor/`, `.kiro/`, `.windsurf/` - all

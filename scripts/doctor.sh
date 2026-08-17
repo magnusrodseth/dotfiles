@@ -337,6 +337,77 @@ else
   warn "zinit or zoxide not installed; skipping shell init checks"
 fi
 
+# --- cmux socket control -----------------------------------------------------
+
+section "cmux socket control (every agent hook depends on it)"
+# cmux's control socket is what the agent integrations talk to. `cmux hooks
+# setup` generates one bridge per agent (pi's is ~/.pi/agent/extensions/
+# cmux-session.ts) and each shells out to the cmux CLI: `cmux hooks pi <event>`
+# for session lifecycle, `cmux surface resume set|clear` for the resume binding.
+#
+# With automation.socketControlMode=password every one of those calls needs a
+# shared secret, and it lives in two machine-local halves because this repo is
+# public: CMUX_SOCKET_PASSWORD exported from zsh/ignored/cmux-socket.sh, and the
+# same value saved app-side in cmux Settings > Automation. cmux.json declares
+# the mode but deliberately leaves socketPassword unset for that reason, so a
+# fresh clone gets the mode without either half of the secret.
+#
+# Miss either half and every hook exits 1. Nothing breaks loudly: the extension
+# stays silent on exit 69 ("surface is gone") but warns on anything else via
+# console.warn, and pi's fullscreen TUI paints over warnings raised mid-session.
+# The only visible symptom is two JSON warning lines next to the prompt at
+# shutdown, which read like launch noise from the session you just started. This
+# machine ran with all agent hooks dead until 17.08.2026 for exactly that reason.
+cmux_json="$DOTFILES/.config/cmux/cmux.json"
+cmux_secret="$DOTFILES/zsh/ignored/cmux-socket.sh"
+if ! command -v cmux >/dev/null 2>&1; then
+  warn "cmux not on PATH (skipping socket control checks)"
+elif [ ! -f "$cmux_json" ]; then
+  fail ".config/cmux/cmux.json missing (socket control mode undeclared)"
+else
+  # cmux.json is JSONC and carries a commented-out example block that also
+  # mentions socketControlMode, so comment lines are dropped before matching.
+  cmux_mode="$(grep -vE '^[[:space:]]*//' "$cmux_json" \
+    | grep -oE '"socketControlMode"[[:space:]]*:[[:space:]]*"[A-Za-z]+"' \
+    | head -1 | sed -E 's/.*"([A-Za-z]+)"$/\1/')"
+  case "${cmux_mode:-}" in
+  password)
+    # Assert the invariant, not one particular way of satisfying it: the CLI
+    # takes --password first, then CMUX_SOCKET_PASSWORD, then the value saved in
+    # cmux Settings > Automation. A round trip is the only honest test, because
+    # each way of failing is a different missing piece with a different fix, and
+    # a machine can pass with the env half absent entirely.
+    cmux_ping="$( ( [ -f "$cmux_secret" ] && . "$cmux_secret" >/dev/null 2>&1
+                    cmux ping ) 2>&1 )"
+    # Only an unreachable socket is a warning. Every rejection means all agent
+    # hooks are exiting 1 right now.
+    case "$cmux_ping" in
+    *PONG*)
+      pass "cmux socket authenticates (agent hooks can reach it)"
+      # Declared design: cmux.json points at this file, with 1Password as the
+      # source of truth. Without it the only copy of the secret on this machine
+      # is cmux's own Settings state, which no backup or clone restores.
+      if [ ! -f "$cmux_secret" ]; then
+        warn "no zsh/ignored/cmux-socket.sh; the CLI is falling back to cmux Settings > Automation (1Password > Private > \"cmux socket control\")"
+      fi
+      ;;
+    *"no socket password is configured"*)
+      fail "no socket password saved in cmux Settings > Automation (paste the 1Password value there)" ;;
+    *"Invalid password"*)
+      fail "cmux rejected the password (cmux-socket.sh and Settings > Automation disagree)" ;;
+    *auth_required* | *"Authentication required"*)
+      fail "cmux has no password to authenticate with (save it in Settings > Automation, or export it from zsh/ignored/cmux-socket.sh)" ;;
+    *)
+      warn "cmux ping did not answer, is cmux running? (${cmux_ping%%$'\n'*})" ;;
+    esac
+    ;;
+  "")
+    warn "could not read automation.socketControlMode from .config/cmux/cmux.json" ;;
+  *)
+    pass "socketControlMode=$cmux_mode (no shared secret needed)" ;;
+  esac
+fi
+
 # --- raycast extensions ------------------------------------------------------
 
 section "Raycast extensions (compiled command JS present)"
