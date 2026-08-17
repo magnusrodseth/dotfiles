@@ -129,15 +129,38 @@ suppress_cc_my_pi_banner() {
 	log "parked cc-my-pi update banner (latest=$version, next check +${SUPPRESS_DAYS}d)"
 }
 
+# cc-my-pi hardcodes its dotted code-block frame and its side-by-side diff
+# threshold, with no setting for either, and pi updates git packages with
+# `git reset --hard`. So the local patches have to be re-applied here, after
+# every update: this is the only moment we know the checkout was just replaced.
+# Runs on the failure path too, since a partial update can still have reset the
+# tree. See scripts/pi/patch-cc-my-pi.sh for what it changes and why.
+reapply_local_patches() {
+	local script output
+	script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-cc-my-pi.sh"
+	if [[ ! -f $script ]]; then
+		log "patch script missing at $script; cc-my-pi is running stock"
+		return 0
+	fi
+	if output=$(bash "$script" 2>&1); then
+		printf '%s\n' "$output" >>"$LOG"
+	else
+		printf '%s\n' "$output" >>"$LOG"
+		log "cc-my-pi patches did NOT apply; re-derive them against the new upstream"
+	fi
+}
+
 log "starting: $PI_BIN update --extensions"
 if output=$("$PI_BIN" update --extensions 2>&1); then
 	[[ -n $output ]] && printf '%s\n' "$output" >>"$LOG"
 	log "update succeeded"
 	suppress_cc_my_pi_banner
+	reapply_local_patches
 	exit 0
 else
 	status=$?
 	[[ -n $output ]] && printf '%s\n' "$output" >>"$LOG"
 	log "update FAILED (exit $status); retrying on next scheduled run"
+	reapply_local_patches
 	exit "$status"
 fi

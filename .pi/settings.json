@@ -19,6 +19,8 @@
   "doubleEscClearEnabled": true,
   "queueSteerEnabled": true,
   "spinnerEnabled": true,
+  "spinnerVerbColor": "accent",
+  "spinnerGlyphColor": "accent",
   "sessionCommandsEnabled": true,
   "copyCommandEnabled": true,
   "claudeHeaderEnabled": false,
