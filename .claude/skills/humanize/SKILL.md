@@ -59,6 +59,7 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 
 - Preserve meaning, facts, structure, and the author's argument. Only change voice.
 - Default to stripping, not embellishing. You may restructure for human rhythm (vary sentence length, restore active voice, cut filler transitions, land on the strong word): that changes cadence, not content. But never invent facts, numbers, sources, quotes, anecdotes, or opinions the author didn't supply. If human-sounding prose needs a concrete specific the text lacks, flag the gap or ask. A fabricated detail is worse than a bland one.
+- **Rewrite at the register, not the phrase.** The greps are a detector; they are not the rewrite instruction. Em dashes, emphatic colons, punchy fragments and the Claude-era phrase list are four surfaces of one behaviour: sentences built to land rather than to state (see Turn-of-phrase optimization in [references/tells.md](references/tells.md)). Fix each hit individually and the behaviour moves into unlisted synonyms. State what the prose should do instead ("claim first, qualification after"), then use the greps to catch residue. This applies to instructions you write for a model as much as to prose you edit: enumerating banned tokens is measurably weaker than naming the register, and a long ban list degrades compliance rather than improving it.
 - Replace em dashes with two sentences, a comma, or parentheses. Do not swap them for colons by default: the colon-instead-of-em-dash habit produces the emphatic-colon tell, and the author's standing preference is full sentences. A colon earns its place only before a genuine list or a quotation. Never preserve the em dash itself.
 - Replace curly quotes and apostrophes with straight ASCII (`"`, `'`).
 - Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
@@ -74,6 +75,14 @@ When checking a long doc for one category at a time. Exception: the emphatic/app
 ```bash
 # AI vocabulary (GPT-4 era + newer additions)
 grep -niE '\b(delve|underscore|tapestry|vibrant|pivotal|robust|meticulous|crucial|testament|bolster|garner|interplay|intricate|enduring|landscape|certainly|utilize|streamline|harness|paradigm|synergy|ecosystem)\b' <file>
+
+# Claude-era phrases (2026+). Opus 5 and Fable 5 lineages; see tells.md for which is which.
+# These are surface residue of the turn-of-phrase register - fix the register first, then re-run this.
+grep -niE '\b(carry the argument|worth stating plainly|stated fairly|load-bearing|key insight|full stop\.|the [a-z]+ matters more)\b|, and the trap' <file>
+
+# Hyphen-stacked compounds and arrow chains (Fable 5; also generic agent shorthand leaking into prose).
+# Low precision: legitimate triples exist (state-of-the-art, out-of-the-box). Judge each; weigh by density.
+grep -nE '[[:alpha:]]+-[[:alpha:]]+-[[:alpha:]]+|→' <file>
 
 # Magic adverbs (lower precision, weigh by density)
 grep -niE '\b(quietly|deeply|fundamentally|remarkably|arguably|profoundly)\b' <file>

@@ -163,6 +163,14 @@ Specific words overused by LLMs. Density matters: one is coincidence, five acros
 
 **GPT-5 era (mid-2025+):** emphasizing, enhance, highlighting, showcasing, plus heavy "media coverage / attribution" language.
 
+**Claude era (2026+).** A separate lineage from the GPT list, and mostly *phrases* rather than single words. Attribution differs by model, so keep the two apart rather than lumping them as generic "Claudisms" the way most write-ups do:
+
+- **Opus 5:** carry the argument, worth stating plainly, ", and the trap", "the X matters more" (as a closing move), *move* (meaning a rhetorical or strategic choice), full stop (as terminal emphasis).
+- **Fable 5:** load-bearing (applied to a sentence, claim, or abstraction), stated fairly, arrow chains (`A → B → fails`), hyphen-stacked compounds, self-coined labels reused as if established.
+- **Both:** honest / honestly and genuine as unearned sincerity markers, key insight as a filler intensifier, synthesize for ordinary combining.
+
+These sit downstream of one register, not a vocabulary (see [Turn-of-phrase optimization](#turn-of-phrase-optimization)). Grep them to *detect*; do not hand a writer the list as a rewrite instruction.
+
 **Robust** is era-spanning. So is **leverage** (as a verb).
 
 **Also era-spanning:** certainly, utilize, streamline, harness, paradigm, synergy, ecosystem, framework (when used as a vague abstraction rather than a named thing).
@@ -265,6 +273,23 @@ Examples:
 - "Platforms do."
 
 Lower precision: punchy fragments are a legitimate human device. The tell is when a whole passage is built from them. Ask before flattening; it can be deliberate voice.
+
+### Turn-of-phrase optimization
+
+The register that generates the punchy fragments above, the Claude-era phrase list, the emphatic colon, and the em dash. Naming it matters because these are one behaviour with several surface forms, and treating them as separate vocabulary items means fixing four symptoms and leaving the cause.
+
+The pattern: the sentence is built to *land* rather than to state. It withholds the claim through a setup clause, then delivers it as a payoff. Every paragraph closes on its strongest phrasing rather than its most useful qualification. The prose reads as quotable, and each individual sentence is good, which is why it survives a vocabulary scrub intact.
+
+Diagnostic, not a word list. Ask of a passage: could this claim have been stated first, plainly, with the qualification after it? If yes, and the piece never does that anywhere, the register is the tell.
+
+Examples of the move rather than the words:
+- Setup-then-payoff: "The number is not the interesting part. The timing is."
+- Claim withheld for a closing beat: "...and that is the trap."
+- Terminal emphasis substituting for an argument: "This is wrong, full stop."
+
+**Rewrite at the register, not the phrase.** Banning the enumerated phrases displaces the behaviour into unlisted synonyms, because the optimization target is the cadence and not the vocabulary. Anthropic's own model-specific prompting guidance says the same for generation: a short instruction about the register is as effective as enumerating each pattern, and naming specific tokens is *less* effective than the general form. Instruct for the register ("state claims directly rather than building toward a turn of phrase"), then let the phrase greps catch the residue.
+
+Tier 3. This is voice, and some writers land sentences on purpose. Ask before flattening a whole piece.
 
 ### Listicle in a trench coat
 A list disguised as prose. Each point wrapped in a paragraph that opens "The first... The second... The third..." Often what a model does after being told to stop using bullet lists.
