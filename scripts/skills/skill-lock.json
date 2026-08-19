@@ -1177,9 +1177,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/upstash/context7.git",
       "skillPath": "skills/find-docs/SKILL.md",
-      "skillFolderHash": "ccd99a8580519fa9e65dcea938e92cb1c3a2f7a4",
+      "skillFolderHash": "b635cd66f1414befd36d18646561398de2ddab54",
       "installedAt": "2026-05-18T11:52:09.988Z",
-      "updatedAt": "2026-05-18T11:52:09.988Z"
+      "updatedAt": "2026-08-17T08:06:09.751Z"
     },
     "skill-creator": {
       "source": "anthropics/skills",
@@ -1343,10 +1343,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/mattpocock/skills.git",
       "skillPath": "skills/productivity/grilling/SKILL.md",
-      "skillFolderHash": "fd99bcbb818f7ef766b83656fb5fac0b58e223ad",
-      "pluginName": "mattpocock-skills",
+      "skillFolderHash": "0d40d978f1a588971a11ea7ae85b208e78102dc3",
       "installedAt": "2026-07-14T07:11:43.766Z",
-      "updatedAt": "2026-08-06T06:43:03.808Z"
+      "updatedAt": "2026-08-17T08:06:16.265Z"
     },
     "cmux-artifact": {
       "source": "manaflow-ai/cmux-skills",
