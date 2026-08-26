@@ -9,6 +9,7 @@
 @upstash/cli
 @williamzujkowski/strudel-mcp-server
 agent-browser
+beautify-screenshot
 ctx7
 eas-cli
 neonctl

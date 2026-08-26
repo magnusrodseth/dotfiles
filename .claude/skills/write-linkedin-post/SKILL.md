@@ -163,8 +163,8 @@ If the post needs a first comment (link, credits, påmelding), draft that too.
 ## Refreshing the corpus
 
 [references/linkedin-posts.md](references/linkedin-posts.md) is a snapshot taken
-28.07.2026 via the `linkedin-mcp` skill. Refresh it when his style moves or after
+28.07.2026 via the `linkedin-mcp` skill, extended 26.08.2026. Refresh it when his style moves or after
 a run of new posts, with `get_my_profile(sections="posts", max_scrolls=20)`.
-Known issue: that call rendered 12 of 27 activity items on both attempts and
-silently skipped a block in the middle, so treat any single fetch as partial and
-add to the corpus rather than replacing it.
+Known issue: that call renders a partial feed (12 of 27 items on 28.07.2026,
+items 1-5 and 13-29 on 26.08.2026) and silently skips a block in the middle, so
+treat any single fetch as partial and add to the corpus rather than replacing it.

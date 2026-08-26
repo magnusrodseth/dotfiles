@@ -45,6 +45,26 @@ day two, short version (94 reactions, 8.0k).
 to write a keyword in the comment field for a discount code. It works, it is his
 own move, but only use it when he actually has something to hand out.
 
+**Bullets.** The sb1 launch used emoji bullets (📊 🧾 💸 🤖); the two newest
+posts (second brain in the cloud, agent-readiness) use `→`. Both are his. Default
+to `→` for a list of capabilities, emoji when each item has an obvious icon.
+
+**Small tools get a short post** (learned on the beautify-screenshot post,
+26.08.2026, where he cut the build story himself):
+
+- Skip the "how the agent built it" paragraph when the tool is trivially small.
+  That story earns its place on sb1-sized builds and in Omtale posts, and it
+  reads as padding on a one-feature tool.
+- Do not name the competitor or the paid app being replaced. Describe it instead:
+  "en app som gjorde akkurat dette, men som krevde en betalt lisensnøkkel for å
+  fjerne vannmerket".
+- Widen the audience line with a playful aside in parentheses when the use is
+  broader than the obvious one: "i presentasjoner du holder (eller viber opp!)".
+- The free/open disclaimer for a hobby tool is one relaxed line: "Open source,
+  helt gratis såklart."
+- When the tool ships an agent skill, the CTA can address the agent, not only the
+  reader: "👉🏽 Pek agenten din hit, eller installer og se koden selv: <url>".
+
 ---
 
 ## 2. Arrangement

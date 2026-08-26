@@ -1629,6 +1629,15 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-08-06T06:43:03.812Z",
       "updatedAt": "2026-08-06T06:43:03.812Z"
+    },
+    "beautify-screenshot": {
+      "source": "magnusrodseth/beautify-screenshot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/magnusrodseth/beautify-screenshot.git",
+      "skillPath": "skills/beautify-screenshot/SKILL.md",
+      "skillFolderHash": "66e89a50694040cd7f119f125301b094879a48a9",
+      "installedAt": "2026-08-26T06:35:07.643Z",
+      "updatedAt": "2026-08-26T06:35:07.643Z"
     }
   },
   "dismissed": {

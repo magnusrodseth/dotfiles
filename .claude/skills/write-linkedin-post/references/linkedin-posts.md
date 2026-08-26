@@ -1,7 +1,8 @@
 # LinkedIn corpus (Magnus Rødseth)
 
-Verbatim posts pulled from his profile on 28.07.2026 via the `linkedin-mcp`
-skill, newest first. Every post here is first-party. Reposts of other people's
+Verbatim posts pulled from his profile via the `linkedin-mcp` skill, newest
+first. Snapshot 28.07.2026, extended 26.08.2026 with the two newest posts and
+refreshed engagement numbers on the ones that had moved. Every post here is first-party. Reposts of other people's
 content are excluded because they carry no voice signal.
 
 > **The samples are real, the rules still win.** A couple of the older posts
@@ -54,7 +55,65 @@ international market (Eden Stack launch and Product Hunt).
 
 ---
 
-## 1. EU AI Act breakdown (1 day, 17 reactions, 2 120 impressions)
+## 1. Second brain moved to the cloud (1 day, 40 reactions, 12 comments, 4 396 impressions)
+
+Archetype: **Bygg / ship**, infrastructure variant. `→` bullets, a closing
+question to the reader, and the link on a `👉🏽` line.
+
+> Jeg har flyttet Claude Code-oppsettet for min second brain fra Mac-en til skyen, så jeg kan jobbe med vaultet mitt fra telefonen!
+>
+> Second brainen min er nemlig et Obsidian-vault jeg nesten aldri åpner i Obsidian. Alt går gjennom Claude Code.
+>
+> Vaultet er hundrevis av notater om folk, møter, prosjekter, trening og økonomi i et privat GitHub-repo. Rundt notatene ligger over 40 skills, en håndfull verktøy og noen agent hooks. Et utvalg av hva agenten faktisk kan gjøre der:
+>
+> → Morgendigest som henter mail, kalender og tasks på todo-lista, gjør lavthengende frukt for meg, og ender i det bare jeg kan gjøre selv
+>
+> → Lese kontoer og transaksjoner fra banken min, og kjøre månedlig budsjettgjennomgang
+>
+> → Innsikt og anbefalinger om treningen min
+>
+> → Lese ukas mat-tilbud og fylle handlelista for ukeshandelen
+>
+> → Transkribere møteopptak og YouTube-videoer rett inn som notater, så jeg lett kan hente opp viktig lærdom ved en senere anledning
+>
+> Limet mellom desktop og mobil er agent hooks. Hver notatskriving valideres mot regler for dokumentformat. Hver sesjon henter ned det nyeste fra GitHub, og starter derfor med ferske notater og en forståelse av hva som er gjort nylig. Hvert agent-svar committer og pusher automatisk, så Obsidian og GitHub aldri glir fra hverandre. Og fordi alt dette bor i repoet, følger det med inn i en cloud-sesjon fra mobilappen.
+>
+> Det fine er at porteringen fungerer som en tvungen opprydding av kodebasen. Et repo en fersk virtuell maskin kan bruke, er et repo en ny kollega eller CI kan ta i bruk med lite eller ingen ekstra jobb.
+>
+> Har du også stått på farta med en tanke du ikke vil glemme, men som bare gir mening sammen med kontekst du har i hodet? Det er det gapet dette løser for meg. Jeg skribler ned tanken fra telefonen, og agenten kobler den på alt vaultet allerede vet.
+>
+> 👉🏽 Hele porteringen, fortalt i rekkefølgen den faktisk skjedde: https://lnkd.in/ewKvmNj9
+
+---
+
+## 2. Agent-readiness for a client site (2 weeks, 43 reactions, 4 comments, 5 546 impressions)
+
+Archetype: **Forklaring / nyhet** with a client result as the hook. `→` bullets,
+exact percentages, a tool link on `🔗` and the article on `👉🏽`.
+
+> En kunde sin nettside scoret 0 av 100 på Cloudflares agent-readiness-skanner. Én arbeidsdag senere sto det «Agent-Native», øverste nivå på skalaen, og agentene gjorde hele jobben.
+>
+> I 2026 passerte bot-trafikken menneskene, med 57,5 prosent av HTML-trafikken ifølge Cloudflare. Samtidig faller klikkene fra Google, fordi AI Overviews svarer før brukeren rekker å klikke. Noen spør ChatGPT eller Claude om et problem produktet ditt løser. Dersom assistenten bare får et tomt HTML-skall i retur, er du ute av samtalen uten å merke det.
+>
+> Alt vi bygde er velkjent webteknologi:
+>
+> → robots.txt med regler for AI-crawlere, så treningsbotene holdes ute og søkebotene slipper inn
+> → Content Signals, en maskinlesbar linje som erklærer hva innholdet kan brukes til
+> → sitemap.xml, generert fra den samme innholdslisten som resten av appen bruker
+> → markdown content negotiation (superviktig ⭐), altså ren markdown til den som ber om det i Accept-headeren. Cloudflare målte at en typisk bloggpost bruker rundt en femtedel så mange tokens i markdown som i HTML
+> → Link headers, som peker agenter rett til sitemap-en uten at de må tolke HTML først
+>
+> Og det skal lite til for å ligge foran. Blant de 200 000 største domenene har 4 prosent Content Signals og 3,9 prosent markdown-støtte, og selv nrk.no lander på 43 av 100. Det er ingen pekefinger mot NRK. De er bare et velkjent eksempel på en side som ville hatt mye igjen for å være agent-klar.
+>
+> Har du sjekket hvordan din egen side scorer? Skanneren er gratis og tar sekunder.
+>
+> 🔗 Skann siden din her: https://lnkd.in/dzj2zYji
+>
+> 👉🏽 Les hele gjennomgangen her: https://lnkd.in/dUiybKZJ
+
+---
+
+## 3. EU AI Act breakdown (4 weeks, 35 reactions, 1 comment, 4 402 impressions)
 
 Archetype: **Forklaring / nyhet**
 
@@ -80,7 +139,7 @@ Archetype: **Forklaring / nyhet**
 
 ---
 
-## 2. Claude Fable game with Lars Tønder (2 weeks, 47 reactions, 6 768 impressions)
+## 4. Claude Fable game with Lars Tønder (1 month, 50 reactions, 5 comments, 7 087 impressions)
 
 Archetype: **Bygg / ship**, playful variant. Note the curiosity-question hook and
 the "Side note:" tangent.
@@ -101,7 +160,7 @@ the "Side note:" tangent.
 
 ---
 
-## 3. kode24 story about sb1 (1 month, 128 reactions, 15 799 impressions)
+## 5. kode24 story about sb1 (2 months, 128 reactions, 6 comments, 15 840 impressions)
 
 Archetype: **Omtale**, story path. His best reach.
 
@@ -117,7 +176,7 @@ Archetype: **Omtale**, story path. His best reach.
 
 ---
 
-## 4. sb1 launch (1 month, 119 reactions, 13 comments, 13 532 impressions)
+## 6. sb1 launch (1 month, 119 reactions, 13 comments, 13 532 impressions)
 
 Archetype: **Bygg / ship**. The reference implementation for this archetype.
 
@@ -148,7 +207,7 @@ Archetype: **Bygg / ship**. The reference implementation for this archetype.
 
 ---
 
-## 5. Velo Labs housewarming (1 month, 103 reactions, 8 424 impressions)
+## 7. Velo Labs housewarming (1 month, 103 reactions, 8 424 impressions)
 
 Archetype: **Arrangement**, recap. The credit block is the model.
 
@@ -170,7 +229,7 @@ Archetype: **Arrangement**, recap. The credit block is the model.
 
 ---
 
-## 6. Hackathon win (featured, 180 reactions, 7 comments)
+## 8. Hackathon win (featured, 180 reactions, 7 comments)
 
 Archetype: **Arrangement**, win. His highest reaction count.
 
@@ -190,7 +249,7 @@ Archetype: **Arrangement**, win. His highest reaction count.
 
 ---
 
-## 7. CapraCon talk recap (featured, 103 reactions, 8 comments)
+## 9. CapraCon talk recap (featured, 103 reactions, 8 comments)
 
 Archetype: **Arrangement**, recap with a DM close.
 
@@ -206,7 +265,7 @@ Archetype: **Arrangement**, recap with a DM close.
 
 ---
 
-## 8. Ukas koder i Kode24 (featured, 102 reactions, 8 comments)
+## 10. Ukas koder i Kode24 (featured, 102 reactions, 8 comments)
 
 Archetype: **Omtale**, teaser path. The shortest post in the corpus and the model
 for the teaser length.
@@ -219,7 +278,7 @@ for the teaser length.
 
 ---
 
-## 9. AI-demoer / Capra AI-fagsamling (5 months, 46 reactions, 9 325 impressions)
+## 11. AI-demoer / Capra AI-fagsamling (5 months, 46 reactions, 9 325 impressions)
 
 Archetype: **Mening** running into an **Arrangement** promo.
 
@@ -258,7 +317,7 @@ now discourage. Do not reproduce it.
 
 ---
 
-## 10. Eden Stack launch (5 months, 157 reactions, 62 comments, 15 782 impressions)
+## 12. Eden Stack launch (5 months, 157 reactions, 62 comments, 15 782 impressions)
 
 Archetype: **Bygg / ship**, product launch. Highest comment count in the corpus,
 driven by the keyword-in-comments mechanic.
@@ -285,7 +344,7 @@ Contains two em dashes. Older style, superseded by the hard bans.
 
 ---
 
-## 11. Eden Stack on Product Hunt (5 months, 94 reactions, 7 951 impressions)
+## 13. Eden Stack on Product Hunt (5 months, 94 reactions, 7 951 impressions)
 
 Archetype: **Bygg / ship**, follow-up day. Shows how he does a second post on the
 same thing without repeating himself.
@@ -302,7 +361,7 @@ same thing without repeating himself.
 
 ---
 
-## 12. Agentic Stack blog series launch (6 months, 47 reactions, 5 436 impressions)
+## 14. Agentic Stack blog series launch (6 months, 47 reactions, 5 436 impressions)
 
 Archetype: **Forklaring / nyhet** promoting long-form. Shows the "ask the audience
 what to write next" close.
