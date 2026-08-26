@@ -65,7 +65,7 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 - Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
 - **Humanizing is not casualizing.** A condolence note, a board memo, a legal letter and a group chat are all human, and none of them sound alike. Strip the AI accent from whatever register the text is already in; do not drag formal writing toward breezy startup voice, and do not add contractions or fragments to a register that was formal on purpose. If the register itself seems wrong for the audience, say so instead of silently changing it.
 - **Don't overcorrect.** Every rule here describes taste, not a checklist to satisfy. The failure mode on the other side is real: every sentence punchy, every paragraph one line, forced fragments, inserted slang, a useful word avoided because it appears on a list. Do not swing so far that the output reads as an AI performing humanness. The test is whether a person would plausibly have written this, not whether it avoids the most tells. If a rewrite feels forced, keep the plainer original.
-- Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate).
+- Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate). On Norwegian text, always run the Norwegian negative-parallelism grep from the ad-hoc list in the same pass as the English one — "ikke bare X, men Y" is the same setup-payoff move and hides from the English pattern.
 - When in doubt about whether a rewrite changes meaning, tone, or voice: ask. The cost of one extra question is low; the cost of paving over the user's actual voice is high.
 
 ## Ad-hoc greps for specific tells
@@ -89,6 +89,9 @@ grep -niE '\b(quietly|deeply|fundamentally|remarkably|arguably|profoundly)\b' <f
 
 # Negative parallelisms (incl. causal variant)
 grep -niE "not (just|only|merely|because) .{1,60}\b(but|it'?s|because)\b" <file>
+
+# Negative parallelisms, Norwegian calques ("ikke bare X, men Y" and kin; judge each — a contrast doing real work stays, the setup-payoff reflex goes)
+grep -niE 'ikke (bare|kun|utelukkende|nødvendigvis) .{1,60}\b(men|samt)\b|er ikke (bare )?et spørsmål om|handler ikke (bare )?om|ikke fordi .{1,60}\bmen fordi\b' <file>
 
 # Softened reframes (same setup-payoff move with the "not" dissolved; low precision, judge each)
 grep -niE "(while|although|sure,|at first glance|on the surface|most people (think|assume)|conventional wisdom|everyone talks about).{0,80}\b(but|yet|actually|really|instead|rather|ultimately|in reality|the truth is|what matters is)\b" <file>

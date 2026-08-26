@@ -52,6 +52,25 @@ and confirmed it reads as him. When in doubt, match its rhythm and restraint.
   "inferens (det å la en modell kjøre og produsere et svar)"), before/after, and
   realistic code blocks with English comments. Mask real data in shared output.
 
+## Sentence mechanics
+
+Three mechanisms measured from Klar Tale's lettlest newsroom style (analyzed
+22.08.2026). They fit this voice, and an AI draft gets all three wrong by default:
+
+- **Split, then connect.** When a sentence grows a subordinate clause, split it
+  and move the clause's logic into a sentence-initial connective: Derfor, Da,
+  Men, Så. Two plain sentences with an explicit connective beat one long
+  sentence with an innskutt ledd. This is the *how* behind "short paragraphs,
+  2-4 sentences".
+- **Keep the precise term, define it right after.** Never dumb away the real
+  word (inferens, idempotent, tvungen lønnsnemnd). Use it, then explain it in
+  the following sentence ("X betyr at ...", "det vil si ...") or with the
+  parenthetical gloss from Teaching moves above.
+- **Repeat the noun.** Call the same thing by the same word through a section.
+  No synonym rotation ("agenten ... assistenten ... modellen" for one actor):
+  models rotate by default, and every new synonym makes the reader re-resolve
+  the referent.
+
 ## Punctuation & surface
 
 - **No em dashes, and no colons doing their job.** Plain sentences do the work
