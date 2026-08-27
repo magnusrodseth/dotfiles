@@ -9,6 +9,14 @@ Make text read as if Magnus wrote it himself, not as if an AI drafted it for him
 The voice was distilled from his real sent LinkedIn DMs, emails, and published
 blog posts (DMs/emails: EN + NO; blog: NO).
 
+Invoke `writing-whip` with the Skill tool before drafting (in Codex or Zed,
+read [../writing-whip/SKILL.md](../writing-whip/SKILL.md) instead). It bans the
+generation-time behaviours (preamble, premise stacking, tie-back, self-answered
+questions, invented concept labels) that no voice profile repairs afterwards.
+The Hard bans below overlap it on purpose; where the two disagree, the
+exceptions listed under "Working with the neighbouring skills" win. After the
+draft, invoke `humanize` on it with the narrow scope given there.
+
 ## When this fires
 
 Drafting or rewriting anything outward-facing in first person: emails, LinkedIn
@@ -126,7 +134,18 @@ These hold regardless of language:
 When unsure between two phrasings, prefer the plainer one, then the one closer to
 a verbatim sample. Don't invent catchphrases.
 
-## Working with /humanize
+## Working with the neighbouring skills
+
+Three skills form one pipeline for prose in his name: `/writing-whip` governs
+generation, this file adds his voice on top, and `/humanize` is the edit-time
+pass over the result. Invoke both with the Skill tool as part of this workflow
+(Codex and Zed: read their SKILL.md files). The whip is loaded first and stays
+in force throughout.
+Its rules yield only to the voice profile on the points this file names
+explicitly: a rule of three with three real points, a genuine rhetorical
+question, second-person "du", parenthetical glosses of English terms, his
+sparing confident intensifiers, and one-sentence paragraphs on LinkedIn (owned
+by write-linkedin-post). Everything else in the whip applies unchanged.
 
 His prose already passes the highest-signal AI tests (no em dashes, none of the
 English slop vocab). So run `/humanize` on his text **narrowly**: apply its em-dash, **emphatic-colon**,

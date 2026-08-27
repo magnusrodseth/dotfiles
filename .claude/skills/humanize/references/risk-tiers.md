@@ -38,6 +38,9 @@ Changes that almost never alter meaning. Apply them, but tell the user what you 
 - **Section summaries** ("In conclusion", "In summary", "Overall") in documents under ~5 paragraphs
 - **Inline-header bullet lists** (`- **Foo**: bar`) when 3-4 lines of prose would read better
 - **Emphatic / appositive colons** used mid-prose for a punchy restatement (`This is about one thing: X`) → recast as a full sentence or bridge with a connective (", namely", ", nemlig", ", for"). Leave list-introduction, figure/attribution ("Kilde:"), and fixed-opener ("For ordens skyld:") colons untouched
+- **Reply-shaped scaffolding** where the point survives its removal: reasoning leaks ("I want to be exact about my role here"), preamble announcers ("Two constraints shape the design"), compulsive counts ("for two reasons"), tie-backs ("So, to answer your question"), comma-clipped tails ("asked forty times, mentoring."). Delete the scaffolding, keep the point. A count stays when the number is the information
+- **Appeal to familiarity** ("a classic", "famously", "as we all know") → drop the consensus claim or name the source
+- **Wh-word headings** ("What we do differently") and **"where it actually lives"** framings → name the content
 
 ## Tier 3: ask before changing
 
@@ -67,6 +70,9 @@ Some AI-vocab words have legitimate technical meanings. Ask when context is ambi
 - **Magic adverbs** ("quietly", "deeply") when the sentence genuinely means the subtlety, not just borrowing significance
 - **False vulnerability** ("since we're being honest...") that may be the author's real, earned aside
 - **Invented concept labels** ("the supervision paradox") that might be the author's own established term, not filler
+- **Quotable one-liners** the author may have written on purpose (one per piece can be voice)
+- **Collaborative "we"** that may be the organisation's real voice rather than a switch away from the author's
+- **Self-echo** that may be a deliberate callback rather than vocabulary resurfacing
 
 ### Wholesale deletion candidates
 
@@ -79,6 +85,7 @@ Don't delete a whole section without asking, even if it reeks of AI.
 - **One-point dilution** restatements and **fractal summaries** (cutting them can drop content the user meant to keep; confirm which paragraphs are pure repetition)
 - **Historical analogy stacking** (the user may want one example kept, not the whole roll call removed)
 - **Dead metaphor** collapse (reworking a load-bearing metaphor across a whole piece is a structural rewrite, not a swap)
+- **Premise stacking**, **belaboring the unnecessary** and **never-ending conclusions** (the evidence paragraph, the pre-empted objection, or the stacked closing clauses may carry content the author needs somewhere else)
 
 ### Positive-direction content moves (never fabricate)
 

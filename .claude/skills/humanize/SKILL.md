@@ -26,6 +26,13 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
    ```bash
    grep -nE 'utm_source=(chatgpt|openai|copilot)|referrer=grok\.com|:contentReference|oai_citation|turn0(search|image|news|file)|grok_render_citation|grok-card|attached_file:[0-9]|attributableIndex|【[0-9]+†|20[0-9]{2}-XX-XX' <file>
    ```
+   Also in every pass, EN and NO, the two reply-shaped greps that hit nearly every
+   model-drafted text and whose fix is deletion (see Reply-shaped tells in
+   [references/tells.md](references/tells.md)):
+   ```bash
+   # Tie-back (closing by looping to the question) and compulsive counting
+   grep -niE "to (answer|come back to|bring it back to) (your|the) question|in short, this gives|for å (svare|komme tilbake) (på|til) spørsmålet|kort (sagt|oppsummert)|\b(for|there are|here are) (two|three|four|five) (reasons|things|ways|points|parts)\b|\bav (to|tre|fire) grunner\b" <file>
+   ```
    In the same pass, run the emphatic/appositive-colon grep from the ad-hoc list
    below. It is mandatory on every invocation, including narrow or scoped passes:
    a scope like "em-dash and vocabulary only" limits which rewrites you apply, not
@@ -36,7 +43,7 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
    ..." again and again) is template scaffolding and gets varied or dropped. Report
    the colon findings even when the requested scope did not name them.
 
-2. **Triage.** Read against [references/tells.md](references/tells.md) and classify each candidate change by risk tier (see [references/risk-tiers.md](references/risk-tiers.md)):
+2. **Triage.** Read against [references/tells.md](references/tells.md), including its Reply-shaped tells section and its Currency table (weight `new` and `rising` hits above `fading` ones; a text that trips only fading tells is not evidence of a current model), and classify each candidate change by risk tier (see [references/risk-tiers.md](references/risk-tiers.md)):
    - **Tier 1** (mechanical, can't change meaning): apply silently. Em dashes, curly quotes, hard-tell markers, placeholder text.
    - **Tier 2** (low-risk swaps): apply, then mention in the closing summary. AI vocab swaps, didactic disclaimers, superficial tails, weasel attributions, copulative restoration.
    - **Tier 3** (could change tone, meaning, voice, or structure): pause and ask.
@@ -58,6 +65,7 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 ## Rules
 
 - Preserve meaning, facts, structure, and the author's argument. Only change voice.
+- Every sentence you write new during a rewrite is generated under [writing-whip](../writing-whip/SKILL.md). A rewrite that trades an em dash for a tie-back or a self-answered question has moved the tell, not removed it.
 - Default to stripping, not embellishing. You may restructure for human rhythm (vary sentence length, restore active voice, cut filler transitions, land on the strong word): that changes cadence, not content. But never invent facts, numbers, sources, quotes, anecdotes, or opinions the author didn't supply. If human-sounding prose needs a concrete specific the text lacks, flag the gap or ask. A fabricated detail is worse than a bland one.
 - **Rewrite at the register, not the phrase.** The greps are a detector; they are not the rewrite instruction. Em dashes, emphatic colons, punchy fragments and the Claude-era phrase list are four surfaces of one behaviour: sentences built to land rather than to state (see Turn-of-phrase optimization in [references/tells.md](references/tells.md)). Fix each hit individually and the behaviour moves into unlisted synonyms. State what the prose should do instead ("claim first, qualification after"), then use the greps to catch residue. This applies to instructions you write for a model as much as to prose you edit: enumerating banned tokens is measurably weaker than naming the register, and a long ban list degrades compliance rather than improving it.
 - Replace em dashes with two sentences, a comma, or parentheses. Do not swap them for colons by default: the colon-instead-of-em-dash habit produces the emphatic-colon tell, and the author's standing preference is full sentences. A colon earns its place only before a genuine list or a quotation. Never preserve the em dash itself.
@@ -65,8 +73,15 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 - Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
 - **Humanizing is not casualizing.** A condolence note, a board memo, a legal letter and a group chat are all human, and none of them sound alike. Strip the AI accent from whatever register the text is already in; do not drag formal writing toward breezy startup voice, and do not add contractions or fragments to a register that was formal on purpose. If the register itself seems wrong for the audience, say so instead of silently changing it.
 - **Don't overcorrect.** Every rule here describes taste, not a checklist to satisfy. The failure mode on the other side is real: every sentence punchy, every paragraph one line, forced fragments, inserted slang, a useful word avoided because it appears on a list. Do not swing so far that the output reads as an AI performing humanness. The test is whether a person would plausibly have written this, not whether it avoids the most tells. If a rewrite feels forced, keep the plainer original.
-- Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate). On Norwegian text, always run the Norwegian negative-parallelism grep from the ad-hoc list in the same pass as the English one — "ikke bare X, men Y" is the same setup-payoff move and hides from the English pattern.
+- Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate). On Norwegian text, always run the Norwegian negative-parallelism grep from the ad-hoc list in the same pass as the English one, since "ikke bare X, men Y" is the same setup-payoff move and hides from the English pattern.
 - When in doubt about whether a rewrite changes meaning, tone, or voice: ask. The cost of one extra question is low; the cost of paving over the user's actual voice is high.
+
+## Related skills
+
+Invoke these with the Skill tool where it exists. Where it does not (Codex, Zed), read the linked SKILL.md before continuing. Loading them is part of this skill's workflow, not optional context.
+
+- [writing-whip](../writing-whip/SKILL.md): invoke it before writing any replacement sentence. This file catches what was written; the whip stops the same behaviours at generation, so a rewrite done under it cannot put a tie-back or a self-answered question where the em dash used to be. Its Behaviours list and the Reply-shaped tells section here describe the same moves from the two sides.
+- [write-in-my-voice](../write-in-my-voice/SKILL.md): invoke it first whenever the text is Magnus's own (he says so, or the register and the æ/ø/å make it plain). It names the voice markers this skill must leave alone: a real rule of three, rhetorical questions, second-person "du", parenthetical glosses of English terms, sparing intensifiers. Without it loaded those get flattened as tells. It calls this skill narrowly in return: em dashes, the emphatic colon, slop vocabulary, didactic disclaimers, clustered negative parallelism.
 
 ## Ad-hoc greps for specific tells
 
@@ -78,7 +93,22 @@ grep -niE '\b(delve|underscore|tapestry|vibrant|pivotal|robust|meticulous|crucia
 
 # Claude-era phrases (2026+). Opus 5 and Fable 5 lineages; see tells.md for which is which.
 # These are surface residue of the turn-of-phrase register - fix the register first, then re-run this.
-grep -niE '\b(carry the argument|worth stating plainly|stated fairly|load-bearing|key insight|full stop\.|the [a-z]+ matters more)\b|, and the trap' <file>
+grep -niE '\b(carry the argument|worth stating plainly|stated fairly|load-bearing|gated|key insight|full stop\.|the [a-z]+ matters more)\b|, and the trap' <file>
+
+# Reply-shaped tells (tropes.fyi 2026: reasoning leak, preamble announcers, counting, tie-back). Fix is deletion.
+grep -niE "\bI (want|should|need) to be (clear|exact|precise|honest|careful) (about|here|that)|^(Two|Three|Four|Several) [a-z]+ (shape|drive|matter|are worth|follow)\b|the more important point is|\b(for|there are|here are) (two|three|four|five) (reasons|things|ways|points|parts)\b|to (answer|come back to|bring it back to) (your|the) question|in short, this gives" <file>
+
+# Comma-clipped trailing phrase (low precision: a one-word tail after a comma at sentence end)
+grep -nE ', [a-z]+\.$' <file>
+
+# Appeal to familiarity
+grep -niE '\b(a classic|famously|notoriously|as we all know|as everyone knows|it is well known that|needless to say)\b' <file>
+
+# Wh-word headings
+grep -nE '^#+ (What|Where|Why|How|When)\b' <file>
+
+# "Where it actually lives"
+grep -niE 'where ([a-z]+ ){0,3}(actually|really) (lives|sits|happens)|where the real (work|value) (happens|sits|is)' <file>
 
 # Hyphen-stacked compounds and arrow chains (Fable 5; also generic agent shorthand leaking into prose).
 # Low precision: legitimate triples exist (state-of-the-art, out-of-the-box). Judge each; weigh by density.
@@ -90,7 +120,7 @@ grep -niE '\b(quietly|deeply|fundamentally|remarkably|arguably|profoundly)\b' <f
 # Negative parallelisms (incl. causal variant)
 grep -niE "not (just|only|merely|because) .{1,60}\b(but|it'?s|because)\b" <file>
 
-# Negative parallelisms, Norwegian calques ("ikke bare X, men Y" and kin; judge each — a contrast doing real work stays, the setup-payoff reflex goes)
+# Negative parallelisms, Norwegian calques ("ikke bare X, men Y" and kin; judge each; a contrast doing real work stays, the setup-payoff reflex goes)
 grep -niE 'ikke (bare|kun|utelukkende|nødvendigvis) .{1,60}\b(men|samt)\b|er ikke (bare )?et spørsmål om|handler ikke (bare )?om|ikke fordi .{1,60}\bmen fordi\b' <file>
 
 # Softened reframes (same setup-payoff move with the "not" dissolved; low precision, judge each)

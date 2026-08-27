@@ -2,9 +2,20 @@
 
 Concrete before/after for each category in [tells.md](tells.md). When humanizing, work category by category. Don't try to fix everything in one pass.
 
+## What the editing research says
+
+The patterns below are not taste alone. Several studies put professional editors or expert readers in front of machine text and measured what they did; the fixes here follow what worked. Citations and caveats in [sources.md](sources.md).
+
+- **Deletion and replacement, not addition.** When 18 professional writers edited 1,057 LLM paragraphs (LAMP corpus, Chakrabarty et al. 2025), 74% of their 8,035 edits were replacements, 18% deletions and 8% insertions, and 70% of the non-deletion edits preserved meaning. Their top categories were awkward word choice and phrasing (28%), poor sentence structure (20%), unnecessary or redundant exposition (18%) and clichés (17%). That is the whole strategy of this file: cut, swap, keep the meaning, add nothing.
+- **Moderate human edits are enough; machine "humanizing" is not.** Expert editors changing 20 to 40% of a machine text pushed detector AUROC down by up to 22 points, editing more did not help further, and text "humanized" by GPT-4o or Llama stayed detectable (Beemo, Artemova et al. 2025). Over-rewriting buys nothing, and a paraphrase pass by another model is not an edit.
+- **Vocabulary scrubbing leaves the structure.** Expert human detectors given text prompted to avoid "AI vocab" still caught it, by formulaic introductions and conclusions, by grouping in threes, by quotations always in the same slot, and by a lack of specifics (Russell, Karpinska and Iyyer 2025). Their clue categories, in order: vocabulary 53%, sentence structure 36%, grammar 25%, originality 24%. Fixing the vocabulary fixes the first line of that list only.
+- **The grammatical fingerprint is participles and nominalizations.** Instruction-tuned models use present participial clauses at 2 to 5 times the human rate (GPT-4o at 5.3x, Cohen's d 1.38) and nominalizations at about twice it (Reinhart et al. 2025). Cutting the -ing tail and turning the noun-action back into a verb are the two highest-yield grammatical moves. Agentless passive is not on that list; GPT-4o uses it at half the human rate.
+- **Naming a word retires it.** "delve", "intricate" and "showcasing" fell in arXiv abstracts within weeks of being named as ChatGPT words in April 2024, while "significant" and "additionally" kept climbing (Geng & Trotta 2025). Word lists age fast; the Currency table in [tells.md](tells.md) is the correction for that.
+- **A taxonomy with examples trains the editor.** In the RoFT study, having read the help guide (an error taxonomy with annotated examples) was the single strongest predictor of an annotator's detection score, and annotators improved over rounds when given feedback and an incentive (Dugan et al. 2023). That is why this file is before/after tables and not a rule list.
+
 ## Em dashes
 
-Replace with comma, parentheses, colon, semicolon, or split into two sentences. Pick whichever fits the rhythm.
+Replace with a comma, parentheses, a semicolon, or two sentences. Pick whichever fits the rhythm. Not a colon by default, since that produces the emphatic-colon tell in the next section.
 
 | Before | After |
 |---|---|
@@ -349,6 +360,86 @@ Before:
 
 After:
 > Platform owners rarely build the apps on top of them (AWS didn't build Airbnb).
+
+## Reply-shaped tells
+
+Deletion in every case. The point survives; the scaffolding around it is the tell.
+
+| Before | After |
+|---|---|
+| `I want to be exact about my own role here. I reviewed the diff but did not run it.` | `I reviewed the diff but did not run it.` |
+| `Two constraints shape the design. The first is latency; the second is cost.` | `Latency and cost shape the design.` |
+| `There are three reasons this fails. First, ...` | `This fails because ...` (then the reasons, unnumbered unless the order matters) |
+| `One endpoint, rather than four, for two reasons.` | `One endpoint, because the four shared a schema and a rate limit.` |
+| `So, to answer your question: yes, the employee can be added to the app.` | Delete. The body already said yes. |
+| `In short, this gives you everything you need to ship.` | Delete. |
+| `I don't mean any of that as cynicism about players.` | Delete, unless someone actually read it as cynicism. |
+
+Keep a count when the number itself is the information ("all four endpoints share the bug").
+
+Premise stacking (a paragraph of evidence before the question it supports): move the question to the top, keep the single strongest piece of evidence after it, cut the rest. Ask first if the evidence has to stay for the reader (Tier 3).
+
+Never-ending conclusion: find the first sentence of the ending that says something the body did not, keep it, delete what follows. If every clause is new content, the piece needed one more body paragraph rather than a longer ending.
+
+## Comma-clipped trailing phrase
+
+Land the sentence on the point, or give the tail its own sentence.
+
+| Before | After |
+|---|---|
+| `She was asked forty times, mentoring.` | `She was asked forty times. All of it was mentoring.` |
+| `Put the note above the content, and save.` | `Put the note above the content and save.` |
+
+## Self-echo
+
+Delete the second occurrence, or say the second thing in its own words.
+
+Before:
+> The dashboard quietly became the source of truth. [...] Nothing you have ever believed can quietly disappear.
+
+After:
+> The dashboard became the source of truth. [...] Nothing you have believed is deleted.
+
+## Appeal to familiarity
+
+Same rule as weasel attributions: name the source, or drop the claim of consensus.
+
+| Before | After |
+|---|---|
+| `A classic case of premature optimization.` | `Premature optimization.` |
+| `As we all know, tests catch regressions.` | `Tests catch regressions.` |
+| `The notoriously slow build...` | `The build takes twenty minutes...` |
+
+## Wh-word headings
+
+Name the content the section holds.
+
+| Before | After |
+|---|---|
+| `## What we do differently` | `## Pricing per seat, not per query` |
+| `## Where the market is stuck today` | `## Three blocked regions` |
+| `## Why this matters` | Usually delete the section, or fold its one real point into the previous one. |
+
+## "Where it actually lives"
+
+Name the thing.
+
+| Before | After |
+|---|---|
+| `That is where the complexity actually lives.` | `The retry logic is the complex part.` |
+| `Where the real work happens is the review loop.` | `The review loop does the real work.` |
+
+## Quotable one-liners
+
+Tier 3. If the line says nothing the paragraph did not, cut it. If the author wants one, one per piece.
+
+| Before | After |
+|---|---|
+| `Every metric that rewards volume punishes leverage.` | Delete, or replace with the specific: `Counting tickets rewards splitting tickets.` |
+
+## Collaborative "we"
+
+Tier 3. Restore the author's pronoun where the source was first person or the material is personal. Leave a "we" the organisation actually uses.
 
 ## When to leave it alone
 
