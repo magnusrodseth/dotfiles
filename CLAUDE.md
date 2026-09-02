@@ -212,12 +212,16 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   dev-server.md                   x         x
   task-completion.md              x         x
   writing-style.md                x         x         x
+  no-slop.md                      x         x         x
   norwegian.md                    x         x
+  github-refs.md                  x         x         x
   context7.md                     x         x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
-carries only the two rules that change what it does on every task. Widen its
+carries only the rules that change what it does on every task, which is the
+output-shaping ones plus `context7`. `no-slop.md` and `github-refs.md` are there
+because they govern every sentence it writes, not for symmetry. Widen its
 list on purpose, not for symmetry.
 
 The target file owns the `##` heading and the position. The script owns only the
