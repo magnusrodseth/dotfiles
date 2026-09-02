@@ -54,11 +54,28 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
 
 5. **Positive-direction pass (the load-bearing layer; for prose, not short messages).** Stripping tells only removes the transient surface signal (see The two layers above); this pass addresses the durable one, and for anything longer than a short message it is where the real work happens. Clean text can still be inert. Use [references/rewrite-toward-human.md](references/rewrite-toward-human.md) to restore human rhythm. Apply the Group A structural moves freely (vary sentence length, cut filler transitions, restore active voice, land on the strong word): they change cadence, not content. For the Group B content-and-voice moves (add a concrete number, a first-person note, an emotional edge), **never fabricate**: reshape specifics the author already gave, or flag the gap and ask. Skip this pass for terse factual text or short messages where the machine rhythm isn't the problem.
 
-6. **Re-scan.** Re-run the grep on the rewritten text. Should come back empty.
+6. **Score before returning (prose only; skip short messages and terse factual text).** The grep in step 7 checks the surface layer. Nothing checks the layer this skill calls load-bearing, so score the rewritten text 1 to 5 on four axes. Any axis below 3 gets one revision pass before you return the text.
+
+   | Axis | What you are scoring | 1 | 5 |
+   |---|---|---|---|
+   | **Position** | Does the piece assert something a reasonable reader could disagree with? | A survey of considerations with no claim in it | A contestable claim, stated and backed |
+   | **Specificity** | Are the nouns named, or is the piece about categories? | "teams", "organisations", "studies show" | The actual company, number, date, person |
+   | **Restraint** | Did the rewrite add? | Longer than the original, new hedges and scaffolding | Shorter; replacements and deletions only |
+   | **Register** | Does it still sound like the register it arrived in? | A formal memo now reads breezy, or voice markers got flattened as tells | Same register, AI accent gone |
+
+   **Position and Specificity are scored, never fixed by invention.** If either is low because the author gave you nothing to work with, that is something to report. Name the paragraph that makes no claim, or the noun that needs a real number, and hand it back. A fabricated position is worse than an inert one, and this axis is the most tempting place in the whole skill to break the never-fabricate rule.
+
+   Restraint has a cheap proxy: the rewrite should land at or below the original word count. When 18 professional editors worked over 1,057 machine paragraphs, 74% of their edits were replacements and 18% deletions, against 8% insertions (Chakrabarty et al. 2025, see [references/sources.md](references/sources.md)). A humanizing pass that grew the text did something other than humanize it.
+
+   **Stopping rule: two passes is normal, three means the text is the problem.** If the revision pass still scores Position or Specificity below 3, stop rewriting. The text has no argument or no facts, and a rewrite cannot supply either. Return what you have, name the gap, and say plainly that it needs the author.
+
+7. **Re-scan.** Re-run the grep on the rewritten text. Should come back empty.
 
 ## Output
 
 Return the rewritten text. End with a brief summary: counts of Tier 1 fixes (e.g. "4 em dashes, 2 curly quotes"), Tier 2 fixes (e.g. "swapped 3 instances of 'underscore', dropped 2 didactic disclaimers"), and any Tier 3 passages left alone with the reason ("kept the closing paragraph; you confirmed it's the brand voice"). If you ran a positive-direction pass, note the structural moves ("varied sentence length in the second paragraph, restored active voice twice") and flag any gap you left for the author ("the '40% faster' claim needs a real number, left a marker").
+
+Where you scored (step 6), stamp the four axes on one line so a later pass can see where the weakness was: `Score: Position 4 · Specificity 3 · Restraint 5 · Register 5`. If the stopping rule fired, say so instead of returning a third rewrite.
 
 If the text was already clean, say so and return it unchanged. Do not invent tells to justify edits.
 
@@ -73,6 +90,7 @@ If the text was already clean, say so and return it unchanged. Do not invent tel
 - Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
 - **Humanizing is not casualizing.** A condolence note, a board memo, a legal letter and a group chat are all human, and none of them sound alike. Strip the AI accent from whatever register the text is already in; do not drag formal writing toward breezy startup voice, and do not add contractions or fragments to a register that was formal on purpose. If the register itself seems wrong for the audience, say so instead of silently changing it.
 - **Don't overcorrect.** Every rule here describes taste, not a checklist to satisfy. The failure mode on the other side is real: every sentence punchy, every paragraph one line, forced fragments, inserted slang, a useful word avoided because it appears on a list. Do not swing so far that the output reads as an AI performing humanness. The test is whether a person would plausibly have written this, not whether it avoids the most tells. If a rewrite feels forced, keep the plainer original.
+- **Know when to stop.** Two passes is normal. If a second pass still leaves the piece with no claim and no named specifics, the problem is the text, not the prose. Say that and stop. Polishing past that point produces fluent writing with nothing in it.
 - Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate). On Norwegian text, always run the Norwegian negative-parallelism grep from the ad-hoc list in the same pass as the English one, since "ikke bare X, men Y" is the same setup-payoff move and hides from the English pattern.
 - When in doubt about whether a rewrite changes meaning, tone, or voice: ask. The cost of one extra question is low; the cost of paving over the user's actual voice is high.
 
