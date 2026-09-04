@@ -46,7 +46,7 @@ managed { next }
   }
 }
 
-!in_section && /^[[:space:]]*(profile|model|model_reasoning_effort)[[:space:]]*=/ { next }
+!in_section && /^[[:space:]]*(profile|model|model_reasoning_effort|model_context_window|model_auto_compact_token_limit)[[:space:]]*=/ { next }
 skip { next }
 { print }
 ' "$config" >>"$tmp"
