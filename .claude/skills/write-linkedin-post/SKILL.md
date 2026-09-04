@@ -102,6 +102,13 @@ one line after the draft and offer to switch. Never switch silently.
 - **No markdown.** LinkedIn strips `**bold**`, `*italics*`, `#` headers and `-`
   bullet lists. Write plain text. For emphasis use a line break; for lists use
   emoji or `→` as the bullet, one per line, as in the sb1 and Eden Stack posts.
+- **Inline code is Unicode monospace, not backticks.** LinkedIn has no code
+  formatting, so a command or filename in backticks shows up as literal
+  backticks. Use the Mathematical Monospace block instead: 𝚟𝚌 𝚍𝚎𝚟, 𝙰𝙶𝙴𝙽𝚃𝚂.𝚖𝚍,
+  𝚜𝚕𝚎𝚎𝚙(𝟷). Generate it with `python3 scripts/mono.py 'npx sandbox@latest sh'`
+  and paste the output into the draft; never hand-type it. The full rule, with
+  what gets it and what stays plain, is in
+  [references/inline-code.md](references/inline-code.md).
 - **Paragraphs are one to three sentences**, each separated by a blank line.
   Dense blocks do not get read on a phone.
 - **Tag people in full.** Every event post names participants and says what each
@@ -139,6 +146,8 @@ one line after the draft and offer to switch. Never switch silently.
 
 - [ ] Hook lands above the fold, roughly 210 characters, and is not inflated
 - [ ] No markdown syntax anywhere. Emoji or `→` do the bullets
+- [ ] Commands, flags, filenames and identifiers are in Unicode monospace via
+      `scripts/mono.py`; product names, URLs and Norwegian words are plain
 - [ ] No em dashes, no colon standing in for one, no "ikke X, men Y" reframe
 - [ ] No hype words, no hashtags, never 🙏, space before every emoji
 - [ ] æ/ø/å intact throughout

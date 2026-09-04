@@ -33,7 +33,7 @@ Machines open with "Moreover / Furthermore / Additionally / In addition / It is 
 > After: "The API is rate-limited. That breaks batch jobs."
 
 ### Restore the active voice with a real agent
-Agentless passives ("mistakes were made", "gains were observed") dodge the doer. Name who did what.
+Agentless passives ("mistakes were made", "gains were observed") dodge the doer. Name who did what. This is a name-the-doer move, not a passive-voice hunt: GPT-4o uses agentless passive at about half the human rate (Reinhart et al. 2025, [sources.md](sources.md)), so passive on its own is not a machine marker. The tell is the missing agent.
 
 > Before: "Improvements were implemented and gains were observed."
 > After: "We rewrote the query and cut load time in half."
