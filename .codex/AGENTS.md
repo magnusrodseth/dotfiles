@@ -14,7 +14,20 @@ Being on disk is not enough either. You pack the available-skills list into a fi
 
 ## Browser Preference
 
-Prefer Brave Browser for browser work through Browser or Computer Use. Use another browser only when Magnus names it or Brave cannot support the task, and state the reason when switching.
+Prefer `@Brave Browser` for browser work when Magnus does not name a browser. It uses
+the Brave Personal profile. Use `@Browser` for localhost, an isolated browser profile,
+or when Magnus explicitly asks for the Codex in-app browser. Use another browser only
+when Magnus names it or Brave cannot support the task, and state the reason when switching.
+
+## 1Password
+
+Use `@1Password` for website sign-in and browser credential workflows in ChatGPT or
+Codex when its browser-login capability is available. Use the `onepassword-cli` skill
+for terminal commands, CLI authentication, secret references, and local secret injection.
+Use the 1Password Environments integration only for Developer Environments and local
+`.env` mounts. Never read a secret with `op` and pass it through chat or browser automation.
+If browser-login support is unavailable, ask Magnus to complete the 1Password autofill
+or approval step.
 
 ## Dev Server
 
