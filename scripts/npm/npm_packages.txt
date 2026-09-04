@@ -6,6 +6,7 @@
 @ifi/oh-pi-themes
 @playwright/cli
 @qodo/command
+@openai/codex
 @upstash/cli
 @williamzujkowski/strudel-mcp-server
 agent-browser

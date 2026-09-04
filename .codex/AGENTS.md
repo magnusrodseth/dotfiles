@@ -146,7 +146,12 @@ Name collision: if `rtk gain` fails, you may have reachingforthejack/rtk (Rust T
 
 ### Hook-based usage
 
-All other commands are rewritten automatically by the `rtk hook claude` PreToolUse hook in `hooks.json` (transparent, 0 tokens overhead). Example: `git status` becomes `rtk git status`.
+Codex's PreToolUse hook in `hooks.json` calls the tracked
+`.codex/hooks/rtk-rewrite.sh` adapter. The adapter uses `rtk rewrite` and returns
+Codex's `updatedInput` JSON. Example: `pytest` becomes `rtk pytest`.
+
+Do not use `rtk hook claude` here. Its input and output protocol is specific to
+Claude Code, so Codex accepts the command but receives no usable rewrite.
 
 **It silently truncates large output**, including `du`, removing middle rows from a sorted list so the result still looks complete and correctly sorted. For any disk-size or large-output work, run `rtk proxy <cmd>` instead, and sanity-check that listed entries sum to roughly the parent total.
 

@@ -19,9 +19,8 @@ stow .
 `install.sh` is **honest** (every step reports its real exit status),
 **resilient** (a failing step is recorded but does not abort the run; the
 script exits non-zero at the end listing what failed), and **idempotent**
-(safe to re-run; it converges toward a fully set-up machine). It sources
-`.zshenv` (not the interactive `.zshrc`) to put freshly-installed tools on
-PATH, and calls every sub-script with `bash`.
+(safe to re-run; it converges toward a fully set-up machine). It bootstraps the
+required PATH entries in Bash and calls every sub-script with `bash`.
 
 Steps, in order:
 1. Ensure Homebrew, ensure stow
@@ -39,15 +38,17 @@ Steps, in order:
    `ctx7`, `agent-browser` and `playwriter` come from; skills depend on them)
 9. Agent skills from `scripts/skills/skill-lock.json`
 10. Link dotfiles-authored skills into `~/.agents/skills/`, then mirror that
-   whole root into `~/.claude/skills/`
-11. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
+    whole root into `~/.claude/skills/`
+11. Apply the tracked Codex settings and remove duplicate or secret MCP values
+    from `~/.codex/config.toml`
+12. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
     validates skills, rejects skills that duplicate a lock entry, checks script
     refs, and gitleaks-scans the staged diff)
-12. macOS App Store apps
-13. tmux plugin manager (tpm) setup
-14. macOS system defaults
-15. Default apps for developer file types (`scripts/macos/file-associations.sh`)
-16. bat cache build
+13. macOS App Store apps
+14. tmux plugin manager (tpm) setup
+15. macOS system defaults
+16. Default apps for developer file types (`scripts/macos/file-associations.sh`)
+17. bat cache build
 
 install.sh must never source `~/.zshenv`. It did until 28.07.2026, and since
 that file is zsh (`typeset -U path`, `path=( ... )`), bash 3.2 died on it under
@@ -165,6 +166,36 @@ Shell aliases (all pass `--dangerously-skip-permissions` explicitly):
 - `clr` → `claude --resume`
 - `ship` is a shell *function*, not `/ship`: a headless `claude -p` run pinned to
   haiku with `--allowedTools "Bash(git *)"`.
+
+### Codex and ChatGPT Desktop Integration
+
+The Homebrew cask `chatgpt` installs the desktop app. The active npm prefix
+installs `@openai/codex`, so clean login shells use the current standalone CLI
+instead of depending on the app-bundled binary.
+
+`~/.codex/config.toml` remains a real, mode-600 file because Desktop writes
+machine state, plugin state, project trust, appearance, and hook trust into it.
+The stable settings live in `.codex/personal.config.toml` and are merged into
+the base file by `scripts/codex/apply-profile.sh`. Codex 0.153.2 rejects the old
+top-level `profile = "..."` selector, and Desktop cannot pass `--profile`, so an
+explicit merge is the only setup shared by both surfaces.
+
+The tracked shell policy inherits only the core environment and excludes key,
+token, password, and secret variables. API credentials are 1Password items in
+the Private vault. `.codex/mcp.env.tpl` contains references only. `op run`
+injects Gemini into nano-banana and Stitch into its local MCP proxy without
+placing either value in the parent Codex process.
+
+Cloudflare and PostHog use Codex OAuth stored as machine state. Atlassian stays
+disabled on personal machines because its account requires the Gjensidige work
+machine. Stitch uses an API key because its server does not support dynamic
+OAuth client registration.
+
+Codex hooks are in `.codex/hooks.json`. The PreToolUse adapter calls `rtk
+rewrite` and returns Codex `updatedInput` JSON. The Stop adapter plays the sound
+and returns valid block/continue JSON for one completion pass. New or changed
+hooks must still be reviewed by the user through `/hooks`; do not write trust
+hashes from an agent.
 
 ### OpenCode Configuration
 
@@ -379,9 +410,10 @@ no secret anywhere, at the cost of shells outside cmux losing socket control.
   HEAD` is what catches it.
 - `.config/opencode/` - OpenCode (see above)
 - `.claude/` - Claude Code (settings, commands, skills)
-- `.codex/`, `.agents/`, `.agent/`, `.cursor/`, `.kiro/`, `.windsurf/` - all
-  gitignored except two allowlisted `.codex` files; mostly derived output that
-  `scripts/skills/packages.sh install` regenerates.
+- `.codex/`, `.agents/`, `.agent/`, `.cursor/`, `.kiro/`, `.windsurf/` - mostly
+  derived output. `.codex` allowlists the instructions, hooks, stable settings,
+  and 1Password reference template. The live config, auth, sessions, and plugin
+  caches remain ignored.
 
 ### Other top-level directories
 

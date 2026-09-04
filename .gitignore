@@ -210,8 +210,12 @@ fonts/
 # sqlite logs, plugin caches, shell snapshots). Default-deny, then allow only the
 # hand-authored files that are worth stowing. Two must never be tracked:
 #   auth.json   OAuth tokens
-#   config.toml live API keys (GEMINI_API_KEY, X-Goog-Api-Key) plus machine churn
-#               from marketplace timestamps and per-project trust levels
+#   config.toml machine churn from Desktop settings, marketplace timestamps,
+#               per-project trust levels, OAuth state, and hook trust hashes
 .codex/*
 !.codex/AGENTS.md
 !.codex/hooks.json
+!.codex/personal.config.toml
+!.codex/mcp.env.tpl
+!.codex/hooks/
+!.codex/hooks/*.sh

@@ -16,7 +16,9 @@
 #      weight; the skill silently does not load.
 #   3. PHANTOMS - the lock promises a skill that is absent from disk. A fresh
 #      `packages.sh install` would try to restore it and report MISSING.
-#   4. STALE - a skill's docs describe an older release than the binary that is
+#   4. UNLINKED - an authored skill has no entry in ~/.agents/skills, so Codex,
+#      the ChatGPT app, and Zed cannot discover it.
+#   5. STALE - a skill's docs describe an older release than the binary that is
 #      actually installed. The skill loads fine and reads as authoritative, so
 #      this is the quietest failure of the four: you follow documentation for
 #      flags that no longer match the tool. Observed 28.07.2026, when gws-gmail
@@ -190,6 +192,12 @@ shadowed = sorted(
     if os.path.exists(f"{agents_skills}/{s}") and not os.path.islink(f"{agents_skills}/{s}")
 )
 
+unlinked = sorted(
+    s for s in authored
+    if not os.path.exists(f"{agents_skills}/{s}")
+    and not os.path.islink(f"{agents_skills}/{s}")
+)
+
 problems = 0
 if orphans:
     problems += 1
@@ -225,6 +233,13 @@ if shadowed:
     print("    fix: keep whichever copy is newer, then delete the other "
           "(git rm .claude/skills/<name>, or replace the ~/.agents real dir "
           "with a link into dotfiles)", file=sys.stderr)
+if unlinked:
+    problems += 1
+    print(f"- {len(unlinked)} authored skill(s) missing from ~/.agents "
+          f"(Codex, ChatGPT, and Zed cannot discover them):", file=sys.stderr)
+    for s in unlinked:
+        print(f"    {s}", file=sys.stderr)
+    print("    fix: bash scripts/skills/link-dotfiles-skills.sh", file=sys.stderr)
 
 if problems:
     print(f"Skill integrity failed ({problems} problem class(es)).", file=sys.stderr)

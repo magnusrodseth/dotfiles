@@ -1,0 +1,99 @@
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
+
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false
+exclude = [
+  "*_KEY",
+  "*_PASSWORD",
+  "*_SECRET",
+  "*_TOKEN",
+  "AWS_*",
+  "GEMINI_*",
+  "GOOGLE_*",
+  "OPENAI_*",
+]
+
+[mcp_servers.app-insight-mcp]
+command = "npx"
+args = ["-y", "@jeromyfu/app-insight-mcp"]
+
+[mcp_servers.aso-mcp]
+command = "uv"
+args = ["run", "--directory", "/Users/magnusrodseth/dev/personal/aso-mcp", "python", "server.py"]
+
+[mcp_servers.mcp-domain-availability]
+command = "uvx"
+args = ["--python=3.10", "--from", "git+https://github.com/imprvhub/mcp-domain-availability", "mcp-domain-availability"]
+
+[mcp_servers.atlassian]
+url = "https://mcp.atlassian.com/v1/mcp"
+# Authentication is only available on the Gjensidige work machine.
+enabled = false
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+
+[mcp_servers.1password]
+command = "/Applications/1Password.app/Contents/MacOS/1password-mcp"
+
+[mcp_servers.exa]
+url = "https://mcp.exa.ai/mcp"
+
+[mcp_servers.grep_app]
+url = "https://mcp.grep.app"
+
+[mcp_servers.kokoro-tts]
+command = "uv"
+args = ["run", "--directory", "/Users/magnusrodseth/.local/share/kokoro-tts-mcp", "python", "server.py"]
+
+[mcp_servers.kokoro-tts.env]
+KOKORO_VOICE = "af_sky"
+KOKORO_SPEED = "1.25"
+KOKORO_BASE_URL = "http://127.0.0.1:8880"
+
+[mcp_servers.linkedin]
+command = "uvx"
+args = ["--python", "3.12", "mcp-server-linkedin@latest"]
+
+[mcp_servers.linkedin.env]
+UV_HTTP_TIMEOUT = "300"
+
+[mcp_servers.nano-banana]
+command = "op"
+args = [
+  "run",
+  "--account",
+  "my.1password.eu",
+  "--env-file",
+  "/Users/magnusrodseth/.codex/mcp.env.tpl",
+  "--",
+  "uvx",
+  "nanobanana-mcp-server@latest",
+]
+
+[mcp_servers.nano-banana.env]
+NANOBANANA_MODEL = "nb2"
+
+[mcp_servers.posthog]
+url = "https://mcp-eu.posthog.com/mcp"
+
+[mcp_servers.stitch]
+command = "op"
+args = [
+  "run",
+  "--account",
+  "my.1password.eu",
+  "--env-file",
+  "/Users/magnusrodseth/.codex/mcp.env.tpl",
+  "--",
+  "npx",
+  "-y",
+  "mcp-remote@latest",
+  "https://stitch.googleapis.com/mcp",
+  "--header",
+  "X-Goog-Api-Key:${STITCH_API_KEY}",
+  "--silent",
+]

@@ -111,6 +111,7 @@ pnpm_packages()       { bash scripts/pnpm/packages.sh install; }
 npm_packages()        { bash scripts/npm/packages.sh install; }
 agent_skills()        { bash scripts/skills/packages.sh install; }
 link_dotfiles_skills(){ bash scripts/skills/link-dotfiles-skills.sh; }
+configure_codex()     { bash scripts/codex/apply-profile.sh; }
 git_hooks()           { git config core.hooksPath scripts/githooks; }
 app_store_apps()      { bash scripts/macos/install-app-store-apps.sh; }
 tmux_plugins() {
@@ -141,6 +142,7 @@ run_step "Install pnpm packages"              pnpm_packages
 run_step "Install npm global packages"        npm_packages
 run_step "Install agent skills"               agent_skills
 run_step "Link dotfiles skills globally"      link_dotfiles_skills
+run_step "Configure Codex and ChatGPT Desktop" configure_codex
 run_step "Enable repo git hooks"              git_hooks
 run_step "Install App Store apps"             app_store_apps
 run_step "Install tmux (tpm) plugins"         tmux_plugins

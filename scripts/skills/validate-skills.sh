@@ -139,6 +139,10 @@ resolve_lexically() {
 while IFS= read -r link; do
   [ -n "$link" ] || continue
   [ -e "$REPO_ROOT/$link" ] && continue
+  # `git ls-files -s` describes the index. An intentionally deleted symlink is
+  # still listed until it is staged, but there is no working-tree link to
+  # validate. A genuinely broken symlink still passes -L and is checked below.
+  [ -L "$REPO_ROOT/$link" ] || continue
 
   raw="$(readlink "$REPO_ROOT/$link")"
   resolved="$(resolve_lexically "$(dirname "$link")" "$raw")"

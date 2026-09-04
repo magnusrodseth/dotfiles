@@ -73,7 +73,7 @@ install_packages() {
   # explicitly instead, one `skills add` per source repo so each is cloned once.
   local work
   work="$(mktemp)"
-  local skill source skipped=0
+  local skill source skipped=0 install_failed=0
   while IFS=$'\t' read -r skill source; do
     if [[ -e "$SKILLS_DIR/$skill" ]]; then
       skipped=$((skipped + 1))
@@ -95,8 +95,10 @@ install_packages() {
         flags+=(-s "$skill")
       done < <(awk -F'\t' -v r="$repo" '$1 == r { print $2 }' "$work")
       echo "Installing $((${#flags[@]} / 2)) skill(s) from $repo"
-      npx skills add "$repo" -g -y "${flags[@]}" >/dev/null 2>&1 ||
+      if ! npx skills add "$repo" -g -y "${flags[@]}" >/dev/null 2>&1; then
         echo "WARN: 'skills add $repo' failed"
+        install_failed=1
+      fi
     done
   fi
   rm -f "$work"
@@ -109,43 +111,16 @@ install_packages() {
       missing=$((missing + 1))
     fi
   done
-  if ((missing > 0)); then
+  local link_failed=0
+  if ! bash "$HOME/dotfiles/scripts/skills/link-dotfiles-skills.sh"; then
+    link_failed=1
+  fi
+
+  if ((missing > 0 || install_failed > 0 || link_failed > 0)); then
     echo "$missing skill(s) from the lock could not be installed."
     return 1
   fi
   echo "Skills restored from lock file."
-
-  # Mirror custom skills from dotfiles into ~/.agents/skills/ so they're
-  # available to both Claude Code (.claude/skills) and other agent runtimes
-  # that read from .agents/skills. Only mirrors real directories; skips
-  # symlinks (those already point the other direction, into .agents/skills).
-  mirror_custom_skills
-}
-
-# Function to symlink custom skills from dotfiles into ~/.agents/skills/
-mirror_custom_skills() {
-  local src_dir="$HOME/dotfiles/.claude/skills"
-  local dest_dir="$HOME/.agents/skills"
-
-  [[ ! -d "$src_dir" ]] && return 0
-  mkdir -p "$dest_dir"
-
-  for skill_path in "$src_dir"/*/; do
-    [[ -L "${skill_path%/}" ]] && continue
-    local skill_name
-    skill_name="$(basename "$skill_path")"
-    local target="$dest_dir/$skill_name"
-
-    if [[ -L "$target" ]]; then
-      continue
-    elif [[ -e "$target" ]]; then
-      echo "Skipping $skill_name: $target exists and is not a symlink"
-      continue
-    fi
-
-    ln -s "${skill_path%/}" "$target"
-    echo "Linked custom skill: $skill_name"
-  done
 }
 
 # Ensure npx is available

@@ -6,7 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "rtk hook claude"
+            "command": "bash \"$HOME/.codex/hooks/rtk-rewrite.sh\"",
+            "timeout": 10
           }
         ]
       }
@@ -16,11 +17,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Bottle.aiff"
-          },
-          {
-            "type": "command",
-            "command": "echo '⚠️  STOP CHECK: Is the task FULLY complete? All errors fixed? All todos done? If not, continue working.'"
+            "command": "bash \"$HOME/.codex/hooks/stop-completion-check.sh\"",
+            "timeout": 10
           }
         ]
       }

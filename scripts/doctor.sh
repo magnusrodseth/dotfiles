@@ -78,9 +78,49 @@ check_link() {
     *)             warn "$rel (exists but does not resolve into $DOTFILES)" ;;
   esac
 }
-for f in .zshrc .zshenv .gitconfig .tmux.conf .config/nvim .config/ghostty/config; do
+for f in .zshrc .zshenv .gitconfig .tmux.conf .config/nvim .config/ghostty/config \
+         .codex/AGENTS.md .codex/hooks.json .codex/personal.config.toml \
+         .codex/mcp.env.tpl .codex/hooks/rtk-rewrite.sh \
+         .codex/hooks/stop-completion-check.sh; do
   check_link "$f"
 done
+
+# --- Codex and ChatGPT Desktop ----------------------------------------------
+
+section "Codex and ChatGPT Desktop"
+check_cmd codex "Codex CLI"
+if [ -d /Applications/ChatGPT.app ]; then
+  pass "ChatGPT Desktop installed"
+else
+  fail "ChatGPT Desktop missing (brew install --cask chatgpt)"
+fi
+if [ -f "$HOME/.codex/config.toml" ] \
+   && grep -qx '# BEGIN dotfiles Codex settings' "$HOME/.codex/config.toml"; then
+  pass "tracked Codex settings applied"
+else
+  fail "tracked Codex settings not applied (bash scripts/codex/apply-profile.sh)"
+fi
+if command -v codex >/dev/null 2>&1; then
+  codex_health="$(TERM=xterm-256color codex doctor --json 2>/dev/null || true)"
+  if jq -e '.checks[] | select(.id == "config.load" and .status == "ok")' \
+       <<<"$codex_health" >/dev/null 2>&1; then
+    pass "Codex configuration loads"
+  else
+    fail "Codex configuration does not load (codex doctor)"
+  fi
+  if jq -e '.checks[] | select(.id == "desktop.app_server.handshake" and .status == "ok")' \
+       <<<"$codex_health" >/dev/null 2>&1; then
+    pass "ChatGPT Desktop app server responds"
+  else
+    warn "ChatGPT Desktop app server did not respond (open the app, then run codex doctor)"
+  fi
+  if jq -e '.checks[] | select(.id == "mcp.config" and .status == "ok")' \
+       <<<"$codex_health" >/dev/null 2>&1; then
+    pass "MCP configuration resolves"
+  else
+    warn "MCP configuration has warnings (codex doctor)"
+  fi
+fi
 
 # --- homebrew packages -------------------------------------------------------
 
@@ -164,33 +204,24 @@ fi
 
 # --- npm global packages -----------------------------------------------------
 
-# These live under nvm's node prefix, not the pnpm store, so the pnpm check
+# These live under the active npm global prefix, not the pnpm store, so the pnpm check
 # above cannot see them. 63 installed skills call `gws`, which was undeclared
 # and unchecked until 28.07.2026: install.sh restored every gws-* skill and each
 # one failed at its first command on a fresh machine.
-# There is more than one global node_modules on this machine: brew's node and
-# every nvm-managed node have their own. `npm root -g` only reports the active
-# one, so checking just that path reported 16 packages "missing" the moment
-# brew's node became the default, even though every binary still resolved from
-# nvm's bin on PATH. Search all known roots instead.
+# Only the active prefix matters. Searching inactive nvm installations made the
+# doctor report green while `gws`, `ctx7`, and `codex` were absent from PATH.
 section "npm global packages"
 if command -v npm >/dev/null 2>&1; then
-  roots=()
-  r="$(npm root -g 2>/dev/null)"; [ -d "$r" ] && roots+=("$r")
-  for n in "$HOME"/.nvm/versions/node/*/lib/node_modules; do
-    [ -d "$n" ] && roots+=("$n")
-  done
-  if [ "${#roots[@]}" -eq 0 ]; then
+  root="$(npm root -g 2>/dev/null)"
+  if [ ! -d "$root" ]; then
     warn "no global node_modules found; skipping package check"
   else
     missing=0
     while IFS= read -r pkg; do
       [ -z "$pkg" ] && continue
-      found=0
-      for r in "${roots[@]}"; do [ -e "$r/$pkg" ] && { found=1; break; }; done
-      [ "$found" -eq 1 ] || { echo "      missing: $pkg"; missing=$((missing + 1)); }
+      [ -e "$root/$pkg" ] || { echo "      missing: $pkg"; missing=$((missing + 1)); }
     done < <(list_lines scripts/npm/npm_packages.txt)
-    [ "$missing" -eq 0 ] && pass "all npm global packages installed (${#roots[@]} root(s) searched)" \
+    [ "$missing" -eq 0 ] && pass "all npm global packages installed in the active prefix" \
       || fail "$missing npm package(s) missing"
   fi
 else
@@ -299,7 +330,7 @@ fi
 
 section "Key CLI tools"
 for t in nvim eza zoxide atuin oh-my-posh bat tmux delta fzf zinit \
-         gws ctx7 gitleaks exiftool typst; do
+         codex gws ctx7 gitleaks exiftool typst; do
   case "$t" in
     zinit) [ -d "$HOME/.local/share/zinit" ] && pass "zinit" || warn "zinit (loaded by .zshrc; absent until first interactive shell)";;
     *)     check_cmd "$t";;

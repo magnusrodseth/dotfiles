@@ -2,7 +2,7 @@
 
 # npm global packages.
 #
-# These live under nvm's active node prefix, NOT in the pnpm store, so
+# These live under the active npm global prefix, NOT in the pnpm store, so
 # scripts/pnpm/packages.sh cannot see or restore them. They were undeclared
 # entirely until 28.07.2026, which meant a fresh machine restored all 62 gws-*
 # and recipe-* skills from skill-lock.json and then had every one of them fail
@@ -80,7 +80,7 @@ install_packages() {
 
 ensure_npm_installed() {
   if ! command -v npm >/dev/null 2>&1; then
-    echo "npm not found. Install node (Brewfile) or activate nvm first."
+    echo "npm not found. Install node from the Brewfile first."
     exit 1
   fi
 }

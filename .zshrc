@@ -252,3 +252,6 @@ ocg-restart() {
 }
 
 # ── End OpenCode GenAI Gateway ────────────────────────────────────
+
+# Added by the Qodo CLI installer
+case ":$PATH:" in *":/Users/magnusrodseth/.qodo/bin:"*|*":/Users/magnusrodseth/.qodo/bin/:"*) ;; *) export PATH="/Users/magnusrodseth/.qodo/bin:$PATH" ;; esac

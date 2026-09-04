@@ -28,6 +28,7 @@ images/*
 google-cloud-sdk
 \.config/op
 \.claude/skills
+\.pi/agent/skills
 \.claude/plugins/known_marketplaces.json
 \.agents
 \.agent

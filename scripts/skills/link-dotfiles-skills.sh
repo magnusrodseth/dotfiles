@@ -100,6 +100,7 @@ echo "~/.agents/skills: $linked linked, $skipped already correct, $conflicts con
 
 mirrored=0
 mir_ok=0
+mir_conflicts=0
 
 for entry in "$AGENTS"/*; do
   [ -e "$entry" ] || [ -L "$entry" ] || continue
@@ -112,7 +113,13 @@ for entry in "$AGENTS"/*; do
     continue
   fi
 
-  rm -rf "$target"
+  if [ -e "$target" ] && [ ! -L "$target" ]; then
+    echo "WARN: $target is a real path; refusing to replace it"
+    mir_conflicts=$((mir_conflicts + 1))
+    continue
+  fi
+
+  [ -L "$target" ] && rm "$target"
   ln -s "$expected" "$target"
   echo "mirrored $name -> ~/.claude/skills"
   mirrored=$((mirrored + 1))
@@ -131,5 +138,9 @@ for target in "$CLAUDE"/*; do
   mir_pruned=$((mir_pruned + 1))
 done
 
-echo "~/.claude/skills: $mirrored mirrored, $mir_ok already correct, $mir_pruned pruned"
+echo "~/.claude/skills: $mirrored mirrored, $mir_ok already correct, $mir_conflicts conflicts, $mir_pruned pruned"
+if [ "$conflicts" -gt 0 ] || [ "$mir_conflicts" -gt 0 ]; then
+  echo "Skill linking stopped with conflicts. Resolve the paths listed above."
+  exit 1
+fi
 echo "Done."

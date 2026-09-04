@@ -19,8 +19,6 @@
 tap "anomalyco/tap"
 tap "aws/tap"
 tap "beeftornado/rmtree"
-tap "dopplerhq/cli"
-tap "dopplerhq/doppler", trusted: { formulae: ["doppler"] }
 tap "facebook/fb"
 tap "hashicorp/tap"
 tap "homebrew/bundle"
@@ -154,7 +152,7 @@ brew "railway"
 # with "Refusing to load formula from untrusted tap", which aborted
 # `brew bundle cleanup` entirely, leaving this file with no drift check at all.
 brew "hashicorp/tap/terraform", trusted: true
-brew "dopplerhq/cli/doppler"
+brew "doppler"
 brew "hashicorp/tap/terraform-ls", trusted: true
 brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "stripe/stripe-cli/stripe", trusted: true
@@ -197,6 +195,7 @@ cask "anydesk"
 cask "aws-vault-binary"
 cask "bitwarden"
 cask "brave-browser"
+cask "chatgpt"
 cask "discord"
 cask "dotnet-runtime"
 cask "dropbox"
