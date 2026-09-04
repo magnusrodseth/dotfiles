@@ -181,21 +181,19 @@ top-level `profile = "..."` selector, and Desktop cannot pass `--profile`, so an
 explicit merge is the only setup shared by both surfaces.
 
 The tracked shell policy inherits only the core environment and excludes key,
-token, password, and secret variables. API credentials are 1Password items in
-the Private vault. `.codex/mcp.env.tpl` contains references only. `op run`
-injects Gemini into nano-banana and Stitch into its local MCP proxy without
-placing either value in the parent Codex process.
+token, password, and secret variables. The direct 1Password MCP uses desktop
+app integration for browser credential workflows, so login values stay in
+1Password.
 
 Cloudflare and PostHog use Codex OAuth stored as machine state. Atlassian stays
 disabled on personal machines because its account requires the Gjensidige work
-machine. Stitch uses an API key because its server does not support dynamic
-OAuth client registration.
+machine.
 
 Codex hooks are in `.codex/hooks.json`. The PreToolUse adapter calls `rtk
-rewrite` and returns Codex `updatedInput` JSON. The Stop adapter plays the sound
-and returns valid block/continue JSON for one completion pass. New or changed
-hooks must still be reviewed by the user through `/hooks`; do not write trust
-hashes from an agent.
+rewrite` and returns Codex `updatedInput` JSON. The Stop hook auto-commits and
+pushes only when the current Git root is the local vault. New or changed hooks
+must still be reviewed by the user through `/hooks`; do not write trust hashes
+from an agent.
 
 ### OpenCode Configuration
 

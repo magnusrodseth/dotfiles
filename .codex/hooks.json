@@ -17,11 +17,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.codex/hooks/stop-completion-check.sh\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "root=\"$(git rev-parse --show-toplevel 2>/dev/null)\" || exit 0; [ \"$root\" = \"$HOME/dev/personal/vault\" ] || exit 0; VAULT_AUTO_PUSH=1 bash \"$root/.codex/hooks/auto-commit-push.sh\"",
             "timeout": 30,
             "statusMessage": "Auto-committing vault changes..."
