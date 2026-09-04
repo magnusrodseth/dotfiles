@@ -18,6 +18,9 @@ Prefer `@Brave Browser` for browser work when Magnus does not name a browser. It
 the Brave Personal profile. Use `@Browser` for localhost, an isolated browser profile,
 or when Magnus explicitly asks for the Codex in-app browser. Use another browser only
 when Magnus names it or Brave cannot support the task, and state the reason when switching.
+Use one named browser group for each browser task, even when the task needs only one tab.
+Create it before opening or claiming tabs with `await browser.nameSession("🔎 Short task name")`;
+use a short, task-specific name that starts with an emoji.
 
 ## 1Password
 
