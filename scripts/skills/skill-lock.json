@@ -990,6 +990,15 @@
       "skillFolderHash": "1bca9cf1bf416c4809f06370aa5503b067d270ca",
       "installedAt": "2026-09-04T12:11:14.965Z",
       "updatedAt": "2026-09-04T12:11:14.965Z"
+    },
+    "scroll-craft": {
+      "source": "nateherkai/scroll-craft",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/nateherkai/scroll-craft.git",
+      "skillPath": "plugins/nateherk-design/skills/scroll-craft/SKILL.md",
+      "skillFolderHash": "3a543da6bd8082c4455a47ac3c25c9fbfb844e34",
+      "installedAt": "2026-09-05T10:33:41.446Z",
+      "updatedAt": "2026-09-05T10:33:41.446Z"
     }
   },
   "lastSelectedAgents": [
