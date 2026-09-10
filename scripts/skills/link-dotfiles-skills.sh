@@ -30,12 +30,25 @@
 
 set -eu
 
+# Pass a skill name to link only that skill and preserve unrelated local state.
+# With no argument, retain the full convergence behavior used by install.sh.
+only="${1:-}"
+if [ "$#" -gt 1 ] || { [ -n "$only" ] && ! [[ "$only" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; }; then
+  echo "Usage: bash scripts/skills/link-dotfiles-skills.sh [skill-name]" >&2
+  exit 2
+fi
+
 SRC="$HOME/dotfiles/.claude/skills"
 AGENTS="$HOME/.agents/skills"
 CLAUDE="$HOME/.claude/skills"
 
 if [ ! -d "$SRC" ]; then
   echo "Source dir not found: $SRC"
+  exit 1
+fi
+
+if [ -n "$only" ] && [ ! -f "$SRC/$only/SKILL.md" ]; then
+  echo "Authored skill not found: $only" >&2
   exit 1
 fi
 
@@ -50,6 +63,7 @@ conflicts=0
 for entry in "$SRC"/*; do
   [ -e "$entry" ] || continue
   name="$(basename "$entry")"
+  [ -z "$only" ] || [ "$name" = "$only" ] || continue
   target="$AGENTS/$name"
   expected="../../dotfiles/.claude/skills/$name"
 
@@ -80,6 +94,7 @@ done
 
 pruned=0
 for target in "$AGENTS"/*; do
+  [ -z "$only" ] || [ "$(basename "$target")" = "$only" ] || continue
   [ -L "$target" ] || continue
   case "$(readlink "$target")" in
     *dotfiles/.claude/skills/*) ;;   # managed by this script
@@ -105,6 +120,7 @@ mir_conflicts=0
 for entry in "$AGENTS"/*; do
   [ -e "$entry" ] || [ -L "$entry" ] || continue
   name="$(basename "$entry")"
+  [ -z "$only" ] || [ "$name" = "$only" ] || continue
   target="$CLAUDE/$name"
   expected="../../.agents/skills/$name"
 
@@ -127,6 +143,7 @@ done
 
 mir_pruned=0
 for target in "$CLAUDE"/*; do
+  [ -z "$only" ] || [ "$(basename "$target")" = "$only" ] || continue
   [ -L "$target" ] || continue
   case "$(readlink "$target")" in
     ../../.agents/skills/*) ;;
