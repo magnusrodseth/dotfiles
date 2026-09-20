@@ -11,7 +11,7 @@ Create a new presentation in the central presentations repo. All decks live in *
 PRES="$HOME/dev/personal/presentations"
 ```
 
-This skill is a thin orchestrator. The repo's own `AGENTS.md` and project skills are the source of truth for structure, components, themes, and deployment. Your job here: gather the content, pick the brand, then follow the repo's instructions.
+This skill is a thin orchestrator. The repo's `AGENTS.md` and project skills own narrative, layout, components, themes, and deployment. Gather the source material, then follow them.
 
 ## Workflow
 
@@ -19,7 +19,9 @@ This skill is a thin orchestrator. The repo's own `AGENTS.md` and project skills
 
 Read `$PRES/AGENTS.md` before anything else. It defines the route scaffold, the `presentations.ts` manifest, available themes, slide variants, and key rules (bun not npm, lucide-react not emojis, "Magnus Rødseth" with ø, Norwegian content by default, no scrolling within slides).
 
-The repo also has project skills under `$PRES/.claude/skills/` that activate when working inside it:
+Then read `$PRES/.agents/skills/presentation-craft/SKILL.md` before outlining or coding. Follow its brief, evidence, composition, and revision workflow, including for requests to go straight to a first draft. Read it explicitly when invoked from another repo; do not rely on automatic skill discovery.
+
+Other project skills live under `$PRES/.agents/skills/`:
 - `presentation-theming`: full workflow for adding a new token-driven theme
 - `brand-designer`: deriving a brand identity from scratch
 - `<company>-brand-guidelines` (capra, reitan, multiconsult, eden-stack, wispr-flow, ...): existing brand systems
@@ -40,7 +42,7 @@ The repo also has project skills under `$PRES/.claude/skills/` that activate whe
 - Use the `read-up-on` skill's discovery approach against `$HOME/dev/personal/vault`: filename find + full-text grep (Norwegian and English variants), rank, read top notes
 - Learnings, brags, and project notes are the richest slide material
 
-Whatever the source, produce a slide outline (10-20 bullets) and confirm it with the user before writing code, unless they asked you to just go ahead.
+Use `presentation-craft` to turn the material into an outline with a job, evidence, and transition for each slide. Let the story and speaking time determine the length. Show consequential gaps before coding; follow existing authorization to proceed.
 
 ### 3. Pick or create the brand theme
 
@@ -59,12 +61,12 @@ Follow the "Creating a New Presentation" section of `AGENTS.md` exactly:
 ### 5. Verify
 
 - `cd $PRES && bunx tsc --noEmit` must exit 0
-- The dev server is assumed already running (port 3000); do not start it
-- Sanity-check the deck at `http://localhost:3000/presentations/<name>` (agent-browser or playwright skills) if the user wants visual confirmation
+- `bun run build` must exit 0
+- Follow the repo's dev-server instructions; locate the running server's actual port
+- Complete the visual and narrative review in `presentation-craft`. Report blocked checks and unresolved material gaps; distinguish a reviewable draft from a deck ready for delivery.
 
 ## Heuristics
 
 - Don't duplicate `AGENTS.md` knowledge from memory; it changes, this skill doesn't. Always re-read it.
-- One idea per slide. Overflowing content splits into more slides, never scrolls.
-- Match an existing deck's tone: skim one recent route file in `src/routes/presentations/` as a style reference before writing slides.
+- Keep presentation preferences in the repo's `presentation-craft` skill; do not duplicate them here.
 - Deployment is a separate, explicit step (`deploy-presentation` skill). Never deploy unless asked.
