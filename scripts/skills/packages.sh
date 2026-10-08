@@ -95,7 +95,8 @@ install_packages() {
         flags+=(-s "$skill")
       done < <(awk -F'\t' -v r="$repo" '$1 == r { print $2 }' "$work")
       echo "Installing $((${#flags[@]} / 2)) skill(s) from $repo"
-      if ! npx skills add "$repo" -g -y "${flags[@]}" >/dev/null 2>&1; then
+      # Zed's universal root plus Claude keeps the shared symlink layout.
+      if ! npx skills add "$repo" -g -a claude-code zed -y "${flags[@]}" >/dev/null 2>&1; then
         echo "WARN: 'skills add $repo' failed"
         install_failed=1
       fi

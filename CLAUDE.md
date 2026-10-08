@@ -208,6 +208,7 @@ One rule, enforced by `scripts/skills/link-dotfiles-skills.sh`:
 ```
 ~/.agents/skills/<name>   canonical: real dir (installed, see skill-lock.json)
                           or symlink into ~/dotfiles/.claude/skills (authored)
+                          or dir with SKILL.md linked to an installed app
 ~/.claude/skills/<name>   ALWAYS a symlink -> ../../.agents/skills/<name>
 ```
 
@@ -224,6 +225,16 @@ stow-managed authoring home); the link script is what makes `~/.agents`
 canonical at runtime. Never vendor a skill that `skill-lock.json` already
 installs: the installed copy wins in every agent and the committed one becomes
 dead code. `scripts/skills/check-staged-skills.sh` rejects that at commit time.
+
+App-owned skills are declared in `scripts/skills/app-skills.json`. The link script
+connects Supacode's bundled files to the shared root and its pi/OpenCode mirrors.
+It replaces matching copies and refuses to overwrite local edits. Missing apps
+are optional unless a live skill still depends on one.
+
+Use both `-a claude-code zed` when refreshing upstream skills with `npx skills add`.
+The current CLI selects copy mode for a single agent root. Selecting both keeps
+the installed content in `~/.agents` with a Claude symlink. After changing skills,
+export the lock, run the link script, and run both integrity and validation checks.
 
 Before 02.08.2026 the two roots were linked independently and `npx skills` real
 dirs silently shadowed the dotfiles copies. 42 skills had diverged, 4 of them
