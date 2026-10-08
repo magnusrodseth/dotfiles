@@ -47,12 +47,15 @@ if [ ! -d "$SRC" ]; then
   exit 1
 fi
 
-if [ -n "$only" ] && [ ! -f "$SRC/$only/SKILL.md" ]; then
-  echo "Authored skill not found: $only" >&2
+mkdir -p "$AGENTS" "$CLAUDE"
+
+# App-owned skills remain in the installed app; their shared entries link to it.
+python3 "$HOME/dotfiles/scripts/skills/link-app-skills.py" "$only"
+
+if [ -n "$only" ] && [ ! -f "$SRC/$only/SKILL.md" ] && [ ! -f "$AGENTS/$only/SKILL.md" ]; then
+  echo "Skill not found in dotfiles, installed apps, or ~/.agents: $only" >&2
   exit 1
 fi
-
-mkdir -p "$AGENTS" "$CLAUDE"
 
 # --- 1. authored skills: dotfiles -> ~/.agents/skills -------------------------
 

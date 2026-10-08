@@ -95,7 +95,9 @@ install_packages() {
         flags+=(-s "$skill")
       done < <(awk -F'\t' -v r="$repo" '$1 == r { print $2 }' "$work")
       echo "Installing $((${#flags[@]} / 2)) skill(s) from $repo"
-      npx skills add "$repo" -g -y "${flags[@]}" >/dev/null 2>&1 ||
+      # A single non-universal agent now selects copy mode, leaving ~/.agents
+      # stale. Zed's universal root plus Claude keeps the shared symlink layout.
+      npx skills add "$repo" -g -a claude-code zed -y "${flags[@]}" >/dev/null 2>&1 ||
         echo "WARN: 'skills add $repo' failed"
     done
   fi
@@ -115,37 +117,8 @@ install_packages() {
   fi
   echo "Skills restored from lock file."
 
-  # Mirror custom skills from dotfiles into ~/.agents/skills/ so they're
-  # available to both Claude Code (.claude/skills) and other agent runtimes
-  # that read from .agents/skills. Only mirrors real directories; skips
-  # symlinks (those already point the other direction, into .agents/skills).
-  mirror_custom_skills
-}
-
-# Function to symlink custom skills from dotfiles into ~/.agents/skills/
-mirror_custom_skills() {
-  local src_dir="$HOME/dotfiles/.claude/skills"
-  local dest_dir="$HOME/.agents/skills"
-
-  [[ ! -d "$src_dir" ]] && return 0
-  mkdir -p "$dest_dir"
-
-  for skill_path in "$src_dir"/*/; do
-    [[ -L "${skill_path%/}" ]] && continue
-    local skill_name
-    skill_name="$(basename "$skill_path")"
-    local target="$dest_dir/$skill_name"
-
-    if [[ -L "$target" ]]; then
-      continue
-    elif [[ -e "$target" ]]; then
-      echo "Skipping $skill_name: $target exists and is not a symlink"
-      continue
-    fi
-
-    ln -s "${skill_path%/}" "$target"
-    echo "Linked custom skill: $skill_name"
-  done
+  # Use the same linking rules for authored, installed, and app-owned skills.
+  bash "$HOME/dotfiles/scripts/skills/link-dotfiles-skills.sh"
 }
 
 # Ensure npx is available

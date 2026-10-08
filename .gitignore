@@ -122,6 +122,17 @@ fonts/
 # Raycast account access token — was committed to this PUBLIC repo (rotate it in
 # Raycast: sign out & back in). Untracked so it can't be re-committed.
 .config/raycast/config.json
+# Raycast's generated Node.js bytecode cache
+.config/raycast/node-compile-cache/
+
+# Wrangler logs and telemetry state
+.config/.wrangler/
+
+# Argo CD login state (auth and refresh tokens)
+.config/argocd/
+
+# Watchman generates this LaunchAgent with machine-specific paths and PATH
+Library/LaunchAgents/com.github.facebook.watchman.plist
 
 # Google Cloud SDK credentials and runtime
 .config/gcloud/

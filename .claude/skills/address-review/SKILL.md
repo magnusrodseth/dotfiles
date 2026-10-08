@@ -1,7 +1,7 @@
 ---
 name: address-review
 description: "Take a GitHub PR's review feedback end to end: fetch unresolved threads from bots and humans, judge each, apply fixes, push, then reply and resolve. Use for \"address the review\" or \"go through the PR feedback\"."
-version: 0.3.0
+version: 0.4.0
 ---
 
 # Address PR review
@@ -16,6 +16,7 @@ Mechanics worth knowing up front: GitHub's REST API posts replies, but **thread 
 - **Ask on every disagreement.** If a comment looks wrong, not applicable, or a false positive, surface it and let the user decide. Never silently dismiss or resolve it. This applies doubly to human reviewers: never push back on a colleague's comment autonomously.
 - **Bot threads get resolved; human threads don't (by default).** After fixing and replying, resolve bot-opened threads. For human-opened threads, reply with what changed but leave resolution to the human, since many teams treat "who opened it resolves it" as etiquette and branch protection may require their sign-off. The user can override with "resolve everything".
 - **A comment can be right and still not belong in this PR.** Review bots regularly raise something genuinely new: a failure mode nobody had considered, a missing index, an auth hole in a neighbouring function. "Agree" and "apply here" are separate decisions. Surface those as their own class (see step 4) and let the user choose between fixing now and opening a follow-up issue. Silently widening the PR to absorb them is how a two-file fix becomes unreviewable.
+- **Three Copilot rounds per PR.** Process at most the first three completed Copilot reviews on a PR. If the latest review is round 4 or later, report its unresolved feedback and stop. Never create an automation or keep monitoring the PR for more reviews.
 - Match each fix to the comment it addresses. One commit referencing the review is usually enough.
 - Only resolve threads you actually addressed (or that the user told you to close). Leave disputed threads open unless the user says otherwise.
 
@@ -50,6 +51,18 @@ already be addressed, and after you push in step 6 the whole picture shifts. Anc
 current.
 - **No reviewer named by the user**: address all unresolved threads from everyone.
 - **Reviewer named** ("address the Copilot review", "address Jonas's comments"): filter threads to that login (for Copilot, the inline login `Copilot`).
+
+When Copilot is in scope, count its completed review submissions before processing its feedback:
+```bash
+COPILOT_ROUNDS=$(gh api --paginate \
+  "repos/{owner}/{repo}/pulls/<PR>/reviews?per_page=100" \
+  --jq '.[] | select(.user.login=="copilot-pull-request-reviewer[bot]") | .id' \
+  | wc -l | tr -d ' ')
+```
+The first automatic review is round 1. If `COPILOT_ROUNDS` is greater than 3, do not
+address or trigger another Copilot round. Report the cap, the current head SHA, and the
+remaining unresolved Copilot feedback. Continue with human reviewers when they are also
+in scope.
 
 ### 3. Fetch the review feedback
 Summary reviews (overview text; substitute the reviewer's login, or drop the `select` to see all):
@@ -124,7 +137,7 @@ mutation($id:ID!){ resolveReviewThread(input:{threadId:$id}){ thread{ isResolved
 ```
 Human threads stay open with your reply on them unless the user said to resolve everything.
 
-### 8. Re-request review, once
+### 8. Follow up within the three-round cap
 
 Only if the user wants another pass from the bot.
 
@@ -143,7 +156,11 @@ NEW_SHA=$(gh pr view <PR> --json headRefOid -q .headRefOid)
 ```
 Threads whose latest review predates `NEW_SHA` have not seen your fix yet, and reporting
 them as unaddressed is wrong. Anything genuinely new here is fresh feedback on the fixes
-you just pushed, so re-enter at step 4 and get approval again. Do not loop unattended.
+you just pushed. Recount `COPILOT_ROUNDS`. Process rounds 2 and 3 by re-entering at step 4
+and getting approval again. When the count reaches 4, report the remaining feedback and
+stop. Do not create a heartbeat, scheduled task, or other background monitor. A push may
+still trigger another review through the organization ruleset; this skill does not follow
+that review after the cap.
 
 ## Notes
 

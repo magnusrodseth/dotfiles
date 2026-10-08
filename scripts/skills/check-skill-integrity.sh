@@ -52,10 +52,10 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 
-python3 - "$DOTFILES_SKILLS" "$LOCK" "$LIVE_SKILLS" "$AGENTS_SKILLS" "$MODE" <<'PY'
+python3 - "$DOTFILES_SKILLS" "$LOCK" "$LIVE_SKILLS" "$AGENTS_SKILLS" "$MODE" "$SCRIPT_DIR/app-skills.json" <<'PY'
 import json, os, sys, re, glob, subprocess
 
-dotfiles_skills, lock_path, live_skills, agents_skills, mode = sys.argv[1:6]
+dotfiles_skills, lock_path, live_skills, agents_skills, mode, app_manifest = sys.argv[1:7]
 
 
 def find_drift(root):
@@ -133,6 +133,23 @@ try:
 except (OSError, ValueError, KeyError) as e:
     die(f"cannot read {lock_path}: {e}")
 
+try:
+    app_skills = json.load(open(app_manifest))
+except (OSError, ValueError) as e:
+    die(f"cannot read {app_manifest}: {e}")
+
+# App provenance is valid only while the canonical file links to its declared
+# source. A copied or edited file must not become an unchecked exception.
+app_bad = []
+for name, entry in app_skills.items():
+    skill = os.path.join(agents_skills, name, "SKILL.md")
+    source = entry["source"]
+    if not os.path.lexists(os.path.dirname(skill)) and not os.path.isfile(source):
+        continue  # optional app absent on this machine
+    if (not os.path.isfile(source) or not os.path.islink(skill)
+            or os.path.realpath(skill) != os.path.realpath(source)):
+        app_bad.append(name)
+
 # Authored = a real directory in the repo. Those are tracked in git, so they
 # need no lock entry; the lock only carries their provenance.
 authored = {
@@ -151,7 +168,7 @@ for s in sorted(os.listdir(live_skills)):
     # Anything resolving into the repo is authored and safe by definition.
     if os.path.realpath(p).startswith(os.path.realpath(dotfiles_skills) + os.sep):
         continue
-    if s in authored or s in lock:
+    if s in authored or s in lock or s in app_skills:
         continue
     orphans.append(s)
 
@@ -191,6 +208,12 @@ shadowed = sorted(
 )
 
 problems = 0
+if app_bad:
+    problems += 1
+    print("- App skill source/link mismatch (run: bash scripts/skills/link-dotfiles-skills.sh):",
+          file=sys.stderr)
+    for s in app_bad:
+        print(f"    {s}", file=sys.stderr)
 if orphans:
     problems += 1
     print(f"- {len(orphans)} skill(s) load but are in neither git nor the lock "
@@ -234,7 +257,8 @@ live = sum(
     1 for s in os.listdir(live_skills)
     if os.path.exists(os.path.realpath(f"{live_skills}/{s}"))
 )
-print(f"Skill integrity OK ({live} live, {len(authored)} authored, {len(lock)} locked).")
+print(f"Skill integrity OK ({live} live, {len(authored)} authored, {len(lock)} locked, "
+      f"{sum(os.path.isfile(e['source']) for e in app_skills.values())} app-owned).")
 
 # Zed caps the skill CATALOG - the sum of every model-invocable skill's
 # name + description - at a fixed 50KB, and the overflow is a cliff rather than

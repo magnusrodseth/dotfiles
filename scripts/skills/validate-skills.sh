@@ -138,6 +138,8 @@ resolve_lexically() {
 
 while IFS= read -r link; do
   [ -n "$link" ] || continue
+  # Deleted tracked links are pending removals, not dangling working-tree links.
+  [ -L "$REPO_ROOT/$link" ] || continue
   [ -e "$REPO_ROOT/$link" ] && continue
 
   raw="$(readlink "$REPO_ROOT/$link")"

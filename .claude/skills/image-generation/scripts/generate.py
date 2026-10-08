@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate or edit images via OpenAI's gpt-image-2 (ChatGPT Images 2.0) API.
+Generate or edit images via OpenAI's GPT Image API.
 Stdlib only. Requires OPENAI_API_KEY in the environment.
 
 Examples:
@@ -26,6 +26,12 @@ API_BASE = "https://api.openai.com/v1"
 GENERATE_URL = f"{API_BASE}/images/generations"
 EDIT_URL = f"{API_BASE}/images/edits"
 TIMEOUT_SECONDS = 300
+DEFAULT_MODEL = "gpt-image-2.5-flare"
+GPT_IMAGE_25_MODELS = {
+    "gpt-image-2.5-flare",
+    "gpt-image-2.5-sunburst",
+}
+NON_CONFIGURABLE_FIDELITY_MODELS = {"gpt-image-2"}
 
 
 def die(msg: str, code: int = 1) -> None:
@@ -43,14 +49,29 @@ def require_api_key() -> str:
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
         prog="generate.py",
-        description="OpenAI gpt-image-2 image generation and editing.",
+        description="OpenAI GPT Image generation and editing.",
     )
     p.add_argument("prompt", help="Text prompt (up to 32,000 chars).")
-    p.add_argument("--model", default="gpt-image-2",
-                   choices=["gpt-image-2", "gpt-image-1.5", "gpt-image-1", "gpt-image-1-mini"])
+    p.add_argument(
+        "--model",
+        default=DEFAULT_MODEL,
+        choices=[
+            "gpt-image-2.5-flare",
+            "gpt-image-2.5-sunburst",
+            "gpt-image-2",
+            "gpt-image-1.5",
+            "gpt-image-1",
+            "gpt-image-1-mini",
+        ],
+    )
     p.add_argument("--size", default="auto",
-                   help="auto | 1024x1024 | 1536x1024 | 1024x1536 | WxH (gpt-image-2, divisible by 16)")
-    p.add_argument("--quality", default="auto", choices=["auto", "low", "medium", "high"])
+                   help="auto | 1024x1024 | 1536x1024 | 1024x1536 | WxH (GPT Image 2+, divisible by 16)")
+    p.add_argument(
+        "--quality",
+        default="auto",
+        choices=["auto", "low", "medium", "high", "xhigh", "max"],
+        help="xhigh and max require a GPT Image 2.5 model.",
+    )
     p.add_argument("--n", type=int, default=1, help="Number of images (1-10).")
     p.add_argument("--format", dest="output_format", default="png",
                    choices=["png", "jpeg", "webp"])
@@ -64,7 +85,6 @@ def parse_args() -> argparse.Namespace:
                    help="Path to input image. Repeat up to 16 to enter edit mode.")
     p.add_argument("--mask", default=None,
                    help="PNG mask (transparent = editable). Edit mode only.")
-    # NOTE: not supported by gpt-image-2 (the default model); ignored there.
     p.add_argument("--input-fidelity", default=None, choices=["low", "high"],
                    help="Edit mode only. Higher preserves more of the source.")
     return p.parse_args()
@@ -180,15 +200,12 @@ def edit(args: argparse.Namespace, api_key: str) -> dict:
     if args.compression is not None:
         fields.append(("output_compression", str(args.compression)))
     if args.input_fidelity:
-        # gpt-image-2 rejects input_fidelity outright:
-        #   "The model 'gpt-image-2' does not support the 'input_fidelity'
-        #    parameter." (HTTP 400, code invalid_input_fidelity_model)
-        # Verified 31.07.2026. Dropping it with a loud warning beats failing
-        # the whole call, which in a batch means producing nothing at all.
-        if args.model == "gpt-image-2":
+        # GPT Image 2 always processes image inputs at high fidelity and does
+        # not accept a configurable input_fidelity value.
+        if args.model in NON_CONFIGURABLE_FIDELITY_MODELS:
             print(
                 f"warning: --input-fidelity is not supported by {args.model}; "
-                "ignoring it. Pass --model gpt-image-1 if you need it.",
+                "image inputs already use high fidelity, so the flag is ignored.",
                 file=sys.stderr,
             )
         else:
@@ -227,6 +244,8 @@ def main() -> None:
     args = parse_args()
     if not (1 <= args.n <= 10):
         die("--n must be between 1 and 10.")
+    if args.quality in {"xhigh", "max"} and args.model not in GPT_IMAGE_25_MODELS:
+        die("--quality xhigh and max require gpt-image-2.5-flare or gpt-image-2.5-sunburst.")
     if args.background == "transparent" and args.output_format == "jpeg":
         die("transparent background requires png or webp output.")
 

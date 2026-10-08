@@ -34,6 +34,11 @@ blocks indefinitely).
 - If you hit a wall, try a different approach rather than stopping
 - Only stop when the task is actually complete with verification
 
+Persistence does not permit scope expansion, bypassing a safety boundary, or
+repeating failed work without new information. When safe in-scope approaches
+are exhausted, or the next step needs user input or new authority, report the
+blocker and the smallest change that would unblock it.
+
 **Completion means:**
 - Build/type-check commands exit 0
 - Tests pass (if applicable)

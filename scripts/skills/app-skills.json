@@ -1,0 +1,10 @@
+{
+  "supacode-cli": {
+    "source": "/Applications/Supacode.app/Contents/Resources/supacode_SupacodeSettingsShared.bundle/Contents/Resources/Skills/supacode-cli.md",
+    "mirrors": [".pi/agent/skills", ".config/opencode/skills"]
+  },
+  "supacode-deeplinks": {
+    "source": "/Applications/Supacode.app/Contents/Resources/supacode_SupacodeSettingsShared.bundle/Contents/Resources/Skills/supacode-deeplinks.md",
+    "mirrors": [".pi/agent/skills", ".config/opencode/skills"]
+  }
+}

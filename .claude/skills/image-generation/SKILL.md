@@ -1,11 +1,13 @@
 ---
 name: image-generation
-description: Generate and edit images via OpenAI's gpt-image-2 (ChatGPT Images 2.0) API. Use when the user asks to "generate an image", "create an image", "make a picture of X", "draw X", "edit this image", "remove the background from this image", "extend this image", "regenerate this image with Y", or invokes /image-generation. Outputs PNG/JPEG/WebP files to disk. Requires OPENAI_API_KEY in the environment.
+description: Generate and edit images via OpenAI's GPT Image 2.5 API. Use for requests to create, draw, edit, extend, combine, or remove backgrounds from images. Outputs PNG, JPEG, or WebP files to disk and requires OPENAI_API_KEY.
 ---
 
-# Image Generation (OpenAI gpt-image-2)
+# Image Generation (OpenAI GPT Image 2.5)
 
-Generate images from text or edit existing images using OpenAI's `gpt-image-2` model (ChatGPT Images 2.0). Runs `scripts/generate.py` with no third-party Python dependencies.
+Generate images from text or edit existing images using OpenAI's GPT Image 2.5 models. Run `scripts/generate.py`, which has no third-party Python dependencies.
+
+Use `gpt-image-2.5-flare` by default. It is OpenAI's recommended model for fast, high-quality everyday generation and editing. Use `gpt-image-2.5-sunburst` when edit precision or premium final-image quality matters more than latency.
 
 ## Prerequisite
 
@@ -44,7 +46,7 @@ Multiple input images (up to 16) compose into a single output:
 
 ## Workflow
 
-1. **Flesh out the prompt.** Never pass the user's request verbatim. gpt-image-2 rewards specific, sensory prompts. Expand the brief into a richer prompt that names:
+1. **Flesh out the prompt.** Never pass the user's request verbatim. Expand the brief into a richer prompt that names:
    - subject and pose/action
    - setting and time of day
    - art style or medium (photo, watercolor, 3D render, line art, etc.)
@@ -68,7 +70,7 @@ Multiple input images (up to 16) compose into a single output:
 
 4. Decide generate vs. edit based on the request. Edit needs at least one `--edit-image`. For edits, the prompt should describe the *change*, not redescribe the whole image.
 
-5. Pick a sensible size and quality. Default `auto` for both is fine; pick `high` only if the user asks for high fidelity or print-quality output.
+5. Pick a sensible model, size, and quality. Use Flare unless the request calls for Sunburst's tighter edit control. Default `auto` for size and quality. Use `xhigh` or `max` only when the user values detail more than latency and cost.
 
 6. Run the script. If it exits non-zero, surface the error message verbatim (it includes the OpenAI error body).
 
@@ -89,22 +91,22 @@ When the user references a style by name or uses any of its trigger keywords (e.
 | Flag | Default | Values |
 |------|---------|--------|
 | positional `prompt` | (required) | up to 32,000 chars |
-| `--model` | `gpt-image-2` | `gpt-image-2`, `gpt-image-1.5`, `gpt-image-1`, `gpt-image-1-mini` |
-| `--size` | `auto` | `auto`, `1024x1024`, `1536x1024`, `1024x1536`, or any `WxH` where W and H are divisible by 16 and aspect ratio is between 1:3 and 3:1 (gpt-image-2 only, max 3840x2160) |
-| `--quality` | `auto` | `auto`, `low`, `medium`, `high` |
+| `--model` | `gpt-image-2.5-flare` | `gpt-image-2.5-flare`, `gpt-image-2.5-sunburst`, `gpt-image-2`, `gpt-image-1.5`, `gpt-image-1`, `gpt-image-1-mini` |
+| `--size` | `auto` | `auto`, recommended sizes `1024x1024`, `1536x1024`, `1024x1536`, or custom `WxH` for GPT Image 2.5 where both edges are multiples of 16, the aspect ratio is 1:3 to 3:1, neither edge exceeds 3840 px, and total pixels are 655,360 to 8,294,400 |
+| `--quality` | `auto` | `auto`, `low`, `medium`, `high`; GPT Image 2.5 also supports `xhigh` and `max` |
 | `--n` | `1` | `1`-`10` |
 | `--format` | `png` | `png`, `jpeg`, `webp` |
 | `--background` | `auto` | `auto`, `transparent`, `opaque` (transparent requires png/webp) |
 | `--output` | `image_<ts>_<i>.<ext>` | output path; with `--n>1`, `_<i>` is appended before the extension |
 | `--edit-image` | (none) | path to an input image; repeatable, max 16 |
 | `--mask` | (none) | PNG mask file; transparent pixels mark editable regions (edit mode only) |
-| `--input-fidelity` | `low` | `low`, `high` (edit mode only; **not supported by `gpt-image-2`**, the default model, which rejects it with HTTP 400. The script now warns and drops it. Use `--model gpt-image-1` if you need it.) |
-| `--compression` | `100` | `0`-`100` (jpeg/webp only) |
+| `--input-fidelity` | unset | `low`, `high` in edit mode. `gpt-image-2` always uses high-fidelity image inputs, so the script warns and drops this flag for that model. |
+| `--compression` | unset | `0`-`100` (jpeg/webp only) |
 
 ## Notes
 
-- gpt-image-2 returns base64; the script decodes and writes to disk for you.
-- Latency: `high` quality can take 30 to 90 seconds. Mention this if the user is waiting.
+- GPT Image returns base64; the script decodes and writes it to disk.
+- Complex prompts can take up to two minutes. `xhigh`, `max`, and Sunburst can take longer than everyday Flare requests.
 - Cost varies by size and quality. The script does not estimate cost.
 - For brand-safe or work content, keep `moderation` at default `auto`. The `--moderation low` flag exists for less restrictive filtering but is rarely needed.
 - This skill does not view the resulting image. If the user wants to see it, suggest `open <path>` on macOS.
