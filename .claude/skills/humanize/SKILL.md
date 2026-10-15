@@ -5,16 +5,16 @@ description: "Detect and rewrite prose that reads as AI-generated: em dashes, AI
 
 # Humanize
 
-Rewrite prose to remove AI tells. Preserve meaning, strip the cadence.
+Make the author's intended meaning easier for the reader to understand. Use the smallest edit that helps; preserve qualifications, uncertainty, and meaningful emphasis.
 
 ## The two layers
 
 AI-ness lives at two levels, and they are not equally durable.
 
 - **Surface layer** (vocabulary, punctuation, sentence rhythm, paragraph scaffolding): the tells in [references/tells.md](references/tells.md). Cheap to detect and cheap to remove, but transient. Newer models shed them on their own, and a light edit strips the rest.
-- **Discourse layer** (whether the piece took a real, contestable position; whether it holds genuine tension; whether its specifics are named and concrete): the moves in [references/rewrite-toward-human.md](references/rewrite-toward-human.md).
+- **Discourse layer** (whether the piece communicates what its reader needs, with an argument or concrete evidence where its purpose requires them): the moves in [references/rewrite-toward-human.md](references/rewrite-toward-human.md).
 
-Stripping the surface layer is necessary but not sufficient. In a controlled test, running AI text through exactly this kind of span-level artifact removal (clichés, purple prose, redundant exposition) moved a discourse-level detector by only 1.6 points: the structural fingerprint survived the scrub (Russell et al., 2026; see [references/sources.md](references/sources.md)). So for anything longer than a short message, treat the positive-direction pass (step 5) as load-bearing work, not a finishing gloss. If a passage has no point of view, no amount of tell-stripping will make it read human.
+Surface cleanup alone does not establish clarity or fidelity. In a fiction study, artifact removal moved a discourse-level detector by only 1.6 points (Russell et al., 2026; see [references/sources.md](references/sources.md)). Use step 5 when prose needs structural editing. A status update or factual explanation can serve its reader without taking a contestable position.
 
 ## When to invoke
 
@@ -44,61 +44,60 @@ User pastes text and asks to clean it up, flags something as sounding like AI or
    the colon findings even when the requested scope did not name them.
 
 2. **Triage.** Read against [references/tells.md](references/tells.md), including its Reply-shaped tells section and its Currency table (weight `new` and `rising` hits above `fading` ones; a text that trips only fading tells is not evidence of a current model), and classify each candidate change by risk tier (see [references/risk-tiers.md](references/risk-tiers.md)):
-   - **Tier 1** (mechanical, can't change meaning): apply silently. Em dashes, curly quotes, hard-tell markers, placeholder text.
+   - **Tier 1** (mechanical, low risk): apply silently, then compare with the original. Em dashes, curly quotes, hard-tell markers, placeholder text.
    - **Tier 2** (low-risk swaps): apply, then mention in the closing summary. AI vocab swaps, didactic disclaimers, superficial tails, weasel attributions, copulative restoration.
-   - **Tier 3** (could change tone, meaning, voice, or structure): pause and ask.
+   - **Tier 3** (could change tone, meaning, voice, or structure): resolve intent under step 4.
 
 3. **Apply Tier 1 and Tier 2.** Use patterns from [references/rewrite-patterns.md](references/rewrite-patterns.md). Work category by category.
 
-4. **Ask about Tier 3 decisions.** Use the `AskUserQuestion` tool, one decision at a time, with a recommended option labeled "(Recommended)". Wait for the answer before applying. Cap at 3-4 questions per document; if more high-risk passages exist than that, batch them into a single question ("apply my recommendation to all / ask one by one / leave them").
+4. **Resolve Tier 3 decisions.** Follow authority the user already gave. When intent remains unclear, use the available question tool or ask in chat before changing the passage. Cap at 3-4 questions per document; batch further decisions. Continue independent edits while awaiting answers.
 
-5. **Positive-direction pass (the load-bearing layer; for prose, not short messages).** Stripping tells only removes the transient surface signal (see The two layers above); this pass addresses the durable one, and for anything longer than a short message it is where the real work happens. Clean text can still be inert. Use [references/rewrite-toward-human.md](references/rewrite-toward-human.md) to restore human rhythm. Apply the Group A structural moves freely (vary sentence length, cut filler transitions, restore active voice, land on the strong word): they change cadence, not content. For the Group B content-and-voice moves (add a concrete number, a first-person note, an emotional edge), **never fabricate**: reshape specifics the author already gave, or flag the gap and ask. Skip this pass for terse factual text or short messages where the machine rhythm isn't the problem.
+5. **Edit for the reader (prose only, where needed).** Use [references/rewrite-toward-human.md](references/rewrite-toward-human.md) for structural and voice edits. Structural changes can alter emphasis or meaning even without adding facts. Apply changes within the user's instructions and compare them with the original. For content and voice, use only supplied material. Skip this pass when the text already serves its reader.
 
-6. **Score before returning (prose only; skip short messages and terse factual text).** The grep in step 7 checks the surface layer. Nothing checks the layer this skill calls load-bearing, so score the rewritten text 1 to 5 on four axes. Any axis below 3 gets one revision pass before you return the text.
+6. **Compare and score (skip scoring short messages and terse factual text).** Compare every rewrite with the original for changes in certainty, scope, attribution, and emphasis. Restore any unintended change. Score prose 1 to 5 on these axes; an axis below 3 gets one revision pass.
 
    | Axis | What you are scoring | 1 | 5 |
    |---|---|---|---|
-   | **Position** | Does the piece assert something a reasonable reader could disagree with? | A survey of considerations with no claim in it | A contestable claim, stated and backed |
-   | **Specificity** | Are the nouns named, or is the piece about categories? | "teams", "organisations", "studies show" | The actual company, number, date, person |
-   | **Restraint** | Did the rewrite add? | Longer than the original, new hedges and scaffolding | Shorter; replacements and deletions only |
+   | **Fidelity** | Does it preserve the author's meaning and confidence? | Claims, qualifications, or emphasis changed | Intended meaning and confidence preserved |
+   | **Usefulness** | Can the intended reader understand or act on it? | Purpose or needed information is unclear | The text serves its reader's purpose |
+   | **Economy** | Does each passage contribute something needed? | Repetition and filler waste attention | Each passage earns its reading time |
    | **Register** | Does it still sound like the register it arrived in? | A formal memo now reads breezy, or voice markers got flattened as tells | Same register, AI accent gone |
 
-   **Position and Specificity are scored, never fixed by invention.** If either is low because the author gave you nothing to work with, that is something to report. Name the paragraph that makes no claim, or the noun that needs a real number, and hand it back. A fabricated position is worse than an inert one, and this axis is the most tempting place in the whole skill to break the never-fabricate rule.
+   Check position when the genre needs an argument, and specifics when the reader needs evidence. If a needed fact, decision, or rationale is missing, name the exact gap in the editorial note, outside the draft. Preserve unresolved questions and genuine uncertainty. The author supplies missing thinking.
 
-   Restraint has a cheap proxy: the rewrite should land at or below the original word count. When 18 professional editors worked over 1,057 machine paragraphs, 74% of their edits were replacements and 18% deletions, against 8% insertions (Chakrabarty et al. 2025, see [references/sources.md](references/sources.md)). A humanizing pass that grew the text did something other than humanize it.
+   Word count is a signal, not a ceiling. Prefer deletions and replacements; allow a short clarification supported by the original when it saves reader effort. See the editing research and Clay's author-responsibility policy in [references/sources.md](references/sources.md).
 
-   **Stopping rule: two passes is normal, three means the text is the problem.** If the revision pass still scores Position or Specificity below 3, stop rewriting. The text has no argument or no facts, and a rewrite cannot supply either. Return what you have, name the gap, and say plainly that it needs the author.
+   **Stopping rule: at most two passes.** If a needed fact or decision still blocks usefulness, return the faithful draft and identify the gap. If an edit cannot preserve meaning, restore the original passage and explain the unresolved issue.
 
-7. **Re-scan.** Re-run the grep on the rewritten text. Should come back empty.
+7. **Re-scan.** Re-run the greps. Remove hard-tell artifacts; judge style hits in context. Keep legitimate wording that survived the fidelity check.
 
 ## Output
 
-Return the rewritten text. End with a brief summary: counts of Tier 1 fixes (e.g. "4 em dashes, 2 curly quotes"), Tier 2 fixes (e.g. "swapped 3 instances of 'underscore', dropped 2 didactic disclaimers"), and any Tier 3 passages left alone with the reason ("kept the closing paragraph; you confirmed it's the brand voice"). If you ran a positive-direction pass, note the structural moves ("varied sentence length in the second paragraph, restored active voice twice") and flag any gap you left for the author ("the '40% faster' claim needs a real number, left a marker").
+Return the rewritten text. End with a brief editorial note: Tier 1 and Tier 2 fix counts, material structural changes, and unresolved Tier 3 passages with reasons. Put missing facts, decisions, or rationale here, outside the draft. Identify passages needing the author's judgment without claiming their endorsement of the rewrite.
 
-Where you scored (step 6), stamp the four axes on one line so a later pass can see where the weakness was: `Score: Position 4 · Specificity 3 · Restraint 5 · Register 5`. If the stopping rule fired, say so instead of returning a third rewrite.
+Where you scored (step 6), stamp the axes on one line: `Score: Fidelity 5 · Usefulness 4 · Economy 5 · Register 5`. If the stopping rule fired, identify the gap or restored passage.
 
 If the text was already clean, say so and return it unchanged. Do not invent tells to justify edits.
 
 ## Rules
 
-- Preserve meaning, facts, structure, and the author's argument. Only change voice.
-- Every sentence you write new during a rewrite is generated under [writing-whip](../writing-whip/SKILL.md). A rewrite that trades an em dash for a tie-back or a self-answered question has moved the tell, not removed it.
-- Default to stripping, not embellishing. You may restructure for human rhythm (vary sentence length, restore active voice, cut filler transitions, land on the strong word): that changes cadence, not content. But never invent facts, numbers, sources, quotes, anecdotes, or opinions the author didn't supply. If human-sounding prose needs a concrete specific the text lacks, flag the gap or ask. A fabricated detail is worse than a bland one.
+- Preserve facts, argument, and intent. Structure and wording affect what readers understand; use the comparison in step 6 to check edits.
+- Every sentence you write new during a rewrite is generated under `writing-whip`. A rewrite that trades an em dash for a tie-back or a self-answered question has moved the tell, not removed it.
+- Default to deletion and replacement. Never invent facts, numbers, sources, quotes, anecdotes, or opinions. Use supplied material for clarification; report content gaps outside the draft.
 - **Rewrite at the register, not the phrase.** The greps are a detector; they are not the rewrite instruction. Em dashes, emphatic colons, punchy fragments and the Claude-era phrase list are four surfaces of one behaviour: sentences built to land rather than to state (see Turn-of-phrase optimization in [references/tells.md](references/tells.md)). Fix each hit individually and the behaviour moves into unlisted synonyms. State what the prose should do instead ("claim first, qualification after"), then use the greps to catch residue. This applies to instructions you write for a model as much as to prose you edit: enumerating banned tokens is measurably weaker than naming the register, and a long ban list degrades compliance rather than improving it.
 - Replace em dashes with two sentences, a comma, or parentheses. Do not swap them for colons by default: the colon-instead-of-em-dash habit produces the emphatic-colon tell, and the author's standing preference is full sentences. A colon earns its place only before a genuine list or a quotation. Never preserve the em dash itself.
 - Replace curly quotes and apostrophes with straight ASCII (`"`, `'`).
-- Do not "improve" sentences that aren't AI-tell carriers. Leave them alone.
+- Leave useful sentences alone. Edit identifiable tells or obstacles to the reader's understanding.
 - **Humanizing is not casualizing.** A condolence note, a board memo, a legal letter and a group chat are all human, and none of them sound alike. Strip the AI accent from whatever register the text is already in; do not drag formal writing toward breezy startup voice, and do not add contractions or fragments to a register that was formal on purpose. If the register itself seems wrong for the audience, say so instead of silently changing it.
 - **Don't overcorrect.** Every rule here describes taste, not a checklist to satisfy. The failure mode on the other side is real: every sentence punchy, every paragraph one line, forced fragments, inserted slang, a useful word avoided because it appears on a list. Do not swing so far that the output reads as an AI performing humanness. The test is whether a person would plausibly have written this, not whether it avoids the most tells. If a rewrite feels forced, keep the plainer original.
-- **Know when to stop.** Two passes is normal. If a second pass still leaves the piece with no claim and no named specifics, the problem is the text, not the prose. Say that and stop. Polishing past that point produces fluent writing with nothing in it.
 - Norwegian text: preserve æ, ø, å. Apply the same tells taxonomy (calques translate). On Norwegian text, always run the Norwegian negative-parallelism grep from the ad-hoc list in the same pass as the English one, since "ikke bare X, men Y" is the same setup-payoff move and hides from the English pattern.
-- When in doubt about whether a rewrite changes meaning, tone, or voice: ask. The cost of one extra question is low; the cost of paving over the user's actual voice is high.
+- When meaning, tone, or voice remains uncertain, follow step 4. Preserve the original passage until the author's intent is clear.
 
 ## Related skills
 
-Invoke these with the Skill tool where it exists. Where it does not (Codex, Zed), read the linked SKILL.md before continuing. Loading them is part of this skill's workflow, not optional context.
+Invoke these skills where supported; otherwise read their SKILL.md. Follow the links below, or resolve names in project skills, then `~/.agents/skills/`. Load them before continuing.
 
-- [writing-whip](../writing-whip/SKILL.md): invoke it before writing any replacement sentence. This file catches what was written; the whip stops the same behaviours at generation, so a rewrite done under it cannot put a tie-back or a self-answered question where the em dash used to be. Its Behaviours list and the Reply-shaped tells section here describe the same moves from the two sides.
+- `writing-whip`: invoke it before writing any replacement sentence. This file catches what was written; the whip stops the same behaviours at generation, so a rewrite done under it cannot put a tie-back or a self-answered question where the em dash used to be. Its Behaviours list and the Reply-shaped tells section here describe the same moves from the two sides.
 - [write-in-my-voice](../write-in-my-voice/SKILL.md): invoke it first whenever the text is Magnus's own (he says so, or the register and the æ/ø/å make it plain). It names the voice markers this skill must leave alone: a real rule of three, rhetorical questions, second-person "du", parenthetical glosses of English terms, sparing intensifiers. Without it loaded those get flattened as tells. It calls this skill narrowly in return: em dashes, the emphatic colon, slop vocabulary, didactic disclaimers, clustered negative parallelism.
 
 ## Ad-hoc greps for specific tells

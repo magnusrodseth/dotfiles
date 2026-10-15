@@ -1,124 +1,101 @@
 # Rewrite toward human
 
-The rest of this skill is subtractive: find a tell, strip it. This file is the other direction. Once the tells are gone you can be left with prose that is clean but inert, correct but clearly machine-shaped. These are the moves that push it back toward how a person writes.
+Use these moves when surface cleanup leaves prose hard to follow. Preserve the author's intended meaning and chosen register. Each example uses only information in its original.
 
-Sources: the writing-craft canon (Orwell, Strunk & White, Zinsser, King, Klinkenborg, Gopen & Swan, Paul Graham, Oxide Computer's "LLMs as writers") and the stylometry / AI-detection literature (GPTZero on perplexity and burstiness; Muñoz-Ortiz et al. on human vs. LLM news text; Kobak et al. on excess vocabulary). Specific citations and URLs are in [sources.md](sources.md); the durable findings are below.
+Sources: the writing-craft and stylometry references in [sources.md](sources.md), plus Clay's AI writing policy on author responsibility and reader effort. The policy is editorial guidance, not a controlled study.
 
-## The one principle underneath all of it
+## The governing principle
 
-Human prose is the trace of a mind that did the work and took a position. Oxide frames it as a social contract: the reader trusts that the writer undertook the greater intellectual effort. AI prose breaks that contract, so it reads as text nobody quite stood behind. Every move below is a tactic in service of one goal: make the prose reflect real understanding and a real stance. If a passage has no point of view, no move here can save it; that is a content problem, not a cadence problem.
+Make the author's thinking easier for the intended reader to understand. A factual explanation can do that without a contestable position. A proposal may need a decision and rationale. Judge the piece by its purpose.
 
-Detection signals are also a moving target as human and machine writing coevolve. Do not chase one detector's score. Favor the durable moves: rhythm variance, concreteness, stance, and voice.
+Even a rewrite that adds no facts can alter emphasis, confidence, or scope. Use the comparison in step 6 of [SKILL.md](../SKILL.md) after editing. Apply structural changes within the user's instructions; resolve unclear intent before changing the passage.
 
-## Group A: structural moves (apply freely, they change cadence not content)
+## Group A: structural moves (compare with the original)
 
-These restructure what is already there. They add no facts, so they stay inside "strip, don't embellish."
+### Vary sentence length where it helps comprehension
 
-### Vary sentence length (burstiness)
-The single strongest human signal in the detection literature. Machine prose clusters in a 10 to 25 word band; human prose alternates long, embedded sentences with very short ones. After any run of two sentences over ~20 words, force the next one under 8. Aim for a sentence-length spread (standard deviation) at least as large as the mean.
+Split an overloaded sentence or combine choppy ones when the result is easier to follow. Let the ideas determine sentence length.
 
 > Before: "The migration improved performance across all endpoints, and the team was pleased with the reduction in latency that followed the rollout."
-> After: "The migration improved performance across every endpoint. Latency dropped by half. The team was relieved."
+> After: "The migration improved performance across all endpoints. The team was pleased with the reduction in latency after the rollout."
 
-### Vary sentence openings
-No two consecutive sentences should start with the same word or the same part of speech. Lead some sentences with a subordinate clause or a prepositional phrase instead of the subject.
+### Reduce needless repetition in openings
+
+Combine repeated subjects where the actions remain distinct. Preserve repetition that helps readers follow instructions or compare items.
 
 > Before: "The system logs errors. The system retries failed jobs. The system alerts on-call."
-> After: "The system logs errors. When a job fails, it retries twice. On-call only hears about it if both retries die."
+> After: "The system logs errors, retries failed jobs, and alerts on-call."
 
-### Cut academic transitions
-Machines open with "Moreover / Furthermore / Additionally / In addition / It is important to note" at several times the human rate. Delete most of them and let the ideas sit next to each other. Juxtaposition carries the logic.
+### Cut empty transitions
+
+Remove an announcement when the following sentence already makes the connection clear. Keep words that explain a real causal, temporal, or contrasting relationship.
 
 > Before: "Moreover, it is important to note that the API is rate-limited. Furthermore, this affects batch jobs."
-> After: "The API is rate-limited. That breaks batch jobs."
+> After: "The API is rate-limited. This affects batch jobs."
 
-### Restore the active voice with a real agent
-Agentless passives ("mistakes were made", "gains were observed") dodge the doer. Name who did what. This is a name-the-doer move, not a passive-voice hunt: GPT-4o uses agentless passive at about half the human rate (Reinhart et al. 2025, [sources.md](sources.md)), so passive on its own is not a machine marker. The tell is the missing agent.
+### Use active voice when the agent is known
 
-> Before: "Improvements were implemented and gains were observed."
-> After: "We rewrote the query and cut load time in half."
+Name the doer only when the source identifies them. Passive voice can be useful when the agent is unknown or unimportant.
 
-### Put the action in the verb (de-nominalize)
-Machine prose stacks abstract nouns and buries the verb far from its subject. Turn the noun-action back into a verb and keep subject and verb close.
+> Before: "The changes were implemented by the team."
+> After: "The team implemented the changes."
+
+### Put the action in the verb
+
+Replace noun-actions with verbs when the relation stays the same.
 
 > Before: "The utilization of caching resulted in a reduction of latency."
 > After: "Caching reduced latency."
 
-### Land on the strongest word (stress position)
-Readers emphasize whatever arrives at the end of a sentence. Move the point there. Never trail off into "...which is important for a variety of reasons."
+### Keep qualifications attached to claims
+
+Moving a qualification can change its prominence. Preserve what it limits and how certain the author is.
 
 > Before: "This change reduced error rates significantly in most cases."
-> After: "This change cut the error rate to zero."
+> After: "In most cases, this change significantly reduced error rates."
 
-### Thread old to new
-Start each sentence with something the reader already has; deliver the new part at the end; hook the next sentence to it. This makes a paragraph read as one continuous thought instead of a list of adjacent true statements.
+Keep the original if the new emphasis is wrong. Ask for evidence only when the reader needs a magnitude; leave that question outside the draft.
+
+### Connect sentences using supplied relationships
+
+Introduce new information through something the reader already knows. Preserve causal language only where the source supports it.
 
 > Before: "Latency dropped. A new cache was the reason. Users noticed."
-> After: "Latency dropped because we added a cache. That cache is what users noticed first."
+> After: "Latency dropped because of a new cache. Users noticed the drop."
 
-### Prefer short plain words over long Latinate ones
-Swap the register down: use (not utilize), help (not facilitate), use (not leverage), about (not regarding), so (not thus). Plain words read as someone talking.
+### Prefer plain words within the chosen register
 
-### Cut adverbs, upgrade the verb
-Delete the "-ly" hedge or intensifier. If the sentence weakens, find a stronger verb instead of restoring the adverb.
+Use a familiar word where it has the same sense: "use" for "utilize", "help" for "facilitate". Keep technical terms and intentional formality.
 
-> Before: "The service quickly and significantly improved."
-> After: "The service went from ten seconds to one."
+### Preserve the strength of the claim
 
-### Break rule-of-three and symmetric parallelism
-Machines default to triads and matched clauses: rhythm without thought. Cut to two or push to four, and make the items different lengths.
-
-> Before: "It's fast, reliable, and scalable."
-> After: "It's fast and, once you're past the setup, genuinely reliable."
-
-### Vary paragraph length; dissolve needless scaffolding
-Even, parallel paragraphs and bold-lead bullet lists are their own fingerprint. Collapse a list back into prose where the structure isn't earning its keep, and let one very short paragraph sit among longer ones.
-
-### State claims in positive form and take a position
-Remove hedge stacks ("it could be argued that this may not be ineffective"). Turn "not X" into the positive claim. A verdict signals a real judgment was made. (See Group B for keeping genuine, varied hedging.)
+Cut empty intensifiers; retain words that carry uncertainty, magnitude, timing, or the author's judgment.
 
 > Before: "It could be argued that shorter subject lines may not be ineffective."
-> After: "Short subject lines win. Keep them under eight words."
+> After: "Shorter subject lines may be effective."
 
-## Group B: content and voice moves (never fabricate, ask or flag instead)
+### Keep distinct items and useful structure
 
-These are what most separate human from machine prose, and they are also where the skill's core rule bites hardest: **do not invent facts, numbers, sources, anecdotes, or opinions the author did not supply.** A fabricated specific is worse than a bland abstraction. Use these to *reshape* specifics the author already has, or to *flag a gap* for the author to fill. Never to manufacture content.
+A list with three distinct items stays a list with three items. Remove an item only when it repeats another or adds nothing needed. Keep headings, bullets, and parallel structure when they help readers scan or compare. Follow the risk tiers for material deletions and structural changes.
+
+## Group B: content and voice moves (use supplied material)
 
 ### Concreteness and named specifics
-The clearest human marker, and the most dangerous to fake. Replace abstract nouns (impact, solution, framework, dynamics) and vague quantifiers (many, significantly, over time) with the actual instance, figure, date, or named source.
 
-> Before: "The solution delivered significant business impact."
-> After (only if the author's material supports it): "The new checkout flow cut cart abandonment from 40% to 22%."
-
-If the text does not contain the specific, do not invent one. Leave a marker or ask: "This sentence would land harder with a real number. What was the actual figure?" The detection literature warns that machines already sprinkle invented numbers to sound convincing; grounded specifics good, fabricated precision bad.
+Replace an abstraction with a named instance only when the author's material provides it. Keep the claim's scope: one example does not establish a general result. Report missing evidence in the editorial note when the reader needs it.
 
 ### First-person perspective and lived detail
-Where the genre allows it, one first-person observation or short concrete anecdote does more than any amount of polish. Only if the author actually has it. Do not write an anecdote they did not live.
 
-### Varied epistemic stance
-Machines are either uniformly confident or flatly hedged. Humans modulate: a genuine "I'm not sure this holds under load" next to a blunt "for normal traffic this is the right call." Only reflect the author's real confidence; do not invent doubt or certainty.
+Retain the author's supplied perspective and experiences where the genre permits them. A factual explanation can stay impersonal. An anecdote is content, so adding one requires the author's material and authority.
 
-### Emotional edge; drop relentless positivity
-Human writing runs cooler and sometimes sharper: skeptical, irritated, flatly critical. Cut reflexive enthusiasm ("exciting potential", "worth celebrating") when it isn't the author's actual view. Only where it matches what they think.
+### Confidence and emotional tone
 
-### Controlled imperfection and idiolect
-Grammatical pristineness is itself a tell. Allow contractions, an occasional deliberate fragment for emphasis, an opening "And" or "But." Keep it subtle, and don't override a formal register the author chose on purpose.
+Preserve genuine doubt, enthusiasm, skepticism, and unresolved questions. Removing a hedge can turn a possibility into a claim. Changing "pleased" to "relieved" assigns a different emotion.
 
-### One apt, unexpected word per passage
-Machines pick the safest continuation, so phrasing is unsurprising. Reject the first collocation that comes to mind ("a sense of peace", "bubbled gently") and choose one specific, slightly unexpected, still-accurate alternative. Only where it doesn't distort meaning.
+### Idiolect and word choice
 
-## Self-check on the rewrite
+Keep deliberate fragments, contractions, repetition, and unusual words when they fit the author and register. Choose a replacement for precision or clarity; forced novelty and deliberate errors do not help the reader.
 
-Measurable targets, not vibes. Run these against your rewritten text:
+## Self-check
 
-- Sentence-length standard deviation is roughly at least the mean. If every sentence is 12 to 25 words, add a short one and a long one.
-- Near-zero "Moreover / Furthermore / Additionally / It is important to note" at paragraph and sentence starts.
-- No two consecutive sentences share an opening word or part of speech.
-- The concrete-and-named to abstract noun ratio went up, not down.
-- First-person count is above zero where the genre permits it (and the author supplied the perspective).
-- No "studies show / experts say / many companies" placeholders remain.
-
-## Two standing caveats
-
-1. **Specificity must be real.** The single fastest way to make prose read human is concrete, checkable detail, and the single worst failure is inventing it. When in doubt, flag the gap; never fabricate a statistic, source, quote, or anecdote.
-2. **Don't game one detector.** Detection thresholds drift. Optimizing a single perplexity or burstiness score is brittle. The durable moves (variance, concreteness, stance, voice) are the point; the metrics are just how you check them.
+Use the Fidelity, Usefulness, Economy, and Register checks in step 6 of [SKILL.md](../SKILL.md). Check rhythm by reading the passage, without sentence-length targets or first-person quotas. Restore wording when a stylistic improvement changes the intended meaning. Leave gaps needing the author in the editorial note, outside the draft.

@@ -2,11 +2,11 @@
 
 Every candidate change falls into one of three tiers. Use this to decide whether to fix silently, fix-and-mention, or pause and ask.
 
-The bar for asking is: **could a reasonable author have made this choice deliberately?** If yes, ask. If no, just fix.
+The tiers estimate risk; they do not guarantee unchanged meaning. Follow the user's existing authority and compare edits with the original. Ask only where intent remains unclear.
 
 ## Tier 1: auto-fix, no notification
 
-Mechanical changes that cannot change meaning. Apply without comment.
+Mechanical changes with low semantic risk. Apply without comment, then check punctuation, quotations, and attribution against the original.
 
 - Em dashes (`—`) replaced with comma, parens, colon, semicolon, or sentence split
 - En dashes in prose where a hyphen or "to" is correct
@@ -17,11 +17,11 @@ Mechanical changes that cannot change meaning. Apply without comment.
 - Markdown syntax that leaked into a plain-text or email context where it won't render → strip
 - Trailing whitespace, double spaces, stray "Subject: ..." prefixes pasted from email forms
 
-These are non-debatable. If the user pasted them, they didn't mean to.
+If a mechanical edit affects meaning, choose another form or resolve the uncertainty under Tier 3.
 
 ## Tier 2: auto-fix, mention in summary
 
-Changes that almost never alter meaning. Apply them, but tell the user what you did in the closing summary so they can spot-check.
+Apply when the original claim and its qualifications survive. Mention the edits briefly so the author can review them. Escalate uncertain changes to Tier 3.
 
 - **AI vocabulary swaps** when the surrounding sentence is generic: `delve`, `underscore` (figurative), `tapestry`, `vibrant`, `intricate`, `pivotal`, `meticulous`, `garner`, `bolster`, `foster`, `showcase`, `leverage` (as a verb), `landscape` (abstract sense), `utilize`, `streamline`, `harness`, `certainly`, `paradigm`, `synergy`, `ecosystem` (as vague abstraction)
 - **Product-marketing vocabulary** used decoratively, where deleting the word costs the sentence nothing: `seamless`, `unlock`, `empower`, `elevate`, `supercharge`, `frictionless`, `effortless`, `game-changer`, `revolutionize`, `cutting-edge`, `best-in-class`, `groundbreaking`, `unparalleled`, `transformative`, `reimagine`, `democratize`, `turnkey`, `plug-and-play`, `future-proof`, `look no further`, `rest assured`, `deep dive`. Drops to Tier 3 in marketing copy (see below) and when the word is the correct technical term (`scalable` about real scaling, `intuitive` in HCI, `data-driven` about an actual method)
@@ -44,7 +44,7 @@ Changes that almost never alter meaning. Apply them, but tell the user what you 
 
 ## Tier 3: ask before changing
 
-Use `AskUserQuestion` with one decision per question. Always include a recommended option marked `(Recommended)`.
+Follow authority the user already gave. If intent remains unclear, ask with the available question tool or in chat before changing the passage.
 
 ### Domain-correct words
 
@@ -89,7 +89,7 @@ Don't delete a whole section without asking, even if it reeks of AI.
 
 ### Positive-direction content moves (never fabricate)
 
-The Group B moves in [rewrite-toward-human.md](rewrite-toward-human.md) add or reshape content, so they carry the highest risk. Adding a concrete number, a first-person note, or an emotional edge is a Tier 3 action at most, and only ever by reshaping what the author already gave or by asking. Never invent a fact, figure, source, quote, or anecdote to make prose sound more human. When a passage would read human only with a specific the text lacks, flag the gap; do not fill it yourself.
+Group B moves in [rewrite-toward-human.md](rewrite-toward-human.md) reshape content or voice and need suitable authority and supplied material. Never invent facts or opinions. Keep unresolved questions and genuine uncertainty; report missing facts, decisions, or rationale outside the draft.
 
 ### Discourse-level tells (structural, high voice-risk)
 
@@ -104,7 +104,7 @@ The four discourse-level tells in [tells.md](tells.md), embodied-emotion over-wr
 
 ## How to ask
 
-Use `AskUserQuestion`. One decision per question. Recommended option first, labeled `(Recommended)`. Briefly state why it's uncertain.
+Use the available question tool or ask in chat. Group related uncertainties and give a recommendation. Ask about authorial intent, not permission already granted.
 
 Example question shape:
 

@@ -126,15 +126,13 @@ Keep a rhetorical question only when it's genuinely doing work (a real pivot the
 
 ## Rule of three
 
-Cut to two, or to one if the third item was filler. Most triplets are padding.
+Keep every distinct item, whatever the count. Remove repeated meaning only when it adds nothing the author intended.
 
 | Before | After |
 |---|---|
-| `engaging, repetitive, and entertaining` | `engaging and repetitive` (or whichever two carry the meaning) |
-| `identity, authenticity, and what it means to live on` | `identity and authenticity` |
-| `through critique, correction, and clarity` | `through critique and correction` |
+| `clear, easy to understand, and readable` | `clear` (when the phrases repeat the same claim) |
 
-If the triplet has genuinely three distinct items (e.g. "Photoshop, Figma, and Sketch"), keep it. The tell is when the three are near-synonyms or vague abstractions.
+A list of "Photoshop, Figma, and Sketch" stays intact. Follow the risk tiers when a deletion could remove a separate idea.
 
 ## False ranges
 
@@ -278,16 +276,16 @@ After:
 
 ## Craft-metaphor verbs
 
-Replace the craft verb with the literal action. The rewrite is usually more specific, because the metaphor was hiding the fact that no specific was ever given.
+Replace a decorative craft verb with its plain equivalent. Use a more specific action only when the source supplies it.
 
 | Before | After |
 |---|---|
-| `We sharpened the positioning.` | `We cut two of the four claims.` |
-| `Observability was bolted on afterwards.` | `Observability was added after launch.` |
-| `The strategy is woven through every team.` | `Every team has a target from the strategy.` |
-| `Let me unpack the tradeoff.` | `The tradeoff is between latency and cost.` |
+| `We sharpened the positioning.` | `We made the positioning clearer.` |
+| `Observability was bolted on afterwards.` | `Observability was added afterwards.` |
+| `The strategy is woven through every team.` | `The strategy applies across every team.` |
+| `Let me unpack the tradeoff.` | `Let me explain the tradeoff.` |
 | `These constraints are baked into the protocol.` | `The protocol requires these constraints.` |
-| `The findings surfaced a gap in coverage.` | `The findings showed tests never covered the retry path.` |
+| `The findings surfaced a gap in coverage.` | `The findings revealed a gap in coverage.` |
 
 Judge by density, not by sight of the word. One craft verb in a long piece is ordinary English, and several of these have literal senses (a map that is mapped, a frame that is framed). A cluster of them, or one standing in for a specific the author has, is the tell. If the literal rewrite needs a fact the text doesn't contain, flag the gap rather than inventing the detail.
 

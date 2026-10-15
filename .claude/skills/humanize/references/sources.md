@@ -44,7 +44,11 @@ High-confidence, verifiable:
 - Paul Graham, "Writing, Briefly" (https://paulgraham.com/writing44.html) and "Write Simply" (https://paulgraham.com/simply.html). Short Germanic words; write like you talk.
 - Oxide Computer, "LLMs as writers," RFD 576. The reader-writer social contract; prose as the trace of real understanding. https://rfd.shared.oxide.computer/rfd/0576
 
-## Positive direction: detection / stylometry research (rewrite-toward-human.md, self-check metrics)
+## Author responsibility and reader effort
+
+- Sophie Alpert, ["Why Clay Has an AI Writing Policy"](https://www.clay.com/blog/ai-writing-policy), 19.08.2026, read 15.10.2026. Company editorial policy, not experimental evidence. Authors must own their ideas and wording; structure affects emphasis, and edits should respect reader time. In this skill, it informs the fidelity comparison and purpose-based checks. It does not establish detector accuracy or a universal authoring-to-reading time ratio.
+
+## Positive direction: detection / stylometry research (background, not rewrite quotas)
 
 High-confidence, verifiable:
 
