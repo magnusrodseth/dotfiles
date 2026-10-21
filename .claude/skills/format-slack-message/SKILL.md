@@ -12,11 +12,10 @@ Slack's message composer is a Chromium-based rich text (WYSIWYG) editor. On past
 ## Workflow
 
 1. **Draft the message in Magnus's voice.** Run the content through the `write-in-my-voice` skill so it reads like he wrote it, not like an AI drafted it (see "Composing the message" below). Skip only if the user pasted final text they want verbatim.
-2. **Append the AI-disclosure footer** (see "AI-disclosure footer" below) as the last line.
-3. **Slackify the Markdown** (see "Slackifying" below): drop tables, keep headings shallow, and prefer links over images.
-4. Convert Markdown → HTML using `pandoc`.
-5. Place the HTML on the clipboard using `osascript` with the AppKit framework.
-6. Confirm the copy and remind the user to paste into Slack.
+2. **Slackify the Markdown** (see "Slackifying" below): drop tables, keep headings shallow, and prefer links over images.
+3. Convert Markdown → HTML using `pandoc`.
+4. Place the HTML on the clipboard using `osascript` with the AppKit framework.
+5. Confirm the copy and remind the user to paste into Slack.
 
 ## Composing the message
 
@@ -25,25 +24,6 @@ Slack messages are outward-facing first-person text, so they go through `write-i
 - **Smooth, connected sentences.** Favour flowing prose over choppy fragments. Let clauses join with commas, colons, and semicolons (never em dashes) so the message reads naturally start to finish.
 - **English for technical jargon.** Keep technical and product terms in English even inside Norwegian prose: say "deployment", "pull request", "merge", "build", "endpoint", "rollback", "feature flag", "background job" rather than forcing a Norwegian equivalent. Magnus code-switches this way naturally; over-translated technical Norwegian reads stiff and wrong.
 - **Plain Norwegian for everything else.** Only the technical nouns/verbs switch to English. The connective tissue, framing, and tone stay in natural Norwegian with correct æ/ø/å.
-
-## AI-disclosure footer
-
-Every message this skill composes ends with a short italic disclosure. Match the message language:
-
-- **Norwegian:** `*Denne meldingen er skrevet av AI, korrekturlest av meg, og basert på kontekst jeg har hentet inn selv.*`
-- **English:** `*This message was written by AI, proof-read by me, and based on context I gathered myself.*`
-
-**Spacing:** a single blank line is not enough. Slack renders consecutive paragraphs tightly, so the footer crowds the body. Add an explicit empty paragraph above it so there's a real visual gap — a line containing only `&nbsp;`, or a `---` rule for a stronger footer separator:
-
-```markdown
-...last line of the body.
-
-&nbsp;
-
-*Denne meldingen er skrevet av AI, korrekturlest av meg, og basert på kontekst jeg har hentet inn selv.*
-```
-
-If the user supplied the full message verbatim (workflow step 1 skipped), the "written by AI" framing is inaccurate — ask whether they still want the footer before adding it.
 
 ## Slackifying
 
@@ -59,14 +39,8 @@ Slack's rich text model is narrower than Teams'. Before converting, adjust the M
 
 ```bash
 # 1) Write the voiced, slackified message to a temp file (HEREDOC preserves formatting).
-#    End with an empty paragraph (&nbsp;) then the italic AI-disclosure footer,
-#    language-matched to the body. The &nbsp; gives a real gap in Slack.
 cat > /tmp/slack-msg.md << 'EOF'
 <VOICED MARKDOWN CONTENT GOES HERE>
-
-&nbsp;
-
-*Denne meldingen er skrevet av AI, korrekturlest av meg, og basert på kontekst jeg har hentet inn selv.*
 EOF
 
 # 2) Convert to HTML (for rich paste) and to plain text (fallback flavor).
