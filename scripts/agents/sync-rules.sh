@@ -60,13 +60,13 @@ RULES_DIR="scripts/agents/rules"
 # <target path>:<comma-separated rule names>
 #
 # OpenCode is deliberately thin. It carries only the rules that change what it
-# does on every task; the rest would be prompt weight for no behaviour. Widen its
-# list only on purpose, not for symmetry with the other two. no-slop was added
-# 19.08.2026 on that test: it governs the prose in every single response.
+# does across tasks, plus the shared refactoring workflow. Widen its list only
+# on purpose, not for symmetry with the other two. no-slop was added 19.08.2026:
+# it governs the prose in every single response.
 MANIFEST="
-.claude/CLAUDE.md:dev-server,task-completion,writing-style,no-slop,norwegian,github-refs,context7
-.codex/AGENTS.md:dev-server,task-completion,writing-style,no-slop,norwegian,github-refs,context7
-.config/opencode/AGENTS.md:writing-style,no-slop,github-refs,context7
+.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,context7
+.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,context7
+.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,context7
 "
 
 TMPDIR_RUN="$(mktemp -d)"

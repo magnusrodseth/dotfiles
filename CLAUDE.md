@@ -251,6 +251,7 @@ each agent's own instruction file by `scripts/agents/sync-rules.sh`:
 scripts/agents/rules/          .claude/  .codex/  opencode/
   dev-server.md                   x         x
   task-completion.md              x         x
+  refactoring.md                  x         x         x
   writing-style.md                x         x         x
   no-slop.md                      x         x         x
   norwegian.md                    x         x
@@ -259,10 +260,10 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
-carries only the rules that change what it does on every task, which is the
-output-shaping ones plus `context7`. `no-slop.md` and `github-refs.md` are there
-because they govern every sentence it writes, not for symmetry. Widen its
-list on purpose, not for symmetry.
+carries the output rules, `context7`, and the shared refactoring workflow.
+`no-slop.md` and `github-refs.md` govern every sentence it writes. `refactoring.md`
+keeps refactoring review consistent across agents. Widen its list on purpose,
+not for symmetry.
 
 The target file owns the `##` heading and the position. The script owns only the
 bytes between `<!-- rules:<name> -->` and `<!-- /rules:<name> -->`, and rewrites
