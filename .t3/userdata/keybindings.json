@@ -10,11 +10,6 @@
     "when": "!terminalFocus"
   },
   {
-    "key": "mod+shift+b",
-    "command": "threadPanel.toggle",
-    "when": "!terminalFocus"
-  },
-  {
     "key": "mod+t",
     "command": "rightPanel.new",
     "when": "rightPanelOpen && !terminalFocus"
@@ -279,10 +274,6 @@
     "command": "sidebar.toggle"
   },
   {
-    "key": "mod+alt+b",
-    "command": "rightPanel.toggle"
-  },
-  {
     "key": "mod+shift+d",
     "command": "terminal.splitVertical",
     "when": "terminalFocus"
@@ -399,5 +390,14 @@
     "key": "mod+9",
     "command": "thread.jump.9",
     "when": "!modelPickerOpen && isDesktop"
+  },
+  {
+    "key": "mod+ctrl+b",
+    "command": "threadPanel.toggle",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "mod+shift+b",
+    "command": "rightPanel.toggle"
   }
 ]
