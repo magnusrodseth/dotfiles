@@ -89,6 +89,16 @@
     "when": "!terminalFocus"
   },
   {
+    "key": "mod+shift+arrowup",
+    "command": "composer.increaseEffort",
+    "when": "!terminalFocus && !modelPickerOpen"
+  },
+  {
+    "key": "mod+shift+arrowdown",
+    "command": "composer.decreaseEffort",
+    "when": "!terminalFocus && !modelPickerOpen"
+  },
+  {
     "key": "mod+shift+s",
     "command": "composer.mode",
     "when": "!terminalFocus"
