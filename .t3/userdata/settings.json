@@ -136,6 +136,7 @@
       }
     ]
   },
+  "threadTitleInstructions": "Write a title for this conversation, based on the user's first message.\n\nRules:\n- Use the language of the user's message. Norwegian in, Norwegian out. Keep the loanwords and product names they use.\n- Start with an imperative verb: Review, Fix, Plan, Map, Continue / Finn, Sjekk, Undersøk, Kartlegg, Fortsett.\n- Name the concrete object: the product, system, repo, PR or document.\n- Use 3 to 6 words. Never exceed 50 characters.\n- Use sentence case. Keep the original casing of proper nouns.\n- Don't use trailing punctuation, quotes, emoji, or filler like \"Help with\" or \"Question about\".\n\nExamples:\n- \"kan du se over capra-utkastet i webflow?\" → Review Capra Webflow draft\n- \"finn info om pureservice og nummeret deres\" → Finn info om Pureservice og nummer\n- \"sjekk elkjøp-salget mot det jeg har i vaultet\" → Sjekk Elkjøp-salg mot vaultet\n- \"the stacked push webviews are broken, repro and fix\" → Reproduce and fix stacked push WebViews\n- \"fortsett å porte builders inn i den eksisterende koden\" → Fortsett Builders-porten i eksisterende kode\n\nOutput only the title.",
   "branchNamePrefix": "magnusrodseth",
   "providerInstances": {
     "codex": {
