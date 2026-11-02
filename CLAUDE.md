@@ -142,6 +142,11 @@ Local secrets go in `zsh/ignored/` (auto-sourced, gitignored).
 
 - **Neovim**: LazyVim config in `.config/nvim/`
 - **VS Code**: Settings symlinked from `Library/Application Support/Code/User/`
+- **T3 Code**: `settings.json`, `client-settings.json` and `keybindings.json` are
+  stowed into `~/.t3/userdata/`. Everything else there is runtime state, tokens
+  and keys, so `.gitignore` default-denies `.t3/`. `install.sh` creates
+  `~/.t3/userdata` before stowing; without it stow folds `~/.t3` into the repo.
+  The app follows symlinks when it saves, so the links survive edits in the UI.
 - **Default editor**: Zed (`$EDITOR="zed -w"` in `.zshenv`)
 - Note: `.zshenv` holds env vars + PATH; `.zshrc` holds interactive shell config only.
 

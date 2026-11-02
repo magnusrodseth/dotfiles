@@ -95,7 +95,13 @@ init_submodules()     { git submodule update --init --recursive; }
 # else. A dirty tree after install therefore means a rule source changed and a
 # target was behind. Commit the result.
 sync_agent_rules()    { bash scripts/agents/sync-rules.sh sync; }
-stow_symlinks()       { stow --restow .; }
+stow_symlinks() {
+  # Pre-create dirs whose app writes runtime state next to the tracked files.
+  # If ~/.t3 is missing, stow folds it into one symlink to the repo, and T3 Code
+  # then writes its ~400 MB SQLite state, tokens and secrets/ into ~/dotfiles.
+  mkdir -p "$HOME/.t3/userdata" || return 1
+  stow --restow .
+}
 brew_packages()       { brew bundle install --file="$DOTFILES/Brewfile"; }
 cargo_packages() {
   # Nothing in the declared state installs Rust, so on a fresh machine this step

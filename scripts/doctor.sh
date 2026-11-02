@@ -80,7 +80,9 @@ check_link() {
 }
 for f in .zshrc .zshenv .gitconfig .tmux.conf .config/nvim .config/ghostty/config \
          .codex/AGENTS.md .codex/hooks.json .codex/personal.config.toml \
-         .codex/hooks/rtk-rewrite.sh; do
+         .codex/hooks/rtk-rewrite.sh \
+         .t3/userdata/settings.json .t3/userdata/client-settings.json \
+         .t3/userdata/keybindings.json; do
   check_link "$f"
 done
 

@@ -230,3 +230,15 @@ Library/LaunchAgents/com.github.facebook.watchman.plist
 !.codex/mcp.env.tpl
 !.codex/hooks/
 !.codex/hooks/*.sh
+
+# T3 Code. `~/.t3/userdata` is mostly runtime state: ~400 MB SQLite thread
+# databases, logs, attachments, auth tokens (clerk-tokens.json,
+# cloud-auth-token.json) and signing keys (secrets/). Default-deny, then allow
+# only the three settings files. desktop-settings.json is window bounds only.
+# Saves go through `<file>.<random>/contents.tmp` dirs, which this also ignores.
+.t3/*
+!.t3/userdata/
+.t3/userdata/*
+!.t3/userdata/settings.json
+!.t3/userdata/client-settings.json
+!.t3/userdata/keybindings.json
