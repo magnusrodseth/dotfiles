@@ -10,6 +10,7 @@
 @upstash/cli
 @williamzujkowski/strudel-mcp-server
 agent-browser
+agent-desktop
 beautify-screenshot
 ctx7
 eas-cli
