@@ -89,7 +89,7 @@
     "when": "!terminalFocus"
   },
   {
-    "key": "mod+shift+a",
+    "key": "mod+shift+s",
     "command": "composer.mode",
     "when": "!terminalFocus"
   },
@@ -342,7 +342,7 @@
     "when": "!terminalFocus"
   },
   {
-    "key": "mod+shift+s",
+    "key": "mod+shift+a",
     "command": "thread.settle",
     "when": "!terminalFocus"
   },
