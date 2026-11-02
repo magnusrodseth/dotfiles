@@ -62,11 +62,12 @@ RULES_DIR="scripts/agents/rules"
 # OpenCode is deliberately thin. It carries only the rules that change what it
 # does across tasks, plus the shared refactoring workflow. Widen its list only
 # on purpose, not for symmetry with the other two. no-slop was added 19.08.2026:
-# it governs the prose in every single response.
+# it governs the prose in every single response. calendar-titles was added
+# 02.11.2026: OpenCode creates calendar events through the gws skills too.
 MANIFEST="
-.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,context7
-.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,context7
-.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,context7
+.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7
+.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7
+.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7
 "
 
 TMPDIR_RUN="$(mktemp -d)"

@@ -261,11 +261,13 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   no-slop.md                      x         x         x
   norwegian.md                    x         x
   github-refs.md                  x         x         x
+  calendar-titles.md              x         x         x
   context7.md                     x         x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
-carries the output rules, `context7`, and the shared refactoring workflow.
+carries the output rules, `calendar-titles`, `context7`, and the shared
+refactoring workflow.
 `no-slop.md` and `github-refs.md` govern every sentence it writes. `refactoring.md`
 keeps refactoring review consistent across agents. Widen its list on purpose,
 not for symmetry.

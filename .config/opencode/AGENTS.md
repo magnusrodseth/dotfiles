@@ -54,6 +54,12 @@ This applies to your own prose in every response, not only when I ask for it. `/
 - Do not link the same reference more than once in a short passage. First mention links, later mentions stay plain.
 <!-- /rules:github-refs -->
 
+## Calendar Event Titles
+
+<!-- rules:calendar-titles -->
+For meetings with other people, use a title that makes sense to every participant. Prefer names and purpose, for example `Magnus x Ola: Lunsj`.
+<!-- /rules:calendar-titles -->
+
 ## Context7
 
 <!-- rules:context7 -->

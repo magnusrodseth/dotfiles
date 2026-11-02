@@ -12,6 +12,12 @@ You discover skills in `~/.agents/skills/` (user scope) and `<repo>/.agents/skil
 
 Being on disk is not enough either. You pack the available-skills list into a fixed context budget (roughly 19-22k characters), shortening descriptions to fit and then omitting the overflow, so with ~325 skills installed some are silently left out of your prompt. If a skill named here is not in your available-skills list, say so plainly instead of improvising a substitute; do not report it as missing from the machine, because it is probably installed and merely omitted. `rg --files ~/.agents/skills -g SKILL.md` shows what is actually on disk.
 
+## Calendar Event Titles
+
+<!-- rules:calendar-titles -->
+For meetings with other people, use a title that makes sense to every participant. Prefer names and purpose, for example `Magnus x Ola: Lunsj`.
+<!-- /rules:calendar-titles -->
+
 ## Browser Preference
 
 Prefer `@Brave Browser` for browser work when Magnus does not name a browser. It uses
