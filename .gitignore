@@ -23,6 +23,10 @@ ignored
 .config/opencode/service.json
 # Webflow CLI: auth.json holds an access token; the rest is prompt and telemetry state
 .config/webflow/
+# Hetzner CLI: cli.toml holds the API token
+.config/hcloud/
+# Harbor CLI: only a telemetry ID
+.config/harbor/
 # Machine-local runtime state
 .config/sparebank1-cli/.profiles.lock
 .config/boligvertikal-harness/smoke-results.json

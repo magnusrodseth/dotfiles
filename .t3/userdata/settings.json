@@ -1,14 +1,6 @@
 {
   "favorites": [
     {
-      "provider": "claudeAgent",
-      "model": "claude-opus-5"
-    },
-    {
-      "provider": "claudeAgent",
-      "model": "claude-fable-5-1"
-    },
-    {
       "provider": "codex",
       "model": "gpt-6.1-sol"
     },
@@ -31,6 +23,10 @@
     {
       "provider": "acpRegistry_copilot",
       "model": "claude-opus-5.5"
+    },
+    {
+      "provider": "claudeAgent",
+      "model": "claude-opus-5-5"
     }
   ],
   "providerModelPreferences": {
@@ -42,7 +38,11 @@
         "claude-opus-4-5",
         "claude-sonnet-5",
         "claude-sonnet-4-6",
-        "claude-haiku-4-5"
+        "claude-haiku-4-5",
+        "claude-opus-5",
+        "claude-fable-5",
+        "claude-fable-5-1",
+        "claude-haiku-5-5"
       ],
       "modelOrder": [
         "claude-opus-5",
@@ -127,11 +127,11 @@
   "deviceOnboardingCompleted": true,
   "idleCompaction": "onReturn",
   "textGenerationModelSelection": {
-    "instanceId": "opencode",
-    "model": "github-copilot/gpt-6.1-terra",
+    "instanceId": "claudeAgent",
+    "model": "claude-sonnet-5-5",
     "options": [
       {
-        "id": "variant",
+        "id": "effort",
         "value": "medium"
       }
     ]
@@ -160,7 +160,7 @@
     },
     "claudeAgent": {
       "driver": "claudeAgent",
-      "enabled": false,
+      "enabled": true,
       "config": {
         "binaryPath": "claude",
         "homePath": "",
