@@ -20,11 +20,12 @@ For meetings with other people, use a title that makes sense to every participan
 
 ## Browser Preference
 
-Prefer `@Brave Browser` for browser work when Magnus does not name a browser. It uses
-the Brave Personal profile. Use `@Browser` for localhost, an isolated browser profile,
-or when Magnus explicitly asks for the Codex in-app browser. Use another browser only
-when Magnus names it or Brave cannot support the task, and state the reason when switching.
-Use one named browser group for each browser task, even when the task needs only one tab.
+Prefer the T3 Code browser for browser work when Magnus does not name a browser. It is
+the preview tab shown inline in the thread, driven by the `t3-browser` skill and the
+t3-code MCP preview tools, so Magnus can watch it. Outside T3 Code, use `@Browser` (the
+Codex in-app browser). Use another browser only when Magnus names it or the default
+cannot support the task, and state the reason when switching.
+With `@Browser`, use one named browser group for each browser task, even for one tab.
 Create it before opening or claiming tabs with `await browser.nameSession("🔎 Short task name")`;
 use a short, task-specific name that starts with an emoji.
 
