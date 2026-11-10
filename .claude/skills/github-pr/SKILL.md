@@ -18,6 +18,9 @@ and GitHub; a directory name or a remembered `main` is insufficient.
 3. Inspect every commit and the complete merge-base diff. Choose checks from
    local guidance for the affected areas. Report exact revision, command and
    result. Pending, skipped and unrun checks do not establish a passing result.
+   For a code change, run [adversarial-review](../adversarial-review/SKILL.md)
+   on the same merge-base diff and keep its report with the evidence. Skip it
+   for docs-only changes.
 4. Write the smallest PR description that explains the trigger, resulting
    behavior, evidence and material limitations. Lead with **Why this matters**:
    one or two sentences on who benefits and what improves. Reuse a local summary
