@@ -1,0 +1,3152 @@
+{
+ "notation": {
+  "t": "absolute time in seconds; every draw is f(t), no timers",
+  "p": "local progress = clamp((t - t0) / dur, 0, 1)",
+  "e": "eased progress: easeOutCubic(p), easeInOutCubic(p), or spring(t - t0, k, d) from presets snappy[320,30] ui[220,28] camera[90,19] heavy[120,22] playful[260,14]",
+  "A, B": "outgoing / incoming scene renderers: A(ctx, t) and B(ctx, t). For compositing, render each into its own offscreen canvas cA, cB every frame, then composite onto ctx",
+  "W, H": "canvas size in px",
+  "hash(i, seed)": "deterministic 0..1 from integer i (e.g. mulberry32 or sin-fract hash). Never Math.random()",
+  "noise2(x, y)": "seeded 2D value/simplex noise; animate by sampling noise3(x, y, t * speed) so it is time-pure",
+  "frame": "Math.round(t * fps); use for per-frame grain seeds so a re-render is identical",
+  "spring scaling": "to change tempo by factor s, multiply k by s^2 and d by s (keeps damping ratio d / (2*sqrt(k)) constant; settle time scales by 1/s)"
+ },
+ "transitions": [
+  {
+   "name": "hard-cut",
+   "description": "Instant switch from A to B on a single frame.",
+   "duration_s": 0.0,
+   "when_to_use": "Default between shots; on the beat; fast action; to create impact. School of Motion lists it as the most useful transition.",
+   "energy": 2,
+   "implementation": "if (t < tc) A(ctx,t); else B(ctx,t);  // snap tc to beat grid: tc = round(tc*bps)/bps"
+  },
+  {
+   "name": "match-cut",
+   "description": "Cut where a shape, position or motion in A lines up with a similar one in B (circle -> sun, logo dot -> planet).",
+   "duration_s": 0.0,
+   "when_to_use": "Show one thing becoming another, passage of time, relationships between objects. Cut at the fastest point of motion.",
+   "energy": 3,
+   "implementation": "Animate matching element to the same center/scale in both scenes: A ends with obj at (cx,cy,r); B starts with its obj at (cx,cy,r). Hard-cut at tc where velocity peaks."
+  },
+  {
+   "name": "cut-on-action",
+   "description": "Cut mid-gesture to a new framing that continues the same action (click starts in wide, lands in close-up).",
+   "duration_s": 0.0,
+   "when_to_use": "UI demos: cursor starts a click in the wide shot, ripple completes in the zoomed shot.",
+   "energy": 2,
+   "implementation": "Shared action clock: actionP = clamp((t-ta)/da); A draws actionP up to tc, B draws the same actionP after tc with a different camera transform."
+  },
+  {
+   "name": "smash-cut",
+   "description": "Abrupt cut from quiet to loud (or reverse), usually with an audio hit.",
+   "duration_s": 0.0,
+   "when_to_use": "Punchlines, contrast, hype openers, 'but then...' beats.",
+   "energy": 5,
+   "implementation": "Hard cut at tc + 2-frame white flash: if (t-tc < 2/fps) {ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H)}; pair with audio transient at tc."
+  },
+  {
+   "name": "j-cut-l-cut",
+   "description": "Audio leads (J) or trails (L) the picture cut by 0.3-1.5 s.",
+   "duration_s": 0.6,
+   "when_to_use": "Any narrative edit; makes cuts feel smooth without a visual effect. Purely an audio-timeline offset.",
+   "energy": 1,
+   "implementation": "Picture: hard cut at tc. Audio (ffmpeg): start B's audio at tc - lead (J) or keep A's audio until tc + tail (L): adelay / afade on overlapping tracks; amix."
+  },
+  {
+   "name": "crossfade-dissolve",
+   "description": "A fades out while B fades in over it.",
+   "duration_s": 0.6,
+   "when_to_use": "Passage of time, change of location, montage, calm pace. Avoid in hype edits.",
+   "energy": 1,
+   "implementation": "ctx.globalAlpha=1; A(ctx,t); ctx.globalAlpha=e; ctx.drawImage(cB,0,0); ctx.globalAlpha=1;"
+  },
+  {
+   "name": "dip-to-color",
+   "description": "A fades to black or white, then B fades up.",
+   "duration_s": 0.8,
+   "when_to_use": "Chapter breaks, act breaks in trailers, endings.",
+   "energy": 1,
+   "implementation": "p<0.5 ? (A(); fill(color, alpha=e(p*2))) : (B(); fill(color, alpha=1-e((p-0.5)*2)))"
+  },
+  {
+   "name": "fade-through",
+   "description": "Material pattern: A fades out first, then B fades in while scaling 92% -> 100%.",
+   "duration_s": 0.3,
+   "when_to_use": "Switching between unrelated UI states (tabs, top-level destinations). Material duration ~300 ms.",
+   "energy": 1,
+   "implementation": "p<0.35 ? (alpha=1-p/0.35, A()) : (alpha=e((p-0.35)/0.65); s=0.92+0.08*alpha; ctx.translate(W/2,H/2); ctx.scale(s,s); ctx.translate(-W/2,-H/2); ctx.globalAlpha=alpha; ctx.drawImage(cB,0,0))"
+  },
+  {
+   "name": "shared-axis",
+   "description": "A and B slide together along x, y or z (scale) with a crossfade; strong spatial relationship.",
+   "duration_s": 0.4,
+   "when_to_use": "Forward/back navigation, step-by-step flows, onboarding sequences.",
+   "energy": 2,
+   "implementation": "x-axis: dx=30*e; A at translate(-dx) alpha 1-e; B at translate(30-dx) alpha e. z-axis: A scale 1->1.1 fade out, B scale 0.8->1 fade in."
+  },
+  {
+   "name": "push",
+   "description": "B pushes A out of frame in one direction; both move together.",
+   "duration_s": 0.5,
+   "when_to_use": "Sequential content, carousels, 'next' beats. Remotion calls it slide().",
+   "energy": 3,
+   "implementation": "x=W*e; ctx.save(); ctx.translate(-x,0); ctx.drawImage(cA,0,0); ctx.translate(W,0); ctx.drawImage(cB,0,0); ctx.restore();"
+  },
+  {
+   "name": "slide-over",
+   "description": "B slides in over a stationary (optionally dimmed and scaled-down) A.",
+   "duration_s": 0.5,
+   "when_to_use": "Modal/sheet reveals, stacking context, iOS-style navigation with parallax.",
+   "energy": 2,
+   "implementation": "A drawn at translate(-0.3*W*e) with dark overlay alpha 0.3*e; B at translate(W*(1-e)) with shadowBlur=40."
+  },
+  {
+   "name": "linear-wipe",
+   "description": "Hard or soft edge sweeps across, revealing B.",
+   "duration_s": 0.6,
+   "when_to_use": "Classic broadcast; clean section changes; directional storytelling.",
+   "energy": 2,
+   "implementation": "A(); ctx.save(); ctx.beginPath(); ctx.rect(0,0,W*e,H); ctx.clip(); ctx.drawImage(cB,0,0); ctx.restore();  // soft edge: createLinearGradient mask in offscreen with 'destination-in'"
+  },
+  {
+   "name": "diagonal-wipe",
+   "description": "Wipe along a slanted edge.",
+   "duration_s": 0.6,
+   "when_to_use": "Sporty, energetic, adds direction without full push.",
+   "energy": 3,
+   "implementation": "edge x0 = lerp(-H, W, e): path moveTo(x0,0) lineTo(x0+H*tan(a)... ) -> polygon (−H,0),(x0,0),(x0−H*0.4,H),(−H,H); clip; draw cB."
+  },
+  {
+   "name": "clock-wipe",
+   "description": "Radial sweep around the center like a clock hand.",
+   "duration_s": 0.8,
+   "when_to_use": "Time, countdowns, cyclical processes. Remotion ships clockWipe().",
+   "energy": 2,
+   "implementation": "ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,hypot(W,H), -PI/2, -PI/2 + TAU*e); ctx.closePath(); ctx.clip(); draw cB."
+  },
+  {
+   "name": "iris-circle-wipe",
+   "description": "Circle grows from a point (often the clicked element) to reveal B; or closes on A.",
+   "duration_s": 0.7,
+   "when_to_use": "Focus pulls, 'zoom into this feature', endings (iris out). Already in skill as circle wipe.",
+   "energy": 3,
+   "implementation": "r = e*hypot(max(cx,W-cx), max(cy,H-cy)); ctx.arc(cx,cy,r,0,TAU); ctx.clip(); draw cB."
+  },
+  {
+   "name": "shape-wipe",
+   "description": "Any shape (star, logo glyph, rounded rect, heart) scales up to reveal B.",
+   "duration_s": 0.8,
+   "when_to_use": "Brand moments; playful styles; the shape carries meaning.",
+   "energy": 3,
+   "implementation": "const p2d=new Path2D(svgD); ctx.translate(cx,cy); ctx.scale(s,s) with s=e*sMax; ctx.rotate(0.3*(1-e)); ctx.clip(p2d); draw cB with inverse transform."
+  },
+  {
+   "name": "blinds-venetian",
+   "description": "N horizontal or vertical slats each open (scaleY 0->1) with a stagger.",
+   "duration_s": 0.8,
+   "when_to_use": "Retro, editorial, staged reveals; works with striped styles.",
+   "energy": 3,
+   "implementation": "for i<N: pi=clamp((p - i*st)/(1-(N-1)*st)); h=H/N; ctx.rect(0, i*h + h*(1-ease(pi))/2, W, h*ease(pi)); then clip once and draw cB."
+  },
+  {
+   "name": "stripes-wipe",
+   "description": "Colored bars sweep across in staggered order, covering A, then retract to show B.",
+   "duration_s": 0.7,
+   "when_to_use": "Brand color moments, hype, sports intros, kinetic-swiss.",
+   "energy": 4,
+   "implementation": "bars i<N, color palette[i%n]; cover phase p<0.5: x_i = W*ease(clamp(2p - i*st)); reveal phase: bars slide out the other side; switch A->B at p=0.5 under full cover."
+  },
+  {
+   "name": "split-reveal",
+   "description": "A splits down the middle (or along text baseline) and the halves slide apart revealing B.",
+   "duration_s": 0.7,
+   "when_to_use": "Product unveil, 'opening the box', title to content.",
+   "energy": 3,
+   "implementation": "B(); left half: clip rect(0,0,W/2,H) translate(-W/2*e) draw cA; right half: clip rect(W/2,0,W/2,H) translate(W/2*e) draw cA."
+  },
+  {
+   "name": "whip-pan",
+   "description": "Very fast pan with heavy directional motion blur; cut hidden inside the blur.",
+   "duration_s": 0.35,
+   "when_to_use": "Energetic scene changes, 'meanwhile', social edits.",
+   "energy": 5,
+   "implementation": "x = W*easeInOutExpo(p) across concatenated [A|B] strip; motion blur: draw strip N=12 times at x - v*dt*i/N with globalAlpha=1/N (v from derivative); cheaper: draw once with ctx.filter=`blur(${k*v}px)` (isotropic, acceptable at 30 fps)."
+  },
+  {
+   "name": "zoom-through",
+   "description": "Camera zooms into a detail of A until it fills the frame and becomes B (infinite zoom).",
+   "duration_s": 1.0,
+   "when_to_use": "Drilling into detail, 'inside the product', continuous worlds. School of Motion 'dynamic/infinite zoom'.",
+   "energy": 4,
+   "implementation": "s = exp(lerp(0, ln(S), easeInCubic(p))); ctx.translate(fx,fy); ctx.scale(s,s); ctx.translate(-fx,-fy); draw cA; crossfade in cB (drawn at scale s/S) when s > S*0.6."
+  },
+  {
+   "name": "zoom-blur-punch",
+   "description": "Quick scale-in with radial blur and flash into B.",
+   "duration_s": 0.3,
+   "when_to_use": "Hype, beat drops. Remotion: zoomBlur()/dreamyZoom().",
+   "energy": 5,
+   "implementation": "Draw cA k=8 times at scale 1+0.04*i*e with alpha 1/k (radial blur approximation), then cut to B scaled 1.15->1 with spring snappy."
+  },
+  {
+   "name": "dolly-zoom-transition",
+   "description": "Background scale changes opposite to foreground (vertigo) during the switch.",
+   "duration_s": 1.2,
+   "when_to_use": "Realization moments, dramatic reveals; use rarely.",
+   "energy": 4,
+   "implementation": "Layers: bg scale sb=1+0.5*e, fg scale sf=1/(1+0.5*e)*k so fg size stays constant; at p=0.5 swap bg A->B under crossfade."
+  },
+  {
+   "name": "container-morph",
+   "description": "One rounded rect morphs position/size/radius from A's element into B's frame, content crossfades with blur.",
+   "duration_s": 0.5,
+   "when_to_use": "Card -> detail, button -> modal; strongest element relationship (Material container transform). Already in skill.",
+   "energy": 3,
+   "implementation": "rect = lerpRect(r0, r1, e); radius = lerp(r0.rad, r1.rad, e); ctx.roundRect(...); ctx.clip(); A content alpha 1-e*2 blur(8*e); B content alpha (e-0.3)/0.7 blur(8*(1-e))."
+  },
+  {
+   "name": "text-mask-reveal",
+   "description": "B is visible only inside giant type, which then scales up until the letters fill the frame.",
+   "duration_s": 1.2,
+   "when_to_use": "Title openers, campaign words, brand names as windows.",
+   "energy": 4,
+   "implementation": "off canvas: fillText(word) large; ctx.globalCompositeOperation='source-in'; drawImage(cB). On main: A(); ctx.translate(fx,fy); scale(lerp(1,40,easeInExpo(p))); drawImage(off). Final frames: plain cB."
+  },
+  {
+   "name": "ink-liquid-bleed",
+   "description": "Organic blob edge spreads across the frame, revealing B.",
+   "duration_s": 1.0,
+   "when_to_use": "Editorial, ink-wash, organic styles, calm-to-medium energy.",
+   "energy": 2,
+   "implementation": "Path: circle of N=64 points, radius r(theta) = R*e*(1 + 0.25*noise2(cos(theta)*1.5, sin(theta)*1.5 + t*0.5)); smooth with quadraticCurveTo; clip; draw cB. Optional 2-3 satellite blobs."
+  },
+  {
+   "name": "page-turn",
+   "description": "A curls away like a page revealing B underneath (2D fake).",
+   "duration_s": 1.0,
+   "when_to_use": "Editorial, paper, storybook, before/after.",
+   "energy": 2,
+   "implementation": "fold line x_f = W*(1-e); clip A to x < x_f; draw flipped strip: ctx.save(); translate(2*x_f,0); scale(-1,1); clip region width w=(W-x_f)*0.5 with linear gradient shading ('multiply'); B underneath. Add shadow gradient along fold."
+  },
+  {
+   "name": "pixel-dissolve",
+   "description": "Random blocks switch from A to B in seeded order.",
+   "duration_s": 0.8,
+   "when_to_use": "Retro, 8-bit, tech, glitch-lite.",
+   "energy": 3,
+   "implementation": "cell=24; for each cell i: if (hash(i,seed) < e) drawImage(cB, sx,sy,cell,cell, sx,sy,cell,cell) over A."
+  },
+  {
+   "name": "dither-dissolve",
+   "description": "Ordered (Bayer 4x4/8x8) threshold dissolve between A and B.",
+   "duration_s": 0.8,
+   "when_to_use": "Pixel art, terminal-mono, risograph, 1-bit looks.",
+   "energy": 2,
+   "implementation": "Precompute Bayer matrix M; per pixel block (2-4 px) show B if M[x%8][y%8]/64 < e; build mask in ImageData once per frame, apply via 'destination-in' on cB copy."
+  },
+  {
+   "name": "mosaic-pixelate",
+   "description": "A pixelates to big blocks, swaps to B, then de-pixelates.",
+   "duration_s": 0.6,
+   "when_to_use": "Tech reveals, censoring jokes, glitch transitions.",
+   "energy": 3,
+   "implementation": "block = lerp(1, 64, tri(p)); ctx.imageSmoothingEnabled=false; draw src (A if p<0.5 else B) to tiny canvas W/block x H/block, then drawImage back up to W x H."
+  },
+  {
+   "name": "glitch-rgb-split",
+   "description": "Short burst of RGB channel offsets, slice displacement and noise; cut hides inside.",
+   "duration_s": 0.25,
+   "when_to_use": "Tech, cyber, hype; 1-2 per video at most.",
+   "energy": 5,
+   "implementation": "For 6-10 frames: draw src 3x with 'lighter' and channel tint (or ctx.filter per channel via offscreen multiply with #f00/#0f0/#00f) at x offsets ±(8*hash(frame)); slice: for k slices, drawImage(src,0,y,W,h, dx=±40*hash(frame,k),y,W,h)."
+  },
+  {
+   "name": "light-leak-flash",
+   "description": "Warm gradient blob washes across with 'screen' blend, peaking at the cut.",
+   "duration_s": 0.6,
+   "when_to_use": "Lifestyle, nostalgic, product films with film texture.",
+   "energy": 3,
+   "implementation": "Cut A->B at p=0.5; ctx.globalCompositeOperation='screen'; radial gradients (orange #ff8a3d, magenta #ff3d7f) at center moving x=lerp(-0.2W,1.2W,p), alpha = sin(PI*p)."
+  },
+  {
+   "name": "film-burn",
+   "description": "Overexposed hot spot blooms from an edge to white, then B emerges.",
+   "duration_s": 0.8,
+   "when_to_use": "Retro, documentary, analog styles.",
+   "energy": 4,
+   "implementation": "noise-shaped radial gradient #fff6d0 -> #ff7a00 -> transparent, radius grows with easeInExpo(p); composite 'lighter'; switch to B at peak; fade the burn out over 0.3 s."
+  },
+  {
+   "name": "luma-fade",
+   "description": "B appears through A's brightness: bright areas of A transition first (luma matte).",
+   "duration_s": 1.0,
+   "when_to_use": "Dreamy, photographic, product glints.",
+   "energy": 2,
+   "implementation": "Get A luminance via getImageData (or pre-baked luma canvas); mask = smoothstep(e-0.1, e+0.1, luma); apply as alpha to cB with 'destination-in' via ImageData write."
+  },
+  {
+   "name": "spin",
+   "description": "A rotates and scales out while B rotates in from the opposite angle.",
+   "duration_s": 0.5,
+   "when_to_use": "Playful, mascot-pop, quick energetic changes.",
+   "energy": 4,
+   "implementation": "A: translate(center) rotate(PI*e) scale(1-e) alpha 1-e; B: rotate(-PI*(1-e)) scale(e) with playful spring."
+  },
+  {
+   "name": "card-flip",
+   "description": "Scene flips like a card around the Y axis (2D fake via scaleX).",
+   "duration_s": 0.6,
+   "when_to_use": "Reveals, before/after, quiz answers. Remotion: flip().",
+   "energy": 3,
+   "implementation": "a = PI*e; sx = Math.cos(a); ctx.translate(W/2,0); ctx.scale(Math.abs(sx), 1 - 0.05*Math.sin(a)); draw (a<PI/2 ? cA : cB) centered; darken with fill alpha 0.3*sin(a)."
+  },
+  {
+   "name": "deck-shuffle",
+   "description": "A slides off as a card on top of a stack, revealing B as the next card; slight rotation per card.",
+   "duration_s": 0.6,
+   "when_to_use": "Lists of features, testimonials, multiple screens.",
+   "energy": 3,
+   "implementation": "Stack k cards with offsets (k*8px, rotate(hash(k)*0.06-0.03)); top card A: translate(W*1.2*e, -60*e) rotate(0.2*e); B card rises to top: scale lerp(0.95,1,e)."
+  },
+  {
+   "name": "accordion-fold",
+   "description": "A folds into N vertical panels (zig-zag) and collapses; B unfolds.",
+   "duration_s": 0.8,
+   "when_to_use": "Brochures, menus, editorial or retro styles.",
+   "energy": 3,
+   "implementation": "panel width w=W/N; each panel i drawn via drawImage slice with scaleX = cos(e*PI/2), alternate shading gradient (i%2?darken:lighten); panels packed toward left as they compress."
+  },
+  {
+   "name": "grid-tile-flip",
+   "description": "Screen splits into a grid; each tile flips (scaleX) from A to B with a diagonal stagger.",
+   "duration_s": 1.0,
+   "when_to_use": "Tech dashboards, galleries, departures-board styles.",
+   "energy": 4,
+   "implementation": "tile (i,j): pi = clamp((p - (i+j)*st)/(1-maxSt)); sx=cos(PI*pi); drawImage((pi<0.5?cA:cB), tile src rect, centered with scaleX |sx|)."
+  },
+  {
+   "name": "scale-through-object",
+   "description": "Camera flies into an object in A (a screen, a window, a letter O) which becomes B's frame.",
+   "duration_s": 1.0,
+   "when_to_use": "Device -> app UI, 'inside the dashboard', product to feature.",
+   "energy": 4,
+   "implementation": "Compute transform that maps object's rect R to full frame: s = W/R.w; T = lerp(identity, scaleAbout(R.center, s), easeInOutCubic(p)); draw cA with T; draw cB inside R (transformed) so at p=1 it fills the frame."
+  },
+  {
+   "name": "portal-shape",
+   "description": "A shape (door, phone outline, circle) in A opens, and B is seen through it, then the shape expands.",
+   "duration_s": 1.2,
+   "when_to_use": "Story worlds, 'step into', app reveals.",
+   "energy": 4,
+   "implementation": "phase1: B clipped to shape at small size (shape 'opens' via scaleY spring); phase2: scale shape up as iris; add inner shadow (strokeStyle rgba(0,0,0,.4), lineWidth 20, shadowBlur 30)."
+  },
+  {
+   "name": "swipe-up-social",
+   "description": "Vertical push mimicking a feed swipe, with slight overshoot.",
+   "duration_s": 0.4,
+   "when_to_use": "9:16 content, 'next tip' beats, creator-style edits.",
+   "energy": 4,
+   "implementation": "y = H*spring(t-t0, 320, 30); translate(0,-y) draw cA; translate(0,H-y) draw cB; draw a faint finger/touch dot moving up in the first 0.2 s for affordance."
+  },
+  {
+   "name": "radial-wipe-burst",
+   "description": "Several concentric rings in brand colors expand, last one reveals B.",
+   "duration_s": 0.7,
+   "when_to_use": "Celebrations, logo moments, festive (avoid generic confetti).",
+   "energy": 4,
+   "implementation": "for i<3: r_i = e_i*R with stagger 0.08; fill circle palette[i]; final ring uses clip to draw cB."
+  },
+  {
+   "name": "chromatic-slide",
+   "description": "Push transition where RGB channels arrive at slightly different times.",
+   "duration_s": 0.5,
+   "when_to_use": "Tech, neon-night, music-driven edits.",
+   "energy": 4,
+   "implementation": "draw B three times with 'lighter' composite tinted r/g/b, each with x offset W*(1-spring(t-t0-i*0.02, 320,30)); A pushed out normally."
+  },
+  {
+   "name": "morph-shape-to-shape",
+   "description": "Path interpolation between matching point sets (circle -> square -> logo).",
+   "duration_s": 0.8,
+   "when_to_use": "Abstract explainers, icon changes, logo intros.",
+   "energy": 3,
+   "implementation": "Resample both paths to N=128 points (arc-length), align start index by minimal distance; pts[i] = lerp(a[i], b[i], e); draw with lineTo; fill color lerp."
+  },
+  {
+   "name": "slit-scan-stretch",
+   "description": "A smears horizontally into streaks (pixel row stretch) and B pulls in from the streak.",
+   "duration_s": 0.5,
+   "when_to_use": "Sci-fi, speed, music videos.",
+   "energy": 4,
+   "implementation": "Take column x_s = lerp(W/2,W,e); drawImage(cA, x_s,0,1,H, x_s,0,W-x_s,H) stretches one column; mirror for B entering."
+  },
+  {
+   "name": "blur-crossfade",
+   "description": "Dissolve where both scenes blur toward the midpoint.",
+   "duration_s": 0.6,
+   "when_to_use": "Soft, premium, calm; hides content mismatch. Already used inside container morph.",
+   "energy": 1,
+   "implementation": "ctx.filter=`blur(${12*tri(p)}px)`; draw cA alpha 1-e; draw cB alpha e; ctx.filter='none'."
+  }
+ ],
+ "text": [
+  {
+   "name": "rise-from-mask",
+   "description": "Each unit slides up from below a clipping line (baseline mask).",
+   "unit": "line|word|char",
+   "duration_stagger": "0.6-0.9 s per unit; stagger lines 0.08 s, words 0.06 s, chars 0.008-0.02 s (Codrops/GSAP guidance)",
+   "implementation": "for unit i: e=spring(t-t0-i*st, 220,28); ctx.save(); ctx.rect(x, y-asc, w, asc+desc); ctx.clip(); ctx.fillText(u, x, y + (1-e)*lineH*1.1); ctx.restore();"
+  },
+  {
+   "name": "fade-up-stagger",
+   "description": "Units fade in while moving up 12-24 px.",
+   "unit": "word",
+   "duration_stagger": "0.5 s each, 0.05-0.08 s stagger",
+   "implementation": "e=easeOutCubic(pi); ctx.globalAlpha=e; ctx.fillText(w, x, y + 20*(1-e));"
+  },
+  {
+   "name": "typewriter-cursor",
+   "description": "Chars appear one by one with a blinking block/bar cursor.",
+   "unit": "char",
+   "duration_stagger": "12-25 chars/s; cursor blink period 1.0 s (on 0.5 / off 0.5)",
+   "implementation": "n=floor((t-t0)*cps); s=str.slice(0,n); fillText(s); cx = x+measureText(s).width; if (n<len || floor(t*2)%2==0) fillRect(cx+2, y-asc, 3, asc);"
+  },
+  {
+   "name": "typewriter-delete-retype",
+   "description": "Types a phrase, backspaces to a stem, types a replacement.",
+   "unit": "char",
+   "duration_stagger": "type 18 cps, hold 0.6 s, delete 35 cps, retype 18 cps",
+   "implementation": "Timeline segments [type A][hold][delete to common prefix][type B]; n(t) piecewise-linear; same cursor logic."
+  },
+  {
+   "name": "scramble-decode",
+   "description": "Each char cycles random glyphs before locking to the real one, left to right.",
+   "unit": "char",
+   "duration_stagger": "total 0.8-1.4 s; char i locks at t0 + i*0.03 + 0.3",
+   "implementation": "for i: if t < lock_i: ch = GLYPHS[floor(hash(i, floor(t*30))*GLYPHS.length)] else ch=str[i]; use monospace or measure per char; locked chars in full color, scrambling chars at 50% alpha."
+  },
+  {
+   "name": "counter-roll",
+   "description": "Number counts from a to b with easing; thousands separators stable.",
+   "unit": "number",
+   "duration_stagger": "0.8-2.0 s, easeOutExpo",
+   "implementation": "v = lerp(a, b, easeOutExpo(p)); txt = Intl.NumberFormat('nb-NO').format(round(v)); use tabular figures (font-variant-numeric not on canvas: choose a font with tabular digits or draw each digit in fixed-width cells)."
+  },
+  {
+   "name": "slot-machine-roll",
+   "description": "Each digit is a vertical strip 0-9 that rolls and lands with overshoot; digits stagger right to left.",
+   "unit": "digit",
+   "duration_stagger": "1.0-1.6 s, stagger 0.06 s, spring heavy",
+   "implementation": "per digit d: pos = target_d + 10*(spins) ; y = -(spring(t-t0-i*st,120,22)*pos % 10)*lineH; clip to cell; for k in -1..1 fillText(((floor(-y/lineH)+k)%10), x, y + k*lineH)."
+  },
+  {
+   "name": "letter-scale-pop",
+   "description": "Chars scale from 0 with overshoot, staggered.",
+   "unit": "char",
+   "duration_stagger": "0.4 s each, stagger 0.03 s, spring playful",
+   "implementation": "s=spring(t-t0-i*0.03, 260, 14); ctx.translate(cx_i, baseline - capH/2); ctx.scale(s,s); fillText(ch, -w/2, capH/2)."
+  },
+  {
+   "name": "blur-in",
+   "description": "Units go from blur(16px)+alpha 0 to sharp.",
+   "unit": "word|line",
+   "duration_stagger": "0.6 s, stagger 0.06 s",
+   "implementation": "ctx.filter=`blur(${16*(1-e)}px)`; ctx.globalAlpha=e; fillText(...); ctx.filter='none';"
+  },
+  {
+   "name": "tracking-expand",
+   "description": "Letter-spacing grows from tight to wide while fading in (cinematic title).",
+   "unit": "line",
+   "duration_stagger": "2-4 s slow, easeOutQuart",
+   "implementation": "ctx.letterSpacing = `${lerp(-0.05, 0.3, e)}em`; (Chrome canvas supports letterSpacing) else lay out chars manually x_i += w_i + spacing; ctx.textAlign center by measuring total width."
+  },
+  {
+   "name": "highlight-marker-sweep",
+   "description": "A marker-colored rect sweeps behind a word left to right.",
+   "unit": "word|phrase",
+   "duration_stagger": "0.4-0.6 s, start after the word is readable",
+   "implementation": "fillStyle=markerColor; fillRect(x, y-capH*0.9, w*e, capH*1.15) with slight skew: ctx.transform(1,0,-0.1,1,0,0); then fillText on top. Rough edge: polygon with hash-jittered vertices."
+  },
+  {
+   "name": "underline-draw",
+   "description": "Line or hand-drawn swoosh draws under a word.",
+   "unit": "word",
+   "duration_stagger": "0.4-0.7 s",
+   "implementation": "ctx.setLineDash([len,len]); ctx.lineDashOffset = len*(1-e); ctx.stroke(underlinePath2D); ctx.lineCap='round'."
+  },
+  {
+   "name": "strike-through",
+   "description": "Line crosses out a word; optional replacement appears above.",
+   "unit": "word",
+   "duration_stagger": "0.3 s strike, 0.4 s replacement rise",
+   "implementation": "moveTo(x, yMid); lineTo(x + w*e, yMid + jitter); stroke; old word alpha -> 0.5; new word via rise-from-mask above."
+  },
+  {
+   "name": "kinetic-stack-push",
+   "description": "Each new line enters at the bottom and pushes the stack up; older lines shrink/fade.",
+   "unit": "line",
+   "duration_stagger": "0.35-0.5 s per push, spring snappy",
+   "implementation": "stackOffset = sum over pushes j of lineH*spring(t - tj, 320, 30); line k drawn at y0 - (k*lineH) + ... ; alpha = 1 - 0.25*age."
+  },
+  {
+   "name": "word-swap-carousel",
+   "description": "One slot in a sentence cycles words vertically ('Built for [teams|speed|you]').",
+   "unit": "word",
+   "duration_stagger": "hold 1.2-1.8 s per word, swap 0.35 s",
+   "implementation": "slotW = lerp(w_prev, w_next, e) so the sentence reflows; clip slot rect; prev at y - lineH*e alpha 1-e, next at y + lineH*(1-e) alpha e."
+  },
+  {
+   "name": "split-flap-board",
+   "description": "Each char flips through characters like an airport board until it lands.",
+   "unit": "char",
+   "duration_stagger": "per flip 0.06 s; total 0.6-1.5 s; stagger 0.02 s",
+   "implementation": "seq = charset from current to target; idx=floor((t-ti)/0.06); top half: old char clipped to upper half; flipping flap: scaleY = cos(PI*f) of new/old half; bottom half new char; dark gap line at middle; tile bg #111, text #f2f2f2."
+  },
+  {
+   "name": "handwriting-stroke",
+   "description": "Text appears as if written by pen along its strokes.",
+   "unit": "line",
+   "duration_stagger": "0.08-0.15 s per letter, total 1-3 s",
+   "implementation": "Use a single-line (stroke) font path set as Path2D list (e.g. Hershey or exported from a script font via opentype.js); for each path k with length L_k, reveal sequentially with setLineDash([L,L]) + lineDashOffset = L*(1-pk)."
+  },
+  {
+   "name": "outline-to-fill",
+   "description": "Text first draws as outline, then fills.",
+   "unit": "word|line",
+   "duration_stagger": "0.8 s stroke, 0.3 s fill",
+   "implementation": "Stroke phase: strokeText with dash (needs glyph path via opentype.js) or approximate: clip rect growing over strokeText. Fill phase: globalAlpha=e2; fillText."
+  },
+  {
+   "name": "gradient-sweep",
+   "description": "A shine or color gradient moves across the letters.",
+   "unit": "line",
+   "duration_stagger": "0.8-1.2 s, once or loop every 3 s",
+   "implementation": "g = createLinearGradient(x0 + sweep, 0, x0 + sweep + 200, 0) with base, highlight, base stops; sweep = lerp(-200, w, p); fillStyle=g; fillText."
+  },
+  {
+   "name": "bounce-drop",
+   "description": "Chars fall from above and bounce on the baseline.",
+   "unit": "char",
+   "duration_stagger": "0.6-0.9 s, stagger 0.04 s",
+   "implementation": "y = baseline - dropH*(1-easeOutBounce(pi)); or spring(t, 260, 14) for elastic landing."
+  },
+  {
+   "name": "wave-sine",
+   "description": "Chars bob on a traveling sine wave.",
+   "unit": "char",
+   "duration_stagger": "continuous; period 1.5-2.5 s; amplitude 4-12 px",
+   "implementation": "y_i = baseline + A*sin(TAU*(t/period) - i*0.4); entry: A *= e."
+  },
+  {
+   "name": "elastic-stretch",
+   "description": "Word squashes and stretches on entry (scaleX/scaleY inverse), then settles.",
+   "unit": "word",
+   "duration_stagger": "0.6 s, spring playful",
+   "implementation": "s=spring(t-t0,260,14); sy = s; sx = 1 + (1 - s)*0.6; translate(center); scale(sx, sy); fillText."
+  },
+  {
+   "name": "caption-karaoke",
+   "description": "Burned-in captions; current word highlighted (color/scale/pill) in sync with speech.",
+   "unit": "word",
+   "duration_stagger": "per word timing from transcript (whisper word timestamps); 2-7 words per caption page",
+   "implementation": "page = words grouped to <= 32 chars; active word = words where w.start <= t < w.end; draw pill roundRect behind active word with spring ui on enter; others at 70% alpha."
+  },
+  {
+   "name": "quote-reveal",
+   "description": "Pull quote: big quotation mark draws, text rises by line, attribution fades last.",
+   "unit": "line",
+   "duration_stagger": "quote mark 0.4 s, lines 0.08 s stagger, attribution +0.4 s",
+   "implementation": "quote glyph scale pop (spring ui); rise-from-mask per line; attribution fade-up; hold based on reading speed."
+  },
+  {
+   "name": "big-number-slam",
+   "description": "Huge number scales down from 3x to 1x with impact shake and a flash.",
+   "unit": "word",
+   "duration_stagger": "0.25 s slam, 0.3 s shake decay",
+   "implementation": "s = 1 + 2*(1-spring(t-t0, 320, 30)); camera shake amplitude 14*exp(-(t-t0-0.2)*12); 1-frame white flash at impact; optional unit/label rises after."
+  },
+  {
+   "name": "lower-third",
+   "description": "Name/title bar: accent line draws, plate slides out, name and role rise.",
+   "unit": "line",
+   "duration_stagger": "in 0.6 s, hold 3-5 s, out 0.4 s",
+   "implementation": "accent bar width = 6 -> plateW via spring ui; plate clipRect grows; name rise-from-mask; role fade-up delayed 0.1 s; out = reverse with easeInCubic."
+  },
+  {
+   "name": "ticker-marquee",
+   "description": "Text scrolls continuously across a band.",
+   "unit": "line",
+   "duration_stagger": "speed 80-160 px/s (readable); seamless loop",
+   "implementation": "x = -((t*speed) % (textW + gap)); for (k=0; x + k*(textW+gap) < W; k++) fillText(str, x + k*(textW+gap), y)."
+  },
+  {
+   "name": "word-cloud-assemble",
+   "description": "Words fly in from scattered positions to a packed layout.",
+   "unit": "word",
+   "duration_stagger": "1.2-2 s total, stagger by size (largest first)",
+   "implementation": "precompute final positions (spiral packing, seeded); start = final + polar(400+hash*400, hash*TAU); pos = lerp(start, final, spring(t-t0-i*st, 220,28)); rotate lerp(hash*0.6-0.3, 0)."
+  },
+  {
+   "name": "line-by-line-wipe",
+   "description": "Each line revealed by a left-to-right clip wipe.",
+   "unit": "line",
+   "duration_stagger": "0.5 s per line, 0.12 s stagger",
+   "implementation": "clip rect(x, y-asc, w*e_i, lineH); fillText."
+  },
+  {
+   "name": "char-cascade-3d",
+   "description": "Chars rotate in on X axis (fake with scaleY + skew) like falling dominos.",
+   "unit": "char",
+   "duration_stagger": "0.5 s each, stagger 0.025 s",
+   "implementation": "a=(1-e)*PI/2; ctx.translate(cx, baseline); ctx.transform(1, 0, 0, cos(a), 0, 0); alpha = e; fillText(ch, -w/2, 0)."
+  },
+  {
+   "name": "weight-morph",
+   "description": "Variable-font weight animates (Thin -> Black) on emphasis.",
+   "unit": "word",
+   "duration_stagger": "0.4-0.8 s",
+   "implementation": "Canvas font string accepts numeric weight with variable fonts: ctx.font=`${round(lerp(200,900,e))} 120px 'Inter'`; load font via FontFace first; re-measure for centering each frame."
+  },
+  {
+   "name": "text-on-path",
+   "description": "Text runs along a curved path, path offset animates.",
+   "unit": "char",
+   "duration_stagger": "continuous or 1-2 s entry",
+   "implementation": "precompute path samples with arc length; for char i at s = offset + cumW_i: pos, angle = sample(s); translate(pos) rotate(angle) fillText(ch,0,0)."
+  },
+  {
+   "name": "glitch-text",
+   "description": "Text jitters with RGB offset and slice displacement for a few frames, then settles.",
+   "unit": "word",
+   "duration_stagger": "0.3-0.5 s bursts",
+   "implementation": "for 3 passes with 'lighter' and fill #f0f/#0ff/#fff: fillText(x + (hash(frame,c)-0.5)*12); slice: clip random horizontal bands and offset x."
+  },
+  {
+   "name": "mask-wipe-color-swap",
+   "description": "Text changes color with a hard wipe passing through it (two-tone).",
+   "unit": "line",
+   "duration_stagger": "0.4 s",
+   "implementation": "fillText(colorA); clip rect(x, y, w*e, h); fillText(colorB)."
+  },
+  {
+   "name": "countdown-flip",
+   "description": "3-2-1 numerals with scale-down + fade, each on a beat.",
+   "unit": "word",
+   "duration_stagger": "1 beat each",
+   "implementation": "for n: tn = t0 + k*beat; s = lerp(1.4, 1, easeOutCubic); alpha 1 -> 0 over last 30% of beat."
+  },
+  {
+   "name": "emoji-react-pop",
+   "description": "Emoji or icon pops next to a word (opt-in, social only).",
+   "unit": "word",
+   "duration_stagger": "0.3 s pop, playful spring",
+   "implementation": "drawImage(emojiBitmap) with letter-scale-pop math, rotation 0.3*(1-s)."
+  }
+ ],
+ "camera": [
+  {
+   "name": "push-in",
+   "description": "Slow scale toward a focus point; adds tension or attention.",
+   "spring": "camera",
+   "implementation": "s = lerp(1, 1.12, e); ctx.translate(fx,fy); ctx.scale(s,s); ctx.translate(-fx,-fy); drawWorld(). Slow: 3-8 s linear-ish (easeInOutSine)."
+  },
+  {
+   "name": "pull-out",
+   "description": "Reverse push; reveals context or ends a scene.",
+   "spring": "camera",
+   "implementation": "s = lerp(1.25, 1, e) about focus; often combined with fading in surrounding UI."
+  },
+  {
+   "name": "pan",
+   "description": "Horizontal move across a wide world.",
+   "spring": "camera",
+   "implementation": "ctx.translate(-lerp(x0, x1, e), 0); world drawn wider than W. Keep speed < W/3 per s to avoid judder at 30 fps."
+  },
+  {
+   "name": "tilt",
+   "description": "Vertical move (scroll down a page, top to bottom of a building).",
+   "spring": "camera",
+   "implementation": "ctx.translate(0, -lerp(y0, y1, e)). For UI scroll demos, use spring ui per scroll step."
+  },
+  {
+   "name": "truck-parallax",
+   "description": "Camera moves sideways; layers move at speeds proportional to 1/depth.",
+   "spring": "camera",
+   "implementation": "for layer L with depth z: ctx.save(); ctx.translate(-camX / z, -camY / z); L.draw(); ctx.restore(); z=1 foreground, 2-6 background."
+  },
+  {
+   "name": "parallax-layers-drift",
+   "description": "Static shot made alive by small layered drift.",
+   "spring": "camera",
+   "implementation": "camX = 30*sin(t*0.2); camY = 10*sin(t*0.13); apply truck-parallax with z in [1, 1.5, 3]."
+  },
+  {
+   "name": "orbit-2_5d",
+   "description": "Fake orbit around a subject using layer x-offsets by depth and slight scaleX.",
+   "spring": "camera",
+   "implementation": "angle a = lerp(-0.3, 0.3, e); for layer z: x = sin(a)*R*(1/z - 1/zFocus); scaleX = cos(a*0.5) for flat cards; sort by depth each frame."
+  },
+  {
+   "name": "seeded-shake",
+   "description": "Impact shake that decays; deterministic.",
+   "spring": "none",
+   "implementation": "amp = A*exp(-(t-ti)*decay); dx = amp*(noise1(t*25, seed)-0.5)*2; dy = amp*(noise1(t*25, seed+7)-0.5)*2; rot = amp*0.002*(noise1(t*25, seed+13)-0.5); A=12 px, decay 8-12."
+  },
+  {
+   "name": "handheld-drift",
+   "description": "Low-frequency wander that mimics a handheld camera.",
+   "spring": "none",
+   "implementation": "dx = 6*noise1(t*0.7, s1)+2*noise1(t*2.1, s2); dy similarly; rot = 0.003*noise1(t*0.5, s3); scale 1.03 to hide edges."
+  },
+  {
+   "name": "rack-focus",
+   "description": "Blur moves from one depth layer to another.",
+   "spring": "camera",
+   "implementation": "f = e; fg.filter = blur(8*f px); bg.filter = blur(8*(1-f) px); draw bg then fg. Pre-blur on offscreen for speed."
+  },
+  {
+   "name": "dolly-zoom",
+   "description": "Subject stays the same size while the background scale changes (vertigo effect).",
+   "spring": "camera",
+   "implementation": "bgScale = lerp(1, 1.6, e); fgScale = constant (or slight compensating 1/lerp(1,1.05,e)); draw bg about vanishing point, then fg."
+  },
+  {
+   "name": "snap-zoom",
+   "description": "Very fast zoom (0.15-0.3 s) to a detail, often with whoosh SFX.",
+   "spring": "snappy",
+   "implementation": "s = lerp(1, 2.2, spring(t-t0, 320, 30)) about target; add 3-frame directional blur (draw 4 copies at intermediate scales, alpha 0.25)."
+  },
+  {
+   "name": "whip-pan-camera",
+   "description": "Extremely fast pan with motion blur between two framings in the same world.",
+   "spring": "none",
+   "implementation": "x = lerp(x0, x1, easeInOutExpo(p)); v = dx/dt; draw N=10 copies at x - v*(i/N)*shutter with alpha 1/N; shutter = 1/fps*0.5."
+  },
+  {
+   "name": "follow-cursor",
+   "description": "Camera loosely follows the cursor/point of interest with lag.",
+   "spring": "camera",
+   "implementation": "Closed-form: cam(t) = target(t) convolved with spring; practical: cam = sum over target keyframes j of (pos_j - pos_{j-1})*spring(t - t_j, 90, 19); keeps purity."
+  },
+  {
+   "name": "crane-pedestal",
+   "description": "Vertical rise revealing a scene from below/above with slight scale change.",
+   "spring": "camera",
+   "implementation": "y = lerp(200, 0, e); s = lerp(1.05, 1, e); combine with parallax layers."
+  },
+  {
+   "name": "dutch-roll",
+   "description": "Small rotation for unease or energy.",
+   "spring": "camera",
+   "implementation": "ctx.translate(W/2,H/2); ctx.rotate(lerp(0, 0.06, e)); ctx.translate(-W/2,-H/2). Keep <= 5 deg; scale 1.08 to hide corners."
+  },
+  {
+   "name": "focus-zoom-to-rect",
+   "description": "Zoom so a given UI rect fills ~70% of the frame (product demo staple).",
+   "spring": "camera",
+   "implementation": "s = 0.7*min(W/R.w, H/R.h); target translation centers R; T = lerp(identity, (scale s about R.center then recenter), spring(t-t0, 90, 19))."
+  },
+  {
+   "name": "ken-burns",
+   "description": "Slow pan + zoom across a still image.",
+   "spring": "camera",
+   "implementation": "s = lerp(1.0, 1.15, p); offset = lerp(o0, o1, p); linear or easeInOutSine over 5-10 s."
+  }
+ ],
+ "backgrounds": [
+  {
+   "name": "film-grain",
+   "description": "Seeded per-frame monochrome noise overlay. Already in skill.",
+   "implementation": "Pre-generate 8 noise tiles (256x256 ImageData, seeded); per frame pick tile floor(hash(frame)*8), random offset; ctx.globalCompositeOperation='overlay'; alpha 0.06-0.12; createPattern.",
+   "render_cost": "low"
+  },
+  {
+   "name": "scanlines",
+   "description": "Horizontal dark lines every 2-4 px.",
+   "implementation": "pattern canvas 1x3: row 0 rgba(0,0,0,.25); ctx.fillStyle=ctx.createPattern(pat,'repeat'); fillRect; optional slow roll: translate(0, (t*20)%3).",
+   "render_cost": "low"
+  },
+  {
+   "name": "dot-grid",
+   "description": "Regular dots, can pulse or fade toward edges.",
+   "implementation": "for x in 0..W step g, y step g: r = 1.5 * (1 + 0.3*sin(t*2 + (x+y)*0.01)); arc; fill rgba(...). Use a pattern for static version.",
+   "render_cost": "low"
+  },
+  {
+   "name": "line-grid",
+   "description": "Thin graph-paper grid, optionally drifting.",
+   "implementation": "ctx.lineWidth=1; stroke vertical/horizontal lines at offset (t*speed) % g; major lines every 5 at higher alpha.",
+   "render_cost": "low"
+  },
+  {
+   "name": "blueprint",
+   "description": "Cyan-white grid on deep blue with dimension lines and annotations.",
+   "implementation": "fill #0b3a6e; minor grid rgba(255,255,255,.08) 20px; major .18 100px; dimension lines with arrowheads and monospace labels drawn via line-draw (lineDash).",
+   "render_cost": "low"
+  },
+  {
+   "name": "animated-gradient-mesh",
+   "description": "Soft blobs of color moving slowly, blurred.",
+   "implementation": "4-5 radial gradients, centers c_i = base_i + 120*[noise1(t*0.1, i), noise1(t*0.1, i+9)]; composite 'lighter' or normal on base; optional ctx.filter='blur(60px)' on a half-res offscreen then upscale.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "noise-flow-field",
+   "description": "Particles trace curl/noise flow lines (precomputed paths for purity).",
+   "implementation": "Seed N=800 particles; position at t found by integrating a fixed number of steps k=floor(t*fps) is expensive, so precompute trajectories once at load (array per particle), then at t draw the trailing segment indices [k-20, k] with alpha falloff.",
+   "render_cost": "high"
+  },
+  {
+   "name": "halftone",
+   "description": "Dot screen whose dot radius encodes brightness of an underlying image/gradient.",
+   "implementation": "grid at 45 deg: ctx.rotate(PI/4); for cell: lum = sample(src, x, y); r = cell*0.5*sqrt(1-lum); arc fill. Animate lum source for moving halftone.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "risograph-misregistration",
+   "description": "Two or three flat ink layers slightly offset, with grain and multiply blend.",
+   "implementation": "draw layer in pink #ff48b0 and layer in blue #0078bf separately onto offscreens; composite with 'multiply'; offset each by (2-4 px)*(hash(floor(t*4), layer)-0.5) (steps, not smooth); add coarse grain mask via 'destination-out'.",
+   "render_cost": "low"
+  },
+  {
+   "name": "paper-fibers",
+   "description": "Warm paper with subtle fibers and tooth.",
+   "implementation": "base #f4efe6; seeded 400 short bezier strokes rgba(120,100,70,.05) length 10-40 px; low-freq noise blotches (radial gradients alpha .03); static, render once to offscreen.",
+   "render_cost": "low"
+  },
+  {
+   "name": "starfield",
+   "description": "Stars with parallax depth and twinkle; optional warp.",
+   "implementation": "stars i: (x,y,z) from hash; screen x = cx + (x - cx)/z*f; z(t) = z0 - t*speed mod depth for warp; twinkle alpha = 0.6 + 0.4*sin(t*3 + hash*TAU).",
+   "render_cost": "low"
+  },
+  {
+   "name": "bokeh",
+   "description": "Out-of-focus light discs drifting.",
+   "implementation": "N=30 circles radius 20-80, color from palette, alpha 0.08-0.2, 'lighter' composite; positions drift with noise1(t*0.05, i); ring edge via radial gradient with brighter rim.",
+   "render_cost": "low"
+  },
+  {
+   "name": "aurora",
+   "description": "Ribbon-like curtains of green/teal/violet light that undulate.",
+   "implementation": "for ribbon k: build polyline y(x) = base_k + 60*noise2(x*0.002, t*0.1 + k); fill vertical linearGradient (color -> transparent) below the line; ctx.filter='blur(20px)'; 'screen' composite.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "topographic-contours",
+   "description": "Contour lines from a noise height field, slowly morphing.",
+   "implementation": "Height h(x,y,t) = noise3(x*0.004, y*0.004, t*0.05); marching squares on a 4 px grid for levels 0.1..0.9; stroke each iso-line 1 px. Cache per frame (heavy at 1080p; use 6-8 px grid).",
+   "render_cost": "high"
+  },
+  {
+   "name": "isometric-grid",
+   "description": "Lines at 30/150 deg forming an isometric lattice.",
+   "implementation": "for k: stroke lines y = x*tan(30deg) + k*g and y = -x*tan(30deg) + k*g; plus verticals for tri-grid; use with isometric-tech style.",
+   "render_cost": "low"
+  },
+  {
+   "name": "rain-streaks",
+   "description": "Diagonal streaks falling. Already in skill.",
+   "implementation": "per drop i: x = (hash(i)*W + t*vx) % W; y = (hash(i,1)*H + t*vy) % H; stroke line length 20-40 px alpha 0.2-0.4.",
+   "render_cost": "low"
+  },
+  {
+   "name": "snow",
+   "description": "Flakes falling with sway.",
+   "implementation": "y = (y0 + t*v_i) % (H+20); x = x0 + 20*sin(t*0.8 + phase_i); radius 1-3 by depth; alpha by depth.",
+   "render_cost": "low"
+  },
+  {
+   "name": "confetti-burst",
+   "description": "Paper rectangles burst and fall with spin. Banned by default: generic burst reads as template. Opt-in only for genuine celebration moments with brand colors.",
+   "implementation": "particle i: v0 from hash; pos = p0 + v0*dt + 0.5*g*dt^2 with drag approx; rotation = w_i*dt; draw rect with scaleY = cos(flip_i*dt) for tumble.",
+   "render_cost": "low",
+   "opt_in": true
+  },
+  {
+   "name": "light-rays",
+   "description": "God rays radiating from a point.",
+   "implementation": "for k<24: angle a_k + 0.05*sin(t*0.3+k); draw thin triangle from source to far point, fill with linearGradient white alpha .08 -> 0, 'screen'.",
+   "render_cost": "low"
+  },
+  {
+   "name": "vignette",
+   "description": "Darkened edges to focus center.",
+   "implementation": "radial gradient from (W/2,H/2, 0.4*min(W,H)) transparent to (.., 0.75*hypot(W,H)/2) rgba(0,0,0,.45); fillRect last.",
+   "render_cost": "low"
+  },
+  {
+   "name": "chromatic-aberration",
+   "description": "RGB fringing growing toward the edges.",
+   "implementation": "Draw frame into offscreen; composite three copies with 'lighter' through channel tints (multiply by #f00/#0f0/#00f), scaled 1+0.003*k about center; mild only.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "crt",
+   "description": "Curved-feel screen: scanlines, phosphor glow, vignette, slight flicker.",
+   "implementation": "scanlines + glow (draw content blurred 6px with 'screen' alpha .4) + vignette + flicker alpha 0.97 + 0.03*hash(frame); optional barrel via drawing 40 horizontal slices with x-scale 1 - 0.03*((y-H/2)/(H/2))^2.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "vhs-tracking",
+   "description": "Tape artifacts: horizontal jitter bands, color bleed, noise line rolling.",
+   "implementation": "band y_b = (t*120) % H; within band height 30: drawImage slice offset x by 10*hash(frame); chroma bleed: draw red copy offset +3 px 'screen'; bottom noise line; timestamp overlay in VT323.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "duotone",
+   "description": "Image mapped to two colors (shadows -> color A, highlights -> color B).",
+   "implementation": "draw image; ctx.filter='grayscale(1) contrast(1.2)'; then fill color B with 'multiply', color A with 'lighten' (or per-pixel LUT via ImageData once and cache).",
+   "render_cost": "low"
+  },
+  {
+   "name": "ordered-dither",
+   "description": "1-bit Bayer dithered gradient or image.",
+   "implementation": "per pixel block: out = lum > bayer8[x%8][y%8]/64 ? fg : bg; build ImageData once per unique frame of source.",
+   "render_cost": "medium"
+  },
+  {
+   "name": "concentric-pulse",
+   "description": "Rings emanate from center (radar, sonar, broadcast).",
+   "implementation": "for k: r = ((t*speed + k*gap) % maxR); alpha = 1 - r/maxR; stroke circle.",
+   "render_cost": "low"
+  },
+  {
+   "name": "stripes-diagonal",
+   "description": "Moving barber-pole diagonal stripes.",
+   "implementation": "pattern canvas with two color bands rotated 45 deg; ctx.setTransform via pattern.setTransform(new DOMMatrix().translate(t*40, 0)).",
+   "render_cost": "low"
+  },
+  {
+   "name": "bauhaus-shapes",
+   "description": "Primary geometric shapes (circle, square, triangle) slowly rotating/drifting.",
+   "implementation": "set of 6 seeded shapes; rotation = w_i*t; position drift small; flat fills from palette, no gradients.",
+   "render_cost": "low"
+  },
+  {
+   "name": "caustics",
+   "description": "Underwater light caustics shimmer.",
+   "implementation": "layer two noise fields: c = abs(noise3(x*0.01,y*0.01,t*0.4) - noise3(x*0.012+5,y*0.012,t*0.35)); bright where c small; render at 1/4 res, blur, upscale, 'screen'.",
+   "render_cost": "high"
+  }
+ ],
+ "ui": [
+  {
+   "name": "cursor-arrow",
+   "description": "macOS-style arrow cursor with white outline and drop shadow; moves along a bezier with spring arrival.",
+   "implementation": "Path2D arrow (11 pts); fill #000, stroke #fff 1.5px, shadowBlur 6 rgba(0,0,0,.3); pos = bezier(p0, c, p1, spring(t-t0, 220, 28)); slight overshoot is natural."
+  },
+  {
+   "name": "cursor-hand",
+   "description": "Pointer hand when over clickable elements; swap from arrow on hover.",
+   "implementation": "if (hoverRect contains pos) draw hand Path2D else arrow; crossfade over 2 frames."
+  },
+  {
+   "name": "touch-dot",
+   "description": "Semi-transparent circle representing a finger on mobile.",
+   "implementation": "arc r=22, fill rgba(255,255,255,.35), stroke rgba(0,0,0,.25); on press scale 0.85 (spring snappy); drag leaves fading trail of last 8 positions."
+  },
+  {
+   "name": "cursor-ring",
+   "description": "Ring cursor (presentation/screencast style) that grows on hover.",
+   "implementation": "stroke circle r = lerp(10, 18, hoverE), lineWidth 2, brand color; inner dot r 3."
+  },
+  {
+   "name": "click-ripple",
+   "description": "Expanding, fading ring at click point. Already in skill.",
+   "implementation": "r = 4 + 36*easeOutCubic(p); alpha = 1 - p; stroke lineWidth = 3*(1-p); dur 0.45 s; cursor scale 0.9 at click."
+  },
+  {
+   "name": "tap-indicator",
+   "description": "Mobile tap: filled dot that scales in and a ripple ring; long-press shows growing ring.",
+   "implementation": "dot: scale spring snappy, alpha 0.4; ring: r grows 0->40 over press duration; release: ripple."
+  },
+  {
+   "name": "spotlight-dim-hole",
+   "description": "Dims everything except a rounded-rect or circle hole around the target.",
+   "implementation": "ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.rect(0,0,W,H); ctx.roundRect(hx,hy,hw,hh,r); ctx.fill('evenodd'); hole rect animates from full screen to target via spring ui; alpha fades in 0.3 s."
+  },
+  {
+   "name": "highlight-ring",
+   "description": "Pulsing outline around an element.",
+   "implementation": "roundRect(target expanded by 6 + 4*sin(t*4)); stroke brand color lineWidth 3; alpha 0.6 + 0.4*sin(t*4)."
+  },
+  {
+   "name": "arrow-callout-drawn",
+   "description": "Hand-drawn curved arrow draws toward a target with a label.",
+   "implementation": "Path2D quadratic curve + arrowhead; reveal via setLineDash([L,L]) lineDashOffset L*(1-e); arrowhead appears at e>0.9 with scale pop; label fade-up."
+  },
+  {
+   "name": "tooltip-pop",
+   "description": "Small bubble with pointer that scales from its anchor.",
+   "implementation": "ctx.translate(anchor); ctx.scale(s,s) with s = spring(t-t0, 260, 20) from 0.6; alpha e; roundRect + triangle pointer; text 14-18 px."
+  },
+  {
+   "name": "sticky-note",
+   "description": "Yellow note with slight rotation and shadow; drops on with bounce.",
+   "implementation": "fill #ffe66d, rotate(-0.04), shadow offsetY 8 blur 16; entry: y from -80 with spring playful, rotation settles from -0.15; handwriting font (Kalam)."
+  },
+  {
+   "name": "magnifier-loupe",
+   "description": "Circular lens that magnifies the content under it.",
+   "implementation": "draw scene; ctx.save(); ctx.arc(lx,ly,R,0,TAU); ctx.clip(); ctx.translate(lx,ly); ctx.scale(2,2); ctx.translate(-lx,-ly); drawScene(); ctx.restore(); stroke ring lineWidth 6 + handle."
+  },
+  {
+   "name": "browser-chrome-frame",
+   "description": "Window with traffic-light dots, tab, address bar; content clipped inside.",
+   "implementation": "roundRect window r=12 fill #fff shadow 40; top bar 40 px #f1f1f1; circles #ff5f57 #febc2e #28c840 r=6; url pill with monospace text; clip content rect. Entry: scale 0.96->1 + fade, spring ui."
+  },
+  {
+   "name": "phone-frame",
+   "description": "Generic smartphone bezel with rounded screen and dynamic-island pill (no brand marks).",
+   "implementation": "outer roundRect r=56 fill #111; screen inset 12 px r=44; pill at top 120x34 r=17; clip screen to draw app UI; side-buttons as thin rects."
+  },
+  {
+   "name": "laptop-frame",
+   "description": "Generic laptop: screen bezel and trapezoid base.",
+   "implementation": "screen roundRect fill #1b1b1f; base polygon wider than screen with gradient #d9d9de->#bfc0c6; notch optional; content clip to screen."
+  },
+  {
+   "name": "notification-toast",
+   "description": "Banner slides from top (mobile) or corner (desktop), holds, exits.",
+   "implementation": "y = lerp(-h-20, 24, spring(t-t0, 320, 30)); roundRect blur-backed (draw bg region blurred via filter inside clip); icon + title + body; exit after 2.5 s with easeInCubic."
+  },
+  {
+   "name": "progress-bar",
+   "description": "Linear determinate bar with non-linear realistic progress.",
+   "implementation": "w = W_bar * piecewise(p) with plateaus (e.g. 0->0.4 fast, hold, 0.4->0.9, 1); fill roundRect; optional shimmer gradient moving."
+  },
+  {
+   "name": "spinner-arc",
+   "description": "Rotating arc whose length breathes (Material-style indeterminate).",
+   "implementation": "rot = t*TAU*0.8; len = 0.1 + 0.6*(0.5-0.5*cos(t*TAU*0.66)); arc(cx,cy,r, rot, rot + len*TAU); lineCap round."
+  },
+  {
+   "name": "spinner-dots",
+   "description": "Three dots bouncing in sequence (typing indicator).",
+   "implementation": "for i<3: y = -6*max(0, sin(TAU*(t*1.4) - i*0.6)); arc r 5."
+  },
+  {
+   "name": "chat-bubbles",
+   "description": "Messages appear one by one with typing indicator first; list scrolls up.",
+   "implementation": "for msg i at time ti: typing dots from ti-0.8 to ti; bubble: scale from tail corner, spring ui; previous bubbles y offset by sum of heights*spring; sent = right/brand color, received = left/grey."
+  },
+  {
+   "name": "keycaps",
+   "description": "Keyboard shortcut keycaps (e.g. Cmd + K) that press down in sync.",
+   "implementation": "roundRect key with bottom edge darker (two rects offset 4 px); press: translateY 3 px and edge shrinks, spring snappy; '+' between keys; monospace label."
+  },
+  {
+   "name": "before-after-slider",
+   "description": "Vertical divider sweeps to reveal 'after' over 'before', with handle.",
+   "implementation": "draw before; clip rect(0,0,x,H) draw after; x = lerp(0.1W, 0.9W, easeInOutSine) with hold; handle circle + line; labels 'Before'/'After' pills."
+  },
+  {
+   "name": "checklist-ticking",
+   "description": "Items check off in sequence: box fills, checkmark draws, text strikes or dims.",
+   "implementation": "box roundRect; fill scale pop spring snappy; check Path2D (2 segments) via lineDash reveal 0.25 s; label alpha 1->0.6; stagger 0.35-0.5 s."
+  },
+  {
+   "name": "toggle-switch",
+   "description": "Pill switch whose knob slides with squash and track color crossfades.",
+   "implementation": "knobX = lerp(x0, x1, spring(t-t0, 320, 30)); knob width stretches 1.2x mid-way: w = r*2*(1 + 0.2*sin(PI*p)); track color lerpColor(off,on,e)."
+  },
+  {
+   "name": "step-indicator",
+   "description": "Numbered dots connected by a line; progress fills to the current step.",
+   "implementation": "line fill length = segment*stepE; dots: completed fill brand + check, current ring pulse, upcoming grey; label below each."
+  },
+  {
+   "name": "code-block-typing",
+   "description": "Editor panel with syntax colors; code types in token by token with cursor.",
+   "implementation": "pre-tokenize (small regex lexer: keywords, strings, numbers, comments) to [{text,color}]; reveal chars by n(t); draw tokens with measureText advancing x; line numbers gutter; JetBrains Mono."
+  },
+  {
+   "name": "terminal-window",
+   "description": "Dark terminal with prompt, typed command, then output lines streaming.",
+   "implementation": "window frame #0d0d0d with title bar; prompt '$ ' green; command typewriter 25 cps; Enter at tc; output lines appear every 40-80 ms (hash-jittered); auto-scroll when y > maxY."
+  },
+  {
+   "name": "form-fill",
+   "description": "Input field focus ring, typing, validation check.",
+   "implementation": "border color lerp to brand on focus; placeholder fades; typewriter value; green check pop on blur."
+  },
+  {
+   "name": "modal-dialog",
+   "description": "Backdrop dims, dialog scales 0.95->1 and fades in.",
+   "implementation": "backdrop alpha 0.5*e; dialog s = 0.95 + 0.05*spring(t-t0,220,28); y 12*(1-e)."
+  },
+  {
+   "name": "drag-and-drop",
+   "description": "Card lifts (shadow grows, scale 1.03), follows cursor, drops into slot with settle.",
+   "implementation": "lift: shadowBlur 4->24, scale spring snappy; follow cursor path; drop: pos spring ui into slot; other cards reflow via spring."
+  },
+  {
+   "name": "badge-counter",
+   "description": "Notification badge pops and number increments.",
+   "implementation": "circle scale pop spring playful; number via counter-roll in tiny size."
+  }
+ ],
+ "dataviz": [
+  {
+   "name": "bar-grow",
+   "description": "Bars grow from baseline with stagger; value labels count up.",
+   "implementation": "h_i = value_i*scale*spring(t-t0-i*0.06, 220, 28); fillRect(x_i, base-h_i, bw, h_i); label = counter-roll with same e; axis draws first via line-draw."
+  },
+  {
+   "name": "bar-chart-race",
+   "description": "Ranked horizontal bars reorder over time as values change.",
+   "implementation": "keyframes per period; interpolate values v(t) linearly between periods; rank by v at t; y position = spring-smoothed rank: y = sum_j (rank_j - rank_{j-1})*spring(t - t_j, 220, 28)*rowH; bar width = v*scale; label + value at bar end; period label big in corner."
+  },
+  {
+   "name": "line-draw-dot",
+   "description": "Line draws left to right with a leading dot and value label.",
+   "implementation": "Path2D of points; total length L (sum of segments); setLineDash([L,L]); lineDashOffset=L*(1-e); dot at point at arc length L*e (precompute cumulative lengths); label follows dot."
+  },
+  {
+   "name": "area-fill",
+   "description": "Area under a line fills after or with the line, gradient to transparent.",
+   "implementation": "clip rect(0,0,x(e),H); fill area path with linearGradient(color alpha .35 -> 0); then line-draw on top."
+  },
+  {
+   "name": "donut-sweep",
+   "description": "Donut segments sweep around in sequence.",
+   "implementation": "for seg k: a0=start_k; a1 = start_k + span_k*clamp((e*total - start_k)/span_k); ctx.arc(cx,cy,R,a0,a1); lineWidth = R-r; lineCap butt; center label counts to percentage."
+  },
+  {
+   "name": "pie-explode",
+   "description": "Pie draws, then one slice pulls out for emphasis.",
+   "implementation": "slice k offset = 24*spring(t-tk,260,20) along mid-angle (cos m, sin m); other slices alpha 0.5."
+  },
+  {
+   "name": "big-counter",
+   "description": "Single KPI with label, counts up and settles with a small scale bump.",
+   "implementation": "counter-roll + at end scale 1.06 -> 1 with spring playful; unit suffix rises in after."
+  },
+  {
+   "name": "sparkline",
+   "description": "Tiny inline line chart next to a number; last point dot pulses.",
+   "implementation": "line-draw in 0.6 s; end dot r 3 + pulse ring every 1.5 s."
+  },
+  {
+   "name": "heatmap-fill",
+   "description": "Grid cells fill with color in a wave (diagonal or by value).",
+   "implementation": "cell (i,j): delay = (i+j)*0.015 (or by value rank); alpha/scale spring ui; color from sequential palette lerp(lo, hi, v)."
+  },
+  {
+   "name": "map-pin-drop",
+   "description": "Pins drop onto a simplified map and bounce; ripple at impact.",
+   "implementation": "map as Path2D (pre-projected); pin y = target - 80*(1-easeOutBounce(pi)); shadow ellipse scales with height; ripple ring at landing."
+  },
+  {
+   "name": "flow-sankey-draw",
+   "description": "Flows draw from source to target as thick bezier bands.",
+   "implementation": "band = two cubic beziers + close; reveal by clip rect growing in x, or draw centerline with lineWidth=flow and lineDash reveal; stagger per flow."
+  },
+  {
+   "name": "progress-ring",
+   "description": "Circular progress to a percentage with counter in center.",
+   "implementation": "track circle alpha .15; arc(-PI/2, -PI/2 + TAU*pct*e) lineCap round; counter."
+  },
+  {
+   "name": "comparison-split",
+   "description": "Two values side by side, the winner bar extends further and highlights.",
+   "implementation": "both bars grow with same spring; at end, loser fades to grey, winner gets highlight-ring and label slam."
+  },
+  {
+   "name": "timeline-scrub",
+   "description": "Horizontal timeline; playhead moves and events pop as it passes.",
+   "implementation": "playhead x = lerp(x0, x1, p); event k visible when x >= x_k: scale pop + label fade-up; past segment colored, future grey."
+  },
+  {
+   "name": "scatter-bloom",
+   "description": "Points appear from center or by group, settle to positions.",
+   "implementation": "pos = lerp(center, target, spring(t-t0-hash(i)*0.4, 220, 28)); radius pop."
+  },
+  {
+   "name": "waffle-unit-chart",
+   "description": "10x10 grid of squares fills to a percentage (isotype-like).",
+   "implementation": "cell n < round(pct*100) filled in order with delay n*0.012; scale spring snappy."
+  },
+  {
+   "name": "stacked-bar-build",
+   "description": "Segments stack one category at a time.",
+   "implementation": "segment k grows after segment k-1 completes; legend item highlights in sync."
+  },
+  {
+   "name": "slope-chart",
+   "description": "Two columns of values connected by lines that draw, rising lines in accent.",
+   "implementation": "line-draw each connector with stagger; endpoint dots pop; color by sign."
+  },
+  {
+   "name": "axis-gridline-intro",
+   "description": "Axes draw, ticks fade in, then data animates (staging).",
+   "implementation": "axis line-draw 0.4 s; ticks fade-up stagger 0.02 s; data starts at +0.5 s."
+  },
+  {
+   "name": "annotation-on-chart",
+   "description": "Callout line and label pinned to a data point after the data settles.",
+   "implementation": "leader line lineDash reveal from point to label; label rise; point highlight ring."
+  },
+  {
+   "name": "number-to-chart-morph",
+   "description": "Big number shrinks and moves to become the top of its bar.",
+   "implementation": "number pos/scale lerp to bar top via spring camera; bar grows beneath simultaneously."
+  }
+ ],
+ "pace": {
+  "notes": [
+   "bar_seconds = 240 / BPM (4/4). beat = 60 / BPM. Snap cuts and slams to beats; move text entries a few frames before the beat so they land on it.",
+   "Text hold rule (convention derived from reading research): hold_s = 0.5 + words / wps, minimum 1.2 s for any readable line. Brysbaert (2019) measured 238 wpm (~4.0 words/s) average silent reading of non-fiction; moving video with competing visuals reads slower, so presets use 2.0-3.5 wps.",
+   "Subtitle ceiling: Netflix guides cap adult subtitles at ~17 characters/s in most languages (some English guidance cites 20 cps), minimum 5/6 s per event, maximum 7 s. Use 15 cps for burned-in captions on busy visuals.",
+   "Spring scaling: multiply k by s^2 and d by s to speed motion by factor s while keeping the same overshoot character. The spring_k_mult below is s^2; damping multiplier is sqrt(spring_k_mult).",
+   "Film baseline: Hollywood average shot length was ~8-11 s in 1930-1960 and ~3-6 s by ~2000 (Bordwell, Intensified Continuity); Cutting et al. measured the decline across 160 films 1935-2010. These are features, not ads; short-form social cut rates are not measured in any study found, so the social numbers below are convention.",
+   "Material Design durations for UI-scale motion: 50-200 ms small utility, 250-400 ms medium, 450-600 ms large expressive, 700-1000 ms ambient. Use these for UI demos inside videos, then scale by the pace preset.",
+   "Apple HIG: add motion purposefully, do not add it for its own sake, and respect Reduce Motion. Applies to 'max_simultaneous_moves': fewer is clearer."
+  ],
+  "presets": [
+   {
+    "name": "calm",
+    "mood": "reflective, premium, meditative, nordic-ink-wash, hopper-still",
+    "bpm": [
+     60,
+     80
+    ],
+    "bars_per_shot": [
+     2,
+     4
+    ],
+    "shot_s_at_70bpm": [
+     6.9,
+     13.7
+    ],
+    "text_wps": 2.0,
+    "max_words_per_card": 12,
+    "spring_k_mult": 0.5,
+    "damping_mult": 0.71,
+    "transition_s": [
+     0.8,
+     1.4
+    ],
+    "preferred_transitions": [
+     "crossfade-dissolve",
+     "blur-crossfade",
+     "ink-liquid-bleed",
+     "luma-fade",
+     "dip-to-color"
+    ],
+    "max_simultaneous_moves": 1,
+    "camera": "push-in 4-8 s, ken-burns, parallax drift",
+    "basis": "BPM band = Artlist 'slow/medium-slow'; shot length near classical-era ASL (convention)."
+   },
+   {
+    "name": "considered",
+    "mood": "editorial, explainer, corporate-trust, documentary",
+    "bpm": [
+     80,
+     100
+    ],
+    "bars_per_shot": [
+     2,
+     3
+    ],
+    "shot_s_at_90bpm": [
+     5.3,
+     8.0
+    ],
+    "text_wps": 2.5,
+    "max_words_per_card": 10,
+    "spring_k_mult": 0.7,
+    "damping_mult": 0.84,
+    "transition_s": [
+     0.5,
+     0.8
+    ],
+    "preferred_transitions": [
+     "shared-axis",
+     "linear-wipe",
+     "container-morph",
+     "push"
+    ],
+    "max_simultaneous_moves": 2,
+    "camera": "push-in, focus-zoom-to-rect, tilt",
+    "basis": "Explainer VO pace 130-160 wpm (vendor guidance, 150 most cited) implies ~2.5 words/s; on-screen text matches VO."
+   },
+   {
+    "name": "standard",
+    "mood": "product demo, SaaS launch, LinkedIn, YouTube body",
+    "bpm": [
+     100,
+     120
+    ],
+    "bars_per_shot": [
+     1,
+     2
+    ],
+    "shot_s_at_110bpm": [
+     2.2,
+     4.4
+    ],
+    "text_wps": 3.0,
+    "max_words_per_card": 8,
+    "spring_k_mult": 1.0,
+    "damping_mult": 1.0,
+    "transition_s": [
+     0.35,
+     0.6
+    ],
+    "preferred_transitions": [
+     "hard-cut",
+     "push",
+     "container-morph",
+     "iris-circle-wipe",
+     "cut-on-action"
+    ],
+    "max_simultaneous_moves": 2,
+    "camera": "focus-zoom-to-rect, snap-zoom for emphasis, follow-cursor",
+    "basis": "Matches modern feature ASL 3-6 s (Bordwell) at the long end; Material medium/long durations for UI. Convention."
+   },
+   {
+    "name": "energetic",
+    "mood": "social ads, feature reels, kinetic-swiss, mascot-pop",
+    "bpm": [
+     120,
+     132
+    ],
+    "bars_per_shot": [
+     0.5,
+     1
+    ],
+    "shot_s_at_126bpm": [
+     0.95,
+     1.9
+    ],
+    "text_wps": 3.5,
+    "max_words_per_card": 5,
+    "spring_k_mult": 1.5,
+    "damping_mult": 1.22,
+    "transition_s": [
+     0.2,
+     0.4
+    ],
+    "preferred_transitions": [
+     "hard-cut",
+     "whip-pan",
+     "swipe-up-social",
+     "stripes-wipe",
+     "zoom-blur-punch"
+    ],
+    "max_simultaneous_moves": 3,
+    "camera": "snap-zoom, seeded-shake on hits, whip-pan",
+    "basis": "Artlist 'medium-fast' band. Short-form hook must land in 0-3 s (platform/vendor convention; Facebook counted a view at 3 s per Digiday 2016). Cut cadence is convention."
+   },
+   {
+    "name": "hype",
+    "mood": "launch teaser, sports, music-driven, countdown",
+    "bpm": [
+     130,
+     160
+    ],
+    "bars_per_shot": [
+     0.25,
+     0.5
+    ],
+    "shot_s_at_140bpm": [
+     0.43,
+     0.86
+    ],
+    "text_wps": 4.0,
+    "max_words_per_card": 3,
+    "spring_k_mult": 2.0,
+    "damping_mult": 1.41,
+    "transition_s": [
+     0.0,
+     0.25
+    ],
+    "preferred_transitions": [
+     "hard-cut",
+     "smash-cut",
+     "glitch-rgb-split",
+     "zoom-blur-punch",
+     "chromatic-slide"
+    ],
+    "max_simultaneous_moves": 4,
+    "camera": "seeded-shake, snap-zoom every 2 bars, dutch-roll",
+    "basis": "Cut on every beat or half-beat is convention. Keep cards to 1-3 words so the 4 wps reading rate (Brysbaert 238 wpm) still holds at ~0.5-0.9 s per card."
+   },
+   {
+    "name": "trailer",
+    "mood": "film-style launch film with three acts",
+    "bpm": [
+     [
+      70,
+      95
+     ],
+     [
+      100,
+      120
+     ],
+     [
+      120,
+      140
+     ]
+    ],
+    "bars_per_shot": [
+     [
+      2,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      0.25,
+      1
+     ]
+    ],
+    "text_wps": 2.0,
+    "max_words_per_card": 4,
+    "spring_k_mult": [
+     0.6,
+     1.0,
+     1.8
+    ],
+    "damping_mult": [
+     0.77,
+     1.0,
+     1.34
+    ],
+    "transition_s": [
+     1.0,
+     0.4,
+     0.0
+    ],
+    "preferred_transitions": [
+     "dip-to-color between acts",
+     "hard-cut",
+     "smash-cut",
+     "text-mask-reveal title",
+     "film-burn"
+    ],
+    "max_simultaneous_moves": [
+     1,
+     2,
+     4
+    ],
+    "camera": "act1 slow push-in; act2 parallax trucks; act3 snap zooms and shakes; final hold on title 2-3 s",
+    "basis": "Three-act cue structure (open, build, big finish) from trailer editors; faster cuts and higher BPM toward the climax (No Film School). Arrays are per act. Insert a 0.5-1.0 s silence before the title hit (convention)."
+   }
+  ],
+  "formats": [
+   {
+    "format": "TikTok / Reels / Shorts (9:16)",
+    "length_s": "15-45 typical",
+    "hook": "Payoff or claim on screen in 0-1.5 s; motion in frame 1; no logo intro.",
+    "safe_zone_1080x1920": "Keep text inside ~x 60-960, y 210-1500 (Reels blocks ~210 top / ~310 bottom; TikTok ~108-130 top, 320-480 bottom, 120-150 right). Values are measured by third parties, not published by the platforms.",
+    "captions": "Burn in; many views start muted (vendor-cited 68% TikTok / 54% Reels, unverified primary).",
+    "pace": "energetic or hype",
+    "evidence": "Semrush review of 500 trending TikToks: >1/3 show a person speaking within 3 s; >1/2 use music as primary sound in the first 3 s."
+   },
+   {
+    "format": "LinkedIn feed (1:1 or 4:5, also 9:16)",
+    "length_s": "15-30 for tips/announcements, 30-90 for ads (vendor guidance)",
+    "hook": "State the result in the first 2-3 s; text-first.",
+    "captions": "Burned-in captions are the most consistent recommendation; design for sound-off. Digiday (2016) reported publishers seeing up to 85% of Facebook video views without sound, the origin of the 'sound-off' norm.",
+    "pace": "standard or considered"
+   },
+   {
+    "format": "YouTube intro",
+    "length_s": "branded sting 3-5 s max (convention); YouTube measures 'intro' retention at the 30 s mark",
+    "hook": "Match title/thumbnail promise immediately; logo sting after the hook, not before.",
+    "pace": "standard"
+   },
+   {
+    "format": "Keynote / deck animation",
+    "length_s": "builds 0.3-0.6 s; slide transitions 0.4-0.8 s",
+    "hook": "Presenter controls timing; one move per click.",
+    "pace": "considered; Material medium/long durations; max 1 simultaneous move"
+   },
+   {
+    "format": "Product launch film",
+    "length_s": "60-120",
+    "hook": "Problem or striking product shot in first 5 s; logo/end-card last 3-5 s.",
+    "pace": "trailer or standard; music-led cut"
+   },
+   {
+    "format": "Explainer",
+    "length_s": "60-120 (130-160 words per minute of VO)",
+    "hook": "Question or pain point in first 5 s.",
+    "pace": "considered"
+   },
+   {
+    "format": "Trailer / teaser",
+    "length_s": "30-150",
+    "hook": "Act 1 sets world, act 2 escalates, act 3 montage + title + date.",
+    "pace": "trailer"
+   }
+  ]
+ },
+ "styles": [
+  {
+   "name": "bauhaus-geometric",
+   "palette": [
+    "#F2EBDD",
+    "#E63946",
+    "#1D3557",
+    "#F4C430",
+    "#111111"
+   ],
+   "type": {
+    "display": "League Spartan",
+    "body": "Jost"
+   },
+   "texture": "flat fills, no gradients; optional paper-fibers at 4% alpha",
+   "motion": {
+    "springs": [
+     "snappy",
+     "heavy"
+    ],
+    "transitions": [
+     "shape-wipe",
+     "iris-circle-wipe",
+     "split-reveal",
+     "morph-shape-to-shape"
+    ],
+    "text": [
+     "rise-from-mask",
+     "letter-scale-pop",
+     "mask-wipe-color-swap"
+    ],
+    "camera": [
+     "truck-parallax"
+    ],
+    "background": "bauhaus-shapes"
+   },
+   "sound": {
+    "mood": "minimal percussive, marimba, woodblocks",
+    "bpm": [
+     100,
+     118
+    ]
+   },
+   "banned": [
+    "gradients",
+    "drop shadows",
+    "photo realism",
+    "script fonts"
+   ],
+   "brief": "Primary shapes are the actors: circles, squares and triangles assemble into layouts, then dissolve into the next idea. Type is set heavy and geometric on a strict grid. Every move is a straight line or a perfect arc."
+  },
+  {
+   "name": "neo-brutalist",
+   "palette": [
+    "#FFFFFF",
+    "#000000",
+    "#FF5C00",
+    "#C6FF00",
+    "#3D5AFE"
+   ],
+   "type": {
+    "display": "Archivo Black",
+    "body": "Space Grotesk",
+    "mono": "Space Mono"
+   },
+   "texture": "none; hard 4-8 px black offset shadows on every box",
+   "motion": {
+    "springs": [
+     "snappy"
+    ],
+    "transitions": [
+     "hard-cut",
+     "push",
+     "stripes-wipe",
+     "smash-cut"
+    ],
+    "text": [
+     "big-number-slam",
+     "kinetic-stack-push",
+     "highlight-marker-sweep"
+    ],
+    "camera": [
+     "snap-zoom",
+     "seeded-shake"
+    ],
+    "background": "line-grid"
+   },
+   "sound": {
+    "mood": "punchy drum loops, distorted bass",
+    "bpm": [
+     120,
+     135
+    ]
+   },
+   "banned": [
+    "soft shadows",
+    "blur",
+    "rounded corners > 4 px",
+    "pastels"
+   ],
+   "brief": "Thick black borders, flat loud colors and hard offset shadows. Boxes slam in on snappy springs and stop dead. Copy is short and set big."
+  },
+  {
+   "name": "risograph-print",
+   "palette": [
+    "#F7F3EA",
+    "#FF48B0",
+    "#0078BF",
+    "#FFE800",
+    "#00A95C"
+   ],
+   "type": {
+    "display": "Bricolage Grotesque",
+    "body": "IBM Plex Sans"
+   },
+   "texture": "risograph-misregistration + coarse grain; overlapping inks via multiply",
+   "motion": {
+    "springs": [
+     "ui",
+     "playful"
+    ],
+    "transitions": [
+     "dither-dissolve",
+     "linear-wipe",
+     "blinds-venetian"
+    ],
+    "text": [
+     "rise-from-mask",
+     "outline-to-fill",
+     "highlight-marker-sweep"
+    ],
+    "camera": [
+     "parallax-layers-drift"
+    ],
+    "background": "risograph-misregistration"
+   },
+   "sound": {
+    "mood": "lo-fi beats, tape-saturated synths",
+    "bpm": [
+     80,
+     95
+    ]
+   },
+   "banned": [
+    "pure black",
+    "smooth gradients",
+    "glossy highlights"
+   ],
+   "brief": "Two or three flat spot inks overprint and shift a few pixels between steps, like a print slightly out of register. Motion steps at 12 fps for shapes while the camera stays smooth. Grain sits on top of everything."
+  },
+  {
+   "name": "blueprint-technical",
+   "palette": [
+    "#0B3A6E",
+    "#134E8E",
+    "#E8F1FF",
+    "#7FD1FF",
+    "#FFD166"
+   ],
+   "type": {
+    "display": "Barlow Condensed",
+    "body": "IBM Plex Mono"
+   },
+   "texture": "blueprint grid + faint paper noise",
+   "motion": {
+    "springs": [
+     "ui",
+     "camera"
+    ],
+    "transitions": [
+     "linear-wipe",
+     "zoom-through",
+     "shared-axis"
+    ],
+    "text": [
+     "typewriter-cursor",
+     "underline-draw",
+     "line-by-line-wipe"
+    ],
+    "camera": [
+     "pan",
+     "focus-zoom-to-rect"
+    ],
+    "background": "blueprint"
+   },
+   "sound": {
+    "mood": "ambient electronic, ticking clocks",
+    "bpm": [
+     90,
+     105
+    ]
+   },
+   "banned": [
+    "filled photo imagery",
+    "playful bounces",
+    "emoji"
+   ],
+   "brief": "Everything is drawn in thin white lines on deep blue and builds stroke by stroke, with dimension lines and callouts. The camera glides between details like a drafter's eye. Labels type in monospace."
+  },
+  {
+   "name": "terminal-mono",
+   "palette": [
+    "#0D0D0D",
+    "#E6E6E6",
+    "#39FF14",
+    "#FFB000",
+    "#5C6370"
+   ],
+   "type": {
+    "display": "JetBrains Mono",
+    "body": "JetBrains Mono",
+    "alt": "VT323"
+   },
+   "texture": "scanlines at 8% optional, slight glow",
+   "motion": {
+    "springs": [
+     "snappy"
+    ],
+    "transitions": [
+     "hard-cut",
+     "dither-dissolve",
+     "pixel-dissolve"
+    ],
+    "text": [
+     "typewriter-cursor",
+     "scramble-decode",
+     "typewriter-delete-retype"
+    ],
+    "camera": [
+     "tilt"
+    ],
+    "background": "scanlines"
+   },
+   "sound": {
+    "mood": "minimal synth arps, keyboard clicks",
+    "bpm": [
+     100,
+     120
+    ]
+   },
+   "banned": [
+    "proportional fonts",
+    "springs with overshoot",
+    "gradients"
+   ],
+   "brief": "One monospace font, a blinking cursor and output that streams line by line. Transitions are hard cuts or dithered dissolves. Color is used only for prompts, success and warnings."
+  },
+  {
+   "name": "data-journalism",
+   "palette": [
+    "#FFFFFF",
+    "#121212",
+    "#D7263D",
+    "#1B998B",
+    "#E8E8E8",
+    "#F4A259"
+   ],
+   "type": {
+    "display": "Source Serif 4",
+    "body": "Libre Franklin"
+   },
+   "texture": "none; hairline rules and annotations",
+   "motion": {
+    "springs": [
+     "ui",
+     "camera"
+    ],
+    "transitions": [
+     "shared-axis",
+     "crossfade-dissolve",
+     "container-morph"
+    ],
+    "dataviz": [
+     "axis-gridline-intro",
+     "line-draw-dot",
+     "annotation-on-chart",
+     "number-to-chart-morph"
+    ],
+    "text": [
+     "fade-up-stagger",
+     "highlight-marker-sweep",
+     "counter-roll"
+    ],
+    "camera": [
+     "focus-zoom-to-rect",
+     "pan"
+    ],
+    "background": "none (white)"
+   },
+   "sound": {
+    "mood": "understated piano/strings, ticking",
+    "bpm": [
+     80,
+     100
+    ]
+   },
+   "banned": [
+    "3D charts",
+    "neon",
+    "decorative particles",
+    "truncated axes"
+   ],
+   "brief": "Serif headlines over white, charts that build axis first, then data, then a single annotated takeaway. One accent color marks the story; everything else is grey. The camera moves only to point at the evidence."
+  },
+  {
+   "name": "paper-cutout-collage",
+   "palette": [
+    "#F3E9DC",
+    "#C8553D",
+    "#588B8B",
+    "#F2D0A4",
+    "#2D2A32"
+   ],
+   "type": {
+    "display": "Fraunces",
+    "body": "Work Sans",
+    "hand": "Caveat"
+   },
+   "texture": "paper-fibers, torn edges (jittered polygon outlines), soft drop shadows offset 3 px",
+   "motion": {
+    "springs": [
+     "playful",
+     "heavy"
+    ],
+    "transitions": [
+     "page-turn",
+     "slide-over",
+     "deck-shuffle"
+    ],
+    "text": [
+     "bounce-drop",
+     "letter-scale-pop",
+     "handwriting-stroke"
+    ],
+    "camera": [
+     "truck-parallax"
+    ],
+    "background": "paper-fibers"
+   },
+   "sound": {
+    "mood": "acoustic guitar, claps, glockenspiel",
+    "bpm": [
+     95,
+     115
+    ]
+   },
+   "banned": [
+    "vector perfection",
+    "glow",
+    "chrome"
+   ],
+   "brief": "Shapes look cut from colored paper with torn edges and small shadows, layered on a craft-paper ground. Pieces hop in on playful springs and wobble a little at rest, at 12 fps steps. The camera trucks across layers to show depth."
+  },
+  {
+   "name": "claymorphism-soft-3d",
+   "palette": [
+    "#F6F0FF",
+    "#A78BFA",
+    "#F9A8D4",
+    "#86EFAC",
+    "#FCD34D",
+    "#3B3054"
+   ],
+   "type": {
+    "display": "Baloo 2",
+    "body": "Nunito"
+   },
+   "texture": "inner highlight (top-left white radial) + inner shadow (bottom-right) on rounded shapes",
+   "motion": {
+    "springs": [
+     "playful",
+     "ui"
+    ],
+    "transitions": [
+     "spin",
+     "iris-circle-wipe",
+     "container-morph"
+    ],
+    "text": [
+     "letter-scale-pop",
+     "elastic-stretch",
+     "bounce-drop"
+    ],
+    "camera": [
+     "orbit-2_5d"
+    ],
+    "background": "animated-gradient-mesh (pastel, slow)"
+   },
+   "sound": {
+    "mood": "bubbly synth pop, pluck sounds",
+    "bpm": [
+     105,
+     120
+    ]
+   },
+   "banned": [
+    "hard edges",
+    "dark backgrounds",
+    "serif type"
+   ],
+   "brief": "Soft, puffy rounded shapes with inner highlights, as if made of clay. Objects squash and stretch on landing. Pastel ground, chunky rounded type."
+  },
+  {
+   "name": "glass-and-light",
+   "palette": [
+    "#0A0F1F",
+    "#1E2A4A",
+    "#8EC5FF",
+    "#E0C3FC",
+    "#FFFFFF"
+   ],
+   "type": {
+    "display": "Manrope",
+    "body": "Inter"
+   },
+   "texture": "frosted panels (blur(24px) of background clipped to roundRect), 1 px white 20% borders, bokeh behind. Opt-in: expensive and overused.",
+   "motion": {
+    "springs": [
+     "ui",
+     "camera"
+    ],
+    "transitions": [
+     "blur-crossfade",
+     "container-morph",
+     "luma-fade"
+    ],
+    "text": [
+     "blur-in",
+     "gradient-sweep"
+    ],
+    "camera": [
+     "parallax-layers-drift",
+     "rack-focus"
+    ],
+    "background": "bokeh + animated-gradient-mesh"
+   },
+   "sound": {
+    "mood": "airy pads, soft piano",
+    "bpm": [
+     75,
+     95
+    ]
+   },
+   "banned": [
+    "more than 3 glass panels on screen",
+    "neon outlines",
+    "grain over glass"
+   ],
+   "brief": "Frosted translucent panels float over slow colored light, and focus shifts between them. Moves are slow and soft. Opt-in only."
+  },
+  {
+   "name": "y2k-chrome",
+   "palette": [
+    "#C0C0C8",
+    "#E8E8F0",
+    "#5B5BFF",
+    "#FF4FD8",
+    "#0A0A12"
+   ],
+   "type": {
+    "display": "Michroma",
+    "body": "Exo 2",
+    "alt": "Monoton"
+   },
+   "texture": "chrome via multi-stop linearGradient (#fff, #888, #222, #ddd, #fff) with gradient-sweep shine; starbursts",
+   "motion": {
+    "springs": [
+     "snappy",
+     "playful"
+    ],
+    "transitions": [
+     "zoom-blur-punch",
+     "chromatic-slide",
+     "spin"
+    ],
+    "text": [
+     "gradient-sweep",
+     "tracking-expand",
+     "elastic-stretch"
+    ],
+    "camera": [
+     "orbit-2_5d",
+     "snap-zoom"
+    ],
+    "background": "starfield + concentric-pulse"
+   },
+   "sound": {
+    "mood": "trance-pop, bubbly synths, UK garage",
+    "bpm": [
+     128,
+     140
+    ]
+   },
+   "banned": [
+    "paper texture",
+    "muted colors",
+    "serif body text"
+   ],
+   "brief": "Liquid chrome type with sweeping highlights, star sparkles and electric blue-pink accents. Elements spin and zoom in with punchy springs. Everything shines."
+  },
+  {
+   "name": "retro-vhs",
+   "palette": [
+    "#1A1423",
+    "#F72585",
+    "#4CC9F0",
+    "#FFD60A",
+    "#EDEDED"
+   ],
+   "type": {
+    "display": "Bungee",
+    "body": "VT323"
+   },
+   "texture": "vhs-tracking + crt + chromatic-aberration + timestamp overlay",
+   "motion": {
+    "springs": [
+     "snappy"
+    ],
+    "transitions": [
+     "glitch-rgb-split",
+     "mosaic-pixelate",
+     "dip-to-color"
+    ],
+    "text": [
+     "glitch-text",
+     "typewriter-cursor",
+     "ticker-marquee"
+    ],
+    "camera": [
+     "handheld-drift",
+     "snap-zoom"
+    ],
+    "background": "vhs-tracking"
+   },
+   "sound": {
+    "mood": "synthwave, tape-wobbled drums",
+    "bpm": [
+     95,
+     115
+    ]
+   },
+   "banned": [
+    "clean flat UI",
+    "4K crispness",
+    "modern glassmorphism"
+   ],
+   "brief": "The whole frame reads as a worn tape: tracking bands roll, colors bleed, a REC timestamp ticks in the corner. Cuts glitch, and titles type on in a blocky display face."
+  },
+  {
+   "name": "pixel-8bit",
+   "palette": [
+    "#0F0F1B",
+    "#29ADFF",
+    "#FF004D",
+    "#FFEC27",
+    "#00E436",
+    "#FFF1E8"
+   ],
+   "type": {
+    "display": "Press Start 2P",
+    "body": "Pixelify Sans",
+    "alt": "Silkscreen"
+   },
+   "texture": "render at 1/4 or 1/6 res with imageSmoothingEnabled=false, upscale; limited palette",
+   "motion": {
+    "springs": [
+     "snappy (quantized to 12 fps)"
+    ],
+    "transitions": [
+     "pixel-dissolve",
+     "dither-dissolve",
+     "iris-circle-wipe (stepped)"
+    ],
+    "text": [
+     "typewriter-cursor",
+     "bounce-drop (stepped)",
+     "countdown-flip"
+    ],
+    "camera": [
+     "pan (integer pixels)"
+    ],
+    "background": "starfield (pixel stars)"
+   },
+   "sound": {
+    "mood": "chiptune square waves",
+    "bpm": [
+     120,
+     150
+    ]
+   },
+   "banned": [
+    "anti-aliasing",
+    "blur",
+    "gradients",
+    "sub-pixel motion"
+   ],
+   "brief": "Low-res canvas scaled up with crisp pixels and a tight palette. Motion moves in whole pixels at stepped frame rates. Dialogue boxes type out with blips."
+  },
+  {
+   "name": "split-flap-departures",
+   "palette": [
+    "#111111",
+    "#1E1E1E",
+    "#F2F2F2",
+    "#FFC107",
+    "#4CAF50"
+   ],
+   "type": {
+    "display": "Chivo Mono",
+    "body": "Overpass Mono"
+   },
+   "texture": "tile grid with center seam line, subtle vertical gradient per tile",
+   "motion": {
+    "springs": [
+     "snappy"
+    ],
+    "transitions": [
+     "grid-tile-flip",
+     "hard-cut"
+    ],
+    "text": [
+     "split-flap-board",
+     "ticker-marquee",
+     "slot-machine-roll"
+    ],
+    "camera": [
+     "push-in (slow)"
+    ],
+    "background": "dark tiles"
+   },
+   "sound": {
+    "mood": "mechanical clatter SFX over minimal electronic",
+    "bpm": [
+     100,
+     115
+    ]
+   },
+   "banned": [
+    "script fonts",
+    "organic shapes",
+    "blur transitions"
+   ],
+   "brief": "Every word lands on a mechanical departures board, flapping through letters before it settles. Rows update in waves. Amber marks what is new."
+  },
+  {
+   "name": "newsprint",
+   "palette": [
+    "#F2EEE3",
+    "#1A1A1A",
+    "#8B0000",
+    "#BDB6A6",
+    "#5A5A5A"
+   ],
+   "type": {
+    "display": "Playfair Display",
+    "body": "Old Standard TT",
+    "masthead": "UnifrakturMaguntia"
+   },
+   "texture": "halftone images, paper-fibers, ink spread (blur 0.6px), column rules",
+   "motion": {
+    "springs": [
+     "heavy",
+     "ui"
+    ],
+    "transitions": [
+     "page-turn",
+     "spin (newspaper spin, opt-in)",
+     "linear-wipe"
+    ],
+    "text": [
+     "quote-reveal",
+     "line-by-line-wipe",
+     "strike-through"
+    ],
+    "camera": [
+     "ken-burns",
+     "focus-zoom-to-rect"
+    ],
+    "background": "paper-fibers + halftone"
+   },
+   "sound": {
+    "mood": "ragtime piano, typewriter, newsroom ambience",
+    "bpm": [
+     90,
+     110
+    ]
+   },
+   "banned": [
+    "neon",
+    "rounded UI",
+    "saturated color beyond one red"
+   ],
+   "brief": "Columns, rules and halftone photos on aged paper. Headlines set in a high-contrast serif; the camera reads across the page and zooms into the key line. One red ink for emphasis."
+  },
+  {
+   "name": "isometric-tech",
+   "palette": [
+    "#0F172A",
+    "#1E293B",
+    "#38BDF8",
+    "#A78BFA",
+    "#F8FAFC",
+    "#22C55E"
+   ],
+   "type": {
+    "display": "Sora",
+    "body": "Inter",
+    "mono": "Space Mono"
+   },
+   "texture": "isometric-grid at 6% alpha; flat shaded faces (top light, left mid, right dark)",
+   "motion": {
+    "springs": [
+     "ui",
+     "heavy"
+    ],
+    "transitions": [
+     "zoom-through",
+     "shared-axis",
+     "scale-through-object"
+    ],
+    "text": [
+     "fade-up-stagger",
+     "typewriter-cursor"
+    ],
+    "camera": [
+     "truck-parallax",
+     "orbit-2_5d"
+    ],
+    "background": "isometric-grid"
+   },
+   "sound": {
+    "mood": "clean electronic, pulsing bass",
+    "bpm": [
+     110,
+     124
+    ]
+   },
+   "banned": [
+    "perspective 3D",
+    "photo textures",
+    "drop shadows not on the iso axis"
+   ],
+   "brief": "Systems drawn as isometric blocks: servers, pipes and data packets moving along iso axes. Blocks rise from the grid on heavy springs. The camera trucks across the diagram."
+  },
+  {
+   "name": "hand-drawn-doodle",
+   "palette": [
+    "#FFFFFF",
+    "#1F1F1F",
+    "#FFD43B",
+    "#FF8787",
+    "#74C0FC"
+   ],
+   "type": {
+    "display": "Kalam",
+    "body": "Inter",
+    "alt": "Patrick Hand"
+   },
+   "texture": "jittered strokes (each line drawn 2x with hash offsets ±1 px), boil at 8 fps",
+   "motion": {
+    "springs": [
+     "playful",
+     "ui"
+    ],
+    "transitions": [
+     "ink-liquid-bleed",
+     "linear-wipe",
+     "card-flip"
+    ],
+    "text": [
+     "handwriting-stroke",
+     "highlight-marker-sweep",
+     "underline-draw"
+    ],
+    "camera": [
+     "pan"
+    ],
+    "background": "none or dot-grid"
+   },
+   "sound": {
+    "mood": "ukulele, whistling, light percussion",
+    "bpm": [
+     95,
+     115
+    ]
+   },
+   "banned": [
+    "perfect geometry",
+    "dark mode",
+    "photographic backgrounds"
+   ],
+   "brief": "Simple black-ink doodles on white, with a yellow marker for emphasis and lines that boil slightly like hand animation. Arrows and circles draw themselves around the key point. Friendly and plain."
+  },
+  {
+   "name": "duotone-photo",
+   "palette": [
+    "#1B1B3A",
+    "#FF6B6B",
+    "#FFE66D",
+    "#F7FFF7"
+   ],
+   "type": {
+    "display": "Anton",
+    "body": "Work Sans"
+   },
+   "texture": "duotone mapping + grain 6%",
+   "motion": {
+    "springs": [
+     "snappy",
+     "camera"
+    ],
+    "transitions": [
+     "text-mask-reveal",
+     "hard-cut",
+     "split-reveal"
+    ],
+    "text": [
+     "rise-from-mask",
+     "tracking-expand",
+     "big-number-slam"
+    ],
+    "camera": [
+     "ken-burns",
+     "push-in"
+    ],
+    "background": "duotone"
+   },
+   "sound": {
+    "mood": "indie rock, driving drums",
+    "bpm": [
+     110,
+     128
+    ]
+   },
+   "banned": [
+    "full-color photos",
+    "more than 2 photo tones",
+    "thin type"
+   ],
+   "brief": "Photos reduced to two strong colors, with tall condensed type cutting across them. Images slowly push in while words slam over the top. Bold and poster-like."
+  },
+  {
+   "name": "swiss-grid-minimal-dark",
+   "palette": [
+    "#0A0A0A",
+    "#171717",
+    "#EDEDED",
+    "#A1A1A1",
+    "#3B82F6"
+   ],
+   "type": {
+    "display": "Geist",
+    "body": "Inter",
+    "mono": "Geist Mono"
+   },
+   "texture": "thin 1 px borders at 8% white; subtle dot-grid; radial glow behind hero at 6%",
+   "motion": {
+    "springs": [
+     "ui",
+     "camera"
+    ],
+    "transitions": [
+     "container-morph",
+     "blur-crossfade",
+     "shared-axis"
+    ],
+    "text": [
+     "blur-in",
+     "rise-from-mask",
+     "counter-roll"
+    ],
+    "camera": [
+     "focus-zoom-to-rect",
+     "push-in"
+    ],
+    "background": "dot-grid + vignette"
+   },
+   "sound": {
+    "mood": "minimal techno, soft kicks, glassy plucks",
+    "bpm": [
+     110,
+     122
+    ]
+   },
+   "banned": [
+    "bounce easing",
+    "more than one accent color",
+    "emoji",
+    "skeuomorphic shadows"
+   ],
+   "brief": "Near-black canvas, crisp grey type, hairline borders and one blue accent. UI pieces assemble with quick, damped motion and focus shifts by blur. Precise and quiet."
+  },
+  {
+   "name": "organic-blob-liquid",
+   "palette": [
+    "#FFF7ED",
+    "#FB923C",
+    "#F472B6",
+    "#34D399",
+    "#1E1B4B"
+   ],
+   "type": {
+    "display": "DM Serif Display",
+    "body": "DM Sans"
+   },
+   "texture": "smooth noise-deformed blobs, soft inner gradients",
+   "motion": {
+    "springs": [
+     "playful",
+     "camera"
+    ],
+    "transitions": [
+     "ink-liquid-bleed",
+     "morph-shape-to-shape",
+     "iris-circle-wipe"
+    ],
+    "text": [
+     "wave-sine",
+     "blur-in",
+     "elastic-stretch"
+    ],
+    "camera": [
+     "parallax-layers-drift"
+    ],
+    "background": "animated-gradient-mesh"
+   },
+   "sound": {
+    "mood": "warm neo-soul, rhodes, gentle groove",
+    "bpm": [
+     85,
+     100
+    ]
+   },
+   "banned": [
+    "sharp corners",
+    "grids",
+    "glitch"
+   ],
+   "brief": "Shapes are soft blobs that breathe and merge, and scenes change by flowing color. Type is a friendly serif with gentle waves. Warm and calm."
+  },
+  {
+   "name": "monochrome-luxury",
+   "palette": [
+    "#0B0B0B",
+    "#F5F3EE",
+    "#8C8C8C",
+    "#C9B37E"
+   ],
+   "type": {
+    "display": "Cormorant Garamond",
+    "body": "Tenor Sans",
+    "alt": "Bodoni Moda"
+   },
+   "texture": "fine grain 4%, vignette, occasional light-rays",
+   "motion": {
+    "springs": [
+     "camera",
+     "heavy"
+    ],
+    "transitions": [
+     "dip-to-color",
+     "luma-fade",
+     "linear-wipe (slow)"
+    ],
+    "text": [
+     "tracking-expand",
+     "blur-in",
+     "line-by-line-wipe"
+    ],
+    "camera": [
+     "push-in (slow)",
+     "rack-focus"
+    ],
+    "background": "vignette + grain"
+   },
+   "sound": {
+    "mood": "solo cello or piano, sparse",
+    "bpm": [
+     60,
+     76
+    ]
+   },
+   "banned": [
+    "bright colors",
+    "bouncy springs",
+    "busy layouts",
+    "more than 6 words on screen"
+   ],
+   "brief": "Black and ivory with one muted gold, wide-tracked serif capitals and long holds. Everything moves slowly and arrives without overshoot. Silence is part of the rhythm."
+  },
+  {
+   "name": "comic-halftone",
+   "palette": [
+    "#FFFFFF",
+    "#111111",
+    "#FFDD00",
+    "#E3170A",
+    "#00A6ED"
+   ],
+   "type": {
+    "display": "Bangers",
+    "body": "Comic Neue"
+   },
+   "texture": "halftone dots in shading, thick ink outlines, speed lines",
+   "motion": {
+    "springs": [
+     "playful",
+     "snappy"
+    ],
+    "transitions": [
+     "shape-wipe (starburst)",
+     "smash-cut",
+     "card-flip"
+    ],
+    "text": [
+     "big-number-slam",
+     "letter-scale-pop",
+     "bounce-drop"
+    ],
+    "camera": [
+     "snap-zoom",
+     "seeded-shake"
+    ],
+    "background": "halftone + radial speed lines"
+   },
+   "sound": {
+    "mood": "brass stabs, cartoon SFX",
+    "bpm": [
+     115,
+     135
+    ]
+   },
+   "banned": [
+    "gradients",
+    "photo",
+    "thin type"
+   ],
+   "brief": "Panels with thick ink outlines, halftone shading and starburst sound-effect words. Hits come with snap zooms and shakes. Primary colors only."
+  },
+  {
+   "name": "scandinavian-minimal",
+   "palette": [
+    "#F7F5F2",
+    "#2B2B2B",
+    "#D9CBB8",
+    "#7A8B7F",
+    "#C26A4A"
+   ],
+   "type": {
+    "display": "Instrument Serif",
+    "body": "Figtree"
+   },
+   "texture": "subtle paper grain 3%, lots of negative space",
+   "motion": {
+    "springs": [
+     "ui",
+     "camera"
+    ],
+    "transitions": [
+     "crossfade-dissolve",
+     "shared-axis",
+     "linear-wipe"
+    ],
+    "text": [
+     "fade-up-stagger",
+     "rise-from-mask",
+     "underline-draw"
+    ],
+    "camera": [
+     "push-in",
+     "pan"
+    ],
+    "background": "flat warm off-white"
+   },
+   "sound": {
+    "mood": "acoustic guitar, felt piano",
+    "bpm": [
+     72,
+     92
+    ]
+   },
+   "banned": [
+    "saturated neon",
+    "glitch",
+    "shake",
+    "more than 2 type sizes per frame"
+   ],
+   "brief": "Warm off-white, sage and terracotta, a calm serif headline and generous space. One element moves at a time, eased, with no overshoot. Honest and quiet."
+  },
+  {
+   "name": "corporate-trust",
+   "palette": [
+    "#FFFFFF",
+    "#0A2540",
+    "#1F6FEB",
+    "#E6EEF8",
+    "#00A67E",
+    "#F5A524"
+   ],
+   "type": {
+    "display": "Source Sans 3",
+    "body": "Source Sans 3",
+    "alt": "IBM Plex Sans"
+   },
+   "texture": "none; soft card shadows (0 8 24 rgba(10,37,64,.08)), light dot-grid",
+   "motion": {
+    "springs": [
+     "ui",
+     "camera"
+    ],
+    "transitions": [
+     "shared-axis",
+     "container-morph",
+     "push"
+    ],
+    "text": [
+     "fade-up-stagger",
+     "counter-roll",
+     "lower-third"
+    ],
+    "camera": [
+     "focus-zoom-to-rect",
+     "push-in"
+    ],
+    "background": "light line-grid or flat"
+   },
+   "sound": {
+    "mood": "warm corporate pop, piano + soft drums",
+    "bpm": [
+     95,
+     110
+    ]
+   },
+   "banned": [
+    "glitch",
+    "shake",
+    "neon",
+    "slang",
+    "more than one playful spring per scene"
+   ],
+   "brief": "Clean white and navy with one confident blue and a green for positive outcomes. Numbers count up, cards slide into place and people-first copy stays on screen long enough to read. Calm, clear and accountable, suited to insurance and banking."
+  },
+  {
+   "name": "festive-seasonal",
+   "palette": [
+    "#7A0019",
+    "#0B3D2E",
+    "#F5E6C8",
+    "#D4AF37",
+    "#FFFFFF"
+   ],
+   "type": {
+    "display": "Playfair Display",
+    "body": "Lora",
+    "script": "Great Vibes"
+   },
+   "texture": "snow, bokeh in warm gold, paper-fibers",
+   "motion": {
+    "springs": [
+     "ui",
+     "playful"
+    ],
+    "transitions": [
+     "iris-circle-wipe",
+     "radial-wipe-burst",
+     "crossfade-dissolve"
+    ],
+    "text": [
+     "handwriting-stroke",
+     "tracking-expand",
+     "letter-scale-pop"
+    ],
+    "camera": [
+     "push-in",
+     "parallax-layers-drift"
+    ],
+    "background": "snow + bokeh"
+   },
+   "sound": {
+    "mood": "sleigh bells, celesta, strings",
+    "bpm": [
+     90,
+     120
+    ]
+   },
+   "banned": [
+    "generic confetti bursts (unless opt-in)",
+    "clip-art santas",
+    "neon"
+   ],
+   "brief": "Deep red, pine green and gold on cream, with slow snow and warm bokeh. Greetings write themselves in script and settle with a soft sparkle. Swap the palette for other seasons."
+  },
+  {
+   "name": "zine-photocopy",
+   "palette": [
+    "#F0F0F0",
+    "#0A0A0A",
+    "#FF2E63",
+    "#FFF200"
+   ],
+   "type": {
+    "display": "Rubik Mono One",
+    "body": "Courier Prime"
+   },
+   "texture": "high-contrast threshold, toner speckle (seeded dots), tape strips, misaligned crops",
+   "motion": {
+    "springs": [
+     "snappy"
+    ],
+    "transitions": [
+     "hard-cut",
+     "stripes-wipe",
+     "pixel-dissolve"
+    ],
+    "text": [
+     "strike-through",
+     "kinetic-stack-push",
+     "glitch-text"
+    ],
+    "camera": [
+     "seeded-shake",
+     "dutch-roll"
+    ],
+    "background": "toner speckle"
+   },
+   "sound": {
+    "mood": "garage punk, lo-fi drum machine",
+    "bpm": [
+     130,
+     160
+    ]
+   },
+   "banned": [
+    "smooth gradients",
+    "soft shadows",
+    "centered symmetric layouts"
+   ],
+   "brief": "Photocopied black and white with toner speckle, taped-on cutouts and one hot accent. Layout is crooked on purpose; elements stutter in at 8-12 fps. Loud and handmade."
+  },
+  {
+   "name": "cyber-hud",
+   "palette": [
+    "#020B12",
+    "#00E5FF",
+    "#FF3864",
+    "#B4FF39",
+    "#E0F7FA"
+   ],
+   "type": {
+    "display": "Orbitron",
+    "body": "Rajdhani",
+    "mono": "Share Tech Mono"
+   },
+   "texture": "line-grid, scanlines 6%, thin corner brackets, glow (shadowBlur 12 cyan)",
+   "motion": {
+    "springs": [
+     "snappy",
+     "ui"
+    ],
+    "transitions": [
+     "glitch-rgb-split",
+     "grid-tile-flip",
+     "iris-circle-wipe"
+    ],
+    "text": [
+     "scramble-decode",
+     "typewriter-cursor",
+     "counter-roll"
+    ],
+    "camera": [
+     "focus-zoom-to-rect",
+     "handheld-drift"
+    ],
+    "background": "line-grid + concentric-pulse"
+   },
+   "sound": {
+    "mood": "dark synth, pulsing sub bass",
+    "bpm": [
+     110,
+     128
+    ]
+   },
+   "banned": [
+    "warm colors as base",
+    "serif type",
+    "paper texture"
+   ],
+   "brief": "A heads-up display: corner brackets lock onto targets, readouts decode and rings scan outward. Cyan lines on near-black with a red alert accent. Precise and tense."
+  },
+  {
+   "name": "botanical-engraving",
+   "palette": [
+    "#F4EFE3",
+    "#2F3E2E",
+    "#7B8F5A",
+    "#B5654A",
+    "#1E1E1E"
+   ],
+   "type": {
+    "display": "Cormorant",
+    "body": "EB Garamond"
+   },
+   "texture": "hatching via line patterns, paper-fibers, vignette",
+   "motion": {
+    "springs": [
+     "camera",
+     "ui"
+    ],
+    "transitions": [
+     "ink-liquid-bleed",
+     "page-turn",
+     "crossfade-dissolve"
+    ],
+    "text": [
+     "handwriting-stroke",
+     "line-by-line-wipe",
+     "quote-reveal"
+    ],
+    "camera": [
+     "ken-burns",
+     "pan"
+    ],
+    "background": "paper-fibers"
+   },
+   "sound": {
+    "mood": "harp, woodwinds, field recordings",
+    "bpm": [
+     64,
+     84
+    ]
+   },
+   "banned": [
+    "neon",
+    "glitch",
+    "sans-serif display"
+   ],
+   "brief": "Fine-line plant illustrations that draw themselves stroke by stroke on aged paper, with serif captions like a field guide. Slow pans across plates."
+  }
+ ],
+ "logo_reveals": [
+  {
+   "name": "stroke-draw-then-fill",
+   "description": "Logo outline draws, then fill floods in; wordmark rises.",
+   "duration_s": 2.0,
+   "implementation": "Path2D per logo path; setLineDash([L,L]) dashOffset L*(1-e) over 1.0 s; fill alpha 0->1 over 0.3 s; wordmark rise-from-mask +0.2 s.",
+   "fits_styles": [
+    "blueprint-technical",
+    "hand-drawn-doodle",
+    "monochrome-luxury"
+   ]
+  },
+  {
+   "name": "mask-slice-reveal",
+   "description": "Logo revealed by 3-5 horizontal slices sliding in from alternating sides.",
+   "duration_s": 1.2,
+   "implementation": "for slice k: clip rect band k; translate x = (k%2?1:-1)*W*(1-spring(t-t0-k*0.05,320,30)); drawImage(logo).",
+   "fits_styles": [
+    "kinetic-swiss",
+    "neo-brutalist",
+    "duotone-photo"
+   ]
+  },
+  {
+   "name": "shape-assemble",
+   "description": "Logo built from primitive parts that fly in and lock together.",
+   "duration_s": 1.6,
+   "implementation": "Decompose into parts with final transforms; start transforms seeded off-screen/rotated; per part lerp transform with spring heavy, stagger 0.06; 2-frame flash at lock.",
+   "fits_styles": [
+    "bauhaus-geometric",
+    "isometric-tech",
+    "claymorphism-soft-3d"
+   ]
+  },
+  {
+   "name": "dot-morph-to-logo",
+   "description": "A dot (cursor or click ripple) grows and morphs into the logo mark (container morph).",
+   "duration_s": 1.2,
+   "implementation": "circle -> logo path via morph-shape-to-shape (N=128 resampled points), spring ui; color lerp.",
+   "fits_styles": [
+    "product-film",
+    "swiss-grid-minimal-dark",
+    "corporate-trust"
+   ]
+  },
+  {
+   "name": "ink-bleed-reveal",
+   "description": "Logo emerges through a spreading ink blob.",
+   "duration_s": 1.5,
+   "implementation": "ink-liquid-bleed clip centered on logo; logo drawn inside; blob edge noise freezes as it settles.",
+   "fits_styles": [
+    "nordic-ink-wash",
+    "organic-blob-liquid",
+    "botanical-engraving"
+   ]
+  },
+  {
+   "name": "letter-stagger-lockup",
+   "description": "Wordmark letters rise with stagger, then mark scales in beside it and pushes letters into final spacing.",
+   "duration_s": 1.4,
+   "implementation": "rise-from-mask chars stagger 0.03; mark scale 0->1 spring playful; letter x offsets spring ui from centered to lockup layout.",
+   "fits_styles": [
+    "mascot-pop",
+    "editorial-paper",
+    "scandinavian-minimal"
+   ]
+  },
+  {
+   "name": "light-sweep-glint",
+   "description": "Logo static, a specular highlight sweeps across once; optional lens glint.",
+   "duration_s": 1.0,
+   "implementation": "draw logo; ctx.globalCompositeOperation='source-atop'; linearGradient band (transparent, rgba(255,255,255,.8), transparent) at x = lerp(-w, w, easeInOutSine(p)), skewed 20 deg.",
+   "fits_styles": [
+    "y2k-chrome",
+    "monochrome-luxury",
+    "glass-and-light"
+   ]
+  },
+  {
+   "name": "macro-pull-out",
+   "description": "Starts extreme close on a logo detail, pulls out to reveal the whole mark and tagline.",
+   "duration_s": 2.0,
+   "implementation": "camera pull-out from s=8 to 1 about detail point with spring camera; tagline fade-up after s<1.2.",
+   "fits_styles": [
+    "product-film",
+    "hopper-still",
+    "monochrome-luxury"
+   ]
+  },
+  {
+   "name": "glitch-resolve",
+   "description": "Logo appears corrupted (RGB split, slices) and snaps to clean.",
+   "duration_s": 0.8,
+   "implementation": "glitch-rgb-split for 0.4 s with amplitude decaying to 0; final frame clean + subtle scanline fade.",
+   "fits_styles": [
+    "retro-vhs",
+    "cyber-hud",
+    "neon-night"
+   ]
+  },
+  {
+   "name": "split-flap-resolve",
+   "description": "Brand name lands on split-flap tiles, mark fades in beside it.",
+   "duration_s": 1.6,
+   "implementation": "split-flap-board on wordmark chars; mark fade-in after last char settles.",
+   "fits_styles": [
+    "split-flap-departures"
+   ]
+  },
+  {
+   "name": "stamp-slam",
+   "description": "Logo slams down from scale 3 with shake, ink spread and a thud.",
+   "duration_s": 0.6,
+   "implementation": "big-number-slam math on logo; seeded-shake A=14; ink splatter ring (seeded short strokes) at impact.",
+   "fits_styles": [
+    "comic-halftone",
+    "neo-brutalist",
+    "zine-photocopy"
+   ]
+  },
+  {
+   "name": "orbit-converge",
+   "description": "Small dots orbit and spiral into the center, forming the mark (opt-in particles; keep count low).",
+   "duration_s": 1.8,
+   "implementation": "N=24 dots: radius r = R*(1-e), angle = a0 + 4*TAU*e; at e>0.85 crossfade to logo with scale pop.",
+   "fits_styles": [
+    "cyber-hud",
+    "isometric-tech"
+   ]
+  },
+  {
+   "name": "end-card-three-beat",
+   "description": "End card: logo, then one-line CTA, then URL/handle; each a beat apart; hold 2-3 s.",
+   "duration_s": 3.5,
+   "implementation": "beat 1 logo reveal (any above); beat 2 CTA fade-up; beat 3 URL in mono with underline-draw; hold; optional subtle push-in 1.0->1.03 so the hold isn't frozen.",
+   "fits_styles": [
+    "all"
+   ]
+  },
+  {
+   "name": "end-card-loop-back",
+   "description": "Final frame matches first frame for seamless social loops.",
+   "duration_s": 1.0,
+   "implementation": "Last 1 s transitions (push or match-cut) into a frame rendered identical to t=0; verify by diffing frame 0 vs last frame.",
+   "fits_styles": [
+    "energetic",
+    "hype"
+   ]
+  },
+  {
+   "name": "end-card-qr-cta",
+   "description": "Logo + QR code + CTA for events/screens; QR draws in by modules.",
+   "duration_s": 2.0,
+   "implementation": "QR modules from a precomputed matrix; module (i,j) appears when hash(i,j) < e (or diagonal wave); finder patterns first; hold >= 4 s for scanning.",
+   "fits_styles": [
+    "corporate-trust",
+    "swiss-grid-minimal-dark"
+   ]
+  },
+  {
+   "name": "underline-sign-off",
+   "description": "Logo with a hand-drawn underline or signature swoosh that draws under it.",
+   "duration_s": 1.2,
+   "implementation": "logo fade-up; underline-draw swoosh Path2D with lineDash 0.5 s; final hold.",
+   "fits_styles": [
+    "hand-drawn-doodle",
+    "editorial-paper",
+    "festive-seasonal"
+   ]
+  }
+ ],
+ "sources": [
+  {
+   "url": "https://m3.material.io/styles/motion/easing-and-duration/tokens-specs",
+   "took": "Duration tokens (short 50-200 ms, medium 250-400, long 450-600, extra-long 700-1000) and easing curves (standard cubic-bezier(0.2,0,0,1), emphasized decelerate (0.05,0.7,0.1,1), emphasized accelerate (0.3,0,0.8,0.15)); note that M3 Expressive moves components to spring physics."
+  },
+  {
+   "url": "https://m3.material.io/styles/motion/transitions/transition-patterns",
+   "title": "Material 3 transitions",
+   "took": "Container transform, forward/backward (Android fade vs iOS parallax), lateral, top level (fade out then in), enter/exit along axis away from device edge."
+  },
+  {
+   "url": "https://blog.stylingandroid.com/material-motion-fade-through/",
+   "took": "Fade-through: outgoing fades first, incoming fades in while scaling 92% -> 100%."
+  },
+  {
+   "url": "https://m1.material.io/motion/duration-easing.html",
+   "took": "Wearable durations ~30% shorter than mobile (300 ms -> 210 ms)."
+  },
+  {
+   "url": "https://pub.dev/documentation/flutter_floating_bottom_bar/latest/flutter_floating_bottom_bar/MaterialSpringMotion-class.html",
+   "took": "Community-documented M3 Expressive spring values (default spatial stiffness 380 / damping 0.8, fast 800 / 0.6); not official, used only as context for spring presets."
+  },
+  {
+   "url": "https://developer.apple.com/design/human-interface-guidelines/motion",
+   "took": "Add motion purposefully; avoid gratuitous motion; let people cancel motion; respect Reduce Motion. Basis for max_simultaneous_moves limits."
+  },
+  {
+   "url": "https://easings.net/",
+   "took": "Easing family names (Sine, Quad, Cubic, Quart, Quint, Expo, Circ, Back, Elastic, Bounce) used in sketches."
+  },
+  {
+   "url": "https://animate.style/",
+   "title": "Animate.css v4 catalog",
+   "took": "Entrance/exit/attention vocabulary (backIn, bounceIn, fadeInUp, flipInX, lightSpeedIn, rotateIn, jackInTheBox, hinge, zoomIn, slideIn; attention seekers bounce/pulse/rubberBand/shakeX/headShake/tada/jello/heartBeat) mapped onto text and UI entries."
+  },
+  {
+   "url": "https://www.remotion.dev/docs/transitions/presentations",
+   "took": "Remotion presentation set: fade, slide, wipe (8 directions), flip, clockWipe, iris, zoomBlur, dreamyZoom, pushCut, zoomInOut, none; cube paid."
+  },
+  {
+   "url": "https://www.remotion.dev/docs/transitions/presentations/clock-wipe",
+   "took": "Clock wipe definition: exiting slide wiped out in circular movement."
+  },
+  {
+   "url": "https://hyperframes.heygen.com/catalog",
+   "title": "HyperFrames catalog (HeyGen)",
+   "took": "Confirms category set for code-rendered video blocks: scenes, transitions (incl. shader transitions like flash-through-white), captions, overlays, effects, components, data charts."
+  },
+  {
+   "url": "https://github.com/heygen-com/hyperframes",
+   "took": "HTML-composition-to-video model with paused timelines; validates seek-based rendering approach."
+  },
+  {
+   "url": "https://www.schoolofmotion.com/blog/six-essential-motion-design-transitions-tutorial",
+   "took": "Six essential transitions (hard cut, dissolve, cut on action, match cut, dynamic/infinite zoom, morph) and their when-to-use guidance."
+  },
+  {
+   "url": "https://www.schoolofmotion.com/tutorials/match-cuts",
+   "took": "Match cut in motion design: cut at fastest movement, works for object through time / relationships."
+  },
+  {
+   "url": "https://gsap.com/docs/v3/Plugins/SplitText/",
+   "took": "Split by chars/words/lines; mask option wraps units in overflow clip (one mask type at a time) -> rise-from-mask pattern."
+  },
+  {
+   "url": "https://tympanus.net/codrops/2025/05/14/from-splittext-to-morphsvg-5-creative-demos-using-free-gsap-plugins/",
+   "took": "Stagger scaling by unit: lines ~0.08 s, words ~0.06 s, letters ~0.008 s; line mask reveal pattern."
+  },
+  {
+   "url": "https://www.svgator.com/blog/50-kinetic-typography-examples/",
+   "took": "Kinetic typography technique vocabulary (self-writing, assemble/dismantle, swinging, window-shade reveals)."
+  },
+  {
+   "url": "https://www.linearity.io/blog/kinetic-typography/",
+   "took": "Kinetic type genres (motion layout vs fluid) and readability advice: give viewers time to read, keep a small set of moves."
+  },
+  {
+   "url": "https://www.davidbordwell.net/blog/?p=2590",
+   "took": "Average shot length history: 8-11 s in 1930-60 Hollywood; fast-cut films 1.8-2.7 s in late 1990s."
+  },
+  {
+   "url": "https://www.scribd.com/doc/310344009/Bordwell-Intensified-Continuity",
+   "took": "Typical 2000-era feature ASL 3-6 s."
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3485803",
+   "took": "Cutting et al.: shot lengths shortened across 160 films 1935-2010 (measured trend)."
+  },
+  {
+   "url": "https://www.Gwern.net/doc/psychology/linguistics/2019-brysbaert.pdf",
+   "took": "Brysbaert 2019 meta-analysis: adult English silent reading 238 wpm non-fiction, 260 wpm fiction, oral 183 wpm. Basis for text hold rule."
+  },
+  {
+   "url": "https://backlothelp.netflix.com/hc/en-us/articles/115001352212-How-is-reading-speed-measured-Do-punctuation-and-spaces-count",
+   "took": "Reading speed measured in characters per second including spaces and punctuation."
+  },
+  {
+   "url": "https://backlothelp.netflix.com/hc/en-us/articles/216787938-Portuguese-Timed-Text-Style-Guide",
+   "took": "17 cps / 200 wpm adult, 13 cps / 160 wpm children; min 5/6 s, max 7 s per subtitle event."
+  },
+  {
+   "url": "https://digiday.com/media/silent-world-facebook-video/",
+   "took": "2016: publishers reported up to 85% of Facebook video views without sound; Facebook counted a view at 3 s. Origin of sound-off captions norm."
+  },
+  {
+   "url": "https://www.semrush.com/blog/hooks-of-viral-tiktoks/",
+   "took": "500 trending TikToks: >1/3 show a person speaking in first 3 s; >1/2 use music as primary sound in first 3 s."
+  },
+  {
+   "url": "https://www.opus.pro/blog/linkedin-video-caption-subtitle-best-practices",
+   "took": "LinkedIn: burned-in captions recommended over auto-captions; sound-off design."
+  },
+  {
+   "url": "https://shootsta.com/blog/linkedin-video-best-practices-b2b-teams",
+   "took": "LinkedIn length guidance 15-30 s for tips/announcements (vendor guidance)."
+  },
+  {
+   "url": "https://www.stackmatix.com/blog/linkedin-video-ad-best-practices",
+   "took": "LinkedIn video ads 30-90 s sweet spot (vendor guidance)."
+  },
+  {
+   "url": "https://www.renderforest.com/blog/how-long-should-youtube-intro-be",
+   "took": "Branded YouTube intro length conventions (a few seconds); YouTube's intro retention metric measured at 30 s."
+  },
+  {
+   "url": "https://artlist.io/blog/music-bpm/",
+   "took": "Tempo bands: slow 20-70, medium-slow 70-90, medium 90-110, medium-fast 110-130, fast 130-200 BPM; advice to break rhythm occasionally."
+  },
+  {
+   "url": "https://nofilmschool.com/how-to-edit-trailer-music",
+   "took": "Three-act trailer cue structure: open, build pace, big finish."
+  },
+  {
+   "url": "https://www.filmeditingpro.com/?p=30353",
+   "took": "Faster cutting and higher BPM toward a trailer climax; lay music cues first."
+  },
+  {
+   "url": "https://breadnbeyond.com/how-many-words-does-a-60-seconds-explainer-video-needs/",
+   "took": "Explainer voiceover ~150 words per minute (vendor rule of thumb, range 130-160)."
+  },
+  {
+   "url": "https://houseofmarketers.com/guide-to-safe-zones-tiktok-facebook-instagram-stories-reels/",
+   "took": "Reels/TikTok safe-zone pixel estimates on 1080x1920 (third-party measurements)."
+  },
+  {
+   "url": "https://www.remotion.dev/elements/overlays/social-safe-zones/",
+   "took": "Existence of social safe-zone overlays as a standard render aid."
+  },
+  {
+   "url": "https://lottiefiles.com/blog/design-inspiration/animation-and-motion-design-trends-2024",
+   "took": "Trend vocabulary used for styles: squishy 3D (claymorphism), bolder minimalism, geometric shapes, pixel/dot graphics, bento grids."
+  }
+ ]
+}

@@ -1,0 +1,2106 @@
+{
+ "_meta": {
+  "researched": "10.11.2026",
+  "verification_method": "curl -sL -r 0-1023 -o /dev/null -w '%{http_code} %{content_type}' <example_url>; 200/206 with the expected content type counts as verified. 401 on an API endpoint without a key confirms the endpoint exists.",
+  "pin_versions": "All @latest URLs were verified on 10.11.2026. For reproducible renders pin an exact version (e.g. lucide-static@1.71.0) and vendor the downloaded file.",
+  "universal_icon_fallback": {
+   "name": "Iconify API",
+   "pattern": "https://api.iconify.design/<prefix>/<icon-name>.svg[?color=%23hex&height=512]",
+   "collections_index": "https://api.iconify.design/collections",
+   "notes": "One URL pattern for 200+ sets (lucide, ph, tabler, heroicons, iconoir, ri, material-symbols, bi, simple-icons, twemoji, noto, fluent-emoji, openmoji...). The API is MIT-licensed tooling; each icon keeps its own set's license, which /collections reports as SPDX. Filter on that field to enforce the license rules automatically (reject CC-BY-SA, CC-BY-NC etc)."
+  }
+ },
+ "icons": [
+  {
+   "name": "Lucide",
+   "url": "https://lucide.dev",
+   "license": "ISC",
+   "license_url": "https://lucide.dev/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/lucide-static@<version>/icons/<kebab-name>.svg",
+   "example_url": "https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/rocket.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 2046,
+   "style": "outline, 24px grid, 2px stroke, currentColor stroke",
+   "notes": "Best default. stroke='currentColor' and stroke-width are attributes, so recoloring and stroke-draw animation (stroke-dasharray) are trivial. A few icons derived from Feather are MIT; ISC and MIT both permit everything. Also on unpkg: https://unpkg.com/lucide-static@latest/icons/rocket.svg (verified 200)."
+  },
+  {
+   "name": "Phosphor",
+   "url": "https://phosphoricons.com",
+   "license": "MIT",
+   "license_url": "https://github.com/phosphor-icons/core/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/@phosphor-icons/core@<version>/assets/<weight>/<name>[-<weight>].svg  (weights: thin, light, regular, bold, fill, duotone; non-regular files carry a suffix, e.g. assets/duotone/rocket-duotone.svg)",
+   "example_url": "https://cdn.jsdelivr.net/npm/@phosphor-icons/core@latest/assets/duotone/rocket-duotone.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 9072,
+   "style": "6 weights incl. filled and duotone (~1512 glyphs x 6)",
+   "notes": "Best when one icon must appear in several weights or duotone. Duotone uses an opacity-0.2 secondary layer, easy to recolor."
+  },
+  {
+   "name": "Tabler Icons",
+   "url": "https://tabler.io/icons",
+   "license": "MIT",
+   "license_url": "https://github.com/tabler/tabler-icons/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/@tabler/icons@<version>/icons/<outline|filled>/<name>.svg",
+   "example_url": "https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons/outline/rocket.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 6287,
+   "style": "outline 24px 2px stroke; ~1000 filled variants",
+   "notes": "Largest consistent outline set. Not every outline icon has a filled twin (filled/rocket.svg is 404, filled/heart.svg is 206)."
+  },
+  {
+   "name": "Heroicons",
+   "url": "https://heroicons.com",
+   "license": "MIT",
+   "license_url": "https://github.com/tailwindlabs/heroicons/blob/master/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/heroicons@<version>/<24|20|16>/<outline|solid>/<name>.svg (outline only at 24)",
+   "example_url": "https://cdn.jsdelivr.net/npm/heroicons@latest/24/outline/rocket-launch.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 1288,
+   "style": "outline + solid + mini/micro",
+   "notes": "Small (~320 glyphs x 4 variants) but very polished; Tailwind look."
+  },
+  {
+   "name": "Iconoir",
+   "url": "https://iconoir.com",
+   "license": "MIT",
+   "license_url": "https://github.com/iconoir-icons/iconoir/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/iconoir@<version>/icons/<regular|solid>/<name>.svg",
+   "example_url": "https://cdn.jsdelivr.net/npm/iconoir@latest/icons/regular/rocket.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 1671,
+   "style": "outline 1.5px stroke, some solid",
+   "notes": null
+  },
+  {
+   "name": "Remix Icon",
+   "url": "https://remixicon.com",
+   "license": "Remix Icon License v1.0 (custom, since Jan 2026; npm package.json still says Apache-2.0)",
+   "license_url": "https://github.com/Remix-Design/RemixIcon/blob/master/License",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": "Only as part of a larger work; not as a standalone icon pack",
+   "fetch": "https://cdn.jsdelivr.net/npm/remixicon@<version>/icons/<Category>/<name>-<line|fill>.svg (category folder required, e.g. Map, System, Business)",
+   "example_url": "https://cdn.jsdelivr.net/npm/remixicon@latest/icons/Map/rocket-line.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 3188,
+   "style": "line + fill pairs",
+   "notes": "Category folder in the path makes name-only lookup awkward; Iconify (api.iconify.design/ri/rocket-line.svg) avoids it. LICENSE CHANGE: since v4.x/Jan 2026 the repo uses the custom 'Remix Icon License v1.0'. It allows commercial use with optional credit, but forbids standalone icon sales, building a competing icon library, and using an icon as a logo/brand mark. Use in a video is fine; do not vendor the full set into a public skill repo as an icon collection. Iconify still reports Apache-2.0 (older versions)."
+  },
+  {
+   "name": "Material Symbols",
+   "url": "https://fonts.google.com/icons",
+   "license": "Apache-2.0",
+   "license_url": "https://github.com/google/material-design-icons/blob/master/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/@material-symbols/svg-<100..700>@<version>/<outlined|rounded|sharp>/<snake_name>[-fill].svg",
+   "example_url": "https://cdn.jsdelivr.net/npm/@material-symbols/svg-400@latest/outlined/rocket.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 15777,
+   "style": "outlined/rounded/sharp, weights 100-700, fill variant",
+   "notes": "Biggest set; Google/Android look. Package is community-built from Google's sources."
+  },
+  {
+   "name": "Bootstrap Icons",
+   "url": "https://icons.getbootstrap.com",
+   "license": "MIT",
+   "license_url": "https://github.com/twbs/icons/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/bootstrap-icons@<version>/icons/<name>.svg (filled variants are <name>-fill.svg)",
+   "example_url": "https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/icons/rocket.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 2078,
+   "style": "16px grid, outline + fill",
+   "notes": null
+  },
+  {
+   "name": "Fluent UI System Icons",
+   "url": "https://github.com/microsoft/fluentui-system-icons",
+   "license": "MIT",
+   "license_url": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://api.iconify.design/fluent/<name>-<size>-<regular|filled>.svg (npm @fluentui/svg-icons also works)",
+   "example_url": "https://api.iconify.design/fluent/rocket-24-regular.svg",
+   "verified": "yes: 206 image/svg+xml; charset=utf-8 (10.11.2026)",
+   "count": 19945,
+   "style": "regular + filled, multiple sizes",
+   "notes": "Microsoft 365 look."
+  }
+ ],
+ "illustrations": [
+  {
+   "name": "Open Peeps (Pablo Stanley)",
+   "url": "https://www.openpeeps.com",
+   "license": "CC0-1.0",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "Individual SVG/PNG on Webflow CDN (hashed URLs, scrape from openpeeps.com page); full library zip via https://gum.co/openpeeps (pay-what-you-want, $0 allowed)",
+   "example_url": "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535774550b766992f531a8_peep-50.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": "584,688 combinations; ~100 standing/sitting poses",
+   "style": "hand-drawn black line characters",
+   "notes": "Best default for characters. SVGs are monochrome strokes, so recolor by replacing fill. For procedural peeps use DiceBear open-peeps (CC0)."
+  },
+  {
+   "name": "Humaaans (Pablo Stanley)",
+   "url": "https://www.humaaans.com",
+   "license": "CC0-1.0",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "Zip via https://gum.co/humaaans (pay-what-you-want, $0 allowed); no stable per-file URL",
+   "example_url": "https://www.humaaans.com/",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "flat colored mix-and-match people (heads, bodies, legs)",
+   "notes": "Recolorable SVG (flat fills). Download once by hand, vendor the zip contents."
+  },
+  {
+   "name": "Open Doodles (Pablo Stanley)",
+   "url": "https://www.opendoodles.com",
+   "license": "CC0-1.0",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://opendoodles.s3-us-west-1.amazonaws.com/<name>.svg|.png|.gif (names are case-sensitive, e.g. Doggie.svg)",
+   "example_url": "https://opendoodles.s3-us-west-1.amazonaws.com/coffee.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": "~40",
+   "style": "sketchy doodle scenes, single accent color",
+   "notes": "Simple stable URL pattern; good for playful explainers."
+  },
+  {
+   "name": "DiceBear avatars (CC0 styles)",
+   "url": "https://www.dicebear.com",
+   "license": "Code MIT; styles notionists, lorelei, open-peeps, glass, shapes, thumbs are CC0-1.0",
+   "license_url": "https://www.dicebear.com/licenses/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "HTTP API https://api.dicebear.com/9.x/<style>/<svg|png>?seed=<any>&size=512, or npm @dicebear/core + @dicebear/collection (9.4.2) offline",
+   "example_url": "https://api.dicebear.com/9.x/notionists/svg?seed=Magnus",
+   "verified": "yes: 200 image/svg+xml (10.11.2026)",
+   "count": "infinite (seeded)",
+   "style": "Notion-style avatars (notionists), lorelei, open-peeps",
+   "notes": "Deterministic by seed, so the same name always renders the same face: good for fake user lists. Avoid CC BY styles unless credited (micah, adventurer, personas, big-smile, fun-emoji are CC BY 4.0). avataaars/bottts use the artist's custom 'free for personal and commercial use' terms. Prefer the npm package for renders to avoid network flakiness."
+  },
+  {
+   "name": "IRA Design (Creative Tim)",
+   "url": "https://iradesign.io",
+   "license": "MIT",
+   "license_url": "https://github.com/ira-design/ira-illustrations/blob/master/LICENSE.md",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "Compose in the web builder, download SVG/PNG/AI. No per-file CDN; the GitHub repo holds only the site.",
+   "example_url": "https://iradesign.io/",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "gradient flat scenes and characters, 5 gradient palettes",
+   "notes": "Gradient SVGs; recoloring means editing gradient stops."
+  },
+  {
+   "name": "unDraw",
+   "url": "https://undraw.co",
+   "license": "unDraw license (custom, permissive)",
+   "license_url": "https://undraw.co/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": false,
+   "fetch": "Manual download from undraw.co (accent color picker on site). No API.",
+   "example_url": "https://undraw.co/license",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": ">1000",
+   "style": "flat illustrations with one recolorable accent (#6c63ff)",
+   "notes": "Commercial use OK, no credit. GOTCHAS: license forbids distributing the assets 'in packs or otherwise', forbids automated/non-automated scraping without consent, forbids replicating a competing service, and explicitly forbids AI/ML training or fine-tuning. So: an agent must NOT scrape it, and the skill repo must NOT ship a bundle of unDraw SVGs. Fine for a single hand-downloaded file inside one private project."
+  },
+  {
+   "name": "Storyset (Freepik)",
+   "url": "https://storyset.com",
+   "license": "Storyset/Freepik terms (attribution on free tier)",
+   "license_url": "https://storyset.com/terms",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "'Illustrations by Storyset' linking to https://storyset.com (exact wording set by Storyset; Freepik Premium removes the requirement)",
+   "redistribution_allowed": false,
+   "fetch": "Manual download (SVG/PNG, animated in-browser editor). No public API.",
+   "example_url": "https://storyset.com/terms",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "flat themed illustrations in 5 styles, animatable",
+   "notes": "Usable for commercial video with a credit. Prohibits redistribution, resale, and placing in databases, and items marked editorial are editorial-only. Do not commit to a public repo. Cannot be used in logos/trademarks."
+  },
+  {
+   "name": "DrawKit",
+   "url": "https://www.drawkit.com",
+   "license": "DrawKit license (custom)",
+   "license_url": "https://www.drawkit.com/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": false,
+   "fetch": "Manual zip download per pack (free packs require email)",
+   "example_url": "https://www.drawkit.com/license",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "flat/line illustration packs",
+   "notes": "Commercial OK, no credit. Forbids redistribution standalone or as a compilation, AI training, stock/template sites, merchandise. Keep out of public repos."
+  },
+  {
+   "name": "Blush (free plan)",
+   "url": "https://blush.design",
+   "license": "Blush license (custom)",
+   "license_url": "https://blush.design/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": false,
+   "fetch": "Web editor; free plan exports PNG (SVG is a paid feature on most collections)",
+   "example_url": "https://blush.design/license",
+   "verified": "page reachable only (no direct asset URL to test): 206 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "many artists' collections, customizable characters",
+   "notes": "Commercial OK, no credit. Forbids reselling or redistributing the illustrations. Open Peeps and Humaaans are also on Blush, but their CC0 originals from gum.co are the safer source."
+  },
+  {
+   "name": "Absurd Design",
+   "url": "https://absurd.design",
+   "license": "Absurd free license: NON-COMMERCIAL",
+   "license_url": "https://absurd.design/freelicense",
+   "commercial": false,
+   "attribution_required": true,
+   "attribution_format": "'Illustration(s) from absurd.design' with active link",
+   "redistribution_allowed": false,
+   "fetch": "Manual",
+   "example_url": "https://absurd.design/freelicense",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "surreal hand-drawn",
+   "notes": "EXCLUDED: free license is personal/educational/non-commercial only and also requires attribution. Paid membership needed for commercial work.",
+   "excluded": true
+  }
+ ],
+ "emoji": [
+  {
+   "name": "Twemoji (jdecked fork)",
+   "url": "https://github.com/jdecked/twemoji",
+   "license": "Graphics CC-BY-4.0; code MIT",
+   "license_url": "https://github.com/jdecked/twemoji/blob/main/LICENSE-GRAPHICS",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "Emoji graphics by Twemoji (Twitter, Inc and other contributors, jdecked/twemoji), licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/",
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/<codepoints>.svg (also /assets/72x72/<cp>.png, or npm @twemoji/svg/<cp>.svg). Codepoints: lowercase hex joined by '-', drop U+FE0F except in keycap sequences (use twemoji.convert.toCodePoint logic).",
+   "example_url": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/1f680.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 3988,
+   "style": "flat 2D, crisp at any size",
+   "notes": "Original twitter/twemoji is abandoned (Unicode 14); jdecked fork is the maintained one. Attribution required, auto-generated credits satisfy it."
+  },
+  {
+   "name": "Noto Emoji (Google)",
+   "url": "https://github.com/googlefonts/noto-emoji",
+   "license": "Images Apache-2.0; fonts OFL-1.1",
+   "license_url": "https://github.com/googlefonts/noto-emoji/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "SVG: https://raw.githubusercontent.com/googlefonts/noto-emoji/main/2D/svg/emoji_u<cp>.svg (lowercase hex joined by '_', no fe0f). PNG: 2D/png/{32,72,128,512}/emoji_u<cp>.png. 3D PNG: 3D/png/{32,72,128,512}/emoji_u<cp>.png. Old root svg/ and png/ paths are 404 since the 2D/3D reorg.",
+   "example_url": "https://raw.githubusercontent.com/googlefonts/noto-emoji/main/2D/svg/emoji_u1f680.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 3729,
+   "style": "rounded 2D gradients; separate 3D PNG set",
+   "notes": "Apache-2.0 images need no visible credit, but keep the LICENSE/NOTICE with vendored files."
+  },
+  {
+   "name": "Noto Animated Emoji (Google)",
+   "url": "https://googlefonts.github.io/noto-emoji-animation/",
+   "license": "CC-BY-4.0",
+   "license_url": "https://googlefonts.github.io/noto-emoji-files/",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "'<Name> emoji by Google (Noto Animated Emoji), licensed under CC BY 4.0' (format suggested by Google Fonts maintainers in google/fonts#7921)",
+   "redistribution_allowed": true,
+   "fetch": "https://fonts.gstatic.com/s/e/notoemoji/latest/<cp>/{emoji.svg,lottie.json,512.webp,512.gif}",
+   "example_url": "https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/lottie.json",
+   "verified": "yes: 206 application/json (10.11.2026)",
+   "count": 881,
+   "style": "animated Lottie / WebP / GIF",
+   "notes": "The lottie.json plays through lottie-web with goToAndStop, so emoji can animate deterministically on the canvas. Note the license differs from the static Noto set (CC BY 4.0, attribution required). Only ~881 of ~3700 are animated; no bulk download."
+  },
+  {
+   "name": "Fluent Emoji (Microsoft)",
+   "url": "https://github.com/microsoft/fluentui-emoji",
+   "license": "MIT",
+   "license_url": "https://github.com/microsoft/fluentui-emoji/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "By name, not codepoint: https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/<Name With Spaces URL-encoded>/<3D|Color|Flat|High Contrast>/<snake_name>_<3d.png|color.svg|flat.svg|high_contrast.svg>. Each folder has metadata.json with the 'unicode' field to map codepoints. Skin-tone emoji have an extra Default/<tone> level. Iconify alternative: https://api.iconify.design/fluent-emoji/<name>.svg (Color), fluent-emoji-flat, fluent-emoji-high-contrast.",
+   "example_url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png",
+   "verified": "yes: 206 image/png (10.11.2026)",
+   "count": 3126,
+   "style": "3D (256px PNG), Color (gradient SVG), Flat SVG, High Contrast SVG",
+   "notes": "Best default for emoji in motion graphics: the 3D PNGs look premium and MIT needs no credit. 3D is raster only (256x256), so do not scale it above ~2x."
+  },
+  {
+   "name": "OpenMoji",
+   "url": "https://openmoji.org",
+   "license": "CC-BY-SA-4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "OpenMoji, CC BY-SA 4.0",
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/openmoji@latest/color/svg/<CP-UPPERCASE>.svg",
+   "example_url": "https://cdn.jsdelivr.net/npm/openmoji@latest/color/svg/1F680.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 4546,
+   "style": "flat outline-and-fill",
+   "notes": "EXCLUDED: ShareAlike would arguably force the derived video under CC BY-SA. Recorded for completeness only.",
+   "excluded": true
+  }
+ ],
+ "fonts": {
+  "fetch_pattern": "https://cdn.jsdelivr.net/fontsource/fonts/<fontsource_id>@latest/<subset>-<weight>-<normal|italic>.ttf  (subset 'latin' covers æ ø å Æ Ø Å; use 'latin-ext' for other European diacritics; .woff2 and .woff also available)",
+  "variable_fetch_pattern": "https://cdn.jsdelivr.net/fontsource/fonts/<id>:vf@latest/<subset>-<axis|'full'>-<normal|italic>.woff2  (variable files are woff2 only; 'full' includes every axis, 'wght' just weight). Chromium's FontFace accepts woff2, so this works in the Playwright render.",
+  "variable_ttf_fallback": "https://raw.githubusercontent.com/google/fonts/main/ofl/<familynolowercasespaces>/<FamilyName>[<AXES,comma-separated>].ttf  (URL-encode [ ] as %5B %5D; e.g. ofl/fraunces/Fraunces%5BSOFT,WONK,opsz,wght%5D.ttf). Full glyph set, all axes, TTF. Exact filename varies: list with https://api.github.com/repos/google/fonts/contents/ofl/<dir>.",
+  "metadata_api": "https://api.fontsource.org/v1/fonts/<id> (weights, styles, subsets, license) and https://api.fontsource.org/v1/variable/<id> (axes with min/max). No key needed.",
+  "usage": "const f = new FontFace('Fraunces', `url(${path}) format('truetype')`, {weight:'900'}); await f.load(); document.fonts.add(f); await document.fonts.ready before the first seek.",
+  "verified_examples": [
+   {
+    "url": "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf",
+    "result": "206 font/ttf; downloaded, TrueType, æøåÆØÅ present"
+   },
+   {
+    "url": "https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-900-normal.ttf",
+    "result": "206 font/ttf; æøåÆØÅ present (checked on 700)"
+   },
+   {
+    "url": "https://cdn.jsdelivr.net/fontsource/fonts/space-grotesk@latest/latin-500-normal.ttf",
+    "result": "206 font/ttf; æøåÆØÅ present"
+   },
+   {
+    "url": "https://cdn.jsdelivr.net/fontsource/fonts/fraunces:vf@latest/latin-full-normal.woff2",
+    "result": "206 font/woff2"
+   },
+   {
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/Fraunces%5BSOFT,WONK,opsz,wght%5D.ttf",
+    "result": "206"
+   },
+   {
+    "url": "all 36 families below: latin-400-normal.ttf",
+    "result": "36/36 returned 200 font/ttf and all contain æøåÆØÅ (fontTools cmap check)"
+   }
+  ],
+  "gotchas": [
+   "Static Fontsource TTFs carry odd internal name tables (space-grotesk 700 reports family 'Space Grotesk Light'). Always set family and weight explicitly in FontFace and never rely on the internal name.",
+   "OFL allows bundling fonts in a repo and embedding them in commercial videos; just keep OFL.txt next to vendored files and do not sell the font files alone.",
+   "Honk and Nabla are COLRv1 color fonts: they render in Chromium, but fillStyle does not recolor them; use font-palette / @font-palette-values.",
+   "Permanent Marker is Apache-2.0, not OFL; both are fine."
+  ],
+  "families": [
+   {
+    "family": "Fraunces",
+    "fontsource_id": "fraunces",
+    "role": "display serif",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "opsz": [
+      9.0,
+      144.0
+     ],
+     "wght": [
+      100.0,
+      900.0
+     ],
+     "SOFT": [
+      0.0,
+      100.0
+     ],
+     "WONK": [
+      0.0,
+      1.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/fraunces@latest/latin-400-normal.ttf",
+    "notes": "Soft, 'wonky' old-style serif; SOFT and WONK axes animate well. Strong default for editorial titles.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Playfair Display",
+    "fontsource_id": "playfair-display",
+    "role": "display serif",
+    "weights": [
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wght": [
+      400.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/playfair-display@latest/latin-400-normal.ttf",
+    "notes": "High-contrast Didone-ish; classic elegant titles.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "DM Serif Display",
+    "fontsource_id": "dm-serif-display",
+    "role": "display serif",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/dm-serif-display@latest/latin-400-normal.ttf",
+    "notes": "Single weight with italic; tight, punchy headline serif.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Instrument Serif",
+    "fontsource_id": "instrument-serif",
+    "role": "display serif",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/instrument-serif@latest/latin-400-normal.ttf",
+    "notes": "Condensed modern serif, trendy for tech/brand reels; 400 only + italic.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Bodoni Moda",
+    "fontsource_id": "bodoni-moda",
+    "role": "display serif",
+    "weights": [
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "opsz": [
+      6.0,
+      96.0
+     ],
+     "wght": [
+      400.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/bodoni-moda@latest/latin-400-normal.ttf",
+    "notes": "Fashion Didone with opsz axis.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Young Serif",
+    "fontsource_id": "young-serif",
+    "role": "display serif",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/young-serif@latest/latin-400-normal.ttf",
+    "notes": "Chunky friendly serif, single weight.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Inter",
+    "fontsource_id": "inter",
+    "role": "display sans/grotesk",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "opsz": [
+      14.0,
+      32.0
+     ],
+     "wght": [
+      100.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf",
+    "notes": "Neutral UI sans, opsz axis. Default for body, labels and UI mockups.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Space Grotesk",
+    "fontsource_id": "space-grotesk",
+    "role": "display sans/grotesk",
+    "weights": [
+     300,
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      300.0,
+      700.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/space-grotesk@latest/latin-400-normal.ttf",
+    "notes": "Quirky geometric grotesk, techy.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Bricolage Grotesque",
+    "fontsource_id": "bricolage-grotesque",
+    "role": "display sans/grotesk",
+    "weights": [
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "opsz": [
+      12.0,
+      96.0
+     ],
+     "wdth": [
+      75.0,
+      100.0
+     ],
+     "wght": [
+      200.0,
+      800.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/bricolage-grotesque@latest/latin-400-normal.ttf",
+    "notes": "Expressive grotesk with opsz+wdth+wght; great for kinetic headlines.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Instrument Sans",
+    "fontsource_id": "instrument-sans",
+    "role": "display sans/grotesk",
+    "weights": [
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wdth": [
+      75.0,
+      100.0
+     ],
+     "wght": [
+      400.0,
+      700.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/instrument-sans@latest/latin-400-normal.ttf",
+    "notes": "Clean neo-grotesk with wdth axis; pairs with Instrument Serif.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Manrope",
+    "fontsource_id": "manrope",
+    "role": "display sans/grotesk",
+    "weights": [
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      200.0,
+      800.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/manrope@latest/latin-400-normal.ttf",
+    "notes": "Modern geometric, good for numbers/stats.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Syne",
+    "fontsource_id": "syne",
+    "role": "display sans/grotesk",
+    "weights": [
+     400,
+     500,
+     600,
+     700,
+     800
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      400.0,
+      800.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/syne@latest/latin-400-normal.ttf",
+    "notes": "Art-school wide display at heavy weights.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Unbounded",
+    "fontsource_id": "unbounded",
+    "role": "display sans/grotesk",
+    "weights": [
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      200.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/unbounded@latest/latin-400-normal.ttf",
+    "notes": "Wide, rounded-square display; bold title cards.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Archivo",
+    "fontsource_id": "archivo",
+    "role": "condensed",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wdth": [
+      62.0,
+      125.0
+     ],
+     "wght": [
+      100.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/archivo@latest/latin-400-normal.ttf",
+    "notes": "Grotesk with wdth 62-125: animate from condensed to expanded.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Anton",
+    "fontsource_id": "anton",
+    "role": "condensed",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/anton@latest/latin-400-normal.ttf",
+    "notes": "Heavy condensed impact-style, single weight.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Bebas Neue",
+    "fontsource_id": "bebas-neue",
+    "role": "condensed",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/bebas-neue@latest/latin-400-normal.ttf",
+    "notes": "All-caps condensed classic for big captions; 400 only.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Oswald",
+    "fontsource_id": "oswald",
+    "role": "condensed",
+    "weights": [
+     200,
+     300,
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      200.0,
+      700.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/oswald@latest/latin-400-normal.ttf",
+    "notes": "Condensed gothic with weight axis.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Barlow Condensed",
+    "fontsource_id": "barlow-condensed",
+    "role": "condensed",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/barlow-condensed@latest/latin-400-normal.ttf",
+    "notes": "Condensed with 9 weights + italics; good subtitle face.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Big Shoulders Display",
+    "fontsource_id": "big-shoulders-display",
+    "role": "condensed",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      100.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/big-shoulders-display@latest/latin-400-normal.ttf",
+    "notes": "Tall Chicago-style condensed display, weight axis.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Nunito",
+    "fontsource_id": "nunito",
+    "role": "rounded/friendly",
+    "weights": [
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wght": [
+      200.0,
+      1000.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/nunito@latest/latin-400-normal.ttf",
+    "notes": "Rounded terminals, wght 200-1000.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Fredoka",
+    "fontsource_id": "fredoka",
+    "role": "rounded/friendly",
+    "weights": [
+     300,
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wdth": [
+      75.0,
+      125.0
+     ],
+     "wght": [
+      300.0,
+      700.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/fredoka@latest/latin-400-normal.ttf",
+    "notes": "Bubbly rounded, wdth+wght axes.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Baloo 2",
+    "fontsource_id": "baloo-2",
+    "role": "rounded/friendly",
+    "weights": [
+     400,
+     500,
+     600,
+     700,
+     800
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      400.0,
+      800.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/baloo-2@latest/latin-400-normal.ttf",
+    "notes": "Chunky friendly, weight axis.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "JetBrains Mono",
+    "fontsource_id": "jetbrains-mono",
+    "role": "mono",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wght": [
+      100.0,
+      800.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/latin-400-normal.ttf",
+    "notes": "Code snippets; ligatures; weight axis.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "IBM Plex Mono",
+    "fontsource_id": "ibm-plex-mono",
+    "role": "mono",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono@latest/latin-400-normal.ttf",
+    "notes": "Corporate-technical mono, static weights.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Space Mono",
+    "fontsource_id": "space-mono",
+    "role": "mono",
+    "weights": [
+     400,
+     700
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/space-mono@latest/latin-400-normal.ttf",
+    "notes": "Retro geometric mono, 400/700.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Caveat",
+    "fontsource_id": "caveat",
+    "role": "script/handwritten",
+    "weights": [
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      400.0,
+      700.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/caveat@latest/latin-400-normal.ttf",
+    "notes": "Casual handwriting with weight axis; annotations and arrows.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Permanent Marker",
+    "fontsource_id": "permanent-marker",
+    "role": "script/handwritten",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "Apache-2.0",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/permanent-marker@latest/latin-400-normal.ttf",
+    "notes": "Marker scrawl, single weight. License Apache-2.0.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Pacifico",
+    "fontsource_id": "pacifico",
+    "role": "script/handwritten",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": null,
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/pacifico@latest/latin-400-normal.ttf",
+    "notes": "Retro brush script, single weight.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Dancing Script",
+    "fontsource_id": "dancing-script",
+    "role": "script/handwritten",
+    "weights": [
+     400,
+     500,
+     600,
+     700
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "wght": [
+      400.0,
+      700.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/dancing-script@latest/latin-400-normal.ttf",
+    "notes": "Bouncy connected script, weight axis.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Recursive",
+    "fontsource_id": "recursive",
+    "role": "variable fun axes",
+    "weights": [
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "slnt": [
+      -15.0,
+      0.0
+     ],
+     "wght": [
+      300.0,
+      1000.0
+     ],
+     "CASL": [
+      0.0,
+      1.0
+     ],
+     "CRSV": [
+      0.0,
+      1.0
+     ],
+     "MONO": [
+      0.0,
+      1.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/recursive@latest/latin-400-normal.ttf",
+    "notes": "MONO, CASL (casual), CRSV, slnt, wght 300-1000: morph sans to mono to casual.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Roboto Flex",
+    "fontsource_id": "roboto-flex",
+    "role": "variable fun axes",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "opsz": [
+      8.0,
+      144.0
+     ],
+     "slnt": [
+      -10.0,
+      0.0
+     ],
+     "wdth": [
+      25.0,
+      151.0
+     ],
+     "wght": [
+      100.0,
+      1000.0
+     ],
+     "GRAD": [
+      -200.0,
+      150.0
+     ],
+     "XOPQ": [
+      27.0,
+      175.0
+     ],
+     "XTRA": [
+      323.0,
+      603.0
+     ],
+     "YOPQ": [
+      25.0,
+      135.0
+     ],
+     "YTAS": [
+      649.0,
+      854.0
+     ],
+     "YTDE": [
+      -305.0,
+      -98.0
+     ],
+     "YTFI": [
+      560.0,
+      788.0
+     ],
+     "YTLC": [
+      416.0,
+      570.0
+     ],
+     "YTUC": [
+      528.0,
+      760.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/roboto-flex@latest/latin-400-normal.ttf",
+    "notes": "13 axes incl. wdth 25-151, opsz, GRAD and parametric XTRA/YTUC; extreme stretch animations.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Anybody",
+    "fontsource_id": "anybody",
+    "role": "variable fun axes",
+    "weights": [
+     100,
+     200,
+     300,
+     400,
+     500,
+     600,
+     700,
+     800,
+     900
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wdth": [
+      50.0,
+      150.0
+     ],
+     "wght": [
+      100.0,
+      900.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/anybody@latest/latin-400-normal.ttf",
+    "notes": "wdth 50-150 + wght: dramatic width squash/stretch.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Shantell Sans",
+    "fontsource_id": "shantell-sans",
+    "role": "variable fun axes",
+    "weights": [
+     300,
+     400,
+     500,
+     600,
+     700,
+     800
+    ],
+    "styles": [
+     "italic",
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "ital": [
+      0.0,
+      1.0
+     ],
+     "wght": [
+      300.0,
+      800.0
+     ],
+     "BNCE": [
+      -100.0,
+      100.0
+     ],
+     "INFM": [
+      0.0,
+      100.0
+     ],
+     "SPAC": [
+      0.0,
+      100.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/shantell-sans@latest/latin-400-normal.ttf",
+    "notes": "Marker-style sans with BNCE (bounce), INFM (informality), SPAC axes.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Climate Crisis",
+    "fontsource_id": "climate-crisis",
+    "role": "variable fun axes",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "YEAR": [
+      1979.0,
+      2050.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/climate-crisis@latest/latin-400-normal.ttf",
+    "notes": "YEAR axis 1979-2050 melts the letters; data-driven storytelling.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Honk",
+    "fontsource_id": "honk",
+    "role": "variable fun axes",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "MORF": [
+      0.0,
+      45.0
+     ],
+     "SHLN": [
+      0.0,
+      100.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/honk@latest/latin-400-normal.ttf",
+    "notes": "COLRv1 color 3D font, MORF + SHLN axes. Color font caveat applies.",
+    "verified": "206 font/ttf"
+   },
+   {
+    "family": "Nabla",
+    "fontsource_id": "nabla",
+    "role": "variable fun axes",
+    "weights": [
+     400
+    ],
+    "styles": [
+     "normal"
+    ],
+    "license": "OFL-1.1",
+    "variable_axes": {
+     "EDPT": [
+      0.0,
+      200.0
+     ],
+     "EHLT": [
+      0.0,
+      24.0
+     ]
+    },
+    "norwegian_glyphs_verified": true,
+    "example_url": "https://cdn.jsdelivr.net/fontsource/fonts/nabla@latest/latin-400-normal.ttf",
+    "notes": "COLRv1 isometric color font, EDPT (extrusion depth) + EHLT axes.",
+    "verified": "206 font/ttf"
+   }
+  ]
+ },
+ "photos_video": [
+  {
+   "name": "Unsplash",
+   "url": "https://unsplash.com",
+   "license": "Unsplash License",
+   "license_url": "https://unsplash.com/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Not required by the license. API Guidelines require crediting 'Photo by <Name> on Unsplash' with links when shown in an app.",
+   "redistribution_allowed": false,
+   "fetch": "API https://api.unsplash.com/search/photos?query=<q> with header 'Authorization: Client-ID <ACCESS_KEY>'. Demo 50 req/h, production 1000 req/h after approval. Image CDN requests (images.unsplash.com) do not count. Must call GET /photos/:id/download when downloading (tracking).",
+   "example_url": "https://api.unsplash.com/search/photos?query=ocean",
+   "verified": "yes: 401 application/json (10.11.2026); 401 without key confirms endpoint",
+   "count": ">5M photos",
+   "style": "photos only",
+   "notes": "Key required (free). Cannot sell unaltered images; cannot compile images to replicate a similar/competing service. API guideline wants hotlinked URLs, but for a video render you download once, trigger the download endpoint, and record photographer credit. Unsplash+ images are NOT under the free license: filter out premium results (plus=true)."
+  },
+  {
+   "name": "Pexels (photos + videos)",
+   "url": "https://www.pexels.com",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Not required by the license. API users must show 'Photos provided by Pexels' link, and credit 'Photo by <Name> on Pexels' when possible.",
+   "redistribution_allowed": false,
+   "fetch": "API https://api.pexels.com/v1/search?query=<q> and https://api.pexels.com/v1/videos/search?query=<q> (old /videos/ path deprecated). Header 'Authorization: <API_KEY>'. 200 req/h, 20,000 req/month default. Video results include video_files[] with direct mp4 links at several resolutions, so frames can be extracted with ffmpeg.",
+   "example_url": "https://api.pexels.com/v1/videos/search?query=ocean",
+   "verified": "yes: 401 application/json; charset=utf-8 (10.11.2026); 401 without key confirms endpoint",
+   "count": ">3M photos, large video library",
+   "style": "photos + 4K/HD video",
+   "notes": "Best default B-roll source (one key covers photos and video). Restrictions: identifiable people may not appear in a bad light or offensively; don't sell unaltered copies; don't redistribute on other stock platforms; don't use in a trademark/business name."
+  },
+  {
+   "name": "Pixabay (photos, illustrations, vectors, videos)",
+   "url": "https://pixabay.com",
+   "license": "Pixabay Content License",
+   "license_url": "https://pixabay.com/service/license-summary/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Not required by license. API terms: show users where images come from whenever search results are displayed.",
+   "redistribution_allowed": false,
+   "fetch": "API https://pixabay.com/api/?key=<KEY>&q=<q>&image_type=photo|illustration|vector and https://pixabay.com/api/videos/?key=<KEY>&q=<q>. 100 req/60 s per key. Responses must be cached 24 h. No permanent hotlinking of images: download them.",
+   "example_url": "https://pixabay.com/api/?q=ocean",
+   "verified": "page reachable only (no direct asset URL to test): 400 text/html; charset=utf-8 (10.11.2026); 400 without key confirms endpoint",
+   "count": ">5M items",
+   "style": "photos, illustrations, SVG vectors, video",
+   "notes": "Only source here with vectors via API. Restrictions: no standalone sale/distribution of unaltered content; content showing recognisable trademarks/brands cannot be used commercially in relation to goods/services; no immoral/illegal use of recognisable people; not misleading. Vectors quality varies."
+  },
+  {
+   "name": "Mixkit (Envato) stock video",
+   "url": "https://mixkit.co/free-stock-video/",
+   "license": "Mixkit Stock Video Free License (some clips: Restricted License)",
+   "license_url": "https://mixkit.co/license/#videoFree",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": false,
+   "fetch": "No API. Direct mp4 pattern https://assets.mixkit.co/videos/<id>/<id>-<360|720|1080>.mp4 (ids visible in page HTML; old /videos/preview/mixkit-<slug>-<id>-large.mp4 is 403).",
+   "example_url": "https://assets.mixkit.co/videos/1164/1164-720.mp4",
+   "verified": "yes: 206 video/mp4 (10.11.2026)",
+   "count": null,
+   "style": "curated HD/4K video",
+   "notes": "No key, no attribution. Check each clip: items under the 'Restricted License' are personal/non-commercial only. Can't sell items unaltered or make Mixkit items available to third parties, so don't commit raw clips to a public repo."
+  },
+  {
+   "name": "Coverr",
+   "url": "https://coverr.co",
+   "license": "Coverr License",
+   "license_url": "https://coverr.co/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Site downloads: not required. API Demo (free) tier: attribution to Coverr and the creator required.",
+   "redistribution_allowed": false,
+   "fetch": "API https://api.coverr.co/videos?query=<q> with header x-api-key (free key). Demo tier 50 calls/h; production 2000/h on paid plans. MCP server at https://mcp.coverr.co/mcp.",
+   "example_url": "https://api.coverr.co/videos?query=ocean",
+   "verified": "yes: 401 application/json; charset=utf-8 (10.11.2026); 401 without key confirms endpoint",
+   "count": null,
+   "style": "lifestyle/tech B-roll video",
+   "notes": "No bulk downloading or dataset building, no AI training, no reuploading raw files/packs to stock sites. Free API use needs credit; site downloads do not."
+  },
+  {
+   "name": "Videvo (now Freepik)",
+   "url": "https://www.videvo.net",
+   "license": "Freepik terms (videvo.net/terms-of-use redirects to freepik.com/terms-of-use)",
+   "license_url": "https://www.freepik.com/legal/terms-of-use",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "Freepik free tier: credit the author/Freepik",
+   "redistribution_allowed": false,
+   "fetch": "Manual; Freepik API is paid",
+   "example_url": "https://www.videvo.net",
+   "verified": "NO: 403 to curl (bot protection after Freepik merge); terms URL redirects to freepik.com (10.11.2026)",
+   "count": null,
+   "style": "stock video",
+   "notes": "Not recommended: absorbed into Freepik, free clips need attribution, mixed license types per clip (some editorial-only), and redistribution is forbidden. Pexels/Mixkit cover the same need with fewer strings.",
+   "excluded": false
+  }
+ ],
+ "textures_patterns": [
+  {
+   "name": "Poly Haven (textures, HDRIs, models)",
+   "url": "https://polyhaven.com",
+   "license": "CC0-1.0 (assets)",
+   "license_url": "https://polyhaven.com/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Assets: none. API terms ask products using the live API to say assets come from Poly Haven ('Powered by Poly Haven').",
+   "redistribution_allowed": true,
+   "fetch": "API https://api.polyhaven.com/assets?t=textures|hdris|models and /files/<id> (no key; send a unique User-Agent). File pattern: https://dl.polyhaven.org/file/ph-assets/Textures/jpg/<1k|2k|4k>/<id>/<id>_diff_<res>.jpg; HDRI https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/<res>/<id>_<res>.hdr; tonemapped JPG preview of each HDRI at /files/<id> -> tonemapped.url.",
+   "example_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_wall_08/rock_wall_08_diff_1k.jpg",
+   "verified": "yes: 206 image/jpeg (10.11.2026)",
+   "count": "869 textures, 997 HDRIs",
+   "style": "photoscanned PBR",
+   "notes": "Diffuse JPGs work directly as 2D backgrounds (paper, concrete, wood). Tonemapped HDRI JPGs make good blurred sky/backdrops. .hdr itself needs a WebGL path."
+  },
+  {
+   "name": "ambientCG",
+   "url": "https://ambientcg.com",
+   "license": "CC0-1.0",
+   "license_url": "https://docs.ambientcg.com/license/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "API v3 https://ambientcg.com/api/v3/assets?q=<q>&include=downloads,previews (no key). Download zip https://ambientcg.com/get?file=<AssetId>_<1K|2K|4K|8K>-<JPG|PNG>.zip; the Color map is inside the zip.",
+   "example_url": "https://ambientcg.com/get?file=Concrete049_1K-JPG.zip",
+   "verified": "yes: 206 application/zip (10.11.2026)",
+   "count": "2934 assets",
+   "style": "PBR materials, zip only",
+   "notes": "Zipped (1K JPG ~10 MB), so extract only *_Color.jpg. Single-maintainer site, so cache results locally."
+  },
+  {
+   "name": "Hero Patterns (Steve Schoger)",
+   "url": "https://heropatterns.com",
+   "license": "CC-BY-4.0 (patterns); npm wrapper hero-patterns MIT",
+   "license_url": "https://heropatterns.com",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "Hero Patterns by Steve Schoger (heropatterns.com), CC BY 4.0",
+   "redistribution_allowed": true,
+   "fetch": "Copy SVG/CSS from the site per pattern, or npm hero-patterns@2.1.0 which exports functions returning data-URI SVGs with color/opacity params",
+   "example_url": "https://cdn.jsdelivr.net/npm/hero-patterns@2.1.0/package.json",
+   "verified": "yes: 206 application/json; charset=utf-8 (10.11.2026)",
+   "count": "~90",
+   "style": "repeatable SVG background patterns",
+   "notes": "Tileable, color-parametric, tiny. Use as an image pattern on canvas (createPattern) with an animated offset for drifting backgrounds."
+  },
+  {
+   "name": "Code-generated noise / grain / blobs (own output)",
+   "url": "https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feTurbulence",
+   "license": "Own work (no third-party license)",
+   "license_url": null,
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "Generate in the composition: SVG feTurbulence for grain, seeded value/simplex noise in canvas, blob shapes from seeded polar noise. Haikei (haikei.app) and fffuel-style generators produce SVGs from your settings in-browser; treat their output as your own work, but check each tool's terms before bundling.",
+   "example_url": "https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feTurbulence",
+   "verified": "page reachable only (no direct asset URL to test): 206 text/html (10.11.2026)",
+   "count": null,
+   "style": "grain, gradients, blobs, waves",
+   "notes": "Preferred: seeded generators are deterministic per frame (seek-safe) and need no license at all. Use a fixed seed, never Math.random() at render time."
+  },
+  {
+   "name": "Transparent Textures",
+   "url": "https://www.transparenttextures.com",
+   "license": "Unclear (no license stated; derived from Subtle Patterns, historically CC BY-SA 3.0)",
+   "license_url": "https://www.transparenttextures.com",
+   "commercial": null,
+   "attribution_required": null,
+   "attribution_format": null,
+   "redistribution_allowed": null,
+   "fetch": "https://www.transparenttextures.com/patterns/<name>.png",
+   "example_url": "https://www.transparenttextures.com/patterns/3px-tile.png",
+   "verified": "yes: 206 image/png (10.11.2026)",
+   "count": null,
+   "style": "subtle tileable PNG overlays",
+   "notes": "EXCLUDED: site states no license; many patterns trace back to Subtle Patterns (CC BY-SA 3.0, ShareAlike). Use code-generated grain instead.",
+   "excluded": true
+  }
+ ],
+ "lottie": [
+  {
+   "name": "lottie-web (player)",
+   "url": "https://github.com/airbnb/lottie-web",
+   "license": "MIT",
+   "license_url": "https://github.com/airbnb/lottie-web/blob/master/LICENSE.md",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "npm lottie-web@5.13.0; CDN https://cdn.jsdelivr.net/npm/lottie-web@5/build/player/lottie.min.js (also lottie_canvas.min.js, lottie_svg.min.js)",
+   "example_url": "https://cdn.jsdelivr.net/npm/lottie-web@5/build/player/lottie.min.js",
+   "verified": "yes: 206 application/javascript; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "player library",
+   "notes": "Deterministic: anim = lottie.loadAnimation({container, renderer:'canvas'|'svg', loop:false, autoplay:false, animationData}); in window.seek(t): anim.goToAndStop(t * anim.frameRate, true). Use the ANIMATION's frameRate (the 'fr' field), not the output video fps; goToAndStop(t*1000, false) takes ms instead. Wait for the 'DOMLoaded' event before the first seek. For drawing into our own canvas use renderer 'canvas' with rendererSettings.context, or render SVG and drawImage a serialized snapshot. Avoid files with expressions that call random() or time-of-day, and embed images (no external assets)."
+  },
+  {
+   "name": "dotlottie-web (alt player)",
+   "url": "https://github.com/LottieFiles/dotlottie-web",
+   "license": "MIT",
+   "license_url": "https://github.com/LottieFiles/dotlottie-web/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "npm @lottiefiles/dotlottie-web@0.82.1 (WASM ThorVG renderer, draws straight to a <canvas>); seek with setFrame(frame)",
+   "example_url": "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web@latest/dist/index.js",
+   "verified": "yes: 206 application/javascript (10.11.2026)",
+   "count": null,
+   "style": "player library",
+   "notes": "Plays .lottie (zipped) and .json. WASM load is async; await 'load' before seeking. Use when lottie-web is too slow on big files."
+  },
+  {
+   "name": "LottieFiles free animations",
+   "url": "https://lottiefiles.com/free-animations",
+   "license": "Lottie Simple License",
+   "license_url": "https://lottiefiles.com/page/license",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Not required; 'strongly encouraged'",
+   "redistribution_allowed": true,
+   "fetch": "Manual download as Lottie JSON or .lottie after login; public share links resolve to https://lottie.host/<uuid>/<id>.json",
+   "example_url": "https://lottiefiles.com/page/license",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=utf-8 (10.11.2026)",
+   "count": ">100k free",
+   "style": "vector animations of every kind",
+   "notes": "Commercial use OK without attribution. Redistribution allowed only under the same Lottie Simple License terms. The license excludes collecting/compiling Files from LottieFiles, so no scraping or bulk vendoring. Per-file license can differ: check that the item page says 'Lottie Simple License'."
+  },
+  {
+   "name": "useAnimations",
+   "url": "https://useanimations.com",
+   "license": "MIT (code and animations)",
+   "license_url": "https://github.com/useAnimations/react-useanimations/blob/master/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": "Not required; suggested 'Animated icons by useAnimations'",
+   "redistribution_allowed": true,
+   "fetch": "Raw Lottie JSON from v2 package layout: https://cdn.jsdelivr.net/npm/react-useanimations@2.10.0/lib/<name>/<name>.json (v3 moved to JS modules plus catalog.json)",
+   "example_url": "https://cdn.jsdelivr.net/npm/react-useanimations@2.10.0/lib/activity/activity.json",
+   "verified": "yes: 206 application/json; charset=utf-8 (10.11.2026)",
+   "count": 79,
+   "style": "animated line icons (Feather-like)",
+   "notes": "README states the animations themselves are MIT, free for commercial use. Pin 2.10.0 for raw JSON files."
+  },
+  {
+   "name": "Noto Animated Emoji (Lottie)",
+   "url": "https://googlefonts.github.io/noto-emoji-animation/",
+   "license": "CC-BY-4.0",
+   "license_url": "https://googlefonts.github.io/noto-emoji-files/",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "'<Name> emoji by Google (Noto Animated Emoji), CC BY 4.0'",
+   "redistribution_allowed": true,
+   "fetch": "https://fonts.gstatic.com/s/e/notoemoji/latest/<cp>/lottie.json",
+   "example_url": "https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/lottie.json",
+   "verified": "yes: 206 application/json (10.11.2026)",
+   "count": 881,
+   "style": "animated emoji",
+   "notes": "See emoji section."
+  },
+  {
+   "name": "IconScout free Lottie/icons",
+   "url": "https://iconscout.com/free-lottie-animations",
+   "license": "IconScout Simple License (could not verify: licenses page returned 403)",
+   "license_url": "https://iconscout.com/licenses",
+   "commercial": null,
+   "attribution_required": null,
+   "attribution_format": null,
+   "redistribution_allowed": false,
+   "fetch": "Manual download after login",
+   "example_url": "https://iconscout.com/licenses",
+   "verified": "NO: 403 to curl and WebFetch (bot protection); license not read (10.11.2026)",
+   "count": null,
+   "style": "Lottie, icons, 3D",
+   "notes": "UNVERIFIED: the license page blocked automated fetch (403). Treat as manual-review-only until a human reads the current terms; do not commit files.",
+   "excluded": false
+  }
+ ],
+ "maps_data": [
+  {
+   "name": "world-atlas (TopoJSON from Natural Earth)",
+   "url": "https://github.com/topojson/world-atlas",
+   "license": "ISC (package); data Public Domain (Natural Earth)",
+   "license_url": "https://github.com/topojson/world-atlas/blob/master/LICENSE.md",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/world-atlas@2/{countries,land}-{110m,50m,10m}.json; decode with topojson-client (ISC) and draw with d3-geo (ISC) into the canvas",
+   "example_url": "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
+   "verified": "yes: 206 application/json; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "world countries/land TopoJSON",
+   "notes": "Best default for world maps. Country ids are ISO 3166-1 numeric (Norway 578). 110m is light enough for animation."
+  },
+  {
+   "name": "Natural Earth",
+   "url": "https://www.naturalearthdata.com",
+   "license": "Public Domain",
+   "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://naciscdn.org/naturalearth/<10m|50m|110m>/<cultural|physical>/ne_<scale>_<layer>.zip, or GeoJSON via https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_<scale>_<layer>.geojson",
+   "example_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson",
+   "verified": "yes: 206 text/plain; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "vector boundaries, coastlines, rivers, cities",
+   "notes": "Natural Earth shows de-facto boundaries; disputed areas may need care for a corporate audience. Admin-1 for Norway may predate the 2024 county reform."
+  },
+  {
+   "name": "Norway counties/municipalities (robhop/fylker-og-kommuner, Kartverket data)",
+   "url": "https://github.com/robhop/fylker-og-kommuner",
+   "license": "CC-BY-4.0 (Kartverket data); repo has no code license",
+   "license_url": "https://www.kartverket.no/api-og-data/vilkar-for-bruk",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "© Kartverket (link kartverket.no where possible)",
+   "redistribution_allowed": true,
+   "fetch": "https://raw.githubusercontent.com/robhop/fylker-og-kommuner/main/<Norge|Fylker|Kommuner>-<S|M|L>.<geojson|topojson> (2024 borders, coastline-clipped; jsDelivr gh returns 403 for this repo, use raw.githubusercontent)",
+   "example_url": "https://raw.githubusercontent.com/robhop/fylker-og-kommuner/main/Fylker-S.geojson",
+   "verified": "yes: 206 text/plain; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "Norway outline, 15 fylker, kommuner; S/M/L detail",
+   "notes": "Best default for Norway maps. Data is CC BY 4.0, so redistribution with credit is allowed."
+  },
+  {
+   "name": "Kartverket / Geonorge kommuneinfo API",
+   "url": "https://ws.geonorge.no/kommuneinfo/v1/",
+   "license": "CC-BY-4.0",
+   "license_url": "https://www.kartverket.no/api-og-data/vilkar-for-bruk",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "© Kartverket",
+   "redistribution_allowed": true,
+   "fetch": "No key: https://ws.geonorge.no/kommuneinfo/v1/fylker (list), /fylker/<nr>/omrade and /kommuner/<nr>/omrade (GeoJSON geometry in the 'omrade' field)",
+   "example_url": "https://ws.geonorge.no/kommuneinfo/v1/fylker/03/omrade",
+   "verified": "yes: 200 application/json (10.11.2026)",
+   "count": null,
+   "style": "authoritative current boundaries",
+   "notes": "Full-resolution geometry, so simplify (e.g. mapshaper/topojson-simplify) before animating. Caveat: Kartverket WMS/cache map TILES include Geovekst data that may only be used as-is; copying/other use needs permission. Vector data from kartkatalog is CC BY 4.0."
+  },
+  {
+   "name": "Simple Icons (brand logos)",
+   "url": "https://simpleicons.org",
+   "license": "CC0-1.0 (SVG paths); trademarks belong to the brands",
+   "license_url": "https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/simple-icons@<version>/icons/<slug>.svg (single-path, fill with the brand hex from data/simple-icons.json); or https://api.iconify.design/simple-icons/<slug>.svg",
+   "example_url": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg",
+   "verified": "yes: 206 image/svg+xml (10.11.2026)",
+   "count": 3470,
+   "style": "monochrome single-path brand marks",
+   "notes": "CC0 covers the SVG drawing only, not trademark rights. Showing a brand logo to refer to that brand (nominative use) is normally fine; implying endorsement or partnership is not. Some brands' guidelines forbid recoloring or altering the logo. DISCLAIMER.md asks users to read it before use."
+  }
+ ],
+ "device_frames": [
+  {
+   "name": "Draw frames in code (recommended)",
+   "url": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect",
+   "license": "Own work",
+   "license_url": null,
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "ctx.roundRect for the body, an inner roundRect clip for the screen, a pill for the Dynamic Island / notch, a few strokes for buttons. Parametric width/height/radius/bezel.",
+   "example_url": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect",
+   "verified": "page reachable only (no direct asset URL to test): 206 text/html (10.11.2026)",
+   "count": null,
+   "style": "generic phone/laptop/browser chrome",
+   "notes": "No license questions and no trade-dress problems (a generic rounded phone is not an iPhone photo). Resolution-independent and animatable (tilt, zoom into screen)."
+  },
+  {
+   "name": "devices.css (picturepan2)",
+   "url": "https://github.com/picturepan2/devices.css",
+   "license": "MIT",
+   "license_url": "https://github.com/picturepan2/devices.css/blob/master/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/devices.css@latest/dist/devices.min.css; wrap content in <div class='device device-iphone-14-pro'>...</div>",
+   "example_url": "https://cdn.jsdelivr.net/npm/devices.css@latest/dist/devices.min.css",
+   "verified": "yes: 206 text/css; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "pure-CSS modern phones, tablets, laptops",
+   "notes": "Useful if a composition uses DOM layers; for a single-canvas pipeline, use it as a reference for proportions. Last updated 12.2023."
+  },
+  {
+   "name": "marvelapp/devices.css",
+   "url": "https://github.com/marvelapp/devices.css",
+   "license": "MIT",
+   "license_url": "https://github.com/marvelapp/devices.css/blob/master/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "GitHub repo CSS (older devices)",
+   "example_url": "https://github.com/marvelapp/devices.css",
+   "verified": "page reachable only (no direct asset URL to test): 206 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "pure-CSS device frames (older models)",
+   "notes": "Older device lineup; mostly a geometry reference."
+  },
+  {
+   "name": "MockUPhone",
+   "url": "https://mockuphone.com",
+   "license": "Generated art CC BY 3.0; site code Apache-2.0",
+   "license_url": "https://mockuphone.com/attribution/",
+   "commercial": true,
+   "attribution_required": true,
+   "attribution_format": "Mention that assets were created with MockUPhone (no fixed format)",
+   "redistribution_allowed": true,
+   "fetch": "Manual web tool: upload a screenshot, download a PNG composite",
+   "example_url": "https://mockuphone.com/attribution/",
+   "verified": "page reachable only (no direct asset URL to test): 206 text/html; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "photoreal device PNGs",
+   "notes": "Allowed (CC BY), but frames are photoreal Apple/Samsung products, so trade dress and the device makers' marketing rules apply. Device lineup lags (newest iPhone 15 Pro Max as of early 2026)."
+  },
+  {
+   "name": "Meta (Facebook) Design devices",
+   "url": "https://www.meta.com/design-at-meta/",
+   "license": "Unclear: facebook.design/devices now redirects to meta.com/design-at-meta and the device license text could not be found",
+   "license_url": "https://www.meta.com/design-at-meta/",
+   "commercial": null,
+   "attribution_required": null,
+   "attribution_format": null,
+   "redistribution_allowed": false,
+   "fetch": "Previously a zip of device PNGs",
+   "example_url": "https://www.meta.com/design-at-meta/",
+   "verified": "page reachable only (no direct asset URL to test): 200 text/html; charset=\"utf-8\" (10.11.2026)",
+   "count": null,
+   "style": "photoreal device images",
+   "notes": "EXCLUDED until re-verified: the resource moved and the license is no longer findable. The old terms restricted modifying device images. Draw frames in code instead.",
+   "excluded": true
+  }
+ ],
+ "color_palettes": [
+  {
+   "name": "Radix Colors",
+   "url": "https://www.radix-ui.com/colors",
+   "license": "MIT",
+   "license_url": "https://github.com/radix-ui/colors/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/@radix-ui/colors@3.0.0/index.mjs (ES module exporting e.g. blue, blueDark, blueA, blueP3: 12 steps each)",
+   "example_url": "https://cdn.jsdelivr.net/npm/@radix-ui/colors@latest/index.mjs",
+   "verified": "yes: 206 application/javascript; charset=utf-8 (10.11.2026)",
+   "count": "~30 scales x 12 steps, light/dark/alpha/P3",
+   "style": "UI scales with defined step semantics (1-2 bg, 9 solid, 11-12 text)",
+   "notes": "Best default: step semantics let an agent pick 'background', 'solid' and 'text' colors without guessing, with matching dark mode."
+  },
+  {
+   "name": "Tailwind CSS palette",
+   "url": "https://tailwindcss.com/docs/colors",
+   "license": "MIT",
+   "license_url": "https://github.com/tailwindlabs/tailwindcss/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "v4 (OKLCH): https://cdn.jsdelivr.net/npm/tailwindcss@latest/theme.css (--color-<name>-<50..950>); v3 hex: https://cdn.jsdelivr.net/npm/tailwindcss@3/src/public/colors.js",
+   "example_url": "https://cdn.jsdelivr.net/npm/tailwindcss@latest/theme.css",
+   "verified": "yes: 206 text/css; charset=utf-8 (10.11.2026)",
+   "count": "22 hues x 11 shades",
+   "style": "general-purpose",
+   "notes": "v4 values are OKLCH. Canvas fillStyle accepts oklch() in current Chromium, but convert to hex when you need exact cross-tool colors."
+  },
+  {
+   "name": "Open Color",
+   "url": "https://yeun.github.io/open-color/",
+   "license": "MIT",
+   "license_url": "https://github.com/yeun/open-color/blob/master/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/open-color@1.9.1/open-color.json",
+   "example_url": "https://cdn.jsdelivr.net/npm/open-color@latest/open-color.json",
+   "verified": "yes: 206 application/json; charset=utf-8 (10.11.2026)",
+   "count": "13 hues x 10 shades",
+   "style": "soft UI palette",
+   "notes": "Tiny JSON, easy to embed verbatim."
+  },
+  {
+   "name": "Catppuccin",
+   "url": "https://catppuccin.com/palette",
+   "license": "MIT",
+   "license_url": "https://github.com/catppuccin/palette/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "https://cdn.jsdelivr.net/npm/@catppuccin/palette@1.8.0/css/catppuccin.css (or esm/palette.js)",
+   "example_url": "https://cdn.jsdelivr.net/npm/@catppuccin/palette@1.8.0/css/catppuccin.css",
+   "verified": "yes: 206 text/css; charset=utf-8 (10.11.2026)",
+   "count": "4 flavors x 26 colors",
+   "style": "pastel, developer-themed",
+   "notes": "Good for code-snippet scenes that match editor themes."
+  },
+  {
+   "name": "ColorBrewer / d3-scale-chromatic",
+   "url": "https://colorbrewer2.org",
+   "license": "Apache-2.0 (ColorBrewer schemes); ISC (d3-scale-chromatic)",
+   "license_url": "https://github.com/d3/d3-scale-chromatic/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "npm d3-scale-chromatic@3 (schemeTableau10, interpolateViridis, schemeSet2...) or colorbrewer@1.7.0",
+   "example_url": "https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3/dist/d3-scale-chromatic.min.js",
+   "verified": "yes: 206 application/javascript; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "data-viz categorical/sequential/diverging",
+   "notes": "Use for charts and maps (colorblind-safe options like viridis, cividis). ColorBrewer's Apache license wants the attribution notice kept in redistributed source."
+  },
+  {
+   "name": "IBM Carbon colors",
+   "url": "https://carbondesignsystem.com/elements/color/overview/",
+   "license": "Apache-2.0",
+   "license_url": "https://github.com/carbon-design-system/carbon/blob/main/LICENSE",
+   "commercial": true,
+   "attribution_required": false,
+   "attribution_format": null,
+   "redistribution_allowed": true,
+   "fetch": "npm @carbon/colors@11.62.0",
+   "example_url": "https://cdn.jsdelivr.net/npm/@carbon/colors@latest/package.json",
+   "verified": "yes: 206 application/json; charset=utf-8 (10.11.2026)",
+   "count": null,
+   "style": "corporate palette + accessible data-viz palette",
+   "notes": null
+  },
+  {
+   "name": "nice-color-palettes (COLOURlovers top 1000)",
+   "url": "https://github.com/Jam3/nice-color-palettes",
+   "license": "Package MIT, but data scraped from COLOURlovers (user palettes under CC BY-NC-SA 3.0 per COLOURlovers terms)",
+   "license_url": "https://github.com/Jam3/nice-color-palettes",
+   "commercial": null,
+   "attribution_required": null,
+   "attribution_format": null,
+   "redistribution_allowed": null,
+   "fetch": "https://cdn.jsdelivr.net/npm/nice-color-palettes@4.0.0/1000.json",
+   "example_url": "https://cdn.jsdelivr.net/npm/nice-color-palettes@latest/1000.json",
+   "verified": "yes: 206 application/json; charset=utf-8 (10.11.2026)",
+   "count": 1000,
+   "style": "5-color art palettes",
+   "notes": "EXCLUDED (caution): the MIT license only covers the scraper. Color combinations are arguably not copyrightable, but the source terms are NC-SA. Use for inspiration only, not as a shipped dataset.",
+   "excluded": true
+  }
+ ],
+ "_summary": {
+  "best_defaults": {
+   "icons": "Lucide (ISC) via lucide-static on jsDelivr; Phosphor for weights/duotone; Iconify API as universal fallback with SPDX filtering",
+   "illustrations": "Open Peeps / Humaaans / Open Doodles (CC0) + DiceBear notionists/lorelei/open-peeps (CC0, seeded)",
+   "emoji": "Fluent Emoji (MIT, 3D PNG / flat SVG); Twemoji if flat SVG by codepoint is needed (CC BY, credit)",
+   "fonts": "Fontsource CDN static TTF per weight; :vf woff2 or google/fonts raw TTF for variable axes",
+   "photos_video": "Pexels API (photos + video, one key); Mixkit for no-key direct mp4 (check Free vs Restricted per clip)",
+   "textures": "Poly Haven (CC0, no key) + code-generated seeded grain/noise",
+   "lottie": "lottie-web 5.13 goToAndStop(t*anim.frameRate, true); useAnimations (MIT) and LottieFiles (Lottie Simple License) for content",
+   "maps": "world-atlas TopoJSON (PD data) + robhop/fylker-og-kommuner (Kartverket CC BY 4.0)",
+   "device_frames": "Draw in code with roundRect",
+   "palettes": "Radix Colors (MIT) for UI steps, d3-scale-chromatic for data viz"
+  },
+  "excluded": [
+   "OpenMoji (CC BY-SA)",
+   "Absurd Design free tier (non-commercial)",
+   "Transparent Textures (no license stated; Subtle Patterns heritage CC BY-SA)",
+   "Meta Design devices (license no longer findable)",
+   "nice-color-palettes data (COLOURlovers CC BY-NC-SA source)",
+   "DiceBear CC BY styles unless credited",
+   "Mixkit clips under Restricted License"
+  ],
+  "no_public_repo_redistribution": [
+   "unDraw",
+   "Storyset",
+   "DrawKit",
+   "Blush",
+   "Unsplash",
+   "Pexels",
+   "Pixabay",
+   "Mixkit",
+   "Coverr",
+   "Videvo/Freepik"
+  ]
+ }
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>motion-graphics gallery</title>
+<style>html,body{margin:0;background:#111}canvas{display:block;max-width:100vw;margin:auto}</style></head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+// Gallery: every component in its own tile, so the library can be browsed and verified visually.
+//   render.mjs --page gallery.html?group=transitions --stills 0.35,0.65
+// Groups: transitions (t = progress 0..1), text, backgrounds, post, ui, charts, logo, camera (t = local seconds).
+import { clamp, sp, layout, rrect, imageBox } from './lib/motion.js';
+import { TRANSITIONS, transition } from './lib/transitions.js';
+import { TEXT } from './lib/text.js';
+import { BG, POST } from './lib/backgrounds.js';
+import { UI } from './lib/ui.js';
+import { CHART } from './lib/charts.js';
+import { LOGO, loadLogo } from './lib/logo.js';
+import { CAM, camera, withCamera } from './lib/camera.js';
+
+const q = new URLSearchParams(location.search), GROUP = q.get('group') || 'transitions';
+const COLS = Number(q.get('cols') || 6), TW = 400, TH = 225, PAD = 8, LABEL = 26;
+const tiles = [];
+const add = (name, fn) => tiles.push({ name, fn });
+
+// Two simple scenes for transitions: clearly different so the mask/geometry reads.
+const A = (g) => { const W = g.canvas.width, H = g.canvas.height; g.fillStyle = '#141413'; g.fillRect(0, 0, W, H); g.fillStyle = '#FFD84D'; g.font = '800 110px system-ui'; g.textAlign = 'center'; g.fillText('A', W / 2, H / 2 + 40); g.fillStyle = '#3b5bff'; g.fillRect(20, 20, 60, 60); };
+const B = (g) => { const W = g.canvas.width, H = g.canvas.height; g.fillStyle = '#F4C430'; g.fillRect(0, 0, W, H); g.fillStyle = '#E63946'; g.beginPath(); g.arc(W * 0.75, H * 0.35, 50, 0, Math.PI * 2); g.fill(); g.fillStyle = '#141413'; g.font = '800 110px system-ui'; g.textAlign = 'center'; g.fillText('B', W / 2, H / 2 + 40); };
+const scene = (g) => { const W = g.canvas.width, H = g.canvas.height; g.fillStyle = '#EBF0FA'; g.fillRect(0, 0, W, H); g.fillStyle = '#5B5BD6'; rrect(g, 40, 50, 140, 110, 16); g.fill(); g.fillStyle = '#141413'; g.font = '700 30px system-ui'; g.fillText('Scene', 200, 120); g.fillStyle = '#F5A524'; g.beginPath(); g.arc(320, 70, 22, 0, Math.PI * 2); g.fill(); };
+const font = (px, w = 700) => `${w} ${px}px system-ui, sans-serif`;
+let logo = null;
+
+window.ready = (async () => { try { logo = await loadLogo(q.get('logo') || 'assets/logo.svg'); } catch { logo = null; } })();
+
+if (GROUP === 'transitions') for (const n of Object.keys(TRANSITIONS)) add(n, (g, t) => transition(g, n, t, A, B, { text: 'B', font: '900 60px system-ui' }));
+if (GROUP === 'text') for (const n of Object.keys(TEXT)) add(n, (g, t) => { g.fillStyle = '#141413'; g.fillRect(0, 0, TW, TH);
+  const o = { font: font(34), size: 34, color: '#fff', accent: '#FFD84D', words: n === 'caption-karaoke' ? [{ word: 'Se', start: 0, end: 0.4 }, { word: 'opp', start: 0.4, end: 0.8 }, { word: 'i kveld', start: 0.8, end: 1.3 }] : ['raskere', 'tryggere', 'enklere'], ...(n === 'counter-roll' ? { to: 25000, from: 0 } : n === 'weight-morph' ? { from: 100, to: 900 } : {}), out: 2.6, family: 'system-ui', width: TW - 40, emoji: '🏠✨👍', sub: 'Studio', by: 'Ukjent', band: 'rgba(255,255,255,0.08)' };
+  const str = { 'counter-roll': '25000', 'slot-machine-roll': '2026', 'big-number-slam': '8,8', 'split-flap-board': 'OSLO 08:15', 'kinetic-stack-push': 'Spør.\nSe.\nHandle.', 'quote-reveal': 'Stjernene\nforteller', 'typewriter-delete-retype': 'Gjør det ', 'word-swap-carousel': 'Gjør det ', 'text-on-path': 'SE OPP • SE OPP • SE OPP •', 'emoji-react-pop': '🏠✨👍', 'countdown-flip': '3' }[n] || 'Hei, verden!';
+  const cx = ['big-number-slam', 'countdown-flip', 'text-on-path', 'emoji-react-pop'].includes(n) ? TW / 2 : 24, cy = n === 'kinetic-stack-push' ? 150 : n === 'quote-reveal' ? 100 : n === 'text-on-path' ? 140 : n === 'emoji-react-pop' ? 190 : n === 'lower-third' ? 150 : 130;
+  TEXT[n](g, t, str, cx, cy, { ...o, align: ['big-number-slam', 'countdown-flip'].includes(n) ? 'center' : 'left', radius: 70 }); });
+if (GROUP === 'backgrounds') for (const n of Object.keys(BG)) add(n, (g, t) => { g.fillStyle = '#0b1020'; g.fillRect(0, 0, TW, TH); BG[n](g, t, { color: n === 'paper-fibers' ? '#F1E9DA' : n.includes('halftone') || n === 'stripes-diagonal' || n === 'bauhaus-shapes' ? '#F2EBDD' : '#0b1020', radial: true, at: 0.2 }); });
+if (GROUP === 'post') for (const n of Object.keys(POST)) add(n, (g, t) => { scene(g); POST[n](g, t, { amount: n === 'film-grain' ? 0.2 : undefined }); });
+if (GROUP === 'camera') for (const n of Object.keys(CAM)) add(n, (g, t) => { g.fillStyle = '#222'; g.fillRect(0, 0, TW, TH);
+  const m = { 'push-in': () => CAM[n](t, 0, 2, 1.4), 'pull-out': () => CAM[n](t, 0, 2, 1.4), pan: () => CAM[n](t, 0, 2, 80), tilt: () => CAM[n](t, 0, 2, 60), 'crane-pedestal': () => CAM[n](t, 0, 2, -60), 'snap-zoom': () => CAM[n](t, 0.3, 1.5), 'whip-pan-camera': () => CAM[n](t, 0.4, 300),
+    'seeded-shake': () => CAM[n](t, 0, 2, 14), 'handheld-drift': () => CAM[n](t, 14), 'dutch-roll': () => CAM[n](t, 0.2, 0.15), 'ken-burns': () => CAM[n](t, 0, 3), 'focus-zoom-to-rect': () => CAM[n](t, 0.2, [40, 50, 140, 110], TW, TH), 'follow-cursor': () => CAM[n](t, [[0, 100], [1, 300]], [[0, 80], [1, 160]], TW, TH),
+    'rack-focus': () => CAM[n](t, 0, 1.5, 8), 'orbit-2_5d': () => CAM[n](t, 0, 3), 'truck-parallax': () => CAM[n](t, 0, 2, 80), 'parallax-layers-drift': () => CAM[n](t, 30), 'dolly-zoom': () => CAM[n](t, 0, 2) }[n];
+  withCamera(g, camera(t, m ? m() : null), () => scene(g)); });
+if (GROUP === 'ui') {
+  const k = { accent: '#5B5BD6' };
+  add('cursor-arrow / hand / touch / ring', (g, t) => { scene(g); UI['cursor-arrow'](g, 60, 60, 1.2, 0); UI['cursor-hand'](g, 160, 70, 1.2, 0); UI['touch-dot'](g, 270, 90, 1); UI['cursor-ring'](g, 340, 90, 1); });
+  add('click-ripple + tap-indicator', (g, t) => { scene(g); UI['click-ripple'](g, 110, 110, t % 0.6, k); UI['tap-indicator'](g, 290, 110, t % 0.7, { color: 'rgba(91,91,214,0.6)' }); });
+  add('spotlight-dim-hole', (g, t) => { scene(g); UI['spotlight-dim-hole'](g, t, [40, 50, 140, 110]); });
+  add('highlight-ring', (g, t) => { scene(g); UI['highlight-ring'](g, t, [40, 50, 140, 110], k); });
+  add('arrow-callout-drawn', (g, t) => { scene(g); UI['arrow-callout-drawn'](g, t, [330, 190], [190, 120], { ...k, label: 'Her' }); });
+  add('tooltip-pop', (g, t) => { scene(g); UI['tooltip-pop'](g, t, 110, 50, 'Spør om dette'); });
+  add('sticky-note', (g, t) => { scene(g); UI['sticky-note'](g, t, 280, 120, 'Husk sluket\nfør regnet', { size: 150 }); });
+  add('browser-chrome-frame', (g, t) => { g.fillStyle = '#ddd'; g.fillRect(0, 0, TW, TH); UI['browser-chrome-frame'](g, 30, 20, 340, 190, { url: 'example.no' }, (x, y, w, h) => { g.fillStyle = '#EBF0FA'; g.fillRect(x, y, w, h); g.fillStyle = '#5B5BD6'; g.fillRect(x + 20, y + 20, 100, 60); }); });
+  add('phone-frame + laptop-frame', (g, t) => { g.fillStyle = '#ddd'; g.fillRect(0, 0, TW, TH); UI['laptop-frame'](g, 20, 30, 250, 170, {}, (x, y, w, h) => { g.fillStyle = '#EBF0FA'; g.fillRect(x, y, w, h); }); UI['phone-frame'](g, 290, 20, 95, 190, {}, (x, y, w, h) => { g.fillStyle = '#5B5BD6'; g.fillRect(x, y, w, h); }); });
+  add('terminal-window', (g, t) => { UI['terminal-window'](g, t, 10, 10, 380, 205, ['$ make dev', 'api   ok  :8000', 'web   ok  :5173', '$ make test'], { size: 16 }); });
+  add('code-block-typing', (g, t) => { UI['code-block-typing'](g, t, 10, 10, 380, 205, "import { seek } from './film';\n// pure function of time\nconst t = 0.5;\nexport default seek(t);", { size: 16 }); });
+  add('notification-toast', (g, t) => { scene(g); UI['notification-toast'](g, t, 40, 60, 320, 'Kraftig regn i natt', 'Rens sluket før kl. 22', { h: 80 }); });
+  add('progress-bar + spinners', (g, t) => { scene(g); UI['progress-bar'](g, t, 40, 180, 320, 14, k); UI['spinner-arc'](g, t, 330, 60, 20, k); UI['spinner-dots'](g, t, 330, 120, 16, k); });
+  add('chat-bubbles', (g, t) => { g.fillStyle = '#fff'; g.fillRect(0, 0, TW, TH); UI['chat-bubbles'](g, t, 20, 215, 360, [{ from: 'me', text: 'Hva betyr TG3?', at: 0.1 }, { from: 'them', text: 'Det betyr store eller alvorlige avvik.', at: 0.8 }], { size: 18, typing: 0.4 }); });
+  add('keycaps', (g, t) => { scene(g); UI.keycaps(g, t % 1.5, 60, 140, ['⌘', 'K'], { size: 56 }); });
+  add('checklist-ticking', (g, t) => { g.fillStyle = '#fff'; g.fillRect(0, 0, TW, TH); UI['checklist-ticking'](g, t, 30, 60, ['Rens sluk', 'Sjekk takrenner', 'Flytt verdier'], { size: 24 }); });
+  add('toggle-switch + badge-counter', (g, t) => { scene(g); UI['toggle-switch'](g, t % 1.5, 60, 150, k); UI['badge-counter'](g, t - 0.3, 330, 60, 3); });
+  add('step-indicator', (g, t) => { g.fillStyle = '#fff'; g.fillRect(0, 0, TW, TH); UI['step-indicator'](g, t, 30, 110, 340, 4, k); });
+  add('form-fill', (g, t) => { g.fillStyle = '#fff'; g.fillRect(0, 0, TW, TH); UI['form-fill'](g, t, 30, 40, 340, [{ label: 'Adresse', value: 'Eksempelveien 12' }, { label: 'Postnummer', value: '0001' }], { size: 20 }); });
+  add('modal-dialog', (g, t) => { scene(g); UI['modal-dialog'](g, t, 60, 30, 280, 165, 'Bekreft', 'Vil du lagre endringene?', { cta: 'Lagre' }); });
+  add('drag-and-drop', (g, t) => { scene(g); UI['drag-and-drop'](g, t % 2, [60, 100], [300, 140], (c) => { c.fillStyle = '#F5A524'; rrect(c, -40, -25, 80, 50, 10); c.fill(); }); });
+  add('before-after-slider', (g, t) => { const a = document.createElement('canvas'); a.width = TW; a.height = TH; A(a.getContext('2d')); const b = document.createElement('canvas'); b.width = TW; b.height = TH; B(b.getContext('2d')); UI['before-after-slider'](g, t, 0, 0, TW, TH, a, b); });
+}
+if (GROUP === 'charts') {
+  const bars = [{ label: '2022', value: 12 }, { label: '2023', value: 19 }, { label: '2024', value: 27 }, { label: '2025', value: 41 }];
+  const line = [3, 5, 4, 8, 7, 11, 14].map((v) => ({ value: v }));
+  const pie = [{ value: 14 }, { value: 6 }, { value: 2 }, { value: 3 }];
+  const box = [30, 25, 340, 175], w = (n, f) => add(n, (g, t) => { g.fillStyle = '#fff'; g.fillRect(0, 0, TW, TH); f(g, t); });
+  w('bar-grow', (g, t) => CHART['bar-grow'](g, t, box, bars, {}));
+  w('stacked-bar-build', (g, t) => CHART['stacked-bar-build'](g, t, box, [{ parts: [3, 4, 2] }, { parts: [5, 2, 4] }, { parts: [6, 5, 3] }], {}));
+  w('bar-chart-race', (g, t) => CHART['bar-chart-race'](g, t, box, [{ t: 0, values: { Bad: 3, Tak: 5, Loft: 1 } }, { t: 1.5, values: { Bad: 9, Tak: 6, Loft: 4 } }], { size: 18 }));
+  w('line-draw-dot', (g, t) => CHART['line-draw-dot'](g, t, box, line, {}));
+  w('area-fill', (g, t) => CHART['area-fill'](g, t, box, line, {}));
+  w('sparkline', (g, t) => CHART.sparkline(g, t, [30, 80, 340, 60], line, {}));
+  w('slope-chart', (g, t) => CHART['slope-chart'](g, t, [40, 30, 220, 160], [{ label: 'Bad', a: 3, b: 9 }, { label: 'Tak', a: 6, b: 4 }], { size: 16 }));
+  w('donut-sweep', (g, t) => CHART['donut-sweep'](g, t, box, pie, { center: 25, caption: 'funn' }));
+  w('pie-explode', (g, t) => CHART['pie-explode'](g, t, box, pie, {}));
+  w('progress-ring', (g, t) => CHART['progress-ring'](g, t, box, 0.72, {}));
+  w('big-counter', (g, t) => CHART['big-counter'](g, t, box, 5250000, { suffix: ' kr', caption: 'Husets verdi', size: 60 }));
+  w('waffle-unit-chart', (g, t) => CHART['waffle-unit-chart'](g, t, [110, 15, 180, 195], 0.37, {}));
+  w('heatmap-fill', (g, t) => CHART['heatmap-fill'](g, t, box, [[1, 3, 2, 5, 4, 6], [2, 4, 6, 3, 1, 2], [5, 2, 1, 4, 6, 3]], {}));
+  w('scatter-bloom', (g, t) => CHART['scatter-bloom'](g, t, box, Array.from({ length: 30 }, (_, i) => ({ x: (i * 37) % 100, y: (i * 53) % 100, group: i % 3 })), {}));
+  w('comparison-split', (g, t) => CHART['comparison-split'](g, t, [20, 80, 360, 70], [{ label: 'Før', value: 30 }, { label: 'Etter', value: 70 }], {}));
+  w('timeline-scrub', (g, t) => CHART['timeline-scrub'](g, t, [30, 40, 340, 140], [{ at: 0.1, label: 'Kjøp' }, { at: 0.45, label: 'Takst' }, { at: 0.8, label: 'Salg' }], { dur: 2, size: 16 }));
+  w('map-pin-drop', (g, t) => { CHART['map-pin-drop'](g, t, 140, 150, { label: 'Oslo' }); CHART['map-pin-drop'](g, t - 0.3, 260, 120, { label: 'Bergen' }); });
+  w('flow-sankey-draw', (g, t) => CHART['flow-sankey-draw'](g, t, box, [{ from: 0.1, to: 0.6, width: 18 }, { from: 0.5, to: 0.2, width: 28 }, { from: 0.9, to: 0.9, width: 12 }], {}));
+  w('axis-gridline-intro + annotation', (g, t) => { CHART['axis-gridline-intro'](g, t, box, null, {}); CHART['annotation-on-chart'](g, t - 0.5, 200, 180, 'Rekord', {}); });
+  w('number-to-chart-morph', (g, t) => CHART['number-to-chart-morph'](g, t, box, bars, { at: 0.8 }));
+}
+if (GROUP === 'logo') for (const n of Object.keys(LOGO)) add(n, (g, t) => { g.fillStyle = '#141413'; g.fillRect(0, 0, TW, TH); if (logo) LOGO[n](g, t, logo, TW / 2, TH / 2, 110, { stroke: '#FFD84D', accent: '#FFD84D' }); });
+
+const rows = Math.ceil(tiles.length / COLS);
+const W = COLS * (TW + PAD) + PAD, H = rows * (TH + LABEL + PAD) + PAD;
+const c = document.getElementById('c'); c.width = W; c.height = H; const g = c.getContext('2d');
+const tc = document.createElement('canvas'); tc.width = TW; tc.height = TH; const tg = tc.getContext('2d');
+window.DUR = GROUP === 'transitions' ? 1 : 3;
+window.seek = (t) => {
+  g.fillStyle = '#1a1a1a'; g.fillRect(0, 0, W, H);
+  tiles.forEach((tile, i) => { const x = PAD + (i % COLS) * (TW + PAD), y = PAD + Math.floor(i / COLS) * (TH + LABEL + PAD);
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalAlpha = 1; tg.filter = 'none'; tg.globalCompositeOperation = 'source-over'; tg.clearRect(0, 0, TW, TH);
+    try { tg.save(); tile.fn(tg, t); tg.restore(); } catch (e) { tg.restore(); tg.fillStyle = '#600'; tg.fillRect(0, 0, TW, TH); tg.fillStyle = '#fff'; tg.font = '14px monospace'; tg.fillText(String(e.message).slice(0, 50), 8, 20); console.error(tile.name, e); }
+    g.drawImage(tc, x, y + LABEL); g.fillStyle = '#ddd'; g.font = '600 16px system-ui'; g.textAlign = 'left'; g.fillText(tile.name, x + 2, y + 18); });
+  return true;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>film</title>
+<style>
+  html, body { margin: 0; background: #111; }
+  canvas { display: block; max-width: 100vw; max-height: 100vh; margin: auto; }
+  #bar { position: fixed; left: 0; bottom: 0; height: 4px; background: #fff8; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="bar"></div>
+<script type="module">
+// The film is a pure function of time: window.seek(t) paints frame t. See CLAUDE.md.
+import { clamp, inv, prog, sp, track, layout, rrect, imageBox, text, wordsUp, rng } from './lib/motion.js';
+// Component library (see the skill's COMPONENTS.md and the gallery): compose, don't hand-roll.
+import { transition } from './lib/transitions.js';
+import { textFx } from './lib/text.js';
+import { bg, post } from './lib/backgrounds.js';
+import { CAM, camera, withCamera } from './lib/camera.js';
+import { UI } from './lib/ui.js';
+import { CHART } from './lib/charts.js';
+import { LOGO, loadLogo } from './lib/logo.js';
+import { usePace } from './lib/pace.js';
+const PACE = usePace('standard'); // calm | considered | standard | energetic | hype | trailer: scales every spring
+
+const q = new URLSearchParams(location.search);
+const W = Number(q.get('w') || __W__), H = Number(q.get('h') || __H__);
+const DUR = __DUR__;
+const RENDER = q.has('render');
+const c = document.getElementById('c'); c.width = W; c.height = H;
+const g = c.getContext('2d');
+const L = layout(W, H), u = L.u;
+
+// ---- Assets: fonts and images load before the first seek ----
+const FONTS = [
+  // ['Display', 'assets/fonts/Display.ttf', { weight: '400' }],
+];
+const IMAGES = {
+  // dash: 'assets/shots/dashboard.png',
+};
+const img = {};
+let beats = null;
+window.ready = (async () => {
+  await Promise.all(FONTS.map(async ([family, url, desc]) => { const f = new FontFace(family, `url(${url})`, desc); await f.load(); document.fonts.add(f); }));
+  await Promise.all(Object.entries(IMAGES).map(([k, src]) => new Promise((res, rej) => { const i = new Image(); i.onload = () => { img[k] = i; res(); }; i.onerror = () => rej(new Error('missing image ' + src)); i.src = src; })));
+  try { beats = await (await fetch('audio/beats.json')).json(); } catch { beats = null; }
+  await document.fonts.ready;
+})();
+
+// Beat helper: time of beat n (falls back to 120 BPM when there is no beats.json yet).
+const B = (n) => (beats ? beats.beats[n] ?? n * 0.5 : n * 0.5);
+
+// ---- Palette and type: one display face, one UI face, one accent ----
+const C = { bg: '#141413', fg: '#F0EEE6', muted: '#8A877D', accent: '#D97757' };
+const DISPLAY = (px, w = 700) => `${w} ${px}px Georgia, serif`;
+const SANS = (px, w = 500) => `${w} ${px}px system-ui, sans-serif`;
+
+// ---- Shots: one object per shot, times in seconds, drawn with local time t into context g ----
+// A shot's draw(g, t) must paint a full frame into the g it receives, so transitions can render it offscreen.
+const SHOTS = [
+  { from: 0, to: () => B(8), draw(g, t) {
+      // Hook: type rises word by word from a mask, off-centre, with an accent rule that springs out.
+      const size = 13 * u;
+      wordsUp(g, t - 0.1, 'Every frame', L.safe.x, L.cy - size * 0.2, { font: DISPLAY(size), color: C.fg, size });
+      wordsUp(g, t - 0.45, 'is a function.', L.safe.x, L.cy + size * 0.95, { font: DISPLAY(size, 400), color: C.accent, size });
+      const p = sp(t - 0.8, 'snappy');
+      g.fillStyle = C.fg; g.fillRect(L.safe.x, L.cy + size * 1.4, 40 * u * p, 0.6 * u);
+  } },
+  { from: () => B(8), to: DUR, draw(g, t) {
+      bg(g, 'dot-grid', t, { color: C.bg, ink: 'rgba(240,238,230,0.12)' });
+      // A grid assembling on a stagger, one accent cell.
+      const r = rng(7), n = 6, cell = Math.min(L.safe.w, L.safe.h) / n, x0 = L.cx - (cell * n) / 2, y0 = L.cy - (cell * n) / 2;
+      for (let i = 0; i < n * n; i++) {
+        const s = sp(t - i * 0.025 - r() * 0.08, 'playful'), x = x0 + (i % n) * cell + cell / 2, y = y0 + Math.floor(i / n) * cell + cell / 2;
+        g.fillStyle = i === 14 ? C.accent : C.fg;
+        rrect(g, x - cell * 0.38 * s, y - cell * 0.38 * s, cell * 0.76 * s, cell * 0.76 * s, cell * 0.12); g.fill();
+      }
+  } },
+];
+
+// Cuts between shots: { after: shot index, name: transition, dur }. Centred on the boundary, so the switch lands on its beat.
+const CUTS = [{ after: 0, name: 'iris-circle-wipe', dur: 0.6 }];
+
+const val = (v) => (typeof v === 'function' ? v() : v);
+const paintShot = (s, t) => (c) => { c.fillStyle = C.bg; c.fillRect(0, 0, W, H); s.draw(c, t - val(s.from)); };
+function draw(t) {
+  g.save();
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  const i = SHOTS.findIndex((s) => t >= val(s.from) && t < val(s.to));
+  const cut = CUTS.find((c) => SHOTS[c.after + 1] && Math.abs(t - val(SHOTS[c.after + 1].from)) < c.dur / 2);
+  if (cut) { const b = val(SHOTS[cut.after + 1].from); transition(g, cut.name, prog(t, b - cut.dur / 2, cut.dur), paintShot(SHOTS[cut.after], t), paintShot(SHOTS[cut.after + 1], t), { x: L.cx, y: L.cy }); }
+  else if (i >= 0) paintShot(SHOTS[i], t)(g);
+  post(g, 'film-grain', t, { amount: 0.05 });
+  g.restore();
+}
+window.DUR = DUR;
+window.seek = (t) => { draw(t); return true; };
+
+// ---- Live preview (off during headless render): space = pause, arrows = scrub, click = play with audio ----
+if (!RENDER) {
+  await window.ready;
+  const audio = new Audio('out/preview.wav'); let t0 = performance.now(), paused = false, held = 0;
+  const now = () => (paused ? held : ((performance.now() - t0) / 1000) % DUR);
+  addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { paused = !paused; if (paused) { held = now(); audio.pause(); } else { t0 = performance.now() - held * 1000; } }
+    if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { held = clamp(now() + (e.code === 'ArrowRight' ? 0.1 : -0.1), 0, DUR); paused = true; audio.pause(); }
+  });
+  c.addEventListener('click', () => { t0 = performance.now(); paused = false; audio.currentTime = 0; audio.play().catch(() => {}); });
+  (function loop() { const t = now(); draw(t); document.getElementById('bar').style.width = `${(t / DUR) * 100}%`; requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>
