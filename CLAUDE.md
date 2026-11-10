@@ -263,6 +263,8 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   github-refs.md                  x         x         x
   calendar-titles.md              x         x         x
   context7.md                     x         x         x
+  t3-browser.md                   x         x
+  code-repo-workflow.md           x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
