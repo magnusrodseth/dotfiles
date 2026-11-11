@@ -15,7 +15,10 @@ it. Record separate revisions and dirty-tree state for before and after.
    assertion. Every untested result has a reason.
 2. Use the same scenario on both revisions. Screenshots or short recordings
    demonstrate UI behavior; sanitized request/response pairs, state transitions
-   or measured probes demonstrate backend and infrastructure changes. For
+   or measured probes demonstrate backend and infrastructure changes.
+   Performance claims need numbers from the same realistic workload on both
+   revisions, with several alternating runs. Report the before and after
+   values and the change in percent. For
    documentation-only work, state the exemption and demonstrate any claimed
    mechanism. A lost before-state is an explicit limitation.
 3. Confirm each listener/process belongs to the intended checkout. Inspect
