@@ -15,6 +15,7 @@ import base64
 import json
 import mimetypes
 import os
+import ssl
 import sys
 import time
 import urllib.error
@@ -26,12 +27,30 @@ API_BASE = "https://api.openai.com/v1"
 GENERATE_URL = f"{API_BASE}/images/generations"
 EDIT_URL = f"{API_BASE}/images/edits"
 TIMEOUT_SECONDS = 300
-DEFAULT_MODEL = "gpt-image-2.5-flare"
+DEFAULT_MODEL = "gpt-image-2.6-flare"
+GPT_IMAGE_26_MODELS = {
+    "gpt-image-2.6-flare",
+    "gpt-image-2.6-sunburst",
+}
 GPT_IMAGE_25_MODELS = {
     "gpt-image-2.5-flare",
     "gpt-image-2.5-sunburst",
 }
+# Models that accept quality xhigh and max.
+EXTENDED_QUALITY_MODELS = GPT_IMAGE_25_MODELS | GPT_IMAGE_26_MODELS
 NON_CONFIGURABLE_FIDELITY_MODELS = {"gpt-image-2"}
+
+
+def ssl_context() -> ssl.SSLContext:
+    """python.org builds of Python ship without CA roots, so verification
+    fails until "Install Certificates.command" is run. Fall back to the macOS
+    system bundle when the default store is empty."""
+    ctx = ssl.create_default_context()
+    if not ctx.get_ca_certs() and not os.environ.get("SSL_CERT_FILE"):
+        system_bundle = "/etc/ssl/cert.pem"
+        if os.path.isfile(system_bundle):
+            ctx.load_verify_locations(system_bundle)
+    return ctx
 
 
 def die(msg: str, code: int = 1) -> None:
@@ -56,6 +75,8 @@ def parse_args() -> argparse.Namespace:
         "--model",
         default=DEFAULT_MODEL,
         choices=[
+            "gpt-image-2.6-flare",
+            "gpt-image-2.6-sunburst",
             "gpt-image-2.5-flare",
             "gpt-image-2.5-sunburst",
             "gpt-image-2",
@@ -70,7 +91,14 @@ def parse_args() -> argparse.Namespace:
         "--quality",
         default="auto",
         choices=["auto", "low", "medium", "high", "xhigh", "max"],
-        help="xhigh and max require a GPT Image 2.5 model.",
+        help="xhigh and max require a GPT Image 2.5 or 2.6 model.",
+    )
+    p.add_argument(
+        "--complexity",
+        default=None,
+        choices=["low", "medium", "high"],
+        help="GPT Image 2.6 only. How hard the model reasons about the prompt. "
+             "The API uses high when omitted.",
     )
     p.add_argument("--n", type=int, default=1, help="Number of images (1-10).")
     p.add_argument("--format", dest="output_format", default="png",
@@ -152,7 +180,7 @@ def post_multipart(url: str, api_key: str, fields: list[tuple[str, str]],
 
 def _send(req: urllib.request.Request) -> dict:
     try:
-        with urllib.request.urlopen(req, timeout=TIMEOUT_SECONDS) as resp:
+        with urllib.request.urlopen(req, timeout=TIMEOUT_SECONDS, context=ssl_context()) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="replace")
@@ -174,6 +202,8 @@ def generate(args: argparse.Namespace, api_key: str) -> dict:
         "background": args.background,
         "moderation": args.moderation,
     }
+    if args.complexity:
+        payload["complexity"] = args.complexity
     if args.compression is not None:
         payload["output_compression"] = args.compression
     return post_json(GENERATE_URL, api_key, payload)
@@ -197,6 +227,8 @@ def edit(args: argparse.Namespace, api_key: str) -> dict:
         ("background", args.background),
         ("moderation", args.moderation),
     ]
+    if args.complexity:
+        fields.append(("complexity", args.complexity))
     if args.compression is not None:
         fields.append(("output_compression", str(args.compression)))
     if args.input_fidelity:
@@ -244,8 +276,10 @@ def main() -> None:
     args = parse_args()
     if not (1 <= args.n <= 10):
         die("--n must be between 1 and 10.")
-    if args.quality in {"xhigh", "max"} and args.model not in GPT_IMAGE_25_MODELS:
-        die("--quality xhigh and max require gpt-image-2.5-flare or gpt-image-2.5-sunburst.")
+    if args.quality in {"xhigh", "max"} and args.model not in EXTENDED_QUALITY_MODELS:
+        die("--quality xhigh and max require a GPT Image 2.5 or 2.6 model.")
+    if args.complexity and args.model not in GPT_IMAGE_26_MODELS:
+        die("--complexity requires gpt-image-2.6-flare or gpt-image-2.6-sunburst.")
     if args.background == "transparent" and args.output_format == "jpeg":
         die("transparent background requires png or webp output.")
 

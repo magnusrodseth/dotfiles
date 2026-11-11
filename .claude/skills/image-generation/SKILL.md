@@ -1,13 +1,13 @@
 ---
 name: image-generation
-description: Generate and edit images via OpenAI's GPT Image 2.5 API. Use for requests to create, draw, edit, extend, combine, or remove backgrounds from images. Outputs PNG, JPEG, or WebP files to disk and requires OPENAI_API_KEY.
+description: Generate and edit images via OpenAI's GPT Image 2.6 API. Use for requests to create, draw, edit, extend, combine, or remove backgrounds from images. Outputs PNG, JPEG, or WebP files to disk and requires OPENAI_API_KEY.
 ---
 
-# Image Generation (OpenAI GPT Image 2.5)
+# Image Generation (OpenAI GPT Image 2.6)
 
-Generate images from text or edit existing images using OpenAI's GPT Image 2.5 models. Run `scripts/generate.py`, which has no third-party Python dependencies.
+Generate images from text or edit existing images using OpenAI's GPT Image 2.6 models (released 04.11.2026). Run `scripts/generate.py`, which has no third-party Python dependencies.
 
-Use `gpt-image-2.5-flare` by default. It is OpenAI's recommended model for fast, high-quality everyday generation and editing. Use `gpt-image-2.5-sunburst` when edit precision or premium final-image quality matters more than latency.
+Use `gpt-image-2.6-flare` by default. It is OpenAI's fast model: with `--quality low` it returns in about six seconds. Use `gpt-image-2.6-sunburst` when detail, layout or edit accuracy matter more than latency. `--complexity low|medium|high` (2.6 only) sets how hard the model reasons about the prompt; the API uses `high` when omitted, so pass `low` or `medium` for simple assets to save time.
 
 ## Prerequisite
 
@@ -70,7 +70,7 @@ Multiple input images (up to 16) compose into a single output:
 
 4. Decide generate vs. edit based on the request. Edit needs at least one `--edit-image`. For edits, the prompt should describe the *change*, not redescribe the whole image.
 
-5. Pick a sensible model, size, and quality. Use Flare unless the request calls for Sunburst's tighter edit control. Default `auto` for size and quality. Use `xhigh` or `max` only when the user values detail more than latency and cost.
+5. Pick a sensible model, size, quality, and complexity. Use Flare unless the request calls for Sunburst's tighter edit control. Default `auto` for size and quality. Use `xhigh` or `max` only when the user values detail more than latency and cost.
 
 6. Run the script. If it exits non-zero, surface the error message verbatim (it includes the OpenAI error body).
 
@@ -91,9 +91,10 @@ When the user references a style by name or uses any of its trigger keywords (e.
 | Flag | Default | Values |
 |------|---------|--------|
 | positional `prompt` | (required) | up to 32,000 chars |
-| `--model` | `gpt-image-2.5-flare` | `gpt-image-2.5-flare`, `gpt-image-2.5-sunburst`, `gpt-image-2`, `gpt-image-1.5`, `gpt-image-1`, `gpt-image-1-mini` |
-| `--size` | `auto` | `auto`, recommended sizes `1024x1024`, `1536x1024`, `1024x1536`, or custom `WxH` for GPT Image 2.5 where both edges are multiples of 16, the aspect ratio is 1:3 to 3:1, neither edge exceeds 3840 px, and total pixels are 655,360 to 8,294,400 |
-| `--quality` | `auto` | `auto`, `low`, `medium`, `high`; GPT Image 2.5 also supports `xhigh` and `max` |
+| `--model` | `gpt-image-2.6-flare` | `gpt-image-2.6-flare`, `gpt-image-2.6-sunburst`, `gpt-image-2.5-flare`, `gpt-image-2.5-sunburst`, `gpt-image-2`, `gpt-image-1.5`, `gpt-image-1`, `gpt-image-1-mini` |
+| `--size` | `auto` | `auto`, recommended sizes `1024x1024`, `1536x1024`, `1024x1536`, or custom `WxH` for GPT Image 2.5 and 2.6 where both edges are multiples of 16, the aspect ratio is 1:3 to 3:1, neither edge exceeds 3840 px, and total pixels are 655,360 to 8,294,400 |
+| `--quality` | `auto` | `auto`, `low`, `medium`, `high`; GPT Image 2.5 and 2.6 also support `xhigh` and `max` |
+| `--complexity` | unset (API uses `high`) | `low`, `medium`, `high`; GPT Image 2.6 only |
 | `--n` | `1` | `1`-`10` |
 | `--format` | `png` | `png`, `jpeg`, `webp` |
 | `--background` | `auto` | `auto`, `transparent`, `opaque` (transparent requires png/webp) |
@@ -105,8 +106,11 @@ When the user references a style by name or uses any of its trigger keywords (e.
 
 ## Notes
 
+- The script loads the macOS system CA bundle when Python has no CA roots (python.org builds), so no `SSL_CERT_FILE` is needed.
+- OpenAI also announced SVG export, animated GIF output and `markup` edits for 2.6. The script does not expose them yet; check the API reference before adding them.
+
 - GPT Image returns base64; the script decodes and writes it to disk.
-- Complex prompts can take up to two minutes. `xhigh`, `max`, and Sunburst can take longer than everyday Flare requests.
+- Complex prompts can take up to two minutes. `xhigh`, `max`, `--complexity high`, and Sunburst can take longer than everyday Flare requests.
 - Cost varies by size and quality. The script does not estimate cost.
 - For brand-safe or work content, keep `moderation` at default `auto`. The `--moderation low` flag exists for less restrictive filtering but is rarely needed.
 - This skill does not view the resulting image. If the user wants to see it, suggest `open <path>` on macOS.
