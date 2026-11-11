@@ -1,0 +1,5 @@
+interface:
+  display_name: "Agent Swarm"
+  short_description: "Supervised subagent team with a shared work log"
+policy:
+  allow_implicit_invocation: false

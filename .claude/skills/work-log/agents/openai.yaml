@@ -1,0 +1,3 @@
+interface:
+  display_name: "Work Log"
+  short_description: "Compact goal, steers and progress that survive compaction"
