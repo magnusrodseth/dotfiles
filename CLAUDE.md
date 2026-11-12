@@ -232,9 +232,10 @@ installs: the installed copy wins in every agent and the committed one becomes
 dead code. `scripts/skills/check-staged-skills.sh` rejects that at commit time.
 
 App-owned skills are declared in `scripts/skills/app-skills.json`. The link script
-connects Supacode's bundled files to the shared root and its pi/OpenCode mirrors.
-It replaces matching copies and refuses to overwrite local edits. Missing apps
-are optional unless a live skill still depends on one.
+connects an app's bundled skill files to the shared root and its pi/OpenCode
+mirrors. It replaces matching copies and refuses to overwrite local edits. Missing
+apps are optional unless a live skill still depends on one. The file is empty
+since Supacode was dropped on 12.11.2026.
 
 Use both `-a claude-code zed` when refreshing upstream skills with `npx skills add`.
 The current CLI selects copy mode for a single agent root. Selecting both keeps
