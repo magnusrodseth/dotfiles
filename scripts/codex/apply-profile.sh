@@ -41,7 +41,7 @@ managed { next }
     skip = 1
   }
 
-  if (section ~ /^\[mcp_servers[.](app-insight-mcp|aso-mcp|mcp-domain-availability|atlassian|context7|1password|exa|grep_app|kokoro-tts|linkedin|nano-banana|posthog|stitch)([.]|\])/) {
+  if (section ~ /^\[mcp_servers[.](app-insight-mcp|aso-mcp|mcp-domain-availability|atlassian|context7|1password|exa|grep_app|kokoro-tts|linkedin|posthog)([.]|\])/) {
     skip = 1
   }
 }
