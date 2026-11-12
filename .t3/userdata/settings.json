@@ -98,12 +98,12 @@
     "worktreeAfterDays": 7
   },
   "defaultModelSelection": {
-    "instanceId": "opencode",
-    "model": "github-copilot/claude-opus-5.5",
+    "instanceId": "claudeAgent",
+    "model": "claude-opus-5-5",
     "options": [
       {
-        "id": "variant",
-        "value": "high"
+        "id": "effort",
+        "value": "medium"
       }
     ]
   },
@@ -111,13 +111,13 @@
     "cb654cb6-3766-45f3-b8dc-8b011f608aba": {
       "defaultModelSelection": {
         "instanceId": "claudeAgent",
-        "model": "claude-opus-5"
+        "model": "claude-opus-5-5"
       }
     },
     "7b556dc5-a5aa-4ee9-9df4-3697929857eb": {
       "defaultModelSelection": {
         "instanceId": "claudeAgent",
-        "model": "claude-opus-5"
+        "model": "claude-opus-5-5"
       }
     }
   },
