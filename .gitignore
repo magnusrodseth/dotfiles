@@ -27,6 +27,8 @@ ignored
 .config/hcloud/
 # Harbor CLI: only a telemetry ID
 .config/harbor/
+# Stripe CLI: config.toml holds test-mode API keys
+.config/stripe/
 # Machine-local runtime state
 .config/sparebank1-cli/.profiles.lock
 .config/boligvertikal-harness/smoke-results.json
@@ -240,7 +242,6 @@ Library/LaunchAgents/com.github.facebook.watchman.plist
 !.codex/AGENTS.md
 !.codex/hooks.json
 !.codex/personal.config.toml
-!.codex/mcp.env.tpl
 !.codex/hooks/
 !.codex/hooks/*.sh
 
