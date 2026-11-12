@@ -1,6 +1,6 @@
 ---
 name: t3-browser
-description: Drives T3 Code's built-in browser, the preview tab shown inline in the thread, through the t3-code MCP preview tools. Load before the first mcp__t3-code__preview_* call, and whenever browser work is needed inside T3 and the user names no other browser. Also for requests to open a page "in T3", "in the preview" or "so I can watch". Not for headless scraping outside T3 (use agent-browser or playwriter).
+description: Drives T3 Code's built-in browser, the preview tab shown inline in the thread, through the t3-code MCP preview tools. Load before the first mcp__t3-code__preview_* call, and whenever browser work is needed inside T3 and the user names no other browser. Also for requests to open a page "in T3", "in the preview" or "so I can watch". Not for logged-in sites or pages that need the user's extensions or password manager: its profiles have no browser extensions or real logins (use playwriter). Not for headless scraping (use agent-browser).
 ---
 
 # T3 browser (preview tab)
@@ -19,7 +19,7 @@ Add `preview_resize`, `preview_set_appearance`, `preview_dialog`, `preview_recor
 
 ## 1. The loop
 
-1. **Open**: `preview_open({url})`. Keep the returned `tabId` and pass it to every later call. A logged-in site needs `profileId` from `preview_status().profiles`.
+1. **Open**: `preview_open({url})`. Keep the returned `tabId` and pass it to every later call. `profileId` from `preview_status().profiles` picks a T3 cookie jar, not a Brave or Chrome profile. A site that needs Magnus's real logins or 1Password belongs in `playwriter`.
    - Local dev server: `preview_navigate({target:{kind:"environment-port", port:3000, path:"/settings"}})`. Never start the server in the foreground; follow the project's dev command rules.
 2. **Look**: `preview_snapshot({tabId})` returns the accessibility tree with `aria-ref` ids, diagnostics and console errors. Add `includeImage:true` only to see the pixels.
 3. **Act**: `preview_act({tabId, action, locator:"aria-ref=<ref>"})`.
