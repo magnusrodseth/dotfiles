@@ -1,7 +1,7 @@
 ---
 name: address-review
 description: "Take a GitHub PR's review feedback end to end: fetch unresolved threads from bots and humans, judge each, apply fixes, push, then reply and resolve. Use for \"address the review\" or \"go through the PR feedback\"."
-version: 0.4.0
+version: 0.5.0
 ---
 
 # Address PR review
@@ -98,22 +98,20 @@ query($owner:String!,$repo:String!,$pr:Int!){
 Per thread: `id` is the GraphQL node ID (for resolving), and `comments.nodes[0].databaseId` is the REST comment id (for replying). `isOutdated` means the commented line has since changed; the finding may already be addressed, so check before re-fixing.
 
 ### 4. Investigate and judge
-For each thread, read the referenced `path` plus enough surrounding context to confirm or refute the claim. Classify each as:
+Read and apply [Finding verification](../code-review/references/finding-verification.md) to every thread and actionable summary item at `HEAD_SHA`. Record its evidence status before choosing an action:
 
 | Verdict | Meaning | Action |
 |---|---|---|
-| **agree** | Real, and in scope for this PR | Fix it here |
-| **agree, out of scope** | Real, but it is a pre-existing problem or a new concern this PR did not introduce | Ask the user: fix now, or open a follow-up issue and link it in the reply |
-| **disagree** | Wrong, not applicable, or a false positive | Ask the user before dismissing. Never resolve silently |
-| **needs clarification** | The comment is ambiguous or you cannot tell without context you do not have | Ask |
+| **agree** | Confirmed, and in scope for this PR | Propose a fix here |
+| **agree, out of scope** | Confirmed, but pre-existing or outside this PR | Ask the user: fix now, or open a follow-up issue and link it in the reply |
+| **disagree** | Refuted by specific counterevidence at the current head | Present the evidence and ask before dismissing |
+| **needs clarification** | Unconfirmed; investigation cannot decide the claim | State the evidence gap and ask |
+| **design judgement** | A suggested tradeoff or heuristic, rather than an established defect | Present the rationale separately for the user to decide |
 
-The middle row is the one that gets mishandled. A bot that has read the whole file will
-point at things the diff did not cause, and some of them are worth knowing about. Treat
-"this is a real finding" and "this belongs in this PR" as two separate questions, and put
-the second one to the user.
+Decide truth and PR scope separately. Keep confirmed out-of-scope findings visible for the user to choose a fix or follow-up.
 
 ### 5. Present and get approval
-Show the user a per-comment verdict with the proposed fix (or the reason to push back), grouped by reviewer when there is more than one. **Ask about every disagreement.** Wait for approval before touching GitHub.
+Show each verdict with its evidence, assumptions, and proposed fix or reason to push back. Group by reviewer when there is more than one. **Ask about every disagreement.** Wait for approval before touching GitHub.
 
 ### 6. Fix, commit, push
 Apply the agreed fixes. Verify they compile / lint / test where applicable. Then:
