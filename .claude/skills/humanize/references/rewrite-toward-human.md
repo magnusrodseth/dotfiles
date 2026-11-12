@@ -1,101 +1,118 @@
 # Rewrite toward human
 
-Use these moves when surface cleanup leaves prose hard to follow. Preserve the author's intended meaning and chosen register. Each example uses only information in its original.
+Improve clarity and rhythm using the information the author already supplied.
+The meaning check in [SKILL.md](../SKILL.md) takes priority over every move here.
+See [sources](sources.md) for the evidence and its limits.
 
-Sources: the writing-craft and stylometry references in [sources.md](sources.md), plus Clay's AI writing policy on author responsibility and reader effort. The policy is editorial guidance, not a controlled study.
+## Sentence edits
 
-## The governing principle
+These are usually Tier 2 when they preserve scope, attribution and emphasis.
+Apply the [risk tiers](risk-tiers.md) to each passage. Adding no facts does not
+automatically make a structural change safe.
 
-Make the author's thinking easier for the intended reader to understand. A factual explanation can do that without a contestable position. A proposal may need a decision and rationale. Judge the piece by its purpose.
+### Let sentence length follow the thought
 
-Even a rewrite that adds no facts can alter emphasis, confidence, or scope. Use the comparison in step 6 of [SKILL.md](../SKILL.md) after editing. Apply structural changes within the user's instructions; resolve unclear intent before changing the passage.
+Split a sentence when its ideas are hard to follow. Combine short sentences when they
+describe one action. Keep useful repetition. Do not enforce a length quota, a statistical
+spread, different opening words, or a set number of fragments.
 
-## Group A: structural moves (compare with the original)
+| Before | After |
+|---|---|
+| The migration improved performance across all endpoints, and the team was pleased with the reduction in latency that followed the rollout. | The migration improved performance across all endpoints. The team was pleased with the reduction in latency after the rollout. |
+| The system logs errors. The system retries failed jobs. The system alerts on-call. | The system logs errors, retries failed jobs and alerts on-call. |
 
-### Vary sentence length where it helps comprehension
+The first example supplies no amount of improvement or emotion beyond "pleased".
+The second supplies no retry count, ordering or condition for alerting.
 
-Split an overloaded sentence or combine choppy ones when the result is easier to follow. Let the ideas determine sentence length.
+### Cut transitions that add no relation
 
-> Before: "The migration improved performance across all endpoints, and the team was pleased with the reduction in latency that followed the rollout."
-> After: "The migration improved performance across all endpoints. The team was pleased with the reduction in latency after the rollout."
+Keep transitions that express a real contrast, consequence or sequence.
 
-### Reduce needless repetition in openings
+| Before | After |
+|---|---|
+| Moreover, it is important to note that the API is rate-limited. Furthermore, this affects batch jobs. | The API is rate-limited. This affects batch jobs. |
 
-Combine repeated subjects where the actions remain distinct. Preserve repetition that helps readers follow instructions or compare items.
+"Affects" does not establish that jobs fail. Do not replace it with "breaks".
 
-> Before: "The system logs errors. The system retries failed jobs. The system alerts on-call."
-> After: "The system logs errors, retries failed jobs, and alerts on-call."
+### Make attribution clear
 
-### Cut empty transitions
+Name an actor only when the source or supplied context identifies one. Passive can
+appropriately describe system properties or keep the relevant noun in subject position.
 
-Remove an announcement when the following sentence already makes the connection clear. Keep words that explain a real causal, temporal, or contrasting relationship.
-
-> Before: "Moreover, it is important to note that the API is rate-limited. Furthermore, this affects batch jobs."
-> After: "The API is rate-limited. This affects batch jobs."
-
-### Use active voice when the agent is known
-
-Name the doer only when the source identifies them. Passive voice can be useful when the agent is unknown or unimportant.
-
-> Before: "The changes were implemented by the team."
-> After: "The team implemented the changes."
+| Before | After |
+|---|---|
+| A comparison of the methods was performed by the team. | The team compared the methods. |
+| Improvements were implemented and gains were observed. | Keep unchanged; ask who acted and what changed if that information is needed. |
 
 ### Put the action in the verb
 
-Replace noun-actions with verbs when the relation stays the same.
+Remove nominalizations when the relation between the actions remains the same.
 
-> Before: "The utilization of caching resulted in a reduction of latency."
-> After: "Caching reduced latency."
+| Before | After |
+|---|---|
+| The utilization of caching resulted in a reduction of latency. | Caching reduced latency. |
 
-### Keep qualifications attached to claims
+### Keep qualifications attached to the claim
 
-Moving a qualification can change its prominence. Preserve what it limits and how certain the author is.
+End a sentence where its meaning is complete. Put new information where the reader can
+follow it. A qualification may properly come last. Do not move it merely to create emphasis.
 
-> Before: "This change reduced error rates significantly in most cases."
-> After: "In most cases, this change significantly reduced error rates."
+| Before | After |
+|---|---|
+| This change reduced error rates significantly in most cases. | Keep unchanged; "significantly" needs clarification if its statistical meaning is unclear. |
+| It could be argued that shorter subject lines may not be ineffective. | Keep unchanged unless the author clarifies the intended strength of the claim. |
 
-Keep the original if the new emphasis is wrong. Ask for evidence only when the reader needs a magnitude; leave that question outside the draft.
+"Not ineffective" does not necessarily mean "effective". A tentative suggestion does not
+support a universal recommendation or a new word-count limit.
 
-### Connect sentences using supplied relationships
+### Connect known information to new information
 
-Introduce new information through something the reader already knows. Preserve causal language only where the source supports it.
+Use the preceding thought when it helps the reader understand the next one.
+Preserve who acted and what a pronoun refers to.
 
-> Before: "Latency dropped. A new cache was the reason. Users noticed."
-> After: "Latency dropped because of a new cache. Users noticed the drop."
+| Before | After |
+|---|---|
+| Latency dropped. A new cache was the reason. Users noticed the drop. | A new cache reduced latency. Users noticed the drop. |
 
-### Prefer plain words within the chosen register
+### Prefer familiar words without changing register
 
-Use a familiar word where it has the same sense: "use" for "utilize", "help" for "facilitate". Keep technical terms and intentional formality.
+Use a plain equivalent when it has the same meaning. Keep established technical terms.
+"Use" often replaces "utilize"; "significant" may carry a statistical meaning and must be
+judged in context. Do not swap formal writing into conversational language by default.
 
-### Preserve the strength of the claim
+### Cut decoration, keep information
 
-Cut empty intensifiers; retain words that carry uncertainty, magnitude, timing, or the author's judgment.
+Remove empty emphasis. Keep degree, frequency and confidence when they are part of the
+claim. A stronger verb can strengthen the claim, so check it against the source.
 
-> Before: "It could be argued that shorter subject lines may not be ineffective."
-> After: "Shorter subject lines may be effective."
+| Before | After |
+|---|---|
+| The service quickly and significantly improved. | Keep unchanged; the source supplies no timing or magnitude with which to replace these terms. |
+| It is fast, reliable and scalable. | Keep all three properties unless the author says one is unsupported or redundant. |
 
-### Keep distinct items and useful structure
+## Paragraph and content decisions
 
-A list with three distinct items stays a list with three items. Remove an item only when it repeats another or adds nothing needed. Keep headings, bullets, and parallel structure when they help readers scan or compare. Follow the risk tiers for material deletions and structural changes.
+Judge these by the user's requested scope. A full editorial rewrite can permit
+reorganization; a narrow vocabulary pass usually does not.
 
-## Group B: content and voice moves (use supplied material)
+- Keep one subject per paragraph when that helps the reader. Preserve intentional short
+  paragraphs, especially in messages and LinkedIn posts.
+- Make each paragraph's role in the whole text clear. Remove a repeated preview or recap
+  only when its unique content is preserved and its deletion is authorized.
+- Present supplied facts, interpretation and limitations distinctly. Preserve genuine
+  uncertainty, resolved conclusions and open questions as the author wrote them.
+- Preserve existing first-person perspective, emotion and anecdotes. Do not add any to
+  make the text appear human.
+- Replace an abstraction with a specific only when supporting material supplies it.
+  Otherwise identify the missing information outside the prose.
+- An explanation or factual update needs useful information. An argument needs a supplied
+  position and support. Evaluate the genre the author chose.
 
-### Concreteness and named specifics
+## Final reading
 
-Replace an abstraction with a named instance only when the author's material provides it. Keep the claim's scope: one example does not establish a general result. Report missing evidence in the editorial note when the reader needs it.
+Read the changed passage in context. Confirm that its facts, logical relations,
+confidence and attribution still match the original. Check whether it reads naturally
+for this audience. Revert forced edits.
 
-### First-person perspective and lived detail
-
-Retain the author's supplied perspective and experiences where the genre permits them. A factual explanation can stay impersonal. An anecdote is content, so adding one requires the author's material and authority.
-
-### Confidence and emotional tone
-
-Preserve genuine doubt, enthusiasm, skepticism, and unresolved questions. Removing a hedge can turn a possibility into a claim. Changing "pleased" to "relieved" assigns a different emotion.
-
-### Idiolect and word choice
-
-Keep deliberate fragments, contractions, repetition, and unusual words when they fit the author and register. Choose a replacement for precision or clarity; forced novelty and deliberate errors do not help the reader.
-
-## Self-check
-
-Use the Fidelity, Usefulness, Economy, and Register checks in step 6 of [SKILL.md](../SKILL.md). Check rhythm by reading the passage, without sentence-length targets or first-person quotas. Restore wording when a stylistic improvement changes the intended meaning. Leave gaps needing the author in the editorial note, outside the draft.
+No quota for first-person statements, unexpected words, sentence openings, analogies or
+sentence-length variance applies. Correct grammar and deliberate repetition can stay.

@@ -1,136 +1,73 @@
 # Risk tiers
 
-Every candidate change falls into one of three tiers. Use this to decide whether to fix silently, fix-and-mention, or pause and ask.
+Classify changes by their effect on the text. Meaning preservation applies at every tier.
+Use the user's requested scope and existing authorization before asking a question.
 
-The tiers estimate risk; they do not guarantee unchanged meaning. Follow the user's existing authority and compare edits with the original. Ask only where intent remains unclear.
+## Tier 1: mechanical changes
 
-## Tier 1: auto-fix, no notification
+Apply when the intended correction is unambiguous and the content stays identical.
 
-Mechanical changes with low semantic risk. Apply without comment, then check punctuation, quotations, and attribution against the original.
+- Remove trailing whitespace and accidental duplicate spaces in editable prose.
+- Normalize straight quotes or other typography according to the user's preferences.
+  Preserve exact quotations, code, formulas and identifiers.
+- Remove tracking parameters without changing the destination.
+- Repair leaked formatting when the destination cannot render it.
 
-- Em dashes (`—`) replaced with comma, parens, colon, semicolon, or sentence split
-- En dashes in prose where a hyphen or "to" is correct
-- Curly quotes (`"`, `"`) to straight (`"`)
-- Curly apostrophes (`'`) to straight (`'`)
-- Unicode arrows (`→`, `⇒`, `↔`) replaced with a word ("to", "then", "leads to") or the sentence restructured
-- Hard-tell citation markers: `utm_source=chatgpt.com`, `:contentReference`, `oai_citation`, `turn0search`, `grok_render_citation`, `<grok-card>`, lenticular bracket markers (`【NN†L...】`), `[attached_file:N]`, `attributableIndex`, placeholder dates (`2025-XX-XX`), placeholder URLs (`PASTE_URL_HERE`, `INSERT_SOURCE_URL_N`) → delete
-- Markdown syntax that leaked into a plain-text or email context where it won't render → strip
-- Trailing whitespace, double spaces, stray "Subject: ..." prefixes pasted from email forms
+Citation artifacts need more than deletion when they stand in for evidence. Restore a
+real source only when supplied or verified; otherwise flag the missing reference.
+Preserve intentional drafting placeholders and identify them as unfinished content.
 
-If a mechanical edit affects meaning, choose another form or resolve the uncertainty under Tier 3.
+Replacing an em dash, arrow or range can change logical attachment or notation. Treat
+that as Tier 2 or Tier 3 unless the replacement is mechanically equivalent.
+A formatting preference is not evidence that the author made an accidental choice.
 
-## Tier 2: auto-fix, mention in summary
+## Tier 2: local edits that preserve meaning
 
-Apply when the original claim and its qualifications survive. Mention the edits briefly so the author can review them. Escalate uncertain changes to Tier 3.
+Apply within the user's scope, then mention only material changes.
 
-- **AI vocabulary swaps** when the surrounding sentence is generic: `delve`, `underscore` (figurative), `tapestry`, `vibrant`, `intricate`, `pivotal`, `meticulous`, `garner`, `bolster`, `foster`, `showcase`, `leverage` (as a verb), `landscape` (abstract sense), `utilize`, `streamline`, `harness`, `certainly`, `paradigm`, `synergy`, `ecosystem` (as vague abstraction)
-- **Product-marketing vocabulary** used decoratively, where deleting the word costs the sentence nothing: `seamless`, `unlock`, `empower`, `elevate`, `supercharge`, `frictionless`, `effortless`, `game-changer`, `revolutionize`, `cutting-edge`, `best-in-class`, `groundbreaking`, `unparalleled`, `transformative`, `reimagine`, `democratize`, `turnkey`, `plug-and-play`, `future-proof`, `look no further`, `rest assured`, `deep dive`. Drops to Tier 3 in marketing copy (see below) and when the word is the correct technical term (`scalable` about real scaling, `intuitive` in HCI, `data-driven` about an actual method)
-- **Craft-metaphor verbs** standing in for an action the text already describes: `sharpened`, `distilled`, `crystallized`, `stitched together`, `woven`, `carved out`, `cemented`, `amplified`, `stripped back`, `sanded down`. Swap in the literal verb. Judge by density; `framed`, `mapped`, `unpacked`, `surfaced`, `anchored`, `baked in`, `bolted on` have ordinary literal senses and often stay. If the literal rewrite needs a fact the text lacks, flag the gap instead
-- **Decorative analogies** that fail the permission test in [tells.md](tells.md), where the literal statement is shorter and clearer
-- **Copulative restoration**: "X serves as a hub" → "X is a hub"; "the gallery features four spaces" → "the gallery has four spaces"
-- **Superficial analysis tails** that add no factual content: `, highlighting the importance of...`, `, reflecting broader trends...`, `, contributing to the development of...`, `, fostering a sense of...`
-- **Weasel attributions** with no named source: "experts argue", "industry reports suggest", "observers have noted" → either name a source or delete
-- **Didactic disclaimers**: "it's important to note", "it's worth noting", "it's crucial to remember"; and empty-emphasis openers "Importantly,", "Interestingly,", "Notably,"
-- **Tone-setup transitions** where the setup is the tell and the point survives without it: "Here's the kicker:", "Here's the thing:", "Let's break this down", "Let's unpack this", "Think of it as...", "Imagine a world where..." → delete the setup, keep the point
-- **Rhetorical question-and-answer** ("The result? Devastating." → "The result was devastating."), **dramatic countdown** ("Not X. Not Y. Just Z." → plain statement), and **false ranges** ("from innovation to transformation" → name the actual things)
-- **Softened reframes** where the concessive setup carries no information ("Most people think X. In reality, Y." → "Y.", "On the surface X, but really Y" → state Y). Keep contrast that corrects a real fact, date, number, name, or scope
-- **Anaphora**: collapse three-plus repeated sentence openings into one, keeping a single instance
-- **Section summaries** ("In conclusion", "In summary", "Overall") in documents under ~5 paragraphs
-- **Inline-header bullet lists** (`- **Foo**: bar`) when 3-4 lines of prose would read better
-- **Emphatic / appositive colons** used mid-prose for a punchy restatement (`This is about one thing: X`) → recast as a full sentence or bridge with a connective (", namely", ", nemlig", ", for"). Leave list-introduction, figure/attribution ("Kilde:"), and fixed-opener ("For ordens skyld:") colons untouched
-- **Reply-shaped scaffolding** where the point survives its removal: reasoning leaks ("I want to be exact about my role here"), preamble announcers ("Two constraints shape the design"), compulsive counts ("for two reasons"), tie-backs ("So, to answer your question"), comma-clipped tails ("asked forty times, mentoring."). Delete the scaffolding, keep the point. A count stays when the number is the information
-- **Appeal to familiarity** ("a classic", "famously", "as we all know") → drop the consensus claim or name the source
-- **Wh-word headings** ("What we do differently") and **"where it actually lives"** framings → name the content
+- Replace an ornamental word with a plain equivalent that preserves degree and meaning.
+- Delete a filler opener or tail that adds no fact, qualification or logical relation.
+- Restore a direct verb without inventing an actor or action.
+- Recast an emphatic colon or split a sentence while preserving scope and attribution.
+- Combine adjacent sentences about one action when the emphasis and relations survive.
+- Remove duplicated words or an empty reply-shaped preamble.
+- Use a consistent term when the text clearly uses synonyms for the same concept.
+- Remove vague consensus framing only when the supplied source and its actual claim
+  remain identifiable.
 
-## Tier 3: ask before changing
+Keep legitimate technical meanings. "Robust" in statistics and "landscape" for a screen
+orientation need no replacement. If the meaning is clear, leave them without asking.
 
-Follow authority the user already gave. If intent remains unclear, ask with the available question tool or in chat before changing the passage.
+"Weasel attribution" is not permission to turn "experts suggest X" into "X".
+Preserve the attribution and uncertainty; flag the unidentified source separately.
+Removing a number, distinct list item, uncertainty marker or causal link is never a
+routine stylistic cut.
 
-### Domain-correct words
+## Tier 3: changes affecting argument, structure or voice
 
-Some AI-vocab words have legitimate technical meanings. Ask when context is ambiguous.
+Apply when already authorized and supported by the supplied material. Otherwise keep
+the passage intact and ask about the material decision.
 
-- `robust` in statistics, ML, control theory, software resilience
-- `underscore` in music (incidental score), design, programming (literal `_`)
-- `key` in cryptography, music, databases, UX
-- `tapestry` in textile or art history
-- `landscape` referring to actual terrain or screen orientation
-- `interplay` in physics or systems analysis
-- `garner` when the subject genuinely gathered something specific
-- `pivotal` in mechanical engineering
+- Reorder evidence, delete substantial text, merge or split paragraphs when emphasis changes.
+- Change audience, register, pronouns, a central analogy or a deliberate rhetorical device.
+- Resolve an ambiguous comparison, negation, quantifier or reference.
+- Change a claim's confidence, scope or implied causality.
+- Add substantive context, a definition, an anecdote or a specific fact.
 
-### Tone the user may have wanted
+Authorization permits the requested edit, not fabrication. Use only facts, experiences
+and opinions the author supplied, or verified material within an authorized research scope.
+If the needed information is absent, identify the gap outside the rewritten prose.
 
-- **Marketing copy** where some puffery, grandiose stakes ("will define the next era"), or product-marketing vocabulary ("seamless", "effortless") is intentional brand voice. Landing pages and launch posts are the main case: the register is a deliberate choice, so ask before flattening it
-- **A load-bearing analogy** the whole piece is built on. Cutting one decorative comparison is Tier 2; dismantling the central figure is a structural rewrite
-- **Speeches, poetry, song lyrics, headlines** where rule-of-three, anaphora, or negative parallelism is rhetorical, not AI cadence
-- **Personal essays** where the author's voice happens to use em dashes or "not just X, but Y" deliberately
-- **Sales-flavored prose** that's supposed to be punchy
-- **Short punchy fragments** as a deliberate device (one line for emphasis) rather than a whole passage built from them
-- **Magic adverbs** ("quietly", "deeply") when the sentence genuinely means the subtlety, not just borrowing significance
-- **False vulnerability** ("since we're being honest...") that may be the author's real, earned aside
-- **Invented concept labels** ("the supervision paradox") that might be the author's own established term, not filler
-- **Quotable one-liners** the author may have written on purpose (one per piece can be voice)
-- **Collaborative "we"** that may be the organisation's real voice rather than a switch away from the author's
-- **Self-echo** that may be a deliberate callback rather than vocabulary resurfacing
+Narrative conventions need genre judgment. Do not manufacture ambiguity in a resolved
+essay, a contestable position in an explanation, or emotion in a formal memo.
 
-### Wholesale deletion candidates
+## Asking
 
-Don't delete a whole section without asking, even if it reeks of AI.
+Ask a focused question when the unresolved decision would materially change meaning or
+voice. Give a recommendation and concise alternatives. Use the available user-input tool;
+there is no dependency on a tool named AskUserQuestion.
 
-- Entire "Challenges and Future" sections (the user may have meant to flag real challenges)
-- Whole paragraphs that are pure puffery (the user may want a softened version, not a cut)
-- Closing summary paragraphs (the user may want a tighter summary, not none)
-- Bulleted lists of "media coverage" (the user may want them prosified, not removed)
-- **One-point dilution** restatements and **fractal summaries** (cutting them can drop content the user meant to keep; confirm which paragraphs are pure repetition)
-- **Historical analogy stacking** (the user may want one example kept, not the whole roll call removed)
-- **Dead metaphor** collapse (reworking a load-bearing metaphor across a whole piece is a structural rewrite, not a swap)
-- **Premise stacking**, **belaboring the unnecessary** and **never-ending conclusions** (the evidence paragraph, the pre-empted objection, or the stacked closing clauses may carry content the author needs somewhere else)
-
-### Positive-direction content moves (never fabricate)
-
-Group B moves in [rewrite-toward-human.md](rewrite-toward-human.md) reshape content or voice and need suitable authority and supplied material. Never invent facts or opinions. Keep unresolved questions and genuine uncertainty; report missing facts, decisions, or rationale outside the draft.
-
-### Discourse-level tells (structural, high voice-risk)
-
-The four discourse-level tells in [tells.md](tells.md), embodied-emotion over-writing, over-explaining the theme, vague-allusion-instead-of-named-specific, and too-tidy resolution, all touch meaning, stance, or the shape of the piece. Treat them as Tier 3: ask before rewriting. For the named-specific fix, never invent a reference the author didn't supply; for the resolution fix, never manufacture doubt the author doesn't hold. They apply to reflective and narrative-leaning prose, not to short messages or terse factual text.
-
-### Structural choices that could go either way
-
-- Converting a list to prose, or vice versa, when both are defensible
-- Combining or splitting paragraphs
-- Reordering sentences for flow
-- Changing heading style or hierarchy
-
-## How to ask
-
-Use the available question tool or ask in chat. Group related uncertainties and give a recommendation. Ask about authorial intent, not permission already granted.
-
-Example question shape:
-
-> The closing paragraph reads "This commitment to excellence underscores our enduring dedication to customer success." plus three more AI-tell sentences. Could be intentional marketing voice or could be slop.
->
-> - Strip the AI cadence; keep the core point (Recommended)
-> - Delete the closing paragraph entirely
-> - Leave as-is, it's the brand voice
-
-### What NOT to ask about
-
-- Tier 1 or Tier 2 changes. Just do them.
-- Global "should I proceed?" questions. The user already invoked humanize; they want it done.
-- Stylistic preferences with no risk attached ("should this be a comma or a semicolon?"). Pick one and move on.
-
-### Budget
-
-Cap Tier 3 questions at 3-4 per document. If you find more, batch them:
-
-> I found 7 passages where I'm uncertain whether the AI cadence is intentional. Want to:
-> - Apply my recommendation to all 7 (Recommended)
-> - Walk through them one by one
-> - Leave all 7 untouched and only apply Tier 1 and Tier 2 fixes
-
-## When to skip Tier 3 entirely
-
-If the user said something like "just clean it up", "be aggressive", or "I trust you", reduce Tier 3 to the single highest-risk decision (or skip entirely) and note in the summary what you took the liberty of changing.
-
-If the user said "ask me about anything risky" or "be conservative", expand the Tier 3 budget and ask about borderline Tier 2 cases too.
+Batch related decisions and avoid repeated approval requests. A broad request to
+restructure covers routine paragraph work. A narrow request to remove em dashes does not.
+Complete safe, independent edits while a question is pending. Do not treat silence as
+approval or insert placeholders into the author's prose.

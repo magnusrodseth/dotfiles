@@ -1,448 +1,137 @@
 # Rewrite patterns
 
-Concrete before/after for each category in [tells.md](tells.md). When humanizing, work category by category. Don't try to fix everything in one pass.
+Each replacement below preserves the supplied facts and confidence. Read the sentence in
+context before applying it. Use [risk tiers](risk-tiers.md) for structural or voice choices.
 
-## What the editing research says
+The editing studies in [sources](sources.md) motivate examining redundant exposition,
+word choice and sentence structure. Their observed edit proportions are not quotas, and
+detector performance does not establish an editing rule for every genre.
 
-The patterns below are not taste alone. Several studies put professional editors or expert readers in front of machine text and measured what they did; the fixes here follow what worked. Citations and caveats in [sources.md](sources.md).
-
-- **Deletion and replacement, not addition.** When 18 professional writers edited 1,057 LLM paragraphs (LAMP corpus, Chakrabarty et al. 2025), 74% of their 8,035 edits were replacements, 18% deletions and 8% insertions, and 70% of the non-deletion edits preserved meaning. Their top categories were awkward word choice and phrasing (28%), poor sentence structure (20%), unnecessary or redundant exposition (18%) and clichés (17%). That is the whole strategy of this file: cut, swap, keep the meaning, add nothing.
-- **Moderate human edits are enough; machine "humanizing" is not.** Expert editors changing 20 to 40% of a machine text pushed detector AUROC down by up to 22 points, editing more did not help further, and text "humanized" by GPT-4o or Llama stayed detectable (Beemo, Artemova et al. 2025). Over-rewriting buys nothing, and a paraphrase pass by another model is not an edit.
-- **Vocabulary scrubbing leaves the structure.** Expert human detectors given text prompted to avoid "AI vocab" still caught it, by formulaic introductions and conclusions, by grouping in threes, by quotations always in the same slot, and by a lack of specifics (Russell, Karpinska and Iyyer 2025). Their clue categories, in order: vocabulary 53%, sentence structure 36%, grammar 25%, originality 24%. Fixing the vocabulary fixes the first line of that list only.
-- **The grammatical fingerprint is participles and nominalizations.** Instruction-tuned models use present participial clauses at 2 to 5 times the human rate (GPT-4o at 5.3x, Cohen's d 1.38) and nominalizations at about twice it (Reinhart et al. 2025). Cutting the -ing tail and turning the noun-action back into a verb are the two highest-yield grammatical moves. Agentless passive is not on that list; GPT-4o uses it at half the human rate.
-- **Naming a word retires it.** "delve", "intricate" and "showcasing" fell in arXiv abstracts within weeks of being named as ChatGPT words in April 2024, while "significant" and "additionally" kept climbing (Geng & Trotta 2025). Word lists age fast; the Currency table in [tells.md](tells.md) is the correction for that.
-- **A taxonomy with examples trains the editor.** In the RoFT study, having read the help guide (an error taxonomy with annotated examples) was the single strongest predictor of an annotator's detection score, and annotators improved over rounds when given feedback and an incentive (Dugan et al. 2023). That is why this file is before/after tables and not a rule list.
-
-## Em dashes
-
-Replace with a comma, parentheses, a semicolon, or two sentences. Pick whichever fits the rhythm. Not a colon by default, since that produces the emphatic-colon tell in the next section.
+## Punctuation and artifacts
 
 | Before | After |
 |---|---|
-| `Wikipedia is community-run — it depends on collaboration.` | `Wikipedia is community-run; it depends on collaboration.` |
-| `The issue isn't sourcing — it's framing.` | `The issue isn't sourcing. It's framing.` |
-| `She gained attention in the early 2020s — and her feminist message resonated.` | `She gained attention in the early 2020s, and her feminist message resonated.` |
-| `Three tools — Photoshop, Figma, and Sketch — dominate the market.` | `Three tools (Photoshop, Figma, and Sketch) dominate the market.` |
+| The process is simple: upload the file. | Upload the file. |
+| Retningen stemmer: tyngdepunktet flytter oppover. | Retningen stemmer. Tyngdepunktet flytter oppover. |
+| The tool has one requirement: Python 3. | The tool requires Python 3. |
 
-Rule: if there are more than two em dashes in a short paragraph, the rhythm itself is the tell. Vary the replacements so the rewrite doesn't read like search-and-replace.
+Keep genuine list introductions, useful labels and quotations. An em dash can become a
+comma, parentheses or a full sentence, but the new punctuation must preserve attachment,
+negation and scope. Do not replace it with an emphatic colon.
 
-## Emphatic / appositive colon
+Normalize quotes only in editable prose. Preserve source quotations, code, identifiers,
+mathematical arrows and ranges.
 
-Recast the emphatic colon as a full sentence, or bridge with a connective ("namely" / ", nemlig", ", altså", ", for eksempel", ", for"). If the following sentence already explains the point, just drop the appositive.
+Remove tracking parameters while retaining the link destination. When a leaked citation
+marker represents evidence, replace it with the actual source only if known or verified.
+Otherwise flag the missing reference outside the text. Do not erase evidence or intentional
+drafting placeholders merely because their formatting looks machine-generated.
 
-| Before | After |
-|---|---|
-| `This is about one thing: placement.` | `This is about placement.` |
-| `The three actors are simple: engineer, agent, code.` | `There are three actors, namely the engineer, the agent, and the code.` |
-| `Dette handler om plassering: rett aktør på rett node.` | `Dette handler om plassering. Der en deterministisk sjekk holder, bør du ikke sette en agent til å gjette.` |
-| `Retningen stemmer: tyngdepunktet flytter oppover.` | `Retningen stemmer, for tyngdepunktet flytter oppover.` |
-
-Leave alone: colons that introduce a real list, a following figure/block, an attribution ("Kilde:", "Figure 2:"), or a fixed opener ("For ordens skyld:", "Konkret:"). Vary the fix so it doesn't read like search-and-replace.
-
-## Curly quotes and apostrophes
-
-Replace every `"` `"` `'` `'` `'` with straight ASCII `"` and `'`. Mechanical.
-
-## AI vocabulary
-
-Replace the word with a plainer synonym. Don't try to preserve the cadence of the AI sentence; usually the whole sentence needs to relax.
+## Plain wording
 
 | Before | After |
 |---|---|
-| `Let me delve into the details.` | `Here are the details.` |
-| `This underscores the importance of testing.` | `This shows testing matters.` (or just delete the sentence) |
-| `The intricate tapestry of urban life` | `Urban life` |
-| `A pivotal moment in the evolution of regional statistics` | `A turning point for regional statistics` (or drop entirely) |
-| `Meticulously crafted to enhance user experience` | `Built to be easy to use` |
-| `A robust framework that fosters collaboration` | `A framework that helps people work together` |
-| `Valuable insights into the data` | `What the data shows` |
-| `A vibrant community of contributors` | `A community of contributors` |
-| `Bolstered by recent investment` | `With recent investment` |
-| `Showcasing the team's commitment` | `Showing what the team built` |
+| We utilize a cache. | We use a cache. |
+| The gallery features four rooms. | The gallery has four rooms. |
+| The tool quietly schedules jobs. | The tool schedules jobs. |
+| The utilization of caching resulted in a reduction of latency. | Caching reduced latency. |
+| Observability was bolted on after launch. | Observability was added after launch. |
 
-If a sentence is mostly AI vocabulary with little factual content, delete it. Most "underscore" / "highlight the importance of" sentences add nothing.
+For the "quietly" example, the surrounding context must confirm that the word is decorative.
+If it means no notifications or unobtrusive execution, keep that information.
 
-## Magic adverbs
+Keep domain meanings. "Robust regression", "landscape orientation", "database key" and a
+named software framework can be the precise terms. Do not ask about an unambiguous technical use.
 
-Delete the adverb. The sentence almost always says the same thing, more honestly, without it.
+## Setup and repetition
 
 | Before | After |
 |---|---|
-| `The tool quietly orchestrates your workflows.` | `The tool orchestrates your workflows.` |
-| `This is a fundamentally different approach.` | `This is a different approach.` (or say how it differs) |
-| `The results were remarkably consistent.` | `The results were consistent.` |
+| Here's the kicker: the API is rate-limited. | The API is rate-limited. |
+| It is important to note that the API is rate-limited. | The API is rate-limited. |
+| Let's break this down. The queue holds jobs until a worker is free. | The queue holds jobs until a worker is free. |
+| The result? A failed build. | The result was a failed build. |
+| Not a bug. Not a feature. A design flaw. | This is a design flaw. |
+| The question isn't whether the API is rate-limited. The question is how to handle that limit. | The question is how to handle the API's rate limit. |
+| To answer your question: yes, the employee can be added. | The employee can be added. |
+| For å svare på spørsmålet: du kan legge til den ansatte. | Du kan legge til den ansatte. |
+| The first issue is the missing API. The second issue is the missing permissions. | The issues are the missing API and permissions. |
 
-If deleting "quietly" removes the whole point of the sentence, the sentence had no point. Cut it.
+Cut setup only when it adds no information the reader needs. Preserve a real objection or
+factual contrast. Removing a whole closing paragraph is a structural decision; check its
+unique content and the user's authorization.
 
-## Negative parallelisms
+Keep counts when they convey information. Numbered steps, named dimensions and actual sets
+of three are legitimate. An informative heading such as "How to reset your password" may stay.
 
-Strip the setup. Keep the payoff if it has content, drop it if it's empty.
-
-| Before | After |
-|---|---|
-| `It's not just a meme, it's a celebration of car culture.` | `It's a celebration of car culture.` |
-| `This isn't sourcing, it's framing.` | `This is a framing problem, not a sourcing one.` (or split into two sentences) |
-| `Not only dismissive but also unnecessarily harsh.` | `Dismissive and harsh.` |
-| `Not a career, not a body of work, just an algorithmic moment.` | `Just an algorithmic moment, with no career or body of work behind it.` |
-| `Forget the frameworks. Focus on the constraints.` | `Start from the constraints.` |
-| `It was never about the tooling. It was always about the review loop.` | `The review loop is what decides this.` |
-
-The fix rule for every shape: delete the rejected half, then write the surviving claim as a direct sentence. If the positive claim can't stand alone, it was never the point.
-
-### Softened reframes
-
-The same move with the negation dissolved. Cut the concessive setup and keep the claim.
+## Claims and sources
 
 | Before | After |
 |---|---|
-| `Most teams think they have a hiring problem. In reality, their standards are unclear.` | `The team's standards are unclear.` |
-| `On the surface, this is a caching bug. The deeper issue is the data model.` | `The data model is what's broken here. It shows up as a caching bug.` |
-| `While the API may seem complete, it actually lacks pagination.` | `The API has no pagination.` |
-| `Is this a productivity problem? No. It's an attention problem.` | `Attention is the constraint.` |
+| According to the 2025 report, it is important to note that demand may decline. | According to the 2025 report, demand may decline. |
+| Smith (2019) argues that the method is unreliable in most cases. | Keep unchanged; both attribution and "most cases" carry meaning. |
+| Experts argue that X. | Keep unchanged; flag the unidentified experts outside the text. |
+| Industry reports suggest declining demand. | Keep unchanged; flag the unidentified reports outside the text. |
+| This change reduced error rates significantly in most cases. | Keep unchanged; clarify "significantly" only if supplied context supports the clarification. |
+| The method is substantially faster. | Keep unchanged; flag the missing comparison baseline and measurement if the genre requires them. |
 
-Reframe headings get the same treatment. "Not a tool. A system." becomes "The system". "The real problem" becomes whatever the problem actually is.
+A named citation may still lack support for its associated claim. Humanizing wording does
+not verify the source. Do not turn "suggests" into "shows", "often" into "always", an
+association into a cause, or "not ineffective" into an unqualified recommendation.
 
-Keep contrast that carries information: "The meeting is on Tuesday, not Thursday."
+Never supply a plausible name, figure, year, quote or citation key to fix missing evidence.
+Keep cited wording and citation keys as provided.
 
-## Dramatic countdown ("Not X. Not Y. Just Z.")
-
-Collapse the countdown into a plain statement of Z.
-
-| Before | After |
-|---|---|
-| `Not a bug. Not a feature. A fundamental design flaw.` | `This is a design flaw.` |
-| `Not ten. Not fifty. Five hundred and twenty-three violations.` | `There are 523 violations.` |
-
-## Rhetorical question-and-answer ("The X? A Y.")
-
-Drop the question, state the answer.
+## Lists, modifiers and emphasis
 
 | Before | After |
 |---|---|
-| `The result? Devastating.` | `The result was devastating.` |
-| `The worst part? Nobody saw it coming.` | `Worst of all, nobody saw it coming.` |
+| It is fast, reliable and scalable. | Keep all three properties; the list contains distinct claims. |
+| All the methods do not converge. | Keep unchanged; ask whether none converge or some fail to converge. |
+| The system logs errors. The system retries failed jobs. The system alerts on-call. | The system logs errors, retries failed jobs and alerts on-call. |
+| A comparison of the methods was performed by the team. | The team compared the methods. |
 
-Keep a rhetorical question only when it's genuinely doing work (a real pivot the reader is asking too). One is fine; a string of them is the tell.
+The system example supplies no retry count or condition for alerting. The passive example
+supplies the actor; without one, an active rewrite could invent responsibility.
 
-## Rule of three
+Remove an adverb or modifier only when it contributes no meaningful degree, timing,
+scope or confidence. Keep a qualification near the claim it limits.
 
-Keep every distinct item, whatever the count. Remove repeated meaning only when it adds nothing the author intended.
+## Figurative language and voice
 
-| Before | After |
-|---|---|
-| `clear, easy to understand, and readable` | `clear` (when the phrases repeat the same claim) |
-
-A list of "Photoshop, Figma, and Sketch" stays intact. Follow the risk tiers when a deletion could remove a separate idea.
-
-## False ranges
-
-If the two ends aren't a real spectrum, list the things plainly or name what you mean.
+Replace a decorative metaphor only when its literal meaning is available.
 
 | Before | After |
 |---|---|
-| `From innovation to cultural transformation.` | `Both new products and the way people work.` (say what you actually mean) |
-| `Everything from strategy to execution.` | `Strategy and execution.` |
+| Think of the queue as a post office. It holds jobs until a worker is free. | The queue holds jobs until a worker is free. |
+| We sharpened the positioning. | Keep unchanged; ask what changed if a literal description is needed. |
+| Your onboarding is a leaky bucket. | Keep unchanged; flag the missing description of where users leave. |
+| He published it. Openly. In a book. As a priest. | He published it openly, in a book, as a priest. |
 
-## Anaphora
+The last example changes emphasis. Apply only when that change fits the request and voice.
+Keep an analogy that accurately explains an unfamiliar subject. Do not enforce a word-count
+budget for analogies.
 
-Keep one instance of the repeated opening; vary or merge the rest.
+Preserve deliberate rhetoric, personal pronouns and genre conventions. In a formal memo,
+do not add contractions or conversational fragments. In a personal post, do not flatten
+a meaningful short paragraph or rhetorical question.
 
-| Before | After |
-|---|---|
-| `They assume users will pay. They assume developers will build. They assume ecosystems will emerge.` | `They assume users will pay, developers will build, and ecosystems will emerge.` |
+## Substantial cuts
 
-Deliberate anaphora in a speech or a punchy close can stay. Ask if it reads as intentional rhetoric rather than a generation tic.
+For duplicated content, unnecessary summaries, historical examples or a central metaphor,
+first identify what each passage adds. Preserve distinct facts and logical relations.
+Apply substantial deletions or reordering only within authorized scope.
 
-## Superficial analysis tails
+Do not remove necessary limitations, resolve a genuine uncertainty, manufacture doubt,
+or make an explanation argumentative to satisfy a style preference.
 
-Delete the trailing participle phrase. The sentence almost always stands without it.
+## Leave unchanged
 
-| Before | After |
-|---|---|
-| `The station has six platforms, contributing to the socio-economic development of the region.` | `The station has six platforms.` |
-| `He stepped down in 2010, marking the end of an era.` | `He stepped down in 2010.` |
-| `The mall employs 3,000 staff, reflecting its scale.` | `The mall employs 3,000 staff.` |
-| `Its features support remote work, fostering productivity.` | `Its features support remote work.` |
+- Text that already fits its reader and purpose.
+- Exact quotations and cited source wording.
+- Correct technical terms and notation.
+- Deliberate voice choices consistent with the user's instructions.
+- Ambiguous claims that cannot be clarified from supplied material.
 
-## Weasel attributions
-
-Either name a source or delete the attribution.
-
-| Before | After |
-|---|---|
-| `Experts argue that X.` | `[Name] argued that X in [year].` or just `X.` |
-| `Industry reports suggest declining demand.` | `Demand is declining.` (if uncontested) or cite the report |
-| `Researchers treat X as a fluid formation.` | `Smith (2019) treats X as fluid.` or `X is generally treated as fluid.` |
-| `Some critics have noted...` | Drop, unless you can name them |
-
-## Copulative avoidance
-
-Swap fancy verbs back to "is/has/was".
-
-| Before | After |
-|---|---|
-| `The gallery features four spaces.` | `The gallery has four spaces.` |
-| `X serves as a hub for trade.` | `X is a trade hub.` |
-| `The book stands as a testament to...` | `The book shows...` (or drop) |
-| `Y constitutes a deviation from...` | `Y is a deviation from...` |
-| `Z refers to a class of problems.` | `Z is a class of problems.` |
-
-## Puffery
-
-Strip the inflated framing. State the fact plainly.
-
-| Before | After |
-|---|---|
-| `Nestled in the heart of Tuscany, this vibrant town boasts a rich cultural heritage.` | `The town is in Tuscany.` (then state actual facts) |
-| `A groundbreaking achievement that reshaped the landscape of computing.` | `A new approach in computing.` (then say what it actually did) |
-| `Renowned for its commitment to excellence.` | Delete. Replace with a specific fact if you have one. |
-
-## Outline-style "Challenges and Future" sections
-
-Delete the section if it contains no specific information. Most "Despite these challenges, X continues to thrive" paragraphs are pure filler. If the challenges are real and specific, keep them as plain prose with no canned framing.
-
-## Didactic disclaimers
-
-Delete. The reader didn't ask.
-
-| Before | After |
-|---|---|
-| `It's important to note that results may vary.` | Delete (or move to a footnote if genuinely needed). |
-| `It's worth considering the historical context.` | Delete. |
-| `It is crucial to differentiate X from Y.` | `X is different from Y.` (then say how) |
-
-## Knowledge-cutoff hedges
-
-Delete or replace with concrete uncertainty.
-
-| Before | After |
-|---|---|
-| `As of my last knowledge update, X is the current standard.` | `X is the current standard as of [year].` (verify first) |
-| `While specific details are limited in available sources...` | Delete, or rewrite to acknowledge the actual gap. |
-| `The subject likely supports a low profile.` | Delete; don't speculate. |
-
-## Section summaries
-
-Delete "In summary", "In conclusion", "Overall" at paragraph starts unless the document is genuinely long enough to need a recap. In a four-paragraph piece, no.
-
-## Boldface overuse
-
-Remove all bold except where the document genuinely needs it (one-off emphasis, a defined term being introduced, a UI label). If a paragraph has more than one bolded phrase, ask whether any of them needed it.
-
-## Inline-header vertical lists
-
-Convert to flowing prose, or to a list without the colon-and-bold pattern.
-
-Before:
-```
-- **Construction**: Used for drywall and plywood.
-- **Electrical**: Used for outlets and switches.
-- **Automotive**: Used for auto body repair.
-```
-
-After (prose):
-> Used in construction (drywall, plywood), electrical work (outlets, switches), and auto body repair.
-
-After (list, if list is genuinely needed):
-```
-- Construction: drywall, plywood
-- Electrical: outlets, switches
-- Automotive: auto body repair
-```
-
-## Markdown leakage in non-Markdown contexts
-
-When the target is plain text, email, a CMS that doesn't render Markdown, or a wiki with different syntax: strip all `**`, `#`, `` ``` ``, `---`. Convert headings to either real headings in the target syntax or to plain capitalized lines followed by a blank line.
-
-## Lexical elegant variation
-
-If one concept is being referred to with three different phrasings in adjacent sentences, pick one phrasing and stick with it. Repetition reads more natural than thesaurus-driven variation.
-
-Before:
-> Vierny supported the artists. Her commitment to the avant-garde fostered creativity. This dedication to Russian non-conformists shaped the era.
-
-After:
-> Vierny supported the artists. Her backing shaped the era.
-
-## Dead metaphor
-
-If one metaphor recurs more than twice, keep the strongest instance and state the rest literally.
-
-Before:
-> Platforms are the doors. Products build walls; platforms build doors. Without doors, the ecosystem has no way in, and every wall is just another wall.
-
-After:
-> Products are closed; platforms let others build on top. Without that opening, there's no ecosystem.
-
-## Craft-metaphor verbs
-
-Replace a decorative craft verb with its plain equivalent. Use a more specific action only when the source supplies it.
-
-| Before | After |
-|---|---|
-| `We sharpened the positioning.` | `We made the positioning clearer.` |
-| `Observability was bolted on afterwards.` | `Observability was added afterwards.` |
-| `The strategy is woven through every team.` | `The strategy applies across every team.` |
-| `Let me unpack the tradeoff.` | `Let me explain the tradeoff.` |
-| `These constraints are baked into the protocol.` | `The protocol requires these constraints.` |
-| `The findings surfaced a gap in coverage.` | `The findings revealed a gap in coverage.` |
-
-Judge by density, not by sight of the word. One craft verb in a long piece is ordinary English, and several of these have literal senses (a map that is mapped, a frame that is framed). A cluster of them, or one standing in for a specific the author has, is the tell. If the literal rewrite needs a fact the text doesn't contain, flag the gap rather than inventing the detail.
-
-## Analogy budget
-
-Apply the permission test in [tells.md](tells.md). When an analogy fails it, delete it and describe the thing.
-
-| Before | After |
-|---|---|
-| `Your onboarding is a leaky bucket.` | `42% of users drop on step 2, where the form asks for billing before showing the product.` |
-| `The strategy is a compass for the org.` | `The strategy says which customers to ignore.` |
-| `Think of the queue as a post office.` | `The queue holds jobs until a worker is free.` |
-
-Cutting a single decorative analogy is Tier 2. Reworking one the whole piece is built on is Tier 3, so ask.
-
-## Tone and rhetorical tells
-
-These usually get deleted, not rewritten. The setup phrase is the tell; the point underneath is often fine on its own.
-
-| Before | After |
-|---|---|
-| `Here's the kicker: the API is rate-limited.` | `The API is rate-limited.` |
-| `Think of it as a Swiss Army knife for your workflow.` | Delete the analogy; describe what it does. |
-| `Imagine a world where every tool has intelligence built in.` | `If every tool had this built in, ...` (or state the claim directly) |
-| `Let's break this down step by step.` | Delete. Just explain it. |
-| `The truth is simple: nobody tested it.` | `Nobody tested it.` |
-| `And yes, I'll be honest, I love this model.` | `I like this model.` (or cut) |
-| `This will fundamentally reshape how we think about everything.` | State the actual, bounded effect. If you can't, cut the sentence. |
-| `This is the classic supervision paradox.` | Describe the problem in plain words; drop the coined label unless it's genuinely established. |
-
-## Unicode arrows
-
-Replace `→` with a word or restructure. Never leave the arrow.
-
-| Before | After |
-|---|---|
-| `Input → Processing → Output` | `Input, then processing, then output.` |
-| `More engagement → more revenue.` | `More engagement means more revenue.` |
-
-## Short punchy fragments
-
-Rejoin fragments into complete sentences with varied length. Don't flatten everything to one rhythm; the goal is variety, not uniformity. Ask first if the staccato is clearly deliberate voice.
-
-Before:
-> He published this. Openly. In a book. As a priest.
-
-After:
-> He published it openly, in a book, as a priest.
-
-## Listicle in a trench coat
-
-Either commit to a real list or write real connected prose. Don't leave the "The first... The second..." scaffolding in disguised paragraphs.
-
-Before:
-> The first wall is the missing API. The second wall is the lack of delegated access. The third wall is the absence of scoped permissions.
-
-After (prose):
-> Three things block it: there's no API, no delegated access, and no scoped permissions.
-
-## One-point dilution and fractal summaries
-
-Cut. If a section restates the thesis with a fresh metaphor but adds no new fact or argument, delete the restatement. Remove per-section previews and recaps that only echo what the prose already says. These are wholesale-deletion candidates, so confirm before cutting large blocks (see risk tiers).
-
-## Historical analogy stacking
-
-Keep at most one example that actually earns its place; delete the rapid-fire roll call.
-
-Before:
-> Apple didn't build Uber. Facebook didn't build Spotify. Stripe didn't build Shopify. AWS didn't build Airbnb.
-
-After:
-> Platform owners rarely build the apps on top of them (AWS didn't build Airbnb).
-
-## Reply-shaped tells
-
-Deletion in every case. The point survives; the scaffolding around it is the tell.
-
-| Before | After |
-|---|---|
-| `I want to be exact about my own role here. I reviewed the diff but did not run it.` | `I reviewed the diff but did not run it.` |
-| `Two constraints shape the design. The first is latency; the second is cost.` | `Latency and cost shape the design.` |
-| `There are three reasons this fails. First, ...` | `This fails because ...` (then the reasons, unnumbered unless the order matters) |
-| `One endpoint, rather than four, for two reasons.` | `One endpoint, because the four shared a schema and a rate limit.` |
-| `So, to answer your question: yes, the employee can be added to the app.` | Delete. The body already said yes. |
-| `In short, this gives you everything you need to ship.` | Delete. |
-| `I don't mean any of that as cynicism about players.` | Delete, unless someone actually read it as cynicism. |
-
-Keep a count when the number itself is the information ("all four endpoints share the bug").
-
-Premise stacking (a paragraph of evidence before the question it supports): move the question to the top, keep the single strongest piece of evidence after it, cut the rest. Ask first if the evidence has to stay for the reader (Tier 3).
-
-Never-ending conclusion: find the first sentence of the ending that says something the body did not, keep it, delete what follows. If every clause is new content, the piece needed one more body paragraph rather than a longer ending.
-
-## Comma-clipped trailing phrase
-
-Land the sentence on the point, or give the tail its own sentence.
-
-| Before | After |
-|---|---|
-| `She was asked forty times, mentoring.` | `She was asked forty times. All of it was mentoring.` |
-| `Put the note above the content, and save.` | `Put the note above the content and save.` |
-
-## Self-echo
-
-Delete the second occurrence, or say the second thing in its own words.
-
-Before:
-> The dashboard quietly became the source of truth. [...] Nothing you have ever believed can quietly disappear.
-
-After:
-> The dashboard became the source of truth. [...] Nothing you have believed is deleted.
-
-## Appeal to familiarity
-
-Same rule as weasel attributions: name the source, or drop the claim of consensus.
-
-| Before | After |
-|---|---|
-| `A classic case of premature optimization.` | `Premature optimization.` |
-| `As we all know, tests catch regressions.` | `Tests catch regressions.` |
-| `The notoriously slow build...` | `The build takes twenty minutes...` |
-
-## Wh-word headings
-
-Name the content the section holds.
-
-| Before | After |
-|---|---|
-| `## What we do differently` | `## Pricing per seat, not per query` |
-| `## Where the market is stuck today` | `## Three blocked regions` |
-| `## Why this matters` | Usually delete the section, or fold its one real point into the previous one. |
-
-## "Where it actually lives"
-
-Name the thing.
-
-| Before | After |
-|---|---|
-| `That is where the complexity actually lives.` | `The retry logic is the complex part.` |
-| `Where the real work happens is the review loop.` | `The review loop does the real work.` |
-
-## Quotable one-liners
-
-Tier 3. If the line says nothing the paragraph did not, cut it. If the author wants one, one per piece.
-
-| Before | After |
-|---|---|
-| `Every metric that rewards volume punishes leverage.` | Delete, or replace with the specific: `Counting tickets rewards splitting tickets.` |
-
-## Collaborative "we"
-
-Tier 3. Restore the author's pronoun where the source was first person or the material is personal. Leave a "we" the organisation actually uses.
-
-## When to leave it alone
-
-- Quotes from other people (don't rewrite their voice)
-- Direct citations of source material
-- Technical jargon that has only one right word
-- The author's deliberate stylistic choices (e.g. they actually like em dashes and the text is already otherwise clean)
-- Text that already reads human and has at most one or two minor tells (don't over-rewrite)
+A retained scan match is acceptable when it serves the text. Report material unresolved
+ambiguities; do not invent problems or harmless-looking replacements to justify an edit.

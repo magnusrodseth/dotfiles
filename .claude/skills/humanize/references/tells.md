@@ -1,454 +1,190 @@
 # AI tells taxonomy
 
-Patterns that indicate AI-generated prose. Two sources: Wikipedia's "Signs of AI writing" field guide (strong on GPT-4-era vocabulary and citation artifacts), filtered to general prose; and tropes.fyi (strong on the newer structural and tonal tells that survive a vocab scrub).
+Use this taxonomy to find formulaic or unhelpful prose. A match is a candidate for review,
+not proof of AI authorship. Human writers use these devices too. Judge the function of
+the wording, its density, the genre and the author's intent.
 
-One or two of these in a passage is coincidence. Clusters across multiple categories are signal. The vocabulary and citation tells are high-precision; the rhetorical, tonal, and short-fragment tells are lower-precision (a human might do any one deliberately), so weigh them by density and prefer to ask before rewriting voice.
+The meaning check and [risk tiers](risk-tiers.md) govern every correction.
+The user's requested scope determines whether restructuring or voice changes are authorized.
+Exact quotations, code, mathematical notation and citation keys remain protected.
 
 ## Currency
 
-tropes.fyi tags each trope with how it is trending, and the tag changes what a hit means. Snapshot of 27.08.2026:
+The tropes.fyi snapshot from 27.08.2026 tagged patterns as new, rising, consistent or fading.
+These are dated observations from a style taxonomy, not validated model-identification labels.
+See [sources](sources.md). Use them to revisit examples as writing habits change.
 
-| Tag | Tells | What a hit means |
-|---|---|---|
-| **new** (2026) | reasoning leak, premise stacking, preamble, compulsive counting, belaboring the unnecessary, self-echo, quotable one-liners, forced figurative language, never-ending conclusion, comma-clipped trailing phrase, synonym cycling, appeal to familiarity, promotional language, Wh-word headings, "where it actually lives" | Current-model output. Highest priority: these are what a 2026 draft trips on, and most of them survive a vocabulary scrub. |
-| **rising** | short punchy fragments, grandiose stakes inflation, invented concept labels, fractal summaries, excessive enumeration (listicle in a trench coat) | Same, slightly older. |
-| **consistent** | negative parallelism, em dashes, rule of three, magic adverbs, tie-back, vague attributions, collaborative "we", "Not X. Not Y. Just Z.", "Here's the kicker", title case headings, tapestry/landscape, signposted conclusion | Present in every model generation so far. Always worth the grep. |
-| **fading** | "The X? A Y.", anaphora, bold-first bullets, "Think of it as", unicode decoration, historical analogy stacking, "Imagine a world", false vulnerability, false ranges, "serves as", one-point dilution, content duplication, delve and friends, "it's worth noting", "let's break this down", superficial -ing tails, "despite its challenges" | Still fixed when found. A text that trips only these is more often an older draft, or a person who absorbed 2023-era LLM output, than a current model, so do not call it AI on fading tells alone. |
+| Tag | Examples in that snapshot |
+|---|---|
+| New | Reasoning leaks, preambles, premise stacking, compulsive counting, self-echo, quotable one-liners, synonym cycling, appeals to familiarity, promotional language, Wh-word headings. |
+| Rising | Forced fragments, grandiose stakes, invented labels, repeated summaries, lists disguised as prose. |
+| Consistent | Negative parallelism, dense em dashes, padded triads, vague attributions, magic adverbs, tie-backs, collaborative "we". |
+| Fading | Self-answered questions, stock analogies, decorative arrows, historical example stacking, false ranges, "serves as", "delve", didactic openers and empty participial tails. |
 
-The evidence for taking currency seriously is the word-frequency record. "delve" and "intricate" fell in arXiv abstracts within weeks of being named as ChatGPT words in April 2024, while less conspicuous LLM-favoured words ("significant", "additionally") kept rising (Geng & Trotta 2025, [sources.md](sources.md)). Naming a tell retires it and the behaviour moves elsewhere, which is also why this file names registers and not only tokens.
+Vocabulary frequencies vary by corpus and period. Do not infer a draft's age or model from
+these tags, and do not replace established terms merely because they appear on a list.
 
-## Content tells
+## Content and evidence
 
-### Puffery / undue significance
-Inflating the importance of mundane subjects. Adding statements that the topic "represents", "marks", "contributes to" some broader trend.
+### Inflated significance
 
-Watch for: *stands as, serves as, is a testament to, plays a vital/significant/crucial/pivotal/key role, underscores/highlights its importance, reflects broader, symbolizing its ongoing/enduring/lasting, contributing to, setting the stage for, marking/shaping the, represents/marks a shift, key turning point, evolving landscape, focal point, indelible mark, deeply rooted, boasts a, nestled, in the heart of, groundbreaking, renowned, diverse array, rich cultural heritage.*
+Decoration that claims importance without describing an effect:
+"groundbreaking", "a testament to", "reshapes everything", "in the heart of".
+In marketing, judge the requested voice and the support for the benefit. Keep factual
+descriptions; do not replace hype with an invented achievement.
 
 ### Superficial analysis tails
-Sentences ending with a present-participle phrase that adds vague significance. Often attached to neutral facts to puff them up.
 
-Watch for sentence endings like: *..., highlighting X. ..., underscoring X. ..., emphasizing X. ..., reflecting X. ..., symbolizing X. ..., contributing to X. ..., fostering X. ..., showcasing X. ..., ensuring X. ..., cultivating X.*
+Trailing clauses such as "highlighting its importance" or "reflecting broader trends"
+can add vague significance. Delete only when the clause adds no substantive relation,
+scope or evidence. A participial clause can also express a necessary action or consequence.
 
-Measured, not anecdotal: instruction-tuned models use present participial clauses at 2 to 5 times the human rate (GPT-4o at 5.3x) and nominalizations at about twice it (Reinhart et al. 2025, [sources.md](sources.md)). The -ing tail is the most robust grammatical fingerprint in the literature, and it outlives any vocabulary list.
+### Unnamed authorities and borrowed consensus
 
-### Weasel attributions
-Vague authorities cited instead of specific sources. Single sources presented as widespread consensus.
+"Experts argue", "industry reports suggest", "famously", "as we all know".
+Name the supplied source when available. If absent, preserve attribution and uncertainty
+and flag the gap outside the prose. A suggested result must not become an established fact.
 
-Watch for: *Industry reports, observers have cited, experts argue, some critics argue, scholars have noted, researchers treat X as, several sources/publications (when only one or two are present), it is widely understood, is described in scholarship as.*
+### Unsupported specificity
 
-### Appeal to familiarity
-The unnamed authority is the reader's own supposed prior knowledge. Asserting that something is canonical or well known borrows consensus without evidence. The same move as a weasel attribution, pointed inward.
+A polished name, number, date, quote or citation can be fabricated. Compare specific details
+with the original and supporting material. Source existence, correct metadata and support
+for the claim are separate questions.
 
-Watch for: *a classic, famously, notoriously, as we all know, as everyone knows, it is well known that, needless to say.*
+### Limitations and confidence
 
-### Negative parallelisms
-"Not X, but Y" / "Not just X, but also Y" / "It's not X, it's Y". Setup-payoff cadence that mimics punched-up sales writing. AI uses it to manufacture false profundity by framing every point as a surprising reframe. One per piece can land; ten is an insult to the reader.
+Keep words such as "may", "often", "most", "in this sample" and "suggests" when they
+express real uncertainty or scope. Cut a hedge only when its removal preserves confidence.
+Do not remove a limitations section because it resembles a template.
 
-Examples:
-- "This isn't just a meme, it's a celebration of..."
-- "Not a career, not a body of work, just an algorithmic moment."
-- "The issue here isn't sourcing, it's framing."
+## Rhetoric
 
-Variants to catch:
-- **Causal:** "not because X, but because Y" (every explanation framed as a surprise reveal).
-- **Em-dash dismissal:** "X, not Y" ("It's backwards, not bold").
-- **Cross-sentence reframe:** the same noun negated then repositioned across two sentences. "The question isn't X. The question is Y."
+### Negative parallelisms and softened reframes
 
-Other shapes with the same setup-payoff move: *Forget X. Focus on Y. / Less X, more Y. / X is dead. Y is the future. / Stop thinking X. Start thinking Y. / You don't need X. You need Y. / It was never about X. It was always about Y.*
+Setup-and-reveal forms include "not just X, but Y", "not because X, but because Y",
+"The question isn't X. The question is Y", and "Most people think X. In reality, Y".
 
-#### Softened reframes (the ones that evade a "not" grep)
-The same structure with the negation dissolved into a concessive opener. These are the hardest variant to catch mechanically, because the word "not" never appears. The test is structural: does the passage set up a frame only to dismiss and upgrade it?
+Inspect whether the rejected frame conveys a real fact, objection or contrast.
+"The meeting is on Tuesday, not Thursday" corrects information and stays.
+Removing "not" or a comparison can change meaning even when the sentence becomes shorter.
+Check English and Norwegian forms, including "ikke bare X, men Y".
 
-Watch for: *While X may seem..., Although X appears..., Sure, X..., At first glance, X..., On the surface, X..., Most people think X..., Conventional wisdom says X..., Everyone talks about X...* followed by a pivot.
+### Dramatic countdowns and self-answered questions
 
-The pivot words that do the work: *but, yet, actually, really, instead, rather, ultimately, in reality, the truth is, what matters is, the real, the deeper, the hidden, the overlooked.*
+"Not X. Not Y. Just Z." and "The result? Devastating."
+Recast empty dramatic setup when the underlying claim survives. A genuine rhetorical
+question or deliberate speech device can belong to the author's voice.
 
-Examples:
-- "Most teams think they have a hiring problem. In reality, their standards are unclear."
-- "On the surface, this is a caching bug. The deeper issue is the data model."
+### Padded triads and repeated openings
 
-Also appears as headings ("The real problem", "From chaos to clarity", "Not a tool. A system."). Use a direct heading instead.
+Three near-synonyms may be padding; three distinct properties are information.
+Repeated sentence openings may be monotonous or deliberate anaphora. Keep real list
+members and useful repetition. Do not change item counts or sentence openings to meet a quota.
 
-**Allowed contrast:** correcting a specific factual, legal, technical, date, number, name, or scope error. "The meeting is on Tuesday, not Thursday." The ban targets contrast used for drama or manufactured insight, never contrast that carries real information.
+### False ranges and stacked historical comparisons
 
-### Dramatic countdown ("Not X. Not Y. Just Z.")
-Negating two or more things in staccato before revealing the "real" one. Builds false tension and a false sense of narrowing to the truth. A cousin of negative parallelism and rule-of-three, but distinctive enough to name.
-
-Examples:
-- "Not a bug. Not a feature. A fundamental design flaw."
-- "Not ten. Not fifty. Five hundred and twenty-three violations."
-
-### Rhetorical question-and-answer ("The X? A Y.")
-A question nobody asked, posed and immediately answered for dramatic effect. The model treats this as the height of punchy writing.
-
-Examples:
-- "The result? Devastating."
-- "The worst part? Nobody saw it coming."
-- "So what changed? Everything."
-
-### Rule of three
-Triplets everywhere. Three adjectives, three short phrases, three bullets. Used to make superficial analyses sound comprehensive.
-
-Examples:
-- "engaging, repetitive, and entertaining"
-- "identity, authenticity, and what it means to live on"
-- "construction, renovation, hobby and craft, automotive"
-
-### Anaphora abuse
-The same sentence opening repeated in quick succession. One deliberate anaphora is a rhetorical device; three or four back-to-back is a pattern-generation tic.
-
-Examples:
-- "They assume users will pay. They assume developers will build. They assume ecosystems will emerge."
-- "They have built engines, but not vehicles. They have built power, but not leverage."
-
-### False ranges ("from X to Y")
-"From X to Y" where X and Y aren't endpoints of any real scale, so there's no meaningful middle. Legitimate ranges imply a spectrum ("from novice to expert"). AI uses the frame to dress up a list of two loosely related things.
-
-Examples:
-- "From innovation to cultural transformation."
-- "From the Big Bang to the cosmic web."
-- Tell: ask "what's in the middle?" If nothing, it's a false range.
-
-### Outline-style "Challenges and Future" sections
-Rigid formula: "Despite its [positives], X faces several challenges, including..." closing with "Despite these challenges, X continues to thrive..." or "Future investments could enhance...". Pure filler.
-
-### Knowledge-cutoff / speculation hedges
-The model admitting it doesn't know, then guessing anyway.
-
-Watch for: *as of my last knowledge update, up to my last training update, while specific details are limited, not widely documented/disclosed, based on available information, in the available sources, likely supports, maintains a low profile, keeps personal details private.*
-
-### Didactic disclaimers (older models, 2022–2024)
-Unprompted advice to an imagined reader.
-
-Watch for: *it's important/critical/crucial to note, worth noting, it bears mentioning, may vary depending on, it is crucial to differentiate, please consult.* Also the empty-emphasis openers *Importantly, Interestingly, Notably* when they introduce a point without connecting it to the argument.
-
-## Rhetorical and tone tells
-
-Newer models (mid-2024 onward) lean less on flagged vocabulary and more on rhetorical posture. These are the tells that survive a vocab scrub. Most are lower-precision than the citation/vocab tells: a human might do any one deliberately, so weigh density and ask before rewriting voice.
-
-### False suspense transitions
-Promising a revelation, then delivering an ordinary point. Manufactured drama.
-
-Watch for: *Here's the kicker, Here's the thing, Here's where it gets interesting, Here's what most people miss, Here's the deal.*
-
-### Patronizing analogy
-Reaching for a simplifying metaphor the reader didn't need. The model defaults to teacher mode and assumes a metaphor is always clarifying (often it's less clear than the plain statement).
-
-Watch for: *Think of it as..., Think of it like..., It's like a... (for X), It's basically a..., Imagine, Picture, As if, As though, Works like, Acts like, Functions as, The X of Y, A bridge between, A lens for, A roadmap for, The engine of, The backbone of, The DNA of.*
-
-**Budget.** Machine prose reaches for an analogy at every abstraction, so density alone is diagnostic. Roughly: none needed under 800 words, at most one per 800 to 1500, one per 1500 beyond that. Never stack two figures on one idea.
-
-**Permission test.** Keep an analogy only if every one of these holds. The subject is genuinely unfamiliar, abstract, or technical; the analogy makes it easier rather than prettier; it is shorter than the literal explanation; it is exact enough not to mislead; it reads normally aloud. If any fails, write it literally. This is a judgement call on tone, so a load-bearing analogy is Tier 3, ask before cutting.
-
-**Overused figurative families** for abstract work: journey, battlefield, machine-for-people, ecosystem, engine/fuel, map/compass, signal/noise (unless literal), iceberg, north star, flywheel, scaffolding, plumbing, gardening, chess, sports, puzzle.
-
-### Futurism invitation
-Selling an argument by asking the reader to picture a wonderful hypothetical, usually followed by a list of good things that happen if you accept the premise.
-
-Watch for: *Imagine a world where..., Imagine if..., Picture this:..., In that world, ...*
-
-### Pedagogical voice
-Hand-holding an audience that doesn't need it, even in expert writing. Announces the act of explaining.
-
-Watch for: *Let's break this down, Let's unpack this, Let's dive in, Let's explore, step by step.*
-
-### Asserting obviousness instead of proving it
-Telling the reader a point is clear, simple, or unambiguous in place of demonstrating it. If you have to say it's obvious, it usually isn't. Includes the "privileged insight" reveal: "but none of that is the real story. The real story is..."
-
-Watch for: *The truth is simple, The reality is (simpler/starker), History is clear/unambiguous, It's obvious that, Make no mistake.*
-
-### False vulnerability
-Performed self-awareness or confession that costs the writer nothing. Real vulnerability is specific and uncomfortable; the AI version is polished and risk-free.
-
-Watch for: *And yes, I'll admit..., Let's be honest..., since we're being honest..., This isn't a rant, it's a...*
-
-### Grandiose stakes inflation
-Inflating the stakes of an ordinary argument to world-historical significance. A post about API pricing becomes a meditation on the future of civilization. Related to puffery, but about consequence rather than importance.
-
-Watch for: *will fundamentally reshape everything, will define the next era of, changes everything, something entirely new, the future of X depends on.*
-
-### Invented concept labels
-Coining an authoritative-sounding compound term and using it as if it were an established, defined concept. Usually an abstract problem-noun (paradox, trap, creep, divide, vacuum, inversion) bolted to a domain word. Names the thing to skip the argument. Several in one piece is a strong signal.
-
-Examples: *"the supervision paradox", "the acceleration trap", "workload creep".*
-
-## Language tells
-
-### AI vocabulary
-Specific words overused by LLMs. Density matters: one is coincidence, five across a paragraph is signal.
-
-**GPT-4 era (2023 to mid-2024):** Additionally (sentence-initial), boasts (meaning "has"), bolstered, crucial, delve, emphasizing, enduring, garner, intricate/intricacies, interplay, key (adj.), landscape (abstract), meticulous/meticulously, pivotal, underscore, tapestry, testament, valuable, vibrant.
-
-**GPT-4o era (mid-2024 to mid-2025):** align with, bolstered, crucial, emphasizing, enhance, enduring, fostering, highlighting, pivotal, showcasing, underscore, vibrant.
-
-**GPT-5 era (mid-2025+):** emphasizing, enhance, highlighting, showcasing, plus heavy "media coverage / attribution" language.
-
-**Claude era (2026+).** A separate lineage from the GPT list, and mostly *phrases* rather than single words. Attribution differs by model, so keep the two apart rather than lumping them as generic "Claudisms" the way most write-ups do:
-
-- **Opus 5:** carry the argument, worth stating plainly, ", and the trap", "the X matters more" (as a closing move), *move* (meaning a rhetorical or strategic choice), full stop (as terminal emphasis).
-- **Fable 5:** load-bearing (applied to a sentence, claim, or abstraction), stated fairly, arrow chains (`A → B → fails`), hyphen-stacked compounds, self-coined labels reused as if established.
-- **Both:** honest / honestly and genuine as unearned sincerity markers, key insight as a filler intensifier, synthesize for ordinary combining.
-
-These sit downstream of one register, not a vocabulary (see [Turn-of-phrase optimization](#turn-of-phrase-optimization)). Grep them to *detect*; do not hand a writer the list as a rewrite instruction.
-
-**Robust** is era-spanning. So is **leverage** (as a verb).
-
-**Also era-spanning:** certainly, utilize, streamline, harness, paradigm, synergy, ecosystem, framework (when used as a vague abstraction rather than a named thing), gated (for "restricted" or "conditional").
-
-#### Product-marketing register
-A separate cluster from the encyclopedic vocabulary above, and the one that shows up in landing pages, launch posts, README intros, and app-store copy. Same rule applies: one is coincidence, a cluster is signal. Cut the decoration and state what the thing does.
-
-seamless, unlock, empower, elevate, supercharge, frictionless, effortless, game-changer, revolutionize, revolutionary, cutting-edge, state-of-the-art, best-in-class, groundbreaking, breakthrough, unparalleled, unprecedented, transformative, disruptive, reimagine, redefine, democratize, scalable, turnkey, plug-and-play, future-proof, intuitive, holistic, data-driven, actionable, mission-critical, visionary, pioneering, versatile, embark, dive into, deep dive, look no further, rest assured.
-
-Note the register trap. Some of these are the correct technical word in the right context: *scalable* about an actual scaling property, *intuitive* in an HCI paper, *data-driven* describing a real methodology. The tell is decorative use, where deleting the word costs the sentence nothing.
-
-### Magic adverbs
-An adverb dropped in to make a mundane claim feel significant or subtly powerful. "Quietly" is the flagship. The word implies hidden importance the sentence never earns.
-
-Watch for: *quietly* (quietly orchestrating, quietly suffocating, a quiet intelligence behind it), *deeply, fundamentally, remarkably, arguably, profoundly, subtly.*
-
-Lower precision than the vocab list. Humans use these too. Signal is density plus the "unearned significance" function: cut the adverb and the sentence usually says the same thing more honestly.
-
-### Copulative avoidance
-LLMs swap "is/are" for fancier alternatives.
-
-Watch for: *serves as, stands as, marks, represents, constitutes, features, offers, boasts, maintains, refers to* (in lead sentences where "is" would be natural).
-
-Tell: "X serves as a hub" instead of "X is a hub". "The gallery features four spaces" instead of "The gallery has four spaces".
-
-### Lexical elegant variation
-Repetition-penalty avoidance. Same concept referred to by 3+ different phrasings within a paragraph, even when repetition would be clearer.
-
-Example: a paragraph that calls one thing "Soviet artistic constraints", then "state-imposed artistic norms", then "the confines of socialist realism", all within a few sentences.
-
-### Dead metaphor (the opposite failure)
-Latching onto one metaphor and beating it into the ground for a whole piece. A human introduces a metaphor, uses it, and moves on; AI repeats the same figure 5-10 times ("primitives", "walls and doors", "the ecosystem needs ecosystems"). Where elegant variation over-synonymizes, this over-repeats a single image.
-
-### Self-echo
-A word or phrase from earlier in the same piece reused as if paying it off. It reads as a deliberate callback and is usually narrow vocabulary resurfacing under topic pressure ("quietly become the real source of truth ... nothing you've ever believed can quietly disappear"). Distinct from dead metaphor (one figure beaten flat) and from elegant variation (one referent, many names): here one phrasing recurs across unrelated points. Test: would the second use survive if the first were deleted? If it only works as an echo, cut one. Tier 3, since a callback can be deliberate.
-
-### Craft-metaphor verbs for abstract work
-Physical-craft verbs applied to ideas, strategy, products, and arguments. The model reaches for them because they sound considered, and they cost nothing to write because they assert care without describing any action. A current tell, and it survives every vocabulary scrub aimed at the GPT-4 word list.
-
-Watch for: *sanded down, bolted on, stripped back, stitched together, woven, layered, carved out, baked in, distilled, unpacked, crystallized, sharpened, surfaced, amplified, anchored, framed, mapped, cemented, bridged.*
-
-Lower precision than the vocabulary lists, and deliberately so. Several of these (framed, mapped, unpacked, surfaced, anchored) are ordinary words with literal senses, and *baked in* and *bolted on* are near-idiomatic in software. Weigh by density and by whether a literal verb would say more: cut, added, removed, changed, joined, caused, showed, explained, reduced, clarified, fixed, named, listed, compared, chose, rejected.
-
-Tell: "we sharpened the positioning" where "we cut two of the four claims" is the actual thing that happened. The craft verb is standing in for the specific.
-
-### "Where it actually lives"
-The true source of something framed as a place it inhabits, standing in for the direct answer. "Where the complexity actually lives" instead of naming the complex part.
-
-Watch for: *where X actually/really lives, where the real work happens, where the value sits.* Fix: name the thing.
-
-### "Concrete" as a defensive tic
-When defending text against AI accusations, models lean on "concrete": "no concrete evidence", "without concrete examples". Specific to defensive contexts.
-
-## Style and markup tells
-
-### Em dashes (—)
-LLMs overuse em dashes, especially in places where a human would pick a comma, parentheses, or a colon. Pat, formulaic, sales-y cadence.
-
-A few em dashes in long-form essay writing is normal. Dense em-dash use in short-form text (emails, comments, short paragraphs) is a strong signal, especially when combined with negative parallelisms.
-
-### Emphatic / appositive colon
-A colon dropped mid-paragraph to deliver a punchy point or to restate the clause for emphasis, where a plain sentence would read better: "This is about one thing: placement." "The answer is simple: ..." "Dette handler om plassering: rett aktør på rett node." The colon-as-drumroll is a listicle/sales cadence; a human more often writes a full sentence or bridges with a connective word ("namely", ", nemlig", ", altså", ", for eksempel", ", for").
-
-Density matters: one or two in a long piece is fine, but a per-section drumroll is the tell. Same family as the em dash, and it often shows up right where the em dash was scrubbed out.
-
-Not this tell (leave alone): a colon introducing a genuine multi-item list or a block/figure that follows; a source or label attribution ("Kilde: ...", "Figure 2: ..."); a fixed idiomatic opener ("For ordens skyld: ...", "Konkret: ...").
-
-### Curly quotes and apostrophes
-`"..."`, `'...'`, `'` (right single quote as apostrophe). ChatGPT and DeepSeek output curlies by default. Claude and Gemini don't.
-
-Caveats: macOS smart-quotes setting, Microsoft Word, Chicago Manual of Style typesetting all produce curlies legitimately. Treat as supporting evidence only, except in technical or casual contexts where curlies would be unusual.
-
-### Unicode decoration (arrows and typed-out symbols)
-Characters a person typing in a normal editor wouldn't reach for: unicode arrows (`→`, `⇒`, `↔`), and decorative symbols mid-prose. Claude in particular loves `→`. A human types `->` or rewrites the sentence. Replace `→` with "to", "leads to", "then", or restructure.
-
-Watch for: *Input → Processing → Output*, *engagement → revenue → growth.*
-
-### Title case in section headings
-Capitalizing All Main Words In Headings. Common in AI output, against most style guides for sentence-case prose.
-
-### Wh-word headings
-Headings built on What / Where / Why / How / When ("What we do differently", "Where the market is stuck today", "Why this matters"). The default shape a model reaches for when it has to name a section, in articles and on slides alike, and a tell on its own regardless of what sits under the heading. Grep: `^#+ (What|Where|Why|How|When)\b`. Fix: name the content ("Pricing per seat", "Three blocked regions").
-
-### Boldface overuse
-Bolding **every** instance of a chosen phrase in a "key takeaways" pattern. Inherited from readme files, listicles, slide decks, sales pitches.
-
-### Inline-header vertical lists
-List items where the marker is followed by a bold inline header, colon, then descriptive text:
-- **Standard Rotary Saws**: Typically used for drywall and light materials.
-- **Heavy-Duty Rotary Saws**: Designed for tougher materials.
-
-Strong signal when applied to topics that don't need this structure.
-
-### Markdown leakage
-Bare `**bold**`, `#` headings, `---` thematic breaks in text that should be plain prose (e.g. pasted into a CMS, email, or wiki that doesn't render Markdown).
-
-Three-backtick fenced blocks in non-code contexts. Mixed Markdown and target-format syntax (Markdown plus wikitext, Markdown plus BBCode).
-
-### Unnecessary tables
-Three- or four-row tables that should be prose or a single sentence. Common pattern: "Market and Statistics" with one stat per row.
-
-## Composition and structure tells
-
-Document-level and paragraph-level patterns. These survive any word-level scrub, so they matter most on longer pieces.
-
-### Short punchy fragments
-Very short sentences or fragments used as standalone paragraphs for manufactured emphasis. One thought per line, no state to hold. RLHF pushed models toward this "writing for readability" style; almost nobody drafts this way, because it doesn't match how people think or speak.
-
-Examples:
-- "He published this. Openly. In a book. As a priest."
-- "Platforms do."
-
-Lower precision: punchy fragments are a legitimate human device. The tell is when a whole passage is built from them. Ask before flattening; it can be deliberate voice.
-
-### Comma-clipped trailing phrase
-A short tail hung off a comma to close a sentence instead of landing the point directly. Either a clipped clause that finishes the thought sideways, or a bare noun tacked on as an afterthought: "asked forty times, mentoring." "above the content, and save." Sibling of the punchy fragment, the same withheld-payoff cadence inside one sentence instead of across paragraphs. The grep (`, [a-z]+\.$`) is low precision; judge each hit.
+"From innovation to transformation" supplies no meaningful scale.
+Historical company examples can borrow authority without establishing the comparison.
+Retain a real range or a relevant example. Substantial cuts need authorized scope.
 
 ### Turn-of-phrase optimization
 
-The register that generates the punchy fragments above, the Claude-era phrase list, the emphatic colon, and the em dash. Naming it matters because these are one behaviour with several surface forms, and treating them as separate vocabulary items means fixing four symptoms and leaving the cause.
+Sentences repeatedly withhold a claim for a punchline. Emphatic colons, forced fragments
+and quotable endings can all express this habit.
 
-The pattern: the sentence is built to *land* rather than to state. It withholds the claim through a setup clause, then delivers it as a payoff. Every paragraph closes on its strongest phrasing rather than its most useful qualification. The prose reads as quotable, and each individual sentence is good, which is why it survives a vocabulary scrub intact.
+State the claim directly and retain its qualification. A relevant limitation may properly
+end a sentence or paragraph. Do not flatten a deliberate voice choice without authorization.
+A phrase scan finds candidates; it does not prescribe every replacement.
 
-Diagnostic, not a word list. Ask of a passage: could this claim have been stated first, plainly, with the qualification after it? If yes, and the piece never does that anywhere, the register is the tell.
+### Forced figurative language and invented labels
 
-Examples of the move rather than the words:
-- Setup-then-payoff: "The number is not the interesting part. The timing is."
-- Claim withheld for a closing beat: "...and that is the trap."
-- Terminal emphasis substituting for an argument: "This is wrong, full stop."
+"Think of it as...", "the engine of", "the north star", or a newly coined "X paradox"
+may replace an explanation with a decorative comparison.
 
-**Rewrite at the register, not the phrase.** Banning the enumerated phrases displaces the behaviour into unlisted synonyms, because the optimization target is the cadence and not the vocabulary. Anthropic's own model-specific prompting guidance says the same for generation: a short instruction about the register is as effective as enumerating each pattern, and naming specific tokens is *less* effective than the general form. Instruct for the register ("state claims directly rather than building toward a turn of phrase"), then let the phrase greps catch the residue.
+Keep an analogy that accurately helps this reader understand an unfamiliar subject.
+A central analogy is a structural choice. There is no word-count budget for analogies.
+Use a literal description only when its meaning is supported by supplied material.
 
-Tier 3. This is voice, and some writers land sentences on purpose. Ask before flattening a whole piece.
+## Word choice
 
-### Quotable one-liners
-A standalone line built to be pulled out and read alone, carrying no information: "Every metric that rewards volume punishes leverage." "Story points are a planning tool with no fixed unit." The purest product of turn-of-phrase optimization. The test from tropes.fyi: read the line and say what it means. If the answer is nothing the paragraph did not already say, it is slide bait. One per piece can be voice. Tier 3.
+### Ornamental vocabulary
 
-### Listicle in a trench coat
-A list disguised as prose. Each point wrapped in a paragraph that opens "The first... The second... The third..." Often what a model does after being told to stop using bullet lists.
+Candidate words include delve, underscore, pivotal, vibrant, intricate, robust, leverage,
+utilize, streamline, harness, tapestry, landscape, paradigm, synergy and ecosystem.
+Observed phrase examples include "carry the argument", "worth stating plainly",
+"load-bearing", "key insight" and "full stop".
 
-Examples:
-- "The first wall is... The second wall is... The third wall is..."
-- "The second takeaway is that... The third takeaway is that..."
+These do not identify a model lineage. Judge the intended sense. A word in a named theory,
+software framework or technical description can be correct.
 
-### Fractal summaries
-"Tell them what you'll tell them; tell them; tell them what you told you" applied at every level. Every subsection previews and recaps itself, every section does, the document does. Reads as template-following, not thinking. (The single "In conclusion" recap is the smaller version, see Section summaries.)
+### Promotional wording and magic adverbs
 
-### One-point dilution
-A single argument restated ten ways across thousands of words. The model pads a simple thesis to feel comprehensive, rephrasing the same idea with new metaphors and examples that add nothing. An 800-word point stretched to 4000.
+"Seamless", "effortless", "unlock", "elevate", "quietly", "remarkably", "fundamentally".
+Cut decoration when it contributes nothing. Keep modifiers that actually describe timing,
+degree or a product property. Preserve the register the author chose.
 
-### Content duplication
-Whole sections or paragraphs repeated near-verbatim in one piece, a giveaway of unedited long-form output where the model lost track of what it already wrote. Rarer now, but a dead tell when present.
+### Craft metaphors and synonym cycling
 
-### Historical analogy stacking
-Rapid-fire lists of companies or eras to borrow authority, common in tech writing. "Apple didn't build Uber. Facebook didn't build Spotify. Stripe didn't build Shopify." Or "every major shift, the web, mobile, social, cloud, followed the same pattern."
+"Sharpened", "distilled", "woven", "surfaced" and "anchored" may hide an unspecified action.
+Use the literal action only when known. If "we sharpened the positioning" supplies no
+actual change, flag the missing detail rather than inventing one.
 
-## Discourse-level tells (what survives a vocab scrub)
+Use the same term for the same concept. Avoid cycling among "dashboard", "portal" and
+"hub" when the author means one thing. Preserve distinct concepts and useful repetition.
 
-The tells above live in word choice, punctuation, and paragraph scaffolding. These live one level up, in the shape of the thinking, and they are the ones a light edit does not remove. Empirically, running AI prose through surface artifact removal barely moves a discourse-level classifier (Russell et al., 2026; see [sources.md](sources.md)). All four are **Tier 3** (see [risk-tiers.md](risk-tiers.md)): they touch meaning and voice, so ask before rewriting.
+### Copulative avoidance
 
-These were surfaced by a study of AI vs. human fiction, but the patterns transfer to any reflective or narrative-leaning non-fiction (blog posts, essays, personal writing). They do not apply to terse factual text or short messages.
+"X serves as a hub" can often become "X is a hub".
+Check that a verb such as "represents", "offers" or "refers to" does not carry a distinct
+relationship before replacing it with "is" or "has".
 
-### Embodied-emotion over-writing
-The strongest single tell in the study: AI renders feeling as physical sensation (a tightening chest, cold sweat, a dimming room) instead of naming it, at more than double the human rate. "Show, don't tell" run to compulsion. The signal is when *every* emotional beat is staged through the body and nothing is ever stated plainly.
+## Formatting
 
-Tell: fear rendered as "his throat closed and the light seemed to drain from the room" where "he was afraid" is what the passage needs. Fix: name it, or keep one embodied beat and cut the rest.
+- Replace em dashes in editable prose according to the user's preference. Preserve logical
+  attachment and quoted source wording.
+- Inspect emphatic or appositive colons. Keep actual lists, quotations and useful labels.
+- Use straight quotes in editable prose; exact quotations and code remain unchanged.
+- Preserve mathematical arrows, ranges and necessary Unicode symbols. Remove decoration
+  only when its meaning can be expressed faithfully.
+- Prefer sentence case for generated headings. An informative question heading can stay.
+- Keep useful lists and highlighting. Repeated bold labels or identical section layouts
+  are candidates for simplification, not an automatic ban.
 
-### Over-explaining the theme (moralizing)
-AI states the takeaway out loud. A reflective piece ends with the narrator or author spelling out the lesson, in case the reader missed it. Humans trust the reader to infer it. Related to the surface tells "pedagogical voice" and "asserting obviousness", but this one is about handing over the *point of the whole piece*, not one sentence.
+## Reply-shaped writing
 
-Tell: a closing paragraph that restates "what this really shows us is...". Fix: end on the concrete thing and let the meaning land on its own.
+### Narrating and announcing
 
-### Vague allusion instead of the named specific
-AI gestures at references without naming them: "a famous physicist", "one major study", "a well-known framework". Humans name the physicist, cite the study, call the brand. This is the concreteness move (see [rewrite-toward-human.md](rewrite-toward-human.md)) sharpened: the tell is specifically the *unnamed* reference where a name exists. Fix only if the author knows the specific; never invent one.
+Reasoning leaks, preamble announcers and compulsive counts describe the answer instead of
+giving it: "I want to be exact", "Two constraints shape the design", "for three reasons".
 
-### Too-tidy resolution
-AI resolves everything. Loose ends get tied, tension collapses into acceptance, the ending reassures. Human writing leaves more unresolved and sits with ambiguity. In non-fiction this shows up as an essay that wraps in a neat bow and answers every question it raised. Tell: the piece has no remaining tension by the last line. Fix: keep the genuine open question instead of resolving it for effect, but only if the author's own view is actually unresolved; do not manufacture doubt.
+Delete setup that contributes nothing. Keep a count when it is information, and keep a
+concise explanation of method or limitations when the reader needs it.
 
-## Citation artifacts (hard tells)
+### Defending and repeating
 
-These are near-proof of AI involvement. Grep for them.
-
-- `utm_source=chatgpt.com` or `utm_source=openai` (ChatGPT)
-- `utm_source=copilot.com` (Microsoft Copilot)
-- `referrer=grok.com` (Grok)
-- `:contentReference[oaicite:N]{index=N}` (ChatGPT bug)
-- `oai_citation`, `[oai_citation:N‡...]`
-- `turn0search0`, `turn0image0`, `turn0news0`, `turn0file0`
-- `grok_render_citation_card_json`, `<grok-card data-id="...">`
-- `[attached_file:1]`, `[web:1]` (Perplexity)
-- Lenticular bracket markers: `【85†L261-269】`
-- `({"attribution":{"attributableIndex":"X-Y"}})`
-- Placeholder dates: `2025-XX-XX`, `2026-XX-XX`
-- Placeholder URLs: `PASTE_URL_HERE`, `INSERT_SOURCE_URL_N`, `[link to ...]`
-- DOIs that lead to unrelated articles, book citations without page numbers, broken external links clustered in one document.
-
-## Reply-shaped tells (the model narrating, defending, and refusing to stop)
-
-The 2026 additions to tropes.fyi share one shape. They are the tells of a model *answering*, and they show up in chat replies, agent output, PR descriptions, and any document drafted in one turn. They are composition moves, so the greps are partial and the fix is nearly always deletion. Russell et al. (2025, [sources.md](sources.md)) found formulaic document structure, and "optimistically vague" introductions and conclusions in particular, to be the second most common cue expert human detectors cite, after vocabulary. This section is that cue, itemised.
-
-### Narrating itself
-
-**Reasoning leak.** The text narrates what it is doing, deciding, or about to do. Chain-of-thought residue in the output: "I want to be exact about my own role here." "What that changes in the design is smaller than it might appear, and what it changes is worth being precise about." Fix: delete the sentence; the next one is the content.
-
-**Preamble (announce-then-answer).** Opening with what the output is about to do, a preface to the point, or the prompt restated. Includes structural announcers that name the shape of what follows ("Two constraints shape the design", "Two continuations are worth supporting, and they serve different situations") and throat-clearing frames ("The more important point is..."). The sentence sets up the answer instead of being it. Fix: delete, and start on the first constraint.
-
-**Compulsive counting.** Stating the number of items before listing them, as if getting the count right were the achievement: "Five things we wish to discuss." "For two reasons." "One endpoint, rather than four, for two reasons." Sits between preamble (the announcer) and listicle-in-a-trench-coat (the "The first... The second..." delivery). Fix: drop the count and list the items. Keep a count only when the number itself is the information ("all four endpoints share the bug").
-
-### Defending itself
-
-**Premise stacking.** A point, often a question, preceded by a paragraph of its own evidence, so that by the time it arrives it has been made two or three times. Linked to reasoning leak. Fix: lead with the question or claim, then the one piece of evidence that matters. Tier 3, since the evidence may need to stay somewhere.
-
-**Belaboring the unnecessary.** Defending a minor or uncontroversial point against an objection nobody raised: "I don't mean any of that as cynicism about players." "We are setting this out in full rather than quietly changing the recommendation, because..." Cousin of false vulnerability. Fix: state the point and move on. Tier 3, since occasionally the objection is real.
+Premise stacking, unnecessary objections, repeated previews, duplicated sections and
+one-point dilution can obscure the claim. Put the point before its supporting evidence.
+Preserve evidence and genuine objections; reordering or substantial cuts can affect argument.
 
 ### Refusing to stop
 
-**The tie-back.** Closing by restating the answer and looping it to the original question: "So, to answer your question: yes, the employee can be added." "In short, this gives you everything you need to ship." "To bring it back to what you asked..." The reply already delivered the point; this bolts a summary of itself onto the ask. The smallest member of the fractal-summaries family. Fix: delete the closing sentence or paragraph.
+Tie-backs, repeated conclusions and section recaps can restate the delivered answer.
+Remove duplication within authorized scope. A useful summary in a long document may stay.
 
-**Never-ending conclusion.** The ending stacks clause after clause instead of landing one point, as if reluctant to stop. Fix: keep the first sentence of the ending that says something the body did not, cut what follows. Tier 3 when the stacked clauses carry distinct content.
+## Voice and narrative
 
-Fractal summaries and section summaries (above) are the same refusal at document scale; false vulnerability is the same self-defence with feeling added.
+Canned good faith, performed vulnerability, unsolicited enthusiasm and a switch to
+collaborative "we" can replace the author's voice. Preserve actual pronouns and supplied
+feelings; never add a personal experience or emotional edge for style.
 
-## Communication tells (when humanizing emails, messages, comments)
+StoryScope examined long fiction and found narrative differences including explicit themes
+and tidy plots. These suggest questions for narrative editing, not established rules for
+Norwegian messages or technical prose. Keep the author's actual resolution or open question.
+Do not manufacture tension or ambiguity. See [sources](sources.md).
 
-### Canned good faith
-"I am committed to...", "I assure you...", "my intention is to...", "I align with your values/mission/standards". Legalese formality applied to casual contexts.
+## Legitimate features
 
-### Canned offer to take feedback
-"If there are specific areas you'd like me to address, I am happy to...", "I welcome any further input/guidance", "I would greatly appreciate your input".
-
-### Canned redirect to content over conduct
-"Let's focus on X instead of Y", "rather than [behavior], let's [content]". Used to dodge criticism.
-
-### Subject lines in plain text
-Messages that start with "Subject: ..." as if pasted from an email form.
-
-### Section titles in plain text
-Headings broken out as standalone capitalized lines in what should be flowing prose.
-
-### Section summaries
-Paragraphs starting with "In summary", "In conclusion", "Overall" when the surrounding context doesn't call for a recap.
-
-### Emoji as section markers
-🧠 🚨 🧭 📌 at the start of headings or bullets. Almost always AI in formal-ish contexts.
-
-### Collaborative "we" in single-author material
-A document written by one person, or a personal message, switched to "we" ("We're now equipped to handle whatever comes next", "This gives us a much clearer picture"). The author's voice is gone. Very contextual, since some authors write "we" on purpose, so Tier 3. The tell is the switch, not the pronoun.
-
-## What's NOT a tell
-
-These get mistaken for AI signs but aren't reliable:
-
-- Perfect grammar (many humans write well)
-- Mixed casual/formal register (often indicates technical writers, code switchers, or neurodivergent voices)
-- "Fancy" or formal prose (only specific words are overused, not formal prose generally)
-- Letter-like formatting (predates LLMs)
-- Single transition words like "Additionally" (overused only in clusters)
-- Unsourced content (most of the web is unsourced)
-- Em dashes alone (overused by AI, but also by many human writers)
-- Curly quotes alone (macOS, Word, Chicago style)
-- Agentless passive voice (GPT-4o uses it at about half the human rate; passive is a style-guide preference, not a machine marker. See Reinhart et al. 2025 in [sources.md](sources.md))
+Perfect grammar, formal prose, deliberate short paragraphs, established technical terms,
+passive voice with clear attribution, real triads, question headings and necessary
+qualifications can all be appropriate. Fix a demonstrated problem with the writing,
+not a word or device merely present in the text.

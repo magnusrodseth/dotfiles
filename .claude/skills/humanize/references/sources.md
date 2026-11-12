@@ -5,7 +5,7 @@ Where the guidance in this skill comes from. Two lineages: a detection taxonomy 
 ## Detection taxonomy (tells.md)
 
 - Wikipedia, "Signs of AI writing" (WikiProject AI Cleanup field guide). GPT-4-era vocabulary and citation artifacts.
-- tropes.fyi by ossama.is (https://tropes.fyi). Snapshot taken 27.08.2026: 46 tropes, each tagged consistent / rising / new / fading; the tags feed the Currency table in [tells.md](tells.md). Contributes the structural and tonal tells (rhetorical question-and-answer, anaphora, short-fragment paragraphs, false vulnerability, pedagogical voice, invented concept labels, dead metaphor, historical analogy stacking) and the 2026 reply-shaped set (reasoning leak, premise stacking, preamble, compulsive counting, belaboring the unnecessary, tie-back, never-ending conclusion, comma-clipped trailing phrase, self-echo, quotable one-liners, appeal to familiarity, Wh-word headings, "where it actually lives", collaborative "we"). The same author ships the list as a generation-time skill, vendored here as `writing-whip` (Ossama Chaib, v0.1.0). Full taxonomy at https://tropes.fyi/tropes-md.
+- tropes.fyi by ossama.is (https://tropes.fyi). Snapshot taken 27.08.2026: 46 tropes, each tagged consistent / rising / new / fading; the tags feed the Currency table in [tells.md](tells.md). Contributes the structural and tonal tells (rhetorical question-and-answer, anaphora, short-fragment paragraphs, false vulnerability, pedagogical voice, invented concept labels, dead metaphor, historical analogy stacking) and the 2026 reply-shaped set (reasoning leak, premise stacking, preamble, compulsive counting, belaboring the unnecessary, tie-back, never-ending conclusion, comma-clipped trailing phrase, self-echo, quotable one-liners, appeal to familiarity, Wh-word headings, "where it actually lives", collaborative "we"). The same author ships the list as a generation-time skill, used as the basis of the locally adapted `writing-whip` (Ossama Chaib, upstream v0.1.0). Full taxonomy at https://tropes.fyi/tropes-md.
 
 ## Editing research: what people do when they rewrite machine text (rewrite-patterns.md)
 
@@ -13,7 +13,7 @@ Basis for the "What the editing research says" section in [rewrite-patterns.md](
 
 High-confidence, peer-reviewed:
 
-- Chakrabarty, Laban and Wu, "Can AI writing be salvaged? Mitigating Idiosyncrasies and Improving Human-AI Alignment in the Writing Process through Edits," CHI 2025, arXiv:2409.14509. The LAMP corpus: 18 professional writers, 1,057 LLM paragraphs (GPT-4o, Claude 3.5 Sonnet, Llama 3.1 70B), 8,035 edits under a seven-category taxonomy (cliché; unnecessary/redundant exposition; purple prose; poor sentence structure; lack of specificity and detail; awkward word choice and phrasing; tense inconsistency). 74% replacements, 18% deletions, 8% insertions; 70% of non-deletion edits meaning-preserving. Experts preferred expert-edited text over LLM-edited. Domain is literary fiction and creative non-fiction, so the proportions may not transfer to technical prose; the taxonomy does. This is the "LAMP edit" that Russell et al. 2026 (below) used as their surface-scrub baseline.
+- Chakrabarty, Laban and Wu, "Can AI writing be salvaged? Mitigating Idiosyncrasies and Improving Human-AI Alignment in the Writing Process through Edits," CHI 2025, arXiv:2409.14509. The LAMP corpus: 18 professional writers, 1,057 LLM paragraphs (GPT-4o, Claude 3.5 Sonnet, Llama 3.1 70B), 8,035 edits under a seven-category taxonomy (cliché; unnecessary/redundant exposition; purple prose; poor sentence structure; lack of specificity and detail; awkward word choice and phrasing; tense inconsistency). 74% replacements, 18% deletions, 8% insertions; 70% of non-deletion edits meaning-preserving. Experts preferred expert-edited text over LLM-edited. Domain is literary fiction and creative non-fiction, so both the proportions and the taxonomy need evaluation before transfer to technical prose. This is the "LAMP edit" that Russell et al. 2026 (below) used as their surface-scrub baseline.
 - Artemova et al., "Beemo: Benchmark of Expert-edited Machine-generated Outputs," NAACL 2025, arXiv:2411.04032. 25 expert annotators edited 6.5k machine texts across five task types; the same texts were also "humanized" by GPT-4o and Llama 3.1 70B. Expert edits cut detector AUROC by up to 22 points and the effect was flat across 20 to 80% edit ratios; LLM-edited texts stayed detectable, GPT-4o-edited ones most of all. Basis for "moderate human edits are enough; machine humanizing is not".
 - Russell, Karpinska and Iyyer, "People who frequently use ChatGPT for writing tasks are accurate and robust detectors of AI-generated text," ACL 2025, arXiv:2501.15654. 300 non-fiction articles, five expert annotators (frequent LLM users, untrained) with a majority vote wrong on 1 of 300, including texts paraphrased or generated under a humanization prompt built from the experts' own clue list. Clue categories in their explanations: vocabulary 53.1%, sentence structure 35.9%, grammar 24.8%, originality 23.7%; formulaic and "optimistically vague" introductions and conclusions, listing in threes, and same-slot quotations named explicitly. Basis for the reply-shaped tells section in [tells.md](tells.md) and for "vocabulary scrubbing leaves the structure".
 - Reinhart et al., "Do LLMs write like humans? Variation in grammatical and rhetorical styles," PNAS 122(8), 2025, doi:10.1073/pnas.2422455122, arXiv:2410.16107. Biber's 66 features over parallel human and LLM corpora. Instruction-tuned models: present participial clauses at 2 to 5x the human rate (GPT-4o 5.3x, d=1.38), "that" clauses as subject 2.6x, nominalizations about 2x, phrasal coordination 1.9x; agentless passive at roughly half the human rate. Instruction tuning, not scale, produces the gap. Basis for the -ing tail and de-nominalization moves, and for listing passive voice under "not a tell".
@@ -31,7 +31,7 @@ Directional only (small samples, preprints, or read via abstract):
 
 What the editing research does **not** show: no study here measures a human writer *trained* to write less like a model from a blank page. The closest are LAMP and Beemo (humans editing machine text), RoFT (humans trained to detect, not to write), and the arXiv word drop (avoidance, not craft). "People can be taught to write more human" is inferred from those, not measured. Treat it as a working assumption.
 
-## Positive direction: writing craft (rewrite-toward-human.md, Group A and the "one principle")
+## Positive direction: writing craft and reader-oriented clarity
 
 High-confidence, verifiable:
 
@@ -44,24 +44,20 @@ High-confidence, verifiable:
 - Paul Graham, "Writing, Briefly" (https://paulgraham.com/writing44.html) and "Write Simply" (https://paulgraham.com/simply.html). Short Germanic words; write like you talk.
 - Oxide Computer, "LLMs as writers," RFD 576. The reader-writer social contract; prose as the trace of real understanding. https://rfd.shared.oxide.computer/rfd/0576
 
-## Author responsibility and reader effort
-
-- Sophie Alpert, ["Why Clay Has an AI Writing Policy"](https://www.clay.com/blog/ai-writing-policy), 19.08.2026, read 15.10.2026. Company editorial policy, not experimental evidence. Authors must own their ideas and wording; structure affects emphasis, and edits should respect reader time. In this skill, it informs the fidelity comparison and purpose-based checks. It does not establish detector accuracy or a universal authoring-to-reading time ratio.
-
-## Positive direction: detection / stylometry research (background, not rewrite quotas)
+## Detection and stylometry research: contextual observations
 
 High-confidence, verifiable:
 
 - GPTZero, "What is perplexity and burstiness." https://gptzero.me/news/perplexity-and-burstiness-what-is-it/
 - Muñoz-Ortiz et al., "Contrasting Linguistic Patterns in Human- and LLM-Generated News Text," arXiv:2308.09067. Sentence-length scatter, noun/adjective density, emotion distribution.
-- Kobak et al., "Delving into LLM-assisted writing in biomedical publications through excess vocabulary." Published in *Science Advances* (2025), doi:10.1126/sciadv.adt3813; preprint arXiv:2406.07016. 15M PubMed abstracts 2010-2024; at least 13.5% of 2024 abstracts LLM-processed, up to 40% in some subcorpora. Establishes that excess vocabulary is measurable and **era-specific**, which is why the vocabulary list in [tells.md](tells.md) is split by model generation.
-  **Do not transplant its word list.** The published set (`results/excess_words.csv`, github.com/berenslab/llm-excess-vocab) has 900 words, 407 tagged "style", but those are excess *in biomedical abstracts under GPT-3.5/4-era editing*. It includes `across`, `both`, `this`, `these`, `were`, `within`, `during`, `however`, `like`. Checked against this skill's vocabulary greps in August 2026: it corroborates the existing GPT-4-era layer and adds nothing usable for 2026 Claude-era prose.
+- Kobak et al., "Delving into LLM-assisted writing in biomedical publications through excess vocabulary." Published in *Science Advances* (2025), doi:10.1126/sciadv.adt3813; preprint arXiv:2406.07016. 15M PubMed abstracts 2010-2024; at least 13.5% of 2024 abstracts LLM-processed, up to 40% in some subcorpora. Establishes that excess vocabulary is measurable and **era-specific**, which supports treating vocabulary observations as dated and corpus-specific.
+  **Do not transplant its word list.** The published set (`results/excess_words.csv` in the [excess-vocabulary repository](https://github.com/berenslab/llm-excess-vocab)) has 900 words, 407 tagged "style", but those are excess *in biomedical abstracts under GPT-3.5/4-era editing*. It includes `across`, `both`, `this`, `these`, `were`, `within`, `during`, `however`, `like`. Checked against this skill's vocabulary greps in August 2026: it corroborates the existing GPT-4-era layer and adds nothing usable for 2026 Claude-era prose.
 - Sadoski & Paivio, concreteness effect on comprehension and recall (dual coding). ERIC EJ466317.
-- Russell et al., "StoryScope: Investigating idiosyncrasies in AI fiction," arXiv:2604.03136 (2026). Discourse-level narrative features (theme explicitness, embodied vs. named emotion, allusion specificity, structural tidiness, temporal complexity) separate AI from human writing at 93% macro-F1 with style withheld, and survive surface artifact removal (the LAMP edit) with only a 1.6-point drop. The empirical basis for this skill's claim that AI-ness is structural, not just lexical: backs the discourse-level tells in [tells.md](tells.md) and the "trace of a mind that took a position" principle in [rewrite-toward-human.md](rewrite-toward-human.md).
+- Russell et al., "StoryScope: Investigating idiosyncrasies in AI fiction," arXiv:2604.03136 (2026). Discourse-level narrative features (theme explicitness, embodied vs. named emotion, allusion specificity, structural tidiness, temporal complexity) separate AI from human writing at 93% macro-F1 with style withheld, and survive surface artifact removal (the LAMP edit) with only a 1.6-point drop. This finding concerns narrative construction in long fiction. Its transfer to essays is a hypothesis; it does not establish that a factual update needs a contestable position.
 
 ## Steering: why the rewrite targets the register, not the phrase list
 
-Basis for the "Rewrite at the register, not the phrase" rule in [SKILL.md](../SKILL.md) and the Turn-of-phrase optimization tell in [tells.md](tells.md). Researched August 2026.
+Background for register-level guidance in [SKILL.md](../SKILL.md) and the Turn-of-phrase optimization tell in [tells.md](tells.md). Researched August 2026.
 
 - Anthropic, "Prompting Claude Opus 5" (platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5). Vendor-primary, and self-critical rather than promotional. Confirms Opus 5 responses "run longer than prior Opus models'." Two directly relevant statements: *"Positive examples of the communication style you want tend to be more effective than instructions about what not to do"*, and, on suppressing leaked XML tags, *"Instructions that call out thinking tags by name are less effective than the general form, so avoid naming them specifically."* Also reports that a rule telling the model not to reason **increases** the leakage it was meant to prevent.
 - Anthropic, "Prompting Claude Fable 5" (same path, `prompting-claude-fable-5`). *"Instruction-following is improved enough that you can steer most behaviors with a brief instruction rather than enumerating each behavior by name... A short brevity instruction is as effective as listing each pattern."* Also warns that skills written for earlier models are *"often too prescriptive... and can degrade output quality"*, which is the direct argument against growing this skill's ban lists further.
@@ -72,6 +68,26 @@ Counter-evidence, recorded because it is real and this file should not read as s
 - Few-shot exemplars carry their own cost. StyleAdaptedLM (arXiv:2507.18294) reports that extensive few-shot examples degrade instruction-following; example-based style transfer (STYLL) lags badly on meaning preservation. So "use positive examples" is not a free win over enumeration, it trades one failure mode for another.
 - The popular "pink elephant" claim (telling a model *not* to do X makes X more likely, in general) is **not** established. The most-cited write-up of it is built on Reddit anecdotes with no measurements, and says so itself. The narrow, vendor-measured version above is the only part that holds.
 
-Net position: enumeration is fine for **detection** (the greps), weak for **generation and rewriting** (the instructions). That asymmetry is why this skill keeps long grep lists but tells you to rewrite at the register.
+Local design choice: keep contextual searches in [scans.md](scans.md) and make the generation instructions short and reader-oriented. The cited findings do not establish a universal ranking of prompts or prove authorship from a matched word.
 
-The web research pass also surfaced several 2024-2026 arXiv papers on lexical diversity, stance/engagement, markdown fingerprints, and synthetic lived experience. Those informed the metrics but were not all independently verified. Verify any specific arXiv ID before citing it in published work; the durable findings (burstiness, concreteness, stance variety, voice) are corroborated across the high-confidence sources above.
+The web research pass also surfaced several 2024-2026 arXiv papers on lexical diversity, stance/engagement, markdown fingerprints, and synthetic lived experience. Those informed the earlier guidance but were not all independently verified. Verify any specific arXiv ID before citing it in published work; the durable findings (burstiness, concreteness, stance variety, voice) are corroborated across the high-confidence sources above.
+
+## Scope of the evidence and local adaptations
+
+LAMP concerns creative writing; StoryScope concerns long fiction. Reported edit proportions
+and detector performance describe those studies. They do not establish a maximum sentence
+length, a minimum sentence-length standard deviation, an analogy budget, or a quota for
+first-person statements. No universal numerical threshold is used in this skill.
+
+The catalogued style patterns are editing heuristics. A retained technical term or deliberate
+rhetorical device is not a failure. A detector score is not a measure of factual fidelity,
+usefulness or the author's voice. A DOI resolving establishes existence, not support for a claim.
+
+The 03.10.2026 revision borrows reader-and-purpose checks, attribution-aware passive review,
+complete comparisons and explicit uncertainty from Jakob Thumm's
+[writing-simple-style](https://github.com/JakobThumm/writing-simple-style/blob/886d9dee45fad6045a23366b4a3a3a5fa3ed4f6d/SKILL.md).
+These are local adaptations. The ISO references in that repository are paraphrases; this
+skill does not claim to verify compliance with the underlying standards.
+
+See [evaluation.md](evaluation.md) for regression cases and a blind comparison procedure.
+Static example checks establish limited consistency, not improvement in generated writing.
