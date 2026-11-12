@@ -80,29 +80,22 @@ Choose the workspace deliberately:
   a CLI-only session, ask about the checkout.
 
 Inherit runtime and interaction modes. T3 tools inherit them when omitted and
-cannot exceed the caller's. Do not force full access. Select the provider using
-this user preference, unless the current task explicitly overrides it:
-
-1. OpenCode with GitHub Copilot CLI.
-2. OpenCode with Azure GenAI Gateway.
-3. Codex subscription, only when both OpenCode routes are unavailable or fail.
-
-Do not inherit a Codex subscription default over this preference. Preserve a
-requested model when the preferred route offers it. Otherwise use that route's
-configured model, asking only when no suitable choice can be inferred. Leave
-project/global defaults unchanged.
+cannot exceed the caller's. Do not force full access. Use Anthropic Claude Opus
+5.5 with medium reasoning effort for every T3 task, unless the user explicitly
+overrides this preference for that task. Never use Codex for a T3 task when Opus
+5.5 is available. Do not silently substitute a different provider, model, or
+effort if the requested combination is unavailable. Report the limitation and
+ask how to proceed. Leave project/global defaults unchanged.
 
 Display labels are not identifiers. Resolve the real provider instance and model IDs:
 
 - T3 tools: `providerInstanceId`, model `id` and option ids from
   `orchestrator_capabilities`; pass them in `modelSelection`.
-- CLI: read `providerInstanceId` and `model` from `thread list --json` for an
-  existing thread on the preferred route (for example `opencode` with a
-  `github-copilot/<model>` slug). If no thread uses that route, take the IDs from
-  the app or ask. Pass `--provider` and `--model` together.
+- CLI: identify the provider and model IDs for Anthropic Claude Opus 5.5 from
+the app or existing thread metadata. Pass `--provider` and `--model` together.
 
 Treat reasoning effort as per-thread model configuration; prompt text and
-composer defaults do not establish it. T3 tools: pass it in
+composer defaults do not establish it. Always set medium effort. T3 tools: pass it in
 `modelSelection.options` at launch, or set it afterwards with
 `t3_thread_configure`. The CLI has no effort setting: disclose the gap, pause the
 newly started thread, set it through per-thread app controls, then resume that
