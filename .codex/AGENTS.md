@@ -136,6 +136,26 @@ build tooling, tests, renames and copy edits, and for vault or note work.
 - If you deliberately skip the skill for a web task, say so.
 <!-- /rules:modern-web -->
 
+## Outbound Messages
+
+<!-- rules:outbound-messages -->
+A message that leaves this machine in Magnus's name goes out only after he
+says "send" for that exact text. This covers email, Slack, LinkedIn, iMessage,
+Vibbo, GitHub comments to people outside his own repos, and any reply or
+forward.
+
+1. Write the full draft inline in your chat reply: recipient, subject, and the
+   complete body as it will be sent. A file path, a Gmail draft id or a
+   summary is not a draft he can read.
+2. Stop and wait. "Ser bra ut", "ok" or a thumbs-up on an earlier version is
+   not a send. Any edit restarts the cycle with the new full text.
+3. After he says "send", send that text unchanged and report what went out.
+
+Saving a draft in Gmail is fine without asking; say that it is a draft and
+that nothing was sent. In Claude Code the send tools also sit behind an `ask`
+permission rule, so the approval prompt shows the final text once more.
+<!-- /rules:outbound-messages -->
+
 ## Dev Server
 
 <!-- rules:dev-server -->
@@ -159,6 +179,13 @@ blocks indefinitely).
 - If a todo item exists and is not complete, you are NOT done
 - If you hit a wall, try a different approach rather than stopping
 - Only stop when the task is actually complete with verification
+
+**Do the step yourself.** When the next step is something a tool here can do,
+run it instead of handing it to Magnus: a CLI (`gh auth refresh`, an export
+script, `gjcli` PIM activation), a logged-in browser session, or a one-time
+code that arrives in Gmail. Hand back only what needs his body or his
+authority: BankID, approving a payment, a physical action, or a decision that
+is his to make.
 
 Persistence does not permit scope expansion, bypassing a safety boundary, or
 repeating failed work without new information. When safe in-scope approaches

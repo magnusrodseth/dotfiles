@@ -58,3 +58,13 @@ path=(
   $path
 )
 export PATH
+
+# Agent shells: pass an unmatched glob through literally, as bash does, instead
+# of aborting the whole command. Agents write `grep --include=*.tsx` and
+# `rg -g *.ts` unquoted, and zsh's default `nomatch` killed those commands with
+# "no matches found" in three sessions the week of 13.11.2026. Interactive
+# shells keep zsh's default. Claude Code builds its shell snapshot from the
+# options set here, so this reaches every Bash tool call.
+if [[ "$CLAUDECODE" == "1" || -n "$CLAUDE_CODE_CHILD_SESSION" ]]; then
+  setopt no_nomatch
+fi
