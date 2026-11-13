@@ -1,6 +1,6 @@
 ---
 name: t3-browser
-description: Drives T3 Code's built-in browser, the preview tab shown inline in the thread, through the t3-code MCP preview tools. Use when the user asks to open a page or dev server "in T3", "in the preview", "inline", or "so I can watch", or to click, fill, screenshot, record, resize or inspect a page in that tab. Not for headless scraping outside T3 (use agent-browser or playwriter).
+description: Drives T3 Code's built-in browser, the preview tab shown inline in the thread, through the t3-code MCP preview tools. Load before the first mcp__t3-code__preview_* call, and whenever browser work is needed inside T3 and the user names no other browser. Also for requests to open a page "in T3", "in the preview" or "so I can watch". Not for headless scraping outside T3 (use agent-browser or playwriter).
 ---
 
 # T3 browser (preview tab)
@@ -56,7 +56,20 @@ Done means the requested end state is visible in a fresh snapshot, not that the 
 | Background tab | `preview_open({open:false})` |
 | Parallel subagents | each calls `preview_open({reuseExistingTab:false})` and uses only its own `tabId` |
 
-## 4. Rules
+## 4. Failures and recovery
+
+| Symptom | Cause and fix |
+|---|---|
+| `await is only valid in async functions` from `preview_evaluate` | The expression runs as a plain script. Wrap it: `(async () => { …; return value; })()`. |
+| `timed out after 15000ms` | The page is still loading or the tab died. Call `preview_status`, then `preview_wait_for` a real condition and retry once. Reopen the tab if it is gone. |
+| Too many tabs | Close your own stale tabs: `t3_preview_list`, then `t3_preview_close` on each `tabId` you opened. |
+| Tab belongs to another agent session | Open your own: `preview_open({url, reuseExistingTab:false})`. |
+| No automation host | Call `preview_status` once more. If it still has no host, tell the user the preview browser is down and ask before switching to another browser tool. |
+| Headless fallback for screenshots | Run Playwright from the repo (`pnpm exec playwright …`) so it resolves the repo's install. A script in a scratch directory cannot import `@playwright/test`. |
+
+**Waiting.** `preview_wait_for` waits for a real `text`, `selector` or `urlIncludes`. To wait on a background command, use `t3_background_wait` with its task id. Never wait on text that will not appear as a stand-in for sleep.
+
+## 5. Rules
 
 - **Asked-for only.** Use the browser when the current request asks for browser work. Never open it unasked to verify your own edit, and never repeat an earlier turn's snapshot.
 - **The user's tab is theirs.** `preview_status` reports the owner. Read any listed tab; act only on your own tab or an unclaimed one with no human in control.

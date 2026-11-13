@@ -13,7 +13,9 @@ it. Record separate revisions and dirty-tree state for before and after.
    `assertions.md` in a task-specific temporary directory outside the repo.
    Record environment, setup, commands and one of passed/failed/untested per
    assertion. Every untested result has a reason.
-2. Use the same scenario on both revisions. Screenshots or short recordings
+2. Use the same scenario on both revisions. A UI change gets a before and an
+   after capture of every changed screen and viewport, placed as a pair in the
+   PR body; this is the default, not an extra. Screenshots or short recordings
    demonstrate UI behavior; sanitized request/response pairs, state transitions
    or measured probes demonstrate backend and infrastructure changes.
    Performance claims need numbers from the same realistic workload on both
@@ -30,7 +32,9 @@ it. Record separate revisions and dirty-tree state for before and after.
    complete body file with attachment placeholders when placement matters.
    Keep videos as standalone player references, and images as image Markdown.
    Use the target private repository's approved attachment path; an external
-   paste host is not an automatic fallback.
+   paste host is not an automatic fallback. A fork PR to an upstream where you
+   only have read access still gets images: see the read-only row in
+   [gh-image](../gh-image/SKILL.md) troubleshooting.
 5. Read back the published body and verify its rendered attachments and
    expected player count. Rendered markup does not prove playback. Report a
    failed upload or missing player as unverified. Evidence left only in a

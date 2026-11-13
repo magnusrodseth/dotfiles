@@ -95,6 +95,7 @@ Create resources only when the user's task calls for them.
 | Unknown `--attach` flag | Upgrade `gh`, then check the command's help. |
 | Authentication failure | Check `gh auth status` and any `GH_TOKEN` / `GITHUB_TOKEN` override; sign in with `gh auth login` if needed. |
 | Write-access error or upload 404 | Confirm the selected account and target repo with `gh api repos/OWNER/REPO --jq .permissions`. |
+| Read-only on the upstream of a fork PR | Upload with the `gh image` extension instead: `gh image --repo UPSTREAM_OWNER/REPO shot.png` prints `![shot.png](https://github.com/user-attachments/assets/…)`. Paste those lines into the body file. It uses the browser session from `gh image check-token`, not write access. Verified with `viewerPermission: READ` on Aprende-AS/EksamensportalenV2, 12.11.2026. |
 | Local reference remains in the body | Check the attachment path, working directory, and upload errors. References inside code spans or fences are not rewritten. |
 | Rejected file | Use a non-empty supported image or video file. Check stderr for type and size limits. |
 
