@@ -267,6 +267,7 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   t3-browser.md                   x         x
   code-repo-workflow.md           x         x
   durable-agents.md               x         x
+  modern-web.md                   x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it

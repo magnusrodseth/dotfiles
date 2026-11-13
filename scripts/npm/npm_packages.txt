@@ -14,6 +14,7 @@ agent-desktop
 beautify-screenshot
 ctx7
 eas-cli
+modern-web-guidance
 neonctl
 pi-mcp-adapter
 pi-resource-center
