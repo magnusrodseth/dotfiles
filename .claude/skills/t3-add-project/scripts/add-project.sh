@@ -3,7 +3,7 @@
 # Usage: add-project.sh <github-url|owner/repo> [--dest <path>] [--title <title>]
 set -euo pipefail
 
-t3() { bash "$HOME/.agents/skills/create-t3-task/scripts/t3.sh" "$@"; }
+t3() { bash "$HOME/.agents/skills/t3-create-task/scripts/t3.sh" "$@"; }
 die() { echo "error: $*" >&2; exit 1; }
 
 ref="" dest="" title=""

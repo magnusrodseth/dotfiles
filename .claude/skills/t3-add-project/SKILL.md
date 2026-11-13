@@ -1,5 +1,5 @@
 ---
-name: add-t3-project
+name: t3-add-project
 description: Points T3 Code at a GitHub repo, cloning it first if no clone exists on this machine, then registering it as a T3 project. Use when the user gives a GitHub URL or owner/repo and asks to add it to T3, set up a T3 project for it, or "get it into T3".
 ---
 
@@ -8,7 +8,7 @@ description: Points T3 Code at a GitHub repo, cloning it first if no clone exist
 Run the script. It is idempotent: an existing clone is reused, and an existing project is left alone.
 
 ```bash
-bash ~/.agents/skills/add-t3-project/scripts/add-project.sh <github-url|owner/repo> [--dest <path>] [--title <title>]
+bash ~/.agents/skills/t3-add-project/scripts/add-project.sh <github-url|owner/repo> [--dest <path>] [--title <title>]
 ```
 
 It does this, in order:

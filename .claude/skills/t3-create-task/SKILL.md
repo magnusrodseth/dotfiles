@@ -1,5 +1,5 @@
 ---
-name: create-t3-task
+name: t3-create-task
 description: Creates T3 Code conversations through T3's own tools or its native CLI. Use when the user explicitly asks to start a T3 task or hand off the current conversation to T3 Code.
 ---
 
@@ -36,8 +36,8 @@ executable. `T3CODE_HOME` selects a non-default T3 data directory using T3's own
 convention.
 
 ```bash
-bash ~/.agents/skills/create-t3-task/scripts/t3.sh --version
-bash ~/.agents/skills/create-t3-task/scripts/t3.sh thread start --help
+bash ~/.agents/skills/t3-create-task/scripts/t3.sh --version
+bash ~/.agents/skills/t3-create-task/scripts/t3.sh thread start --help
 ```
 
 Read installed help before dispatch; it is the syntax authority. If the server
@@ -57,7 +57,7 @@ recognizes it: match `workspaceRoot` in `t3_project_list`, or run the read-only
 CLI command:
 
 ```bash
-bash ~/.agents/skills/create-t3-task/scripts/t3.sh thread list --project "$repo" --json
+bash ~/.agents/skills/t3-create-task/scripts/t3.sh thread list --project "$repo" --json
 ```
 
 An empty thread list can be valid. A missing project requires registering it
@@ -121,7 +121,7 @@ CLI: keep prompt files outside a public repository, with private file
 permissions. Use stdin so multiline context and shell metacharacters remain literal:
 
 ```bash
-bash ~/.agents/skills/create-t3-task/scripts/t3.sh thread start \
+bash ~/.agents/skills/t3-create-task/scripts/t3.sh thread start \
   "$repo" - --title "$title" \
   --provider "$provider_instance" --model "$model" --json < "$prompt_file"
 ```
@@ -143,7 +143,7 @@ T3 tools: `t3_thread_read` with a low `limit`, and `t3_thread_configure` with on
 CLI:
 
 ```bash
-bash ~/.agents/skills/create-t3-task/scripts/t3.sh thread show \
+bash ~/.agents/skills/t3-create-task/scripts/t3.sh thread show \
   "$thread_id" --messages 2 --json
 ```
 
