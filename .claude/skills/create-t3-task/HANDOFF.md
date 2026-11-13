@@ -9,9 +9,10 @@ Write a compact brief containing:
 - The user's current objective and the exact next action. If work is complete,
   ask T3 to acknowledge the context and wait for the user's next instruction.
 - Settled decisions and constraints, including actions that remain unauthorized.
-- The provider preference: OpenCode with GitHub Copilot CLI, then OpenCode with
-  Azure GenAI Gateway; Codex subscription only if both preferred routes fail or
-  are unavailable. Carry any explicit task-specific override instead.
+- The provider preference: Anthropic Claude Opus 5.5 (`claude-opus-5-5`) at
+  medium reasoning effort for every T3 task. Never Codex when Opus 5.5 is
+  available, and no silent substitution of provider, model or effort. Carry any
+  explicit task-specific override instead.
 - Completed work, verification results and any qualifications or remaining gates.
 - Real repository/check-out paths, branches, PR/document links and relevant
   uncommitted changes. Distinguish source snapshots from current deployment facts.
