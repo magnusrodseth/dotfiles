@@ -5,72 +5,88 @@ description: Extract insights from conversations and store them in your Obsidian
 
 # Vault Knowledge Capture
 
-Extract valuable insights from conversations and store them in the user's Obsidian vault.
+Store useful knowledge in Magnus's Obsidian vault. This skill works locally and in a cloud checkout.
 
-Can be invoked from ANY project on the machine.
+## Resolve the vault
 
-## Configuration
-
-Resolve the vault location first, then use `$VAULT` everywhere below:
+Use the local vault when it exists. Otherwise, use the current Git repository.
 
 ```bash
-if [ -d "$HOME/dev/personal/vault" ]; then
-    VAULT="$HOME/dev/personal/vault"          # local machine (any cwd)
+if [ -d "$HOME/dev/personal/vault/.git" ]; then
+  VAULT="$HOME/dev/personal/vault"
 else
-    VAULT="${CLAUDE_PROJECT_DIR:-$PWD}"       # cloud session: the repo IS the vault
+  VAULT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 fi
 ```
 
-Expand `$HOME` to the user's actual home directory. The fallback matters in Claude Code cloud/web sessions, where the vault is cloned to a sandbox path and `$HOME/dev/personal/vault` does not exist. On a local machine the first branch always wins, so behaviour there is unchanged.
+Read `$VAULT/AGENTS.md` before making changes. It is the source of truth for structure and writing rules. Read `$VAULT/.agents/skills/vault-management/SKILL.md` for organization work and `$VAULT/.agents/skills/obsidian-markdown/SKILL.md` for Obsidian syntax.
 
 ## Workflow
 
-1. Read `$VAULT/CLAUDE.md` for current vault rules
-2. Analyze conversation for knowledge to capture
-3. Classify content type: learning | how-to-guide | brag | decision | note | resource | person | project | meeting
-4. Read relevant template from `$VAULT/Templates/{Type}.md`
-5. Search vault for existing related notes to link to (glob/grep `$VAULT`)
-6. Write note to `$VAULT/{folder}/{Note Name}.md`
+1. Identify the subject and what should be retained from the conversation.
+2. Search filenames and note contents before writing. Search both Norwegian and English terms, plus aliases.
+3. Rank matches by filename, folder, status, and Git recency. Check the latest commit for candidate notes.
+4. Update the canonical existing note when one covers the subject. Create a note only when no suitable home exists.
+5. Classify the content and choose its folder. Project membership takes precedence over type.
+6. Read one or two recent notes of the same type. Use a template only as a starting point.
+7. Write complete frontmatter, valid wikilinks, and the captured knowledge.
+8. Add at least one link to a new note from an existing note. Check its backlinks.
+9. Review the diff for unsupported claims, duplicate facts, broken links, language, and frontmatter.
 
-## Content Type to Folder
+Use `rg` for search. Example:
 
-| Type | Path |
-|------|------|
-| learning | `$VAULT/Learning/` |
-| how-to-guide | `$VAULT/Reference/` |
-| brag | `$VAULT/Personal/` |
-| decision | `$VAULT/Personal/` |
-| note | `$VAULT/Notes/` |
-| resource | `$VAULT/Reference/` |
-| person | `$VAULT/Personal/People/` |
-| project | `$VAULT/Projects/` |
-| meeting | `$VAULT/Meetings/` |
+```bash
+rg -il -w 'topic|tema|synonym|synonym' "$VAULT" -g '*.md'
+git -C "$VAULT" log -1 --format='%ad %h' --date=short -- 'path/to/Note.md'
+rg -l '\[\[Note Name(?:[|#]|\]\])' "$VAULT" -g '*.md'
+```
 
-## Required Reading Before Acting
+## Placement
 
-Read these in order before creating any note:
+| Content | Default location |
+|---|---|
+| External source summary with `#source/*` | `Learning/` |
+| Reusable reference or how-to guide | `Reference/` |
+| Magnus's own concept or compact idea | `Notes/` |
+| Project | `Projects/` |
+| Person | `Personal/People/` |
+| Meeting | `Meetings/` |
+| Decision or brag | Beside the subject, otherwise `Notes/` |
 
-1. `$VAULT/CLAUDE.md` (always)
-2. Relevant skills based on task:
-   - `$VAULT/.claude/skills/vault-management/SKILL.md`
-   - `$VAULT/.claude/skills/obsidian-markdown/SKILL.md`
-   - `$VAULT/.claude/skills/dataview/SKILL.md`
-   - `$VAULT/.claude/skills/templater/SKILL.md`
-   - `$VAULT/.claude/skills/mermaid/SKILL.md`
-   - `$VAULT/.claude/skills/excalidraw/SKILL.md`
-   - `$VAULT/.claude/skills/advanced-tables/SKILL.md`
-   - `$VAULT/.claude/skills/json-canvas/SKILL.md`
-   - `$VAULT/.claude/skills/obsidian-bases/SKILL.md`
-   - `$VAULT/.claude/skills/omnisearch/SKILL.md`
-   - `$VAULT/.claude/skills/obsidian-git/SKILL.md`
+Keep notes about a live project inside that project's folder, even when their type would normally use another folder.
 
-## Rules
+## Writing rules
 
-- Use `[[wiki links]]` for internal references, never markdown links
-- Always include YAML frontmatter
-- Date format: display `DD.MM.YYYY`, filenames `YYYY-MM-DD`
-- File naming: `Human Readable Name.md` (title case with spaces)
-- One idea per note (atomic notes)
-- Link liberally to build the knowledge graph
-- Search vault before creating duplicates
-- Always read the source files first; they contain the current truth
+- Write one subject per note. A complete synthesis of 1,000 to 3,000 words is normal.
+- Split only when a note contains separate subjects or a section needs independent links.
+- Use `[[wikilinks]]` for internal references. Link only to an existing target or one created in the same change.
+- Give every new note two or three useful outgoing links and at least one incoming link.
+- Never copy a canonical number into several notes. Link to its source of truth.
+- Write English by default. Write Personlig Økonomi and other Norwegian spaces in correct Norwegian with æ, ø, and å.
+- Never use an em dash.
+
+## Frontmatter
+
+Every note needs YAML frontmatter:
+
+```yaml
+---
+type: note
+created: DD.MM.YYYY
+tags: []
+related: []
+---
+```
+
+Projects and decisions always have a status. `active` is valid only for those types. Other notes omit status unless they are `draft`, `completed`, `archived`, or `published`.
+
+Every `learning` note must include one closed-vocabulary source tag: `#source/book`, `#source/article`, `#source/video`, `#source/podcast`, `#source/course`, `#source/research`, `#source/repo`, `#source/docs`, or `#source/experience`.
+
+## Completion check
+
+- No better existing note was missed.
+- The note has valid frontmatter and follows current status rules.
+- Every new wikilink resolves.
+- New notes have useful outgoing and incoming links.
+- Facts that can change were checked against Git recency or a current source.
+- The final diff contains only the intended vault changes.

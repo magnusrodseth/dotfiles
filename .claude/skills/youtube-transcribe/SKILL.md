@@ -28,6 +28,22 @@ yt-dlp --write-auto-sub --sub-lang en --skip-download --sub-format vtt -o "yt" "
 
 Output: `yt.en.vtt`. Other languages via `--sub-lang no`; list them with `yt-dlp --list-subs "<URL>"`.
 
+### 2b. Fallback when captions return HTTP 429
+
+YouTube's caption endpoint (`timedtext`) has a per-IP quota. Once it trips, every caption request returns `HTTP Error 429`, and retries, sleeps, browser cookies and `curl_cffi` impersonation do not clear it (tested 12.11.2026). The audio CDN is not limited the same way. Do not retry captions. Download the audio and transcribe it locally:
+
+```bash
+MODEL="$HOME/.cache/whisper-cpp/ggml-base.en.bin"
+[ -f "$MODEL" ] || { mkdir -p "$(dirname "$MODEL")"; curl -sL -o "$MODEL" \
+  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin; }
+yt-dlp -f "ba/b" -x --audio-format wav --postprocessor-args "-ar 16000 -ac 1" \
+  --extractor-args "youtube:player_client=web_embedded" -o "audio.%(ext)s" "<URL>"
+whisper-cli -m "$MODEL" -f audio.wav -otxt -of clean -np -t 8
+rm -f audio.wav
+```
+
+This writes `clean.txt` directly, so skip step 3's script and go straight to the word-count check. Whisper punctuates, so it often lands above the 190 words-per-minute band. Check that the last line matches the video's ending instead. If `web_embedded` returns 403, try the default client or `tv`. Mark quotes in the note as machine transcription. For non-English audio, use a multilingual model such as `ggml-small.bin` with `-l no`.
+
 ### 3. Clean into prose
 
 ```bash

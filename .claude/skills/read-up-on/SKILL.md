@@ -17,7 +17,7 @@ Resolve the vault location first, then use `$VAULT` everywhere below:
 if [ -d "$HOME/dev/personal/vault" ]; then
     VAULT="$HOME/dev/personal/vault"          # local machine (any cwd)
 else
-    VAULT="${CLAUDE_PROJECT_DIR:-$PWD}"       # cloud session: the repo IS the vault
+    VAULT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)" # cloud: repo is the vault
 fi
 ```
 
@@ -56,6 +56,7 @@ Cast a wide net. Norwegian + English variants matter; many vault notes are in No
 - **Full-text grep**: `grep -r -l -i "<keyword>" --include="*.md" "$VAULT"` for each variant
 - **Auto-memory, for pointers only**: read `$HOME/.claude/projects/*-dev-personal-vault/memory/MEMORY.md` and any topic-related memory files next to it, to learn *which vault note owns the topic*. Take no facts from them
 - **Recent activity**: `git -C "$VAULT" log --since="30 days ago" --name-only --pretty=format: -- "*.md" | grep -i <keyword>` to surface recent edits
+- **Email threads in Codex, when load-bearing**: use the [@Gmail](plugin://gmail@openai-curated-remote) plugin, when available, to search for and read the relevant full thread. Use it when the request refers to an email or thread, or when the vault indicates that newer details may exist in email. Keep this read-only unless the user separately asks for an email action. If Gmail is unavailable, say so and continue from the vault and other read-only sources.
 
 ### 2. Rank candidates
 
