@@ -1,7 +1,10 @@
-When you write or change HTML, CSS or client-side JavaScript in a code
-repository, load the `modern-web-guidance` skill before you write the code.
-This covers UI components, layout, animation, forms, accessibility, Core Web
-Vitals, and browser APIs inside any framework. Skip it for backend, infra,
+When you write or change code that runs in the browser in a code repository,
+load the `modern-web-guidance` skill before you write the code. That means
+markup, styles and client-side scripts in any flavour: `.html`, `.css`,
+`.scss`, `.js`, `.ts`, `.jsx`, `.tsx`, `.vue`, `.svelte`, `.astro`, Tailwind
+classes, CSS-in-JS, and web components. It covers UI components, layout,
+animation, forms, accessibility, Core Web Vitals, and browser APIs. Skip it
+for server-only code (API routes, server actions, loaders, ORMs), infra,
 build tooling, tests, renames and copy edits, and for vault or note work.
 
 - Run the globally installed `modern-web-guidance` binary (declared in
