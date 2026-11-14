@@ -27,7 +27,10 @@ browser, use that one.
 - **Logged-in sites, or anything that needs his extensions** (1Password and
   others): use `playwriter`. It drives his real Brave through the Playwriter
   extension, with his cookies and extensions. He sees the tab in Brave and can
-  take over there. Start every session with `--tab-group <task>`. When
+  take over there. Start every session with `--tab-group "<emoji> <label>"`:
+  one emoji for the kind of task, then a one- or two-word label naming the task
+  or site, for example `"🛒 REMA-handel"`, `"🧪 Kimaki-test"` or
+  `"📬 Innboks"`. Quote the value, because it contains a space. When
   `playwriter browser list` shows more than one browser, pass the Brave row's key
   (`install:Brave:<id>`, different per machine) as `--browser <key>`. Work in a
   tab you opened, and never act on his other tabs. If the extension rejects the
