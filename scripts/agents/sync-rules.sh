@@ -65,8 +65,8 @@ RULES_DIR="scripts/agents/rules"
 # it governs the prose in every single response. calendar-titles was added
 # 02.11.2026: OpenCode creates calendar events through the gws skills too.
 MANIFEST="
-.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,durable-agents,modern-web,outbound-messages
-.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,durable-agents,modern-web,outbound-messages
+.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,durable-agents,outbound-messages
+.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,durable-agents,outbound-messages
 .config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7
 "
 

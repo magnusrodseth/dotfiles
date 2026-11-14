@@ -267,7 +267,6 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   t3-browser.md                   x         x
   code-repo-workflow.md           x         x
   durable-agents.md               x         x
-  modern-web.md                   x         x
   outbound-messages.md            x         x
 ```
 
