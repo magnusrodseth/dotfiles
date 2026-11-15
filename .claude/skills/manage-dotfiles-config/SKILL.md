@@ -76,8 +76,10 @@ changes in the checkout and any deliberate local skill amendments.
 
 ## Notes
 
-- These configs are symlinked from `~/dotfiles` via stow, and `~/.claude` itself symlinks
-  into the repo. Editing the real file under `~/.config/...` edits the repo copy.
+- These configs are symlinked from `~/dotfiles` via stow. Editing the real file under
+  `~/.config/...` edits the repo copy. `~/.claude` is a real directory. Stow links
+  individual entries into it, such as `CLAUDE.md`, `settings.json` and `commands`.
+  `~/.claude/skills/` is managed per entry by `scripts/skills/link-dotfiles-skills.sh`.
 - Commit per concern (keybinds vs theme are separate commits). To mirror a change onto
   another branch, cherry-pick the specific commit rather than merging.
 - Use the checks above for skill setup. Other configs use their format or tool checks.
