@@ -130,6 +130,13 @@ def die(msg):
 
 if not os.path.isdir(live_skills):
     die(f"{live_skills} missing (run: bash scripts/skills/link-dotfiles-skills.sh)")
+
+# Claude Code's own account-skill sync owns two entries in ~/.claude/skills:
+# synced/<org>_<user>/ (manifest.json, "source": "anthropic") and .trash/ for
+# removed ones. They are app state, not skills, so they are never mirrored,
+# vendored or locked. They first appeared on 12.11.2026 and failed every check.
+CLAUDE_OWNED = {"synced", ".trash"}
+live_listing = sorted(s for s in os.listdir(live_skills) if s not in CLAUDE_OWNED)
 try:
     lock = set(json.load(open(lock_path))["skills"])
 except (OSError, ValueError, KeyError) as e:
@@ -160,7 +167,7 @@ authored = {
 }
 
 orphans, dangling = [], []
-for s in sorted(os.listdir(live_skills)):
+for s in live_listing:
     p = f"{live_skills}/{s}"
     if os.path.islink(p) and not os.path.exists(os.path.realpath(p)):
         dangling.append((s, os.readlink(p)))
@@ -187,7 +194,7 @@ phantoms = sorted(
 # a skill says. Enforced as one rule: every .claude entry is a symlink to
 # ../../.agents/skills/<name>, and the two name sets are identical.
 agents_names = set(os.listdir(agents_skills)) if os.path.isdir(agents_skills) else set()
-live_names = set(os.listdir(live_skills))
+live_names = set(live_listing)
 mirror_bad = []
 for s in sorted(live_names):
     p = f"{live_skills}/{s}"
