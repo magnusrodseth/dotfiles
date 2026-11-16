@@ -606,6 +606,15 @@ if [ "${broken_links:-0}" -eq 0 ]; then
 else
   fail "$broken_links broken tracked symlink(s) (bash scripts/skills/validate-skills.sh)"
 fi
+# The repo-root CLAUDE.md is ignored by stow, but a link from before the ignore
+# survives restow. $HOME is an ancestor of every project, so Claude Code then
+# loads the whole dotfiles guide (10k+ tokens) into every session. Survived
+# from 25.07 to 16.11.2026 unnoticed.
+if [ -L "$HOME/CLAUDE.md" ] && [ "$(cd "$HOME" && realpath CLAUDE.md 2>/dev/null)" = "$(realpath "$DOTFILES/CLAUDE.md")" ]; then
+  fail "~/CLAUDE.md links to the dotfiles repo guide (loads into every session; rm ~/CLAUDE.md)"
+else
+  pass "dotfiles repo guide not leaking into every session via ~/CLAUDE.md"
+fi
 
 section "Repo hygiene (no runtime/backup cruft tracked)"
 # Tools drop backups (*.bak.*), caches (*-cache.json), and LMDB runtime DBs
