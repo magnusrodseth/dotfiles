@@ -9,6 +9,8 @@ the surrounding code of every changed function, and grep for its callers.
 
 Report only findings you can tie to a line. For each, give:
 - `file:line`;
+- whether the diff introduced it or it was already present at the base SHA;
+- your confidence: high, medium or low;
 - a concrete failure scenario: input or state, then the wrong result;
 - why the existing code and tests do not catch it;
 - the smallest fix.
@@ -33,13 +35,22 @@ Look for:
 Look for:
 - injection: SQL, shell, template, path traversal, SSRF, and prompt injection
   into LLM tools or agents;
-- missing authentication or authorization, IDOR, crossing tenant or customer
-  boundaries;
+- missing authentication or authorization, IDOR, privilege escalation, crossing
+  tenant or customer boundaries;
+- session and token flaws: session fixation, tokens in URLs or logs, password
+  reset and email change flows, missing expiry or revocation;
+- XSS: reflected, stored and DOM-based, including unsafe HTML rendering in
+  frameworks;
+- business logic: workflow steps that can be skipped or replayed, races on
+  balances, quotas or one-time actions;
+- data exposure: responses that return more fields than the caller may see, PII
+  in logs, verbose errors and stack traces, debug endpoints;
 - secrets in code, logs, error messages or client bundles;
 - unsafe deserialization, crypto misuse, weak randomness for tokens;
 - unvalidated input at trust boundaries, file uploads, open redirects, CORS and
   CSRF;
-- new dependencies: typosquats, install scripts, unpinned versions;
+- new dependencies: typosquats, install scripts, unpinned versions, and known
+  vulnerable versions whose affected code the diff actually calls;
 - CI and infra: workflow `permissions`, `pull_request_target`, untrusted input in
   `run:`, secrets exposed to forks.
 

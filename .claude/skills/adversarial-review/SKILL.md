@@ -55,15 +55,27 @@ Check each finding yourself against the code at the head SHA:
 | Confirmed | You reproduced it, or traced the path from input to effect |
 | Plausible | The path exists but depends on config or input you cannot check |
 | Rejected | Name the guard, test or invariant that prevents it |
+| Accepted risk | The user decided to live with it, with a reason. Only the user sets this |
 
-Do not drop a finding because it is inconvenient, and do not accept one because
-it sounds severe.
+Judge each finding on the code path alone: severity sounds the same whether the
+finding is real or not.
+
+Also mark each finding **introduced** (the diff creates or exposes it) or
+**pre-existing** (present at the base SHA). Pre-existing findings go to the
+out-of-scope list unless the diff makes them worse.
 
 ## 5. Act and report
 
-- Fix confirmed findings that are in scope. List out-of-scope ones for the user.
-- When fixes are substantial, review only the changed region again. Stop after
-  two rounds.
-- Report a table: finding, `file:line`, severity, verdict, action. Add base and
-  head SHA and the number of reviewers.
+- Fix confirmed, introduced findings. List the rest for the user.
+- Fix the root cause, not the symptom: a SQL injection gets a parameterised
+  query, not one escaped string. Grep for the same pattern in sibling code paths
+  and fix every instance the diff touches. Ask how the fix could be bypassed.
+- Prove each fix with a regression test that goes red at the head SHA and green
+  after the fix. Use the `evidence` skill to capture both runs. When no test is
+  feasible, say why in the report.
+- The judge of a fix is never its author. Re-check fixes with a new fresh-context
+  reviewer, scoped to the fix diff and the findings it claims to close. A finding
+  counts as addressed only when a changed line removes it. Stop after two rounds.
+- Report a table: finding, `file:line`, severity, introduced or pre-existing,
+  verdict, action, test. Add base and head SHA and the number of reviewers.
 - When the change goes into a PR, `github-pr` records this report as evidence.
