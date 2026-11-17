@@ -32,6 +32,7 @@ unknowns next, polish last. Fail fast on the risky part.
 
 **Review.** Before opening or updating a PR with a code change, run
 `pre-pr-review`. It runs `adversarial-review` (bugs and security holes) and
-`code-review` (Standards and Spec) in parallel on the same diff. Also run it when
-a diff touches auth, input parsing, secrets, money, shell or SQL execution, or CI
-and infra. Skip it for docs-only changes.
+`code-review` (Standards and Spec) on the same diff, with a reviewer count
+sized by risk. Also run it when a diff touches access control, auth,
+transactions or concurrency, input parsing, secrets, money, shell or SQL
+execution, or CI and infra. Skip it for docs-only changes.
