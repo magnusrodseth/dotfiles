@@ -268,6 +268,7 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   code-repo-workflow.md           x         x
   durable-agents.md               x         x
   outbound-messages.md            x         x
+  email-filing.md                 x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
