@@ -1,6 +1,6 @@
 ---
 name: adversarial-review
-description: "Runs a fresh-context adversarial review of a diff for bugs and security holes, then verifies every finding against the code. Use before opening or updating a PR with a code change, when a diff touches auth, input parsing, secrets, money, shell, SQL or CI, or when asked for an adversarial or security review."
+description: "Runs a fresh-context adversarial review of a diff for bugs and security holes, then verifies every finding against the code. Use when asked for an adversarial or security review, or when a diff touches auth, input parsing, secrets, money, shell, SQL or CI."
 ---
 
 # Adversarial review
@@ -8,7 +8,7 @@ description: "Runs a fresh-context adversarial review of a diff for bugs and sec
 The agent that wrote a change shares the reasoning that produced its bugs. This
 skill hands the diff to reviewers that have none of that context, tells them to
 break it, and then checks each finding against the code. It complements
-`code-review` (Standards and Spec axes); it does not replace it.
+`code-review` (Standards and Spec axes), and `pre-pr-review` runs the two together.
 
 ## 1. Pin the scope
 

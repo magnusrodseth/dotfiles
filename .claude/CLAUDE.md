@@ -44,7 +44,7 @@ them.
 **Match the steps to the task.** A request for a plan, review or experiment does
 not mean publishing it.
 
-| Task | Own worktree | Evidence | PR | `adversarial-review` |
+| Task | Own worktree | Evidence | PR | `pre-pr-review` |
 |---|---|---|---|---|
 | Read-only review, explanation, investigation | No | No | No | No |
 | Plan or local experiment | No | No | Only if asked | No |
@@ -71,10 +71,10 @@ unknowns next, polish last. Fail fast on the risky part.
   (`lsof -i :<port>`).
 
 **Review.** Before opening or updating a PR with a code change, run
-`adversarial-review`. Also run it when a diff touches auth, input parsing, secrets,
-money, shell or SQL execution, or CI and infra. Skip it for docs-only changes.
-`code-review` stays the Standards and Spec review; `adversarial-review` hunts bugs
-and security holes. They answer different questions, so a PR can need both.
+`pre-pr-review`. It runs `adversarial-review` (bugs and security holes) and
+`code-review` (Standards and Spec) in parallel on the same diff. Also run it when
+a diff touches auth, input parsing, secrets, money, shell or SQL execution, or CI
+and infra. Skip it for docs-only changes.
 <!-- /rules:code-repo-workflow -->
 
 ## Durable Agents

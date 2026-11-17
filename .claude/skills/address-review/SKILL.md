@@ -98,7 +98,7 @@ query($owner:String!,$repo:String!,$pr:Int!){
 Per thread: `id` is the GraphQL node ID (for resolving), and `comments.nodes[0].databaseId` is the REST comment id (for replying). `isOutdated` means the commented line has since changed; the finding may already be addressed, so check before re-fixing.
 
 ### 4. Investigate and judge
-Read and apply [Finding verification](../code-review/references/finding-verification.md) to every thread and actionable summary item at `HEAD_SHA`. Record its evidence status before choosing an action:
+Read and apply [Finding verification](../pre-pr-review/references/finding-verification.md) to every thread and actionable summary item at `HEAD_SHA`. Record its evidence status before choosing an action:
 
 | Verdict | Meaning | Action |
 |---|---|---|
