@@ -223,7 +223,7 @@ Zed is the strict one, it scans only `.agents/skills`, exactly one level deep,
 and rejects a skill outright if `name` is not `[a-z0-9-]{1,64}` or `description`
 is empty. Every skill's `name + description` also shares a fixed 50KB catalog
 budget, and on overflow Zed drops everything after the offender in path order
-rather than just the large ones. `check-skill-integrity.sh` warns from 85%.
+rather than just the large ones. `check-skill-integrity.sh` warns from 85% only when `CHECK_ZED_CATALOG=1` is set. It is off by default because Zed only reads single files here.
 
 Authored skills still live in this repo under `.claude/skills/` (the
 stow-managed authoring home); the link script is what makes `~/.agents`

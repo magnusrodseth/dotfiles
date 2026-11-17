@@ -319,9 +319,11 @@ def zed_catalog_bytes(root):
     return total, counted
 
 
+# Opt-in: Zed is only used to read single files on these machines, so its
+# catalog cap does not bite. Set CHECK_ZED_CATALOG=1 to turn the warning back on.
 used, n_cat = zed_catalog_bytes(agents_skills)
 pct = used / ZED_CATALOG_CAP
-if pct >= ZED_WARN_AT:
+if os.environ.get("CHECK_ZED_CATALOG") == "1" and pct >= ZED_WARN_AT:
     print(f"- Zed skill catalog at {used}B of {ZED_CATALOG_CAP}B ({pct:.0%}) across "
           f"{n_cat} skills. Past 100% Zed drops every skill after the first "
           f"overflow in path order, not just the big ones.")
