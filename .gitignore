@@ -256,3 +256,5 @@ Library/LaunchAgents/com.github.facebook.watchman.plist
 !.t3/userdata/settings.json
 !.t3/userdata/client-settings.json
 !.t3/userdata/keybindings.json
+# Work-only skill: drives Gjensidige AI Hub internal API, keep out of this public repo
+.claude/skills/gjensidige-token-budget/
