@@ -22,7 +22,7 @@ None, or grain at 0.02-0.03. Soft drop shadows on cards (`shadow(g, 6u, 2u, ink 
 - Circle wipes from the logo or the card centre on downbeats. Outro: the card shrinks into the logo mark.
 
 ## Components (names from COMPONENTS.md)
-- Pace: `standard`
+- Pace: `considered` (calm product pacing; `standard` read as rushed)
 - Transitions: container-morph (pattern), shared-axis, iris-circle-wipe, push
 - Text: rise-from-mask, fade-up-stagger, counter-roll
 - Camera: focus-zoom-to-rect, follow-cursor, push-in
@@ -31,7 +31,7 @@ None, or grain at 0.02-0.03. Soft drop shadows on cards (`shadow(g, 6u, 2u, ink 
 - Logo reveal: dot-morph-to-logo
 
 ## Sound
-`score.mjs --mood warm --bpm 120 --sections intro:2,build:2,drop:6,outro:2`. SFX: click on presses, whoosh on morphs, pop on card entries, thump on the logo, chime on the final lockup.
+`score.mjs --mood warm --bpm 90 --sections intro:2,build:2,drop:6,outro:2`. SFX: click on presses, whoosh on morphs, pop on card entries, thump on the logo, chime on the final lockup.
 
 ## Banned
 Gradient backgrounds, glows on UI, device mockups with reflections, isometric tilts, confetti.

@@ -24,7 +24,7 @@ Scripts live in `scripts/` next to this file. Below, `$S` means that directory (
 
 2. **Compose the film from four choices**, written into the brief before any code. A brand or a style always applies, never the engine defaults:
    - **Look:** named company or product: read [BRANDS.md](BRANDS.md) and pull the real tokens, fonts and logo. Named aesthetic, or no brand: pick one of the 34 presets in `styles/` (`ls styles/`; each lists palette, fonts to fetch, the transitions/text/camera/background by name, the score command and a banned list). Both: brand supplies colors, fonts and logo; style supplies motion, texture and sound.
-   - **Pace:** one of `calm, considered, standard, energetic, hype, trailer` (`lib/pace.js`). It sets BPM, shot length, text hold time, transition length and spring speed for the whole film.
+   - **Pace:** one of `calm, considered, standard, energetic, hype, trailer` (`lib/pace.js`). It sets BPM, shot length, text hold time, transition length and spring speed for the whole film. **Default to `considered` (or `calm`), never faster unless asked.** Magnus found `standard` too fast on a 20 s LinkedIn promo (17.11.2026): things happened before he could read them. Give every beat at least 3.5 to 4 s, let text hold well past one read, and run one move at a time. A longer film is fine; a rushed one is not.
    - **Components:** pick transitions, text effects, camera moves, backgrounds, UI, charts and the logo reveal by name from [COMPONENTS.md](COMPONENTS.md) (198 implemented). Browse them visually first: `bash $S/gallery.sh` renders every one in a labelled tile. Never hand-roll what the library has.
    - **Sound and assets:** synthesized score (10 genres x 6 moods) or a royalty-free track, plus recorded SFX, fonts and icons, all fetched with license tracking from [LIBRARY.md](LIBRARY.md).
 
@@ -73,6 +73,7 @@ Log scores and the 3 worst problems with timestamps in `docs/review_log.md`, fix
 - One display face, one UI face. One accent color unless the brand says otherwise.
 - Something new happens every 2 to 4 seconds. A hook lands in the first 2 seconds.
 - Real assets only: real screenshots, real logo, real fonts. Never invent product screens.
+- Icons come from Lucide via `fetch.mjs icon lucide:<name>` (Phosphor or Tabler only when Lucide lacks one). Never hand-draw icon glyphs on canvas: a home-made replay arrow rendered broken in a real film.
 - Text holds long enough to read twice. Nothing important within 6% of the edge.
 
 ## Sound
