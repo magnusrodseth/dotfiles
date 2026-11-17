@@ -32,12 +32,15 @@ you consider risky. Each of those anchors the reviewer on your view.
 
 ## 3. Spawn fresh-context reviewers
 
-Run two read-only reviewers in parallel: one with the **Bugs** section, one with
-the **Security** section. For a diff under about 100 changed lines that touches
-no security-sensitive area, one reviewer with both sections is enough.
+A diff is **risky** when it touches access control or auth, transactions or
+concurrency, input parsing, secrets, money, shell, SQL, CI or infra.
+
+Run read-only reviewers in parallel. A risky diff gets two: one with the
+**Bugs** section, one with the **Security** section. Any other diff gets one
+reviewer with both sections.
 
 - Claude Code: the `Agent` tool with `subagent_type: "general-purpose"`, never
-  `"fork"` (a fork inherits your context). Send both calls in one message with
+  `"fork"` (a fork inherits your context). Send every call in one message with
   `run_in_background: false`.
 - Codex: `spawn_agent` without forking the conversation, then wait.
 

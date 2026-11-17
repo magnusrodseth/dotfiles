@@ -15,10 +15,9 @@ spawn reviewer subagents, and a subagent cannot spawn its own.
 Follow `adversarial-review` step 1. Record base SHA, head SHA, dirty or clean,
 and `git diff --shortstat <base-sha>...HEAD`. Both reviews use this diff.
 
-Size the diff:
-- **small**: under about 100 changed lines, and it touches no auth, input
-  parsing, secrets, money, shell, SQL, CI or infra.
-- **full**: everything else.
+Size the diff on two marks:
+- **risky**: as `adversarial-review` step 3 defines it.
+- **short**: under about 300 changed lines in the shortstat.
 
 ## 2. Find the spec
 
@@ -47,10 +46,20 @@ change, your test results, and which parts you consider risky.
 
 ## 4. Spawn every reviewer in one message
 
-| Size | adversarial-review | code-review |
+Pick the first row that matches. A risky diff always gets four reviewers,
+whatever its length.
+
+| Diff | adversarial-review | code-review |
 |---|---|---|
-| full | Bugs and Security, one reviewer each | Standards and Spec, one reviewer each |
-| small | one reviewer with both sections | one reviewer with both briefs, reporting under separate headings |
+| risky | Bugs and Security, one reviewer each | Standards and Spec, one reviewer each |
+| not risky, not short | one reviewer with both sections | Standards and Spec, one reviewer each; one reviewer with both briefs when the spec fits on one screen or there is no spec |
+| not risky, short | one reviewer with both sections | one reviewer with both briefs, reporting under separate headings |
+
+Why: on [Aprende-AS/Eksamensportalen-Master-repo#205](https://github.com/Aprende-AS/Eksamensportalen-Master-repo/pull/205)
+(access checks plus transactions) Bugs and
+Security found largely the same defects independently, and Standards and Spec
+each caught something no other reviewer did. The Bugs/Security overlap is
+redundancy worth paying for only where a missed defect is expensive.
 
 Every reviewer gets a fresh context. In Claude Code, use `Agent` with
 `subagent_type: "general-purpose"` and `run_in_background: false`, never
@@ -75,8 +84,8 @@ Standards findings that the diff introduced. Bring a Spec gap that changes scope
 to the user before acting on it.
 
 Report:
-- a header with base SHA, head SHA, size, reviewer count, and spec source or
-  "no spec";
+- a header with base SHA, head SHA, the table row you picked, reviewer count,
+  and spec source or "no spec";
 - `## Bugs`, `## Security`, `## Standards` and `## Spec`, each a table of
   finding, `file:line`, severity, introduced or pre-existing, verdict, action
   and test, using its source skill's verdicts;
