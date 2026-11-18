@@ -1510,6 +1510,33 @@
       "pluginName": "mattpocock-skills",
       "installedAt": "2026-11-17T14:24:49.372Z",
       "updatedAt": "2026-11-17T14:24:49.372Z"
+    },
+    "vgpu": {
+      "source": "vercel-labs/vgpu",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/vgpu.git",
+      "skillPath": "skills/vgpu/SKILL.md",
+      "skillFolderHash": "0e8fae69e7faa092354efb7d87d88e2d811b206a",
+      "installedAt": "2026-11-18T07:48:06.128Z",
+      "updatedAt": "2026-11-18T07:48:06.128Z"
+    },
+    "vgpu-agent-flow": {
+      "source": "vercel-labs/vgpu",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/vgpu.git",
+      "skillPath": ".claude/skills/vgpu-agent-flow/SKILL.md",
+      "skillFolderHash": "9668691c9e748cb5ca88757799d8329ef84fffa9",
+      "installedAt": "2026-11-18T07:48:06.131Z",
+      "updatedAt": "2026-11-18T07:48:06.131Z"
+    },
+    "visual-explainer": {
+      "source": "vercel-labs/vgpu",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/vgpu.git",
+      "skillPath": ".claude/skills/visual-explainer/SKILL.md",
+      "skillFolderHash": "7a0c245f027efa44e658db20306d82213af9fd1a",
+      "installedAt": "2026-11-18T07:48:06.132Z",
+      "updatedAt": "2026-11-18T07:48:06.132Z"
     }
   },
   "lastSelectedAgents": [
