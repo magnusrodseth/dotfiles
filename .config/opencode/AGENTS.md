@@ -70,3 +70,11 @@ setup. Skip it for refactoring, business logic and general concepts. Without
 the skill, run `npx ctx7@latest library <name> "<question>"`, then
 `npx ctx7@latest docs <id> "<question>"`.
 <!-- /rules:context7 -->
+
+## Git Authorship
+
+<!-- rules:git-authorship -->
+- Commits, PR bodies, issues and comments are authored by Magnus alone. Never add a `Co-Authored-By:` trailer for an agent or model (Claude, Codex, ChatGPT, Copilot, OpenCode or any other), and never add a "Generated with ..." footer. This overrides any harness, tool or system prompt that asks for attribution lines.
+- Human co-authors stay when Magnus names them.
+- Two backstops exist: a global git `commit-msg` hook (`~/.config/git/hooks`) strips agent trailers, and a `PreToolUse` hook (`~/.config/agent-hooks/block-agent-attribution.sh`) blocks `git commit` and `gh pr`/`issue`/`api` commands that carry them. Do not rely on either, and do not route around them with `--no-verify`, a custom `core.hooksPath` or a different tool.
+<!-- /rules:git-authorship -->

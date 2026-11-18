@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Strip AI co-author trailers. Commits are authored by Magnus alone; agents
+# (Claude Code, Codex, OpenCode, T3) sometimes append
+# "Co-Authored-By: Claude <noreply@anthropic.com>" despite settings and
+# instructions. This removes the line, plus a "Generated with" footer, rather
+# than rejecting the commit, so an agent cannot get stuck retrying.
+# Human co-authors are left alone: only known agent names and domains match.
+msg_file="$1"
+pattern='^[[:space:]]*(Co-Authored-By:.*(Claude|Anthropic|anthropic\.com|Codex|OpenAI|openai\.com|ChatGPT|Copilot|OpenCode|opencode\.ai|Cursor|Gemini|Aider)|.*Generated with \[?(Claude Code|Codex|OpenCode)).*$'
+if grep -qiE "$pattern" "$msg_file"; then
+  tmp="$(mktemp)"
+  grep -viE "$pattern" "$msg_file" > "$tmp"
+  # Drop trailing blank lines left behind by the removed trailer block.
+  awk '{ lines[NR]=$0 } END { n=NR; while (n>0 && lines[n] ~ /^[[:space:]]*$/) n--; for (i=1;i<=n;i++) print lines[i] }' "$tmp" > "$msg_file"
+  rm -f "$tmp"
+fi
+local_hook="$(git rev-parse --git-common-dir 2>/dev/null)/hooks/commit-msg"
+if [ -x "$local_hook" ]; then
+  exec "$local_hook" "$@"
+fi
+exit 0

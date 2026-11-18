@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Global git hooks (core.hooksPath = ~/.config/git/hooks in ~/.gitconfig).
+#
+# A global core.hooksPath makes git ignore every repo's own .git/hooks. This
+# script runs the repo-local hook of the same name, so git-lfs, pre-commit and
+# hand-written hooks keep working. Every hook name here is a symlink to it,
+# except commit-msg, which does its own work first and then calls this.
+#
+# Repos that set core.hooksPath locally (husky, lefthook) override the global
+# value, so neither this nor commit-msg runs there.
+name="$(basename "$0")"
+[ "$name" = chain ] && exit 0
+local_hook="$(git rev-parse --git-common-dir 2>/dev/null)/hooks/$name"
+if [ -x "$local_hook" ]; then
+  exec "$local_hook" "$@"
+fi
+exit 0

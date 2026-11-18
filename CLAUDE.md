@@ -159,7 +159,27 @@ Settings in `.claude/settings.json`:
 - Hooks: `Notification` and `Stop` play sounds; `PreToolUse` runs `rtk hook
   claude`, which rewrites every Bash command an agent runs. If a command behaves
   oddly under an agent, that hook is the first thing to check, and
-  `rtk proxy <cmd>` bypasses it.
+  `rtk proxy <cmd>` bypasses it. A second `PreToolUse` hook,
+  `.config/agent-hooks/block-agent-attribution.sh`, blocks `git commit` and
+  `gh pr`/`issue`/`api` calls that carry an agent `Co-Authored-By` trailer or
+  "Generated with" footer. `.codex/hooks.json` runs the same script.
+- `attribution` is `{"commit": "", "pr": ""}`. It does not stop the model from
+  writing trailers itself: on 17.11.2026 a subagent added one anyway. Hence the
+  hook above and the global git hooks below.
+- `~/.claude/settings.json` is currently a real file, not a stow link. Supacode
+  rewrites it with its own hooks. Apply hook changes to both copies.
+
+### Global git hooks
+
+`.gitconfig` sets `core.hooksPath = ~/.config/git/hooks`. `commit-msg` strips
+agent `Co-Authored-By` trailers and "Generated with" footers; every other hook
+name links to `chain`, which runs the repo's own `.git/hooks/<name>`, so
+pre-commit and git-lfs keep working. A repo that sets `core.hooksPath` locally
+(husky, lefthook, `scripts/githooks`) overrides this. Symlink `commit-msg` into
+that repo's hook dir and list it in `.git/info/exclude`, as done in
+`eksamensportalen-fagansvarlig`. `pre-commit install` refuses to run while a
+global `hooksPath` is set; fix a stale `INSTALL_PYTHON` path in the generated
+hook by hand instead.
 - `enabledPlugins`: seven official LSP plugins plus `cloudflare@cloudflare`.
 - `.claude/settings.local.json` also exists and is gitignored globally.
 
@@ -266,13 +286,14 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   context7.md                     x         x         x
   t3-browser.md                   x         x
   code-repo-workflow.md           x         x
+  git-authorship.md               x         x         x
   durable-agents.md               x         x
   outbound-messages.md            x         x
   email-filing.md                 x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
-carries the output rules, `calendar-titles`, `context7`, and the shared
+carries the output rules, `calendar-titles`, `context7`, `git-authorship`, and the shared
 refactoring workflow.
 `no-slop.md` and `github-refs.md` govern every sentence it writes. `refactoring.md`
 keeps refactoring review consistent across agents. Widen its list on purpose,

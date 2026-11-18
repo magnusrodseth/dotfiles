@@ -64,10 +64,11 @@ RULES_DIR="scripts/agents/rules"
 # on purpose, not for symmetry with the other two. no-slop was added 19.08.2026:
 # it governs the prose in every single response. calendar-titles was added
 # 02.11.2026: OpenCode creates calendar events through the gws skills too.
+# git-authorship was added 18.11.2026: OpenCode makes commits too.
 MANIFEST="
-.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,durable-agents,outbound-messages,email-filing
-.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,durable-agents,outbound-messages,email-filing
-.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7
+.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing
+.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing
+.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7,git-authorship
 "
 
 TMPDIR_RUN="$(mktemp -d)"

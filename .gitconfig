@@ -23,6 +23,9 @@
 # while CLAUDE.md claimed delta was the pager. Wired up 28.07.2026.
 [core]
 	pager = delta
+	# Global hooks: commit-msg strips AI co-author trailers, the rest chain to
+	# each repo's own .git/hooks. See ~/.config/git/hooks/chain. Added 18.11.2026.
+	hooksPath = ~/.config/git/hooks
 [interactive]
 	diffFilter = delta --color-only
 [delta]
