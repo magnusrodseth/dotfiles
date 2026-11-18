@@ -44,8 +44,9 @@ reviewer with both sections.
   `run_in_background: false`.
 - Codex: `spawn_agent` without forking the conversation, then wait.
 
-Tell each reviewer it must not edit files, commit, push, deploy, or call external
-services. When the diff touches who may read or write what, add the
+Tell each reviewer to leave the checkout untouched: no edits, commits, pushes,
+deploys, or calls to external services. Reviewers write and run repros only in
+a scratch worktree, as the reviewer prompt describes. When the diff touches who may read or write what, add the
 [authorization-regression](../authorization-regression/SKILL.md) skill to the
 security reviewer's brief.
 
@@ -55,10 +56,20 @@ Check each finding yourself against the code at the head SHA:
 
 | Verdict | Meaning |
 |---|---|
-| Confirmed | You reproduced it, or traced the path from input to effect |
-| Plausible | The path exists but depends on config or input you cannot check |
+| Confirmed | A repro went red for the claimed reason at the head SHA. A trace alone confirms only when the repro cannot run locally, and the report says why |
+| Plausible | The path exists but no repro could run, because it depends on config or input you cannot check |
 | Rejected | Name the guard, test or invariant that prevents it |
 | Accepted risk | The user decided to live with it, with a reason. Only the user sets this |
+
+Follow [finding verification](../pre-pr-review/references/finding-verification.md)
+for each finding: try to refute it, check reachability through real callers,
+and treat a reviewer's red repro as a claim to rerun, not as proof. Rerun every
+repro yourself in a scratch worktree and confirm it drives the production path.
+
+You wrote the change, so you share its blind spots. Hand a finding to a new
+fresh-context verifier when you lean towards Rejected, or when no repro ran.
+Give it the finding, the diff commands and the finding-verification file, and
+none of your reasoning. Its verdict stands unless you name new evidence.
 
 Judge each finding on the code path alone: severity sounds the same whether the
 finding is real or not.

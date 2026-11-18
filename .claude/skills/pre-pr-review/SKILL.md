@@ -63,13 +63,15 @@ redundancy worth paying for only where a missed defect is expensive.
 
 Every reviewer gets a fresh context. In Claude Code, use `Agent` with
 `subagent_type: "general-purpose"` and `run_in_background: false`, never
-`"fork"`. In Codex, use `spawn_agent` without forking, then wait. Reviewers are
-read-only: they must not edit files, commit, push, deploy, or call external
-services.
+`"fork"`. In Codex, use `spawn_agent` without forking, then wait. Reviewers leave the
+checkout untouched: no edits, commits, pushes, deploys, or calls to external
+services. Bugs and Security reviewers write and run repros in a scratch
+worktree, as `adversarial-review`'s reviewer prompt describes.
 
 ## 5. Verify every finding
 
-- Bugs and Security: `adversarial-review` step 4.
+- Bugs and Security: `adversarial-review` step 4. It requires a red repro for
+  Confirmed and a fresh verifier for findings you would reject.
 - Standards and Spec: [finding verification](references/finding-verification.md).
   A baseline smell stays a design judgement unless it breaks a documented
   standard.
