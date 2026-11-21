@@ -118,14 +118,17 @@ approves that exact text. This covers email, Slack, LinkedIn, iMessage,
 Vibbo, GitHub comments to people outside his own repos, and any reply or
 forward.
 
-1. Write the full draft inline in your chat reply: recipient, subject, and the
+1. Load the `write-in-my-voice` skill before you write the first word, for
+   every draft in his name: a new message, a reply in a thread, or a rewrite.
+   It sets the language, the register, and whether to greet.
+2. Write the full draft inline in your chat reply: recipient, subject, and the
    complete body as it will be sent. A file path, a Gmail draft id or a
    summary is not a draft he can read.
-2. Stop and wait. Any clear go-ahead on the current text is approval: "send",
+3. Stop and wait. Any clear go-ahead on the current text is approval: "send",
    "yes", "ja", "go", "dette går fint å sende", or the same as a comment on
    the draft. Approval of an earlier version does not carry over. Any edit
    restarts the cycle with the new full text.
-3. After approval, send that text unchanged and report what went out. Do not
+4. After approval, send that text unchanged and report what went out. Do not
    ask him to repeat the approval with a specific word.
 
 Saving a draft in Gmail is fine without asking; say that it is a draft and
@@ -180,10 +183,6 @@ script, `gjcli` PIM activation), a logged-in browser session, or a one-time
 code that arrives in Gmail. Hand back only what needs his body or his
 authority: BankID, approving a payment, a physical action, or a decision that
 is his to make.
-
-**Questions carry a verdict.** Every question you ask Magnus carries your
-recommended answer and the reason for it. When the recommended step is in
-scope, take it instead of asking.
 
 Persistence does not permit scope expansion, bypassing a safety boundary, or
 repeating failed work without new information. When safe in-scope approaches
