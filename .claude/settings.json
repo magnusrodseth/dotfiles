@@ -40,10 +40,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "rtk hook claude"
-          },
-          {
-            "type": "command",
             "command": "bash \"$HOME/.config/agent-hooks/block-agent-attribution.sh\"",
             "timeout": 10
           }

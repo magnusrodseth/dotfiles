@@ -160,16 +160,19 @@ Settings in `.claude/settings.json`:
 - `permissions` is `{"defaultMode": "bypassPermissions"}`. There has never been
   an allow-list here. Note the `.zshrc` comment: this mode is ignored when read
   as project settings, which is why the shell aliases pass the CLI flag instead.
-- Hooks: `Notification` and `Stop` play sounds; `PreToolUse` runs `rtk hook
-  claude`, which rewrites every Bash command an agent runs. If a command behaves
-  oddly under an agent, that hook is the first thing to check, and
-  `rtk proxy <cmd>` bypasses it. A second `PreToolUse` hook,
+- Hooks: `Notification` and `Stop` play sounds. The `PreToolUse` hook,
   `.config/agent-hooks/block-agent-attribution.sh`, blocks `git commit` and
   `gh pr`/`issue`/`api` calls that carry an agent `Co-Authored-By` trailer or
   "Generated with" footer. `.codex/hooks.json` runs the same script.
 - `attribution` is `{"commit": "", "pr": ""}`. It does not stop the model from
   writing trailers itself: on 17.11.2026 a subagent added one anyway. Hence the
   hook above and the global git hooks below.
+- `rtk` (a command-rewriting hook that compresses Bash output) is uninstalled
+  and must not come back as a hook. It was removed on 21.11.2026. Measured
+  against Claude Code's own ~30k-character output cap, it saved about 2M tokens
+  over four months. Agents ran `rtk proxy` 840 times in five weeks to get
+  around it. It also dropped test-file arguments, cut `ps` output (agents
+  concluded live processes were dead) and added a newline to `curl | shasum`.
 - `~/.claude/settings.json` is currently a real file, not a stow link. Supacode
   rewrites it with its own hooks. Apply hook changes to both copies.
 
@@ -218,8 +221,8 @@ Cloudflare and PostHog use Codex OAuth stored as machine state. Atlassian stays
 disabled on personal machines because its account requires the Gjensidige work
 machine.
 
-Codex hooks are in `.codex/hooks.json`. The PreToolUse adapter calls `rtk
-rewrite` and returns Codex `updatedInput` JSON. The Stop hook auto-commits and
+Codex hooks are in `.codex/hooks.json`. PreToolUse runs the agent-attribution
+block. The Stop hook auto-commits and
 pushes only when the current Git root is the local vault. New or changed hooks
 must still be reviewed by the user through `/hooks`; do not write trust hashes
 from an agent.
@@ -327,12 +330,11 @@ Three things are deliberate here:
   had the rule in neither place. One delivery mechanism, three targets, nothing
   undocumented in the path.
 
-What is deliberately **not** shared: `## Personal Hubs` and `## RTK`. Both differ
-between Claude Code and Codex on purpose. The Codex copy of Personal Hubs is
-written in second person to Codex and carries the "Skills you can and cannot
-see" section about its 19-22k character skill-catalog budget; the Codex copy of
-RTK explains why it is inlined rather than imported. Flattening either into one
-shared body would lose that. The test for sharing a section is not its size, it
+What is deliberately **not** shared: `## Personal Hubs`. It differs between
+Claude Code and Codex on purpose. The Codex copy is written in second person to
+Codex and carries the "Skills you can and cannot see" section about its 19-22k
+character skill-catalog budget. Flattening it into one shared body would lose
+that. The test for sharing a section is not its size, it
 is whether the text is addressed to one agent.
 
 ### Default apps for file types
@@ -576,8 +578,4 @@ zsh/
 - The commit path is guarded: `scripts/githooks/pre-commit` runs gitleaks over
   the staged diff. This repo is public; see `.gitleaks.toml` for the
   allowlist, and keep it narrow
-- `rtk`'s config lives at `~/Library/Application Support/rtk/config.toml`, which
-  is stowed from `Library/Application Support/rtk/`. It is **not** `.config/rtk/`;
-  a file there is read by nothing. `git` and `cargo` are in `exclude_commands`
-  because rtk silently truncated `git log --name-only` from 1639 paths to 46
 - When adding a new tool whose config lives in a stowed dir, gitignore its runtime state (caches, `*-cache.json`, `*.mdb`/lock DBs, `*.bak*`) **before** the first commit so it never enters the tree; `doctor.sh`'s "Repo hygiene" check fails loud if any slips through

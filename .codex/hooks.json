@@ -6,11 +6,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.codex/hooks/rtk-rewrite.sh\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "bash \"$HOME/.config/agent-hooks/block-agent-attribution.sh\"",
             "timeout": 10
           }

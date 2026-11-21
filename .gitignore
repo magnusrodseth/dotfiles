@@ -88,12 +88,6 @@ Library/Application Support/Windsurf/*
 Library/Application Support/Windsurf/User/*
 !Library/Application Support/Windsurf/User/settings.json
 
-# rtk. Track only config.toml, which is the file `rtk config` actually reads.
-# The rest is runtime: history.db is 8.6 MB and grows, tee/ holds captured
-# command output, filters.toml is regenerated.
-Library/Application Support/rtk/*
-!Library/Application Support/rtk/config.toml
-
 # MLflow
 .config/mlflow/
 

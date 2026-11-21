@@ -83,10 +83,10 @@ explains why.
 - A new rule: add the source file, list it in `MANIFEST` in `sync-rules.sh` for
   each target that should get it, and add its row to the table in the repo's
   `CLAUDE.md`.
-- Text outside the markers (`## Personal Hubs`, `## RTK`, anything not shared):
+- Text outside the markers (`## Personal Hubs`, anything not shared):
   edit each target file directly. When it applies to both Claude and Codex,
-  update both, and keep the Codex copy addressed to Codex. Claude imports
-  `@RTK.md`; Codex cannot import, so its copy is inline.
+  update both, and keep the Codex copy addressed to Codex. Codex cannot
+  expand `@` imports, so its copy must be inline.
 
 ## Gotchas catalog
 

@@ -285,42 +285,6 @@ This applies to your own prose in every response, not only when I ask for it. `/
 - Do not link the same reference more than once in a short passage. First mention links, later mentions stay plain.
 <!-- /rules:github-refs -->
 
-## RTK - Rust Token Killer
-
-Inlined deliberately. Claude Code expands `@RTK.md` imports; **you do not**. This file previously ended with a bare `@RTK.md`, which reached you as three literal characters and nothing else, so these rules never applied in Codex. Verified 25.07.2026 with `codex debug prompt-input`. Keep the content here rather than reintroducing an import.
-
-Token-optimized CLI proxy (60-90% savings on dev operations).
-
-### Meta commands (always use rtk directly)
-
-```bash
-rtk gain              # Show token savings analytics
-rtk gain --history    # Show command usage history with savings
-rtk discover          # Analyze agent history for missed opportunities
-rtk proxy <cmd>       # Execute raw command without filtering (for debugging)
-```
-
-### Installation verification
-
-```bash
-rtk --version         # Should show: rtk X.Y.Z
-rtk gain              # Should work (not "command not found")
-which rtk             # Verify correct binary
-```
-
-Name collision: if `rtk gain` fails, you may have reachingforthejack/rtk (Rust Type Kit) installed instead.
-
-### Hook-based usage
-
-Codex's PreToolUse hook in `hooks.json` calls the tracked
-`.codex/hooks/rtk-rewrite.sh` adapter. The adapter uses `rtk rewrite` and returns
-Codex's `updatedInput` JSON. Example: `pytest` becomes `rtk pytest`.
-
-Do not use `rtk hook claude` here. Its input and output protocol is specific to
-Claude Code, so Codex accepts the command but receives no usable rewrite.
-
-**It silently truncates large output**, including `du`, removing middle rows from a sorted list so the result still looks complete and correctly sorted. For any disk-size or large-output work, run `rtk proxy <cmd>` instead, and sanity-check that listed entries sum to roughly the parent total.
-
 ## Context7
 
 Synced from `scripts/agents/rules/context7.md` by `scripts/agents/sync-rules.sh`. This
