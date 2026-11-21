@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ecosystem", "package", "affected_versions", "ids", "kind", "url", "published", "summary"],
+        "properties": {
+          "ecosystem": {"type": "string", "enum": ["npm", "PyPI", "crates.io", "Go", "Maven", "RubyGems", "Homebrew", "other"]},
+          "package": {"type": "string", "description": "Exact registry package name, e.g. @scope/name"},
+          "affected_versions": {"type": "array", "items": {"type": "string"}, "description": "Exact affected or malicious versions only. Empty if the source gives only ranges or no versions."},
+          "ids": {"type": "array", "items": {"type": "string"}, "description": "CVE, GHSA, MAL or other advisory IDs named by the source"},
+          "kind": {"type": "string", "enum": ["malicious", "vulnerability"]},
+          "url": {"type": "string", "description": "https URL of the primary source you read"},
+          "published": {"type": "string", "description": "YYYY-MM-DD"},
+          "summary": {"type": "string", "description": "One plain sentence, at most 300 characters"}
+        }
+      }
+    }
+  }
+}

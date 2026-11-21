@@ -150,6 +150,8 @@ brew "awscli"
 brew "azure-cli"
 brew "hcloud"
 brew "trivy"
+# security-watch scans lockfiles offline with it (scripts/security-watch)
+brew "osv-scanner"
 brew "railway"
 # Must stay fully qualified with trusted:. terraform left homebrew-core over the
 # BSL relicense, so a bare `brew "terraform"` resolves to hashicorp/tap and dies

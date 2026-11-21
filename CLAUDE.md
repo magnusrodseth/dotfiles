@@ -80,6 +80,10 @@ bash scripts/skills/validate-skills.sh --links  # SKILL.md frontmatter + symlink
 bash scripts/agents/sync-rules.sh sync             # splice shared rules into agent files
 bash scripts/agents/sync-rules.sh check            # drift check, exit 1 if behind
 
+# Security watch (read-only report; T3 runs it at 09:00 on weekdays)
+bash scripts/security-watch/run.sh            # add --weekly, --no-news, --dry-run
+python3 scripts/security-watch/test_security_watch.py
+
 # pi packages (manual only; the daily launchd job was removed 21.11.2026)
 bash scripts/pi/update-extensions.sh          # pi update --extensions, then re-apply patches
 bash scripts/pi/patch-cc-my-pi.sh --check     # are the cc-my-pi patches still applied?
@@ -458,6 +462,66 @@ no secret anywhere, at the cost of shells outside cmux losing socket control.
   derived output. `.codex` allowlists the instructions, hooks, stable settings,
   and 1Password reference template. The live config, auth, sessions, and plugin
   caches remain ignored.
+
+### Security watch
+
+`scripts/security-watch/` reports known-vulnerable and malicious packages on
+this machine and in the repos under `~/dev`. It is **read-only**: it never
+upgrades, edits a repo or pushes, and writes only its own state under
+`~/.local/state/security-watch/` (`latest/report.md` and `report.json` per
+run, `seen.json` for dedupe, the offline OSV databases, the KEV cache).
+
+A T3 scheduled task ("Security watch", in T3's *No project*) runs
+`bash ~/dotfiles/scripts/security-watch/run.sh` at 09:00 on weekdays in a new
+thread. A `clean` run settles its thread; `alarm`, `findings`, `error` and the
+Friday `digest` leave it open. If the laptop is asleep at 09:00, that day is
+skipped. The task lives outside the dotfiles project on purpose: a scheduled
+run in a git project gets its own worktree and branch, one per day.
+
+- **What is scanned:** every lockfile in repos whose `origin` owner is in
+  `own_owners`, plus repos of other owners only when the allowlist names them
+  (with an optional exclusive `until` date). `deny_owners` is checked first,
+  against every host label and path segment of every remote url and pushurl,
+  and wins over both: an employer's repos are never read, even if cloned
+  under `~/dev`. `BUILTIN_DENY_SHA256` holds the same owners as hashes, so the
+  rule holds without the 1Password config and without naming them here.
+  osv-scanner gets explicit `-L` lockfiles from `git ls-files`, never a
+  directory or `--recursive`, because `ls-files` does not enter a nested
+  repo. Skipped repos are counted by reason, never named, in every state file. On the machine: global npm
+  (`npm ls -g --all`), the global pnpm lockfile, pi's npm lockfile, cargo
+  installs, uv tools, Claude Code, and the `npx`/`uvx` MCP servers configured
+  for Claude Code, Codex and OpenCode (`@latest` is resolved against the
+  registry). Pending macOS updates are listed. Fridays add a digest of
+  moderate/low counts, `brew outdated`, pi git packages behind upstream, and
+  skills whose upstream folder hash changed.
+- **The allowlist lives in 1Password** (`op://Private/security-watch
+  allowlist/notesPlain`, personal account), not here, because this repo is
+  public and it names client repos. Each successful read is cached locally; a
+  locked 1Password falls back to the cache and the report says how old it is.
+  With neither, repos owned by others are skipped and the run is marked as
+  failed.
+- **osv-scanner runs with `--offline`.** Without it, osv-scanner resolves
+  manifests such as `pom.xml` through deps.dev, which sends internal package
+  coordinates to a third party. Offline,
+  Maven projects without a lockfile are not scanned. The databases are public
+  zips downloaded straight from OSV's bucket, refreshed after 20 hours.
+- **What counts as a finding:** a `MAL-` advisory or a CVE in CISA KEV is an
+  alarm (macOS notification); critical/high with a fixed version is a finding;
+  everything else waits for the Friday digest. Only keys not reported before
+  count, and the triage tier is part of the key, so a known moderate that
+  lands in KEV is reported again. A key unseen for 30 days is forgotten.
+- **The news step** is a headless `claude -p` call on the subscription (the
+  script strips `ANTHROPIC_API_KEY`), Sonnet, with only WebSearch and WebFetch,
+  no MCP servers and no settings, returning JSON validated against
+  `news_schema.json`. It is never shown the inventory; matching on exact name
+  and version happens locally, and matches are labelled unverified. Its text
+  fields are web content, so they are sanitised to one plain line.
+- Every stage is guarded: a crash or timeout fails that stage, the report is
+  still written, and the run is `error` rather than `clean` whenever part of
+  the scan did not happen (a failed stage, a missing tool, a database or KEV
+  copy older than 72 hours, a lockfile osv-scanner could not parse).
+- A full run takes about 2 to 3 minutes; the OSV scan is about 80 seconds of
+  that.
 
 ### Other top-level directories
 

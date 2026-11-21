@@ -331,7 +331,7 @@ fi
 
 section "Key CLI tools"
 for t in nvim eza zoxide atuin oh-my-posh bat tmux delta fzf zinit \
-         codex gws ctx7 gitleaks exiftool typst; do
+         codex gws ctx7 gitleaks exiftool typst osv-scanner; do
   case "$t" in
     zinit) [ -d "$HOME/.local/share/zinit" ] && pass "zinit" || warn "zinit (loaded by .zshrc; absent until first interactive shell)";;
     *)     check_cmd "$t";;
