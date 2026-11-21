@@ -4,15 +4,14 @@
 #
 # Interactive Pi runs with PI_OFFLINE=1 (see zsh/functions/pi.sh), which makes
 # launching instant but also means nothing checks for package updates in the
-# startup path. This script is what keeps them fresh: it runs at login and once
-# daily from com.magnusrodseth.pi-extension-update.
+# startup path. This script is what keeps them fresh. Run it by hand; it ran at
+# login and daily from a launchd job until that job was removed on 21.11.2026.
 #
-# Failures are deliberately left in the log rather than surfaced in the TUI, and
-# are retried on the next scheduled run.
+# Failures are written to the log rather than surfaced in the TUI.
 #
-# Invoked by launchd, so it never inherits an interactive shell. Everything it
-# needs is referenced by an absolute path, resolved here rather than assumed:
-# see resolve_pi below for why the location cannot be hardcoded.
+# It does not rely on an interactive shell. Everything it needs is referenced by
+# an absolute path, resolved here rather than assumed: see resolve_pi below for
+# why the location cannot be hardcoded.
 
 set -uo pipefail
 
@@ -99,8 +98,8 @@ fi
 readonly PI_BIN
 
 # pi is a JS entry point with a `#!/usr/bin/env node` shebang, so it needs node
-# on PATH. launchd supplies only the plist's PATH, which lists no node at all on
-# an nvm machine; prepending pi's own bin directory both fixes that and pins the
+# on PATH. A non-interactive caller (launchd, cron) may supply a PATH with no
+# node at all on an nvm machine; prepending pi's own bin directory both fixes that and pins the
 # node it was installed against rather than whichever one happens to be first.
 export PATH="$(dirname "$PI_BIN"):$PATH"
 log "using pi at $PI_BIN"

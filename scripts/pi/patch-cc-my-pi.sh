@@ -14,9 +14,8 @@
 # Why a script rather than just editing the file: the package is installed as a
 # git checkout under ~/.pi/agent/git, and pi updates it with `git reset --hard`
 # (see PackageManager.ensureGitRef). scripts/pi/update-extensions.sh runs
-# `pi update --extensions` at login and once daily, so a hand-edit disappears
-# the first time upstream publishes a commit, silently and at an unpredictable
-# time. This script is idempotent and is called from that updater, so the
+# `pi update --extensions`, so a hand-edit disappears the first time upstream
+# publishes a commit and the updater runs. This script is idempotent and is called from that updater, so the
 # patches are declared once and converge after every update.
 #
 # It is deliberately loud about drift. If a target string is neither present in

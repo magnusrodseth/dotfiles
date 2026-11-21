@@ -80,7 +80,7 @@ bash scripts/skills/validate-skills.sh --links  # SKILL.md frontmatter + symlink
 bash scripts/agents/sync-rules.sh sync             # splice shared rules into agent files
 bash scripts/agents/sync-rules.sh check            # drift check, exit 1 if behind
 
-# pi packages (also runs at login and daily from launchd)
+# pi packages (manual only; the daily launchd job was removed 21.11.2026)
 bash scripts/pi/update-extensions.sh          # pi update --extensions, then re-apply patches
 bash scripts/pi/patch-cc-my-pi.sh --check     # are the cc-my-pi patches still applied?
 
@@ -447,7 +447,7 @@ no secret anywhere, at the cost of shells outside cmux losing socket control.
   re-applied by `scripts/pi/update-extensions.sh` after every update. The patcher
   is idempotent, has a `--check` mode, and fails naming the patch when upstream
   rewrites that code rather than leaving a half-patched file behind.
-- cc-my-pi also sat frozen at 1.3.2 for weeks while that daily updater reported
+- cc-my-pi also sat frozen at 1.3.2 for weeks while the daily updater reported
   success: the checkout tracked `origin/master`, which upstream abandoned when it
   moved to `main`. A git package whose branch stops receiving commits keeps
   updating cleanly forever. `git rev-parse HEAD` against `git ls-remote origin
@@ -510,8 +510,8 @@ zsh/
   silently shadows brew's. `scripts/cargo/packages.sh export` now refuses to
   write non-crates.io installs for this reason
 - The commit path is guarded: `scripts/githooks/pre-commit` runs gitleaks over
-  the staged diff. This repo is public and has leaked four credentials; see
-  `.gitleaks.toml` for the allowlist, and keep it narrow
+  the staged diff. This repo is public; see `.gitleaks.toml` for the
+  allowlist, and keep it narrow
 - `rtk`'s config lives at `~/Library/Application Support/rtk/config.toml`, which
   is stowed from `Library/Application Support/rtk/`. It is **not** `.config/rtk/`;
   a file there is read by nothing. `git` and `cargo` are in `exclude_commands`

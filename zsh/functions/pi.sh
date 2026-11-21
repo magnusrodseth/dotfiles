@@ -2,18 +2,18 @@
 # Interactive Pi sessions start offline.
 #
 # PI_OFFLINE=1 suppresses Pi's startup version check, package-update check and
-# install telemetry, which is what makes launching feel instant. Package
-# freshness is owned by the scheduled updater instead (see
-# Library/LaunchAgents/com.magnusrodseth.pi-extension-update.plist), so nothing
-# goes stale as a result.
+# install telemetry, which is what makes launching feel instant. The cost is
+# that nothing updates Pi's packages on its own: run
+# scripts/pi/update-extensions.sh by hand. It ran daily from launchd until the
+# job was removed on 21.11.2026.
 #
 # Two classes of invocation deliberately keep normal network semantics:
 #   - explicit maintenance subcommands, which exist to talk to the network;
 #   - print/JSON/RPC modes, which are non-interactive and have no startup UI to
 #     speed up in the first place.
 #
-# The scheduled updater calls the binary by absolute path, so it never reaches
-# this function.
+# The updater calls the binary by absolute path, so it never reaches this
+# function.
 
 pi() {
 	emulate -L zsh
