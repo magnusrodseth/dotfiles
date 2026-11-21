@@ -103,6 +103,13 @@ These hold regardless of language:
   earns its place only when it engages with a specific idea that genuinely
   resonated (the meaty content), never the logistics or pleasantries. Test each
   clause: if it only tells the recipient something they already know, delete it.
+- **Greet only when you open contact.** A greeting ("Hei Kasper,", "Hi Sara!")
+  belongs on the first message in a thread, on your first reply to it, on a
+  reply after a pause of several days, and when someone new joins. In a
+  running thread, open on the substance: "Ja, det passer fint.", "Takk!
+  Torsdag funker." Mirror the other person: once they drop the greeting,
+  drop it too. The sign-off follows the same rule; in a quick back-and-forth
+  it shrinks to the name or goes.
 - **Honesty framing.** Recurring tells: "Jeg skal være ærlig på at...", "med
   åpne kort", "my honest view is this", "to be clear".
 - **Hand the next move to the recipient.** Almost every message closes with an
@@ -123,7 +130,7 @@ These hold regardless of language:
 
 - [ ] **No hard-ban violations**: no "it's not X, it's Y" reframe anywhere, no
       one-sentence dramatic paragraphs, no hype words, no clickbait opening
-- [ ] Greeting/sign-off matches the register (long-form: none - open on the hook, close on a resource list + bio line)
+- [ ] Greeting/sign-off matches the register and the thread position (running thread: open on the substance; long-form: none - open on the hook, close on a resource list + bio line)
 - [ ] Emoji density fits register (heavy in NO casual, near-zero in EN professional, **none in blog prose**), every emoji has a space before it ("for tiden 😊", never "for tiden😊"); **never the pray emoji 🙏 / 🙏🏽**
 - [ ] No em dashes, and no colons doing em-dash work (genuine lists and quotations only, density low); æ/ø/å intact; any triad is three real points, not filler
 - [ ] Messages end by handing the next step to the recipient

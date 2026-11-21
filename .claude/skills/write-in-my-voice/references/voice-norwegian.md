@@ -14,6 +14,9 @@ more emoji-forward than his English. Mirror the verbatim samples below.
 - Time-of-day openers: "God morgen, Daniel!", "Hei igjen, Daniel!"
 - Plain "Hei [Name]," for email. With close friends/family, drop all formality:
   "Halla, mannen!", "Halla, tjommi!", "Heyho", "Hei 💛".
+- In a running thread, skip the greeting and open on the substance. See Step 2
+  in SKILL.md. Sample reply to Tom-Einar (Pureservice), mid-thread:
+  "Takk for raskt og grundig svar!\n\nMvh\nMagnus"
 
 **Sign-offs** (rotate, don't always use the same)
 - "Mvh\nMagnus"
