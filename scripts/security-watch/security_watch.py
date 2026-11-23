@@ -845,7 +845,11 @@ def _npm_global_root() -> Path | None:
 
 def npm_global_is_local(top: str) -> bool:
     """True for a package installed with npm link or from a local path: npm
-    keeps those as a symlink in the global root. Unknown counts as local."""
+    keeps those as a symlink in the global root. Unknown counts as local.
+
+    Known gap: a global install from a local tarball (or git) is a real
+    directory with no record of its source, so it looks like a registry
+    package and its name is looked up."""
     root = _npm_global_root()
     return root is None or (root / top).is_symlink()
 
@@ -865,10 +869,10 @@ def upstream_fix(rec: dict, kind: str, checks: list[dict]) -> str:
     if kind == "pnpm-global":
         # one override per affected semver line, each to the lowest version
         # that clears every affected copy in that line
+        # the installed copy counts too: pnpm install -g does not upgrade the top
         lines: dict[str, list[str | None]] = {}
-        for c in still:
-            for v in c["affected_versions"]:
-                lines.setdefault(override_selector(name, v), []).append(fixed_above(v, rec["_affected"]))
+        for v in dict.fromkeys([rec["version"]] + [v for c in still for v in c["affected_versions"]]):
+            lines.setdefault(override_selector(name, v), []).append(fixed_above(v, rec["_affected"]))
         if all(all(lines[sel]) for sel in lines):
             pairs = ", ".join(f'"{sel}": "^{max(fixes, key=version_key)}"' for sel, fixes in sorted(lines.items()))
             return f"legg til {pairs} under pnpm.overrides i {PNPM_GLOBAL_DIR / 'package.json'}, så pnpm install -g"
@@ -888,12 +892,15 @@ def check_upstream(recs: list[dict], resolve=resolve_latest_tree, pnpm_tops=pnpm
 
     fix_status: upgrade | blocked_upstream | unknown | unchecked
     """
-    trees: dict[str, tuple[str | None, dict[str, set[str]]] | None] = {}
+    trees: dict[tuple[str, str], tuple[str | None, dict[str, set[str]]] | None] = {}
     notes: list[str] = []
 
     def tree(top, kind):
-        if top not in trees:
-            trees[top] = None
+        # keyed by kind too: an npm-linked package may share a name with a
+        # pnpm-global registry package
+        key = (top, kind)
+        if key not in trees:
+            trees[key] = None
             # denied and local names are counted, never named, and never sent
             # to the registry
             if is_denied(remote_tokens(top.lstrip("@")), cfg):
@@ -902,10 +909,10 @@ def check_upstream(recs: list[dict], resolve=resolve_latest_tree, pnpm_tops=pnpm
                 notes.append("skipped a linked or local npm-global package")
             else:
                 try:
-                    trees[top] = resolve(top)
+                    trees[key] = resolve(top)
                 except Exception as e:  # noqa: BLE001 - becomes fix_status unknown
                     notes.append(f"could not resolve {top}@latest ({type(e).__name__})")
-        return trees[top]
+        return trees[key]
 
     pnpm_cache: tuple[list[str], int] | None = None
     for rec in recs:

@@ -362,6 +362,26 @@ class Upstream(unittest.TestCase):
                           pnpm_tops=lambda: (["vercel"], 0))
         self.assertIn('"undici@5": "^5.28.5", "undici@6": "^6.21.2"', rec["fix"])
 
+    def test_pnpm_override_covers_the_installed_line(self):
+        v = [{"id": "GHSA-x", "aliases": [], "summary": "s", "database_specific": {"severity": "HIGH"},
+              "affected": [{"package": {"name": "x", "ecosystem": "npm"}, "ranges": [{"type": "SEMVER", "events": [
+                  {"introduced": "0"}, {"fixed": "1.9.0"}, {"introduced": "2.0.0"}, {"fixed": "2.0.5"}]}]}]}]
+        rec = machine_rec("pnpm-global", "x", "1.2.0", v)
+        sw.check_upstream([rec], resolve=lambda top: ("3", {"x": {"2.0.1"}}), pnpm_tops=lambda: (["t"], 0))
+        self.assertIn('"x@1": "^1.9.0", "x@2": "^2.0.5"', rec["fix"])
+
+    def test_tree_cache_is_per_kind(self):
+        looked = []
+        resolve = lambda top: looked.append(top) or ("1", {"lodash": {"4.17.21"}})
+        v = [vuln("GHSA-1", fixed=("4.17.21",))]
+        pnpm = machine_rec("pnpm-global", "lodash", "4.17.20", v)
+        npm = machine_rec("npm-global", "lodash", "4.17.20", v, tops=["mine"])
+        notes = sw.check_upstream([pnpm, npm], resolve=resolve, pnpm_tops=lambda: (["mine"], 0),
+                                  is_local=lambda top: True)
+        self.assertEqual((pnpm["fix_status"], npm["fix_status"]), ("upgrade", "unknown"))
+        self.assertEqual(looked, ["mine"])
+        self.assertEqual(notes, ["skipped a linked or local npm-global package"])
+
     def test_npm_global_keeps_upgrade_for_tops_that_are_fixed(self):
         rec = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))], tops=["cli-a", "cli-b"])
         trees = {"cli-a": ("2", {"lodash": {"4.17.21"}}), "cli-b": ("1", {"lodash": {"4.17.20"}})}
