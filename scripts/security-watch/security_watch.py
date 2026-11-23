@@ -865,7 +865,7 @@ def fixed_above(version: str, affected: list[dict]) -> str | None:
 def upstream_fix(rec: dict, kind: str, checks: list[dict]) -> str:
     name = rec["package"]
     still = [c for c in checks if c["still_affected"]]
-    held = "; ".join(f"{c['top']}@{c['latest']} har fortsatt {name}@{'/'.join(c['affected_versions'])}" for c in still)
+    held = "; ".join(f"{c['top']}@{c['latest']} still has {name}@{'/'.join(c['affected_versions'])}" for c in still)
     if kind == "pnpm-global":
         # one override per affected semver line, each to the lowest version
         # that clears every affected copy in that line
@@ -875,13 +875,13 @@ def upstream_fix(rec: dict, kind: str, checks: list[dict]) -> str:
             lines.setdefault(override_selector(name, v), []).append(fixed_above(v, rec["_affected"]))
         if all(all(lines[sel]) for sel in lines):
             pairs = ", ".join(f'"{sel}": "^{max(fixes, key=version_key)}"' for sel, fixes in sorted(lines.items()))
-            return f"legg til {pairs} under pnpm.overrides i {PNPM_GLOBAL_DIR / 'package.json'}, så pnpm install -g"
+            return f"add {pairs} under pnpm.overrides in {PNPM_GLOBAL_DIR / 'package.json'}, then run pnpm install -g"
         remove = " ".join(c["top"] for c in still)
-        return f"ingen fiks oppstrøms ({held}): fjern med pnpm remove -g {remove}, eller vent på en ny versjon"
+        return f"no upstream fix ({held}): remove with pnpm remove -g {remove}, or wait for a new release"
     upgrades = [f"npm install -g {c['top']}@latest; " for c in checks if not c["still_affected"]]
     remove = " ".join(c["top"] for c in still)
-    return (f"{''.join(upgrades)}ingen fiks oppstrøms ({held}): avinstaller med npm uninstall -g {remove}, "
-            f"eller vent på en ny versjon")
+    return (f"{''.join(upgrades)}no upstream fix ({held}): uninstall with npm uninstall -g {remove}, "
+            f"or wait for a new release")
 
 
 def check_upstream(recs: list[dict], resolve=resolve_latest_tree, pnpm_tops=pnpm_global_tops,
@@ -1241,15 +1241,15 @@ def render_markdown(rep: dict) -> str:
                 id_text = ", ".join(ids[:3]) + (f" +{len(ids) - 3}" if len(ids) > 3 else "")
                 fixed = f" → {top['fixed']}" if top["fixed"] else ""
                 if any(g.get("major_bump") for g in group):
-                    tags.append("ny major, kan brekke")
+                    tags.append("new major, may break")
                 L.append(f"- `{pkg}@{ver}`{fixed} · {id_text} · {' · '.join(tags)}")
                 status = lead.get("fix_status")
                 if status == "blocked_upstream":
                     still = [c for c in lead.get("upstream") or [] if c["still_affected"]]
-                    L.append("  - **Nyeste versjon hjelper ikke:** " + "; ".join(
-                        f"`{c['top']}@{c['latest']}` drar fortsatt inn `{pkg}@{'/'.join(c['affected_versions'])}`" for c in still))
+                    L.append("  - **Latest release does not help:** " + "; ".join(
+                        f"`{c['top']}@{c['latest']}` still pulls in `{pkg}@{'/'.join(c['affected_versions'])}`" for c in still))
                 elif status == "unknown":
-                    L.append("  - Fiksstatus ukjent: nyeste versjon kunne ikke sjekkes")
+                    L.append("  - Fix status unknown: the latest release could not be checked")
                 for fix in fixes_by_lockfile[:4]:
                     L.append(f"  - `{fix}`")
                 if len(fixes_by_lockfile) > 4:

@@ -292,7 +292,7 @@ class Upstream(unittest.TestCase):
                           is_local=lambda top: False)
         self.assertEqual(rec["fix_status"], "blocked_upstream")
         self.assertTrue(rec["major_bump"])
-        self.assertIn("toolkit@1.1.19 har fortsatt @azure/msal-node@6.0.1)", rec["fix"])
+        self.assertIn("toolkit@1.1.19 still has @azure/msal-node@6.0.1)", rec["fix"])
         self.assertIn("npm uninstall -g toolkit", rec["fix"])
 
     def test_npm_global_upgrade_when_latest_is_fixed_or_drops_it(self):
@@ -341,8 +341,8 @@ class Upstream(unittest.TestCase):
                           is_local=lambda top: False)
         rec.pop("_affected")
         md = sw.render_markdown({**REPORT, "findings": [rec]})
-        self.assertIn("**Nyeste versjon hjelper ikke:** `toolkit@1.1.19` drar fortsatt inn `@azure/msal-node@6.0.1`", md)
-        self.assertIn("ny major, kan brekke", md)
+        self.assertIn("**Latest release does not help:** `toolkit@1.1.19` still pulls in `@azure/msal-node@6.0.1`", md)
+        self.assertIn("new major, may break", md)
         self.assertIn("npm uninstall -g toolkit", md)
 
 
@@ -386,7 +386,7 @@ class Upstream(unittest.TestCase):
         rec = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))], tops=["cli-a", "cli-b"])
         trees = {"cli-a": ("2", {"lodash": {"4.17.21"}}), "cli-b": ("1", {"lodash": {"4.17.20"}})}
         sw.check_upstream([rec], resolve=lambda top: trees[top], is_local=lambda top: False)
-        self.assertTrue(rec["fix"].startswith("npm install -g cli-a@latest; ingen fiks oppstrøms (cli-b@1"))
+        self.assertTrue(rec["fix"].startswith("npm install -g cli-a@latest; no upstream fix (cli-b@1"))
 
     def test_local_tops_are_never_looked_up(self):
         looked = []
@@ -416,7 +416,7 @@ class Upstream(unittest.TestCase):
         for r in (a, b):
             r.pop("_affected")
         md = sw.render_markdown({**REPORT, "findings": [a, b]})
-        self.assertIn("**Nyeste versjon hjelper ikke:** `cli@3` drar fortsatt inn `p@8.1.0`", md)
+        self.assertIn("**Latest release does not help:** `cli@3` still pulls in `p@8.1.0`", md)
         self.assertIn("npm uninstall -g cli", md)
         self.assertNotIn("old command", md)
 
