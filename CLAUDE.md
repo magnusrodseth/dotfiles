@@ -512,6 +512,29 @@ run in a git project gets its own worktree and branch, one per day.
   everything else waits for the Friday digest. Only keys not reported before
   count, and the triage tier is part of the key, so a known moderate that
   lands in KEV is reported again. A key unseen for 30 days is forgotten.
+- **Does upgrading help?** The `upstream` stage checks each reported
+  npm-global and pnpm-global finding. It resolves the top-level package at
+  `@latest` with `npm install --package-lock-only --ignore-scripts` in a temp
+  dir, so only metadata is fetched and no package code runs. Every copy of the
+  vulnerable package in that tree is tested against the advisory's OSV ranges.
+  Each finding gets a `fix_status`:
+  - `upgrade`: the latest release is clean, and the existing command helps.
+  - `blocked_upstream`: the latest release still pulls an affected version.
+    For pnpm-global the fix becomes `pnpm.overrides` lines, one per affected
+    major line. npm-global has no overrides, so its fix says to uninstall or
+    wait. Without a fixed version, pnpm-global says the same.
+  - `unknown`: a top-level package was not checked. Resolution failed, or the
+    package is linked or local, or its owner is denied. Linked, local and
+    denied names never go to the registry. The stage is degraded and
+    blocking, so the run reports `error` if there is nothing else to report.
+  - `unchecked`: repos and the other machine kinds.
+
+  `major_bump` marks a fix that leaves the installed semver line. pnpm-global
+  findings are checked against every registry package in
+  `~/Library/pnpm/global/5/package.json`, because the lockfile does not say
+  which one pulls a package in. Packages with bundled dependencies fail
+  resolution when npm's config blocks tarball downloads, and end as
+  `unknown`.
 - **The news step** is a headless `claude -p` call on the subscription (the
   script strips `ANTHROPIC_API_KEY`), Sonnet, with only WebSearch and WebFetch,
   no MCP servers and no settings, returning JSON validated against

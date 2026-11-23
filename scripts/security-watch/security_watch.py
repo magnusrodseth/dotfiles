@@ -14,6 +14,8 @@ Pipeline, each step recorded as a stage with its real status:
   macos     pending macOS updates
   news      headless `claude -p` web search, structured output, no local tools
   weekly    (Fridays, or --weekly) moderate/low counts and freshness digest
+  upstream  for reported machine findings: does the latest top-level release
+            still pull in an affected version? (npm lockfile-only resolution)
 
 osv-scanner runs with --offline. Without it, osv-scanner resolves manifests
 such as pom.xml through deps.dev, which sends internal package coordinates to
@@ -35,6 +37,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import functools
 import hashlib
 import tomllib
 import urllib.parse
@@ -121,7 +124,8 @@ def version_key(v: str) -> tuple:
     main, _, pre = v.partition("-")
     nums = tuple(int(p) if p.isdigit() else 0 for p in re.split(r"[.+]", main) if p != "")
     nums = nums + (0,) * (6 - len(nums)) if len(nums) < 6 else nums
-    return nums + ((1,) if not pre else (0, pre))
+    # numeric pre-release identifiers compare as numbers (beta.9 < beta.10)
+    return nums + ((1,) if not pre else (0, tuple((0, int(p), "") if p.isdigit() else (1, 0, p) for p in pre.split("."))))
 
 
 def norm_eco(eco: str) -> str:
@@ -733,6 +737,227 @@ def machine_fix(kind: str, top: str, name: str, fixed: str | None) -> str:
     }.get(kind, f"# oppgrader {top}")
 
 
+# --------------------------------------------------------------------------- upstream check
+#
+# A machine fix such as `npm install -g top@latest` only helps when the latest
+# release of the top-level package no longer pulls in an affected version. The
+# check resolves top@latest into a throwaway lockfile (no tarballs, no install
+# scripts) and tests every copy of the package against the advisory's ranges.
+
+PNPM_GLOBAL_DIR = HOME / "Library/pnpm/global/5"
+UPSTREAM_KINDS = ("npm-global", "pnpm-global")
+UPSTREAM_TIMEOUT_S = 300
+
+
+def package_affected(vulns: list[dict], eco: str, name: str) -> list[dict]:
+    target = norm_name(eco, name)
+    return [{"ranges": aff.get("ranges") or [], "versions": aff.get("versions") or []}
+            for v in vulns for aff in v.get("affected") or []
+            if norm_eco((aff.get("package") or {}).get("ecosystem", eco)) == norm_eco(eco)
+            and norm_name(eco, (aff.get("package") or {}).get("name", "")) == target]
+
+
+def is_affected(version: str, affected: list[dict]) -> bool:
+    """OSV range evaluation for SEMVER and ECOSYSTEM ranges (introduced,
+    fixed, last_affected), plus explicitly listed versions."""
+    vk = version_key(version)
+    for aff in affected:
+        if version in aff["versions"]:
+            return True
+        for rng in aff["ranges"]:
+            if rng.get("type") not in ("SEMVER", "ECOSYSTEM"):
+                continue
+            hit = False
+            events = sorted(rng.get("events") or [], key=lambda e: version_key(next(iter(e.values()))))
+            for ev in events:
+                if "introduced" in ev and version_key(ev["introduced"]) <= vk:
+                    hit = True
+                elif "fixed" in ev and version_key(ev["fixed"]) <= vk:
+                    hit = False
+                elif "last_affected" in ev and version_key(ev["last_affected"]) < vk:
+                    hit = False
+            if hit:
+                return True
+    return False
+
+
+def major_bump(installed: str, fixed: str | None) -> bool:
+    """True when the fix leaves the installed semver line (0.x counts minor)."""
+    if not fixed:
+        return False
+    a, b = version_key(installed), version_key(fixed)
+    return a[0] != b[0] or (a[0] == 0 and a[1] != b[1])
+
+
+def override_selector(name: str, installed: str) -> str:
+    k = version_key(installed)
+    return f"{name}@{k[0]}" if k[0] else f"{name}@0.{k[1]}"
+
+
+def resolve_latest_tree(top: str) -> tuple[str | None, dict[str, set[str]]]:
+    """Resolve top@latest with npm into a throwaway lockfile.
+
+    Returns (resolved top version, lower-cased package name -> versions).
+    --package-lock-only fetches metadata only, and --ignore-scripts keeps any
+    package code from running. Raises on failure.
+    """
+    with tempfile.TemporaryDirectory(prefix="security-watch-upstream-") as d:
+        Path(d, "package.json").write_text(json.dumps(
+            {"name": "security-watch-probe", "private": True, "dependencies": {top: "latest"}}))
+        r = run(["npm", "install", "--package-lock-only", "--ignore-scripts", "--no-audit", "--no-fund",
+                 "--loglevel=error"], timeout=UPSTREAM_TIMEOUT_S, cwd=Path(d))
+        lock = Path(d, "package-lock.json")
+        if r.returncode != 0 or not lock.exists():
+            raise RuntimeError(f"npm exited {r.returncode}")
+        packages = json.loads(lock.read_text()).get("packages") or {}
+    tree: dict[str, set[str]] = {}
+    for path, meta in packages.items():
+        if not path or not meta.get("version"):
+            continue
+        pkg = meta.get("name") or path.rsplit("node_modules/", 1)[-1]
+        tree.setdefault(pkg.lower(), set()).add(meta["version"])
+    top_meta = packages.get(f"node_modules/{top}") or {}
+    return top_meta.get("version"), tree
+
+
+def pnpm_global_tops() -> tuple[list[str], int]:
+    """(registry packages in the global pnpm package.json, count of others).
+
+    link:, file:, git and URL specs are local or private code: their names are
+    never looked up on the public registry.
+    """
+    try:
+        deps = json.loads((PNPM_GLOBAL_DIR / "package.json").read_text()).get("dependencies") or {}
+    except (OSError, json.JSONDecodeError):
+        return [], 0
+    registry = sorted(n for n, spec in deps.items() if ":" not in str(spec) and "/" not in str(spec))
+    return registry, len(deps) - len(registry)
+
+
+@functools.cache
+def _npm_global_root() -> Path | None:
+    try:
+        r = run(["npm", "root", "-g"], timeout=30)
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return None
+    return Path(r.stdout.strip()) if r.returncode == 0 and r.stdout.strip() else None
+
+
+def npm_global_is_local(top: str) -> bool:
+    """True for a package installed with npm link or from a local path: npm
+    keeps those as a symlink in the global root. Unknown counts as local.
+
+    Known gap: a global install from a local tarball (or git) is a real
+    directory with no record of its source, so it looks like a registry
+    package and its name is looked up."""
+    root = _npm_global_root()
+    return root is None or (root / top).is_symlink()
+
+
+def fixed_above(version: str, affected: list[dict]) -> str | None:
+    """The lowest fixed version above `version` in the advisory's ranges."""
+    vk = version_key(version)
+    fixes = [ev["fixed"] for aff in affected for rng in aff["ranges"] for ev in rng.get("events") or []
+             if "fixed" in ev and version_key(ev["fixed"]) > vk]
+    return min(fixes, key=version_key) if fixes else None
+
+
+def upstream_fix(rec: dict, kind: str, checks: list[dict]) -> str:
+    name = rec["package"]
+    still = [c for c in checks if c["still_affected"]]
+    held = "; ".join(f"{c['top']}@{c['latest']} still has {name}@{'/'.join(c['affected_versions'])}" for c in still)
+    if kind == "pnpm-global":
+        # one override per affected semver line, each to the lowest version
+        # that clears every affected copy in that line
+        # the installed copy counts too: pnpm install -g does not upgrade the top
+        lines: dict[str, list[str | None]] = {}
+        for v in dict.fromkeys([rec["version"]] + [v for c in still for v in c["affected_versions"]]):
+            lines.setdefault(override_selector(name, v), []).append(fixed_above(v, rec["_affected"]))
+        if all(all(lines[sel]) for sel in lines):
+            pairs = ", ".join(f'"{sel}": "^{max(fixes, key=version_key)}"' for sel, fixes in sorted(lines.items()))
+            return f"add {pairs} under pnpm.overrides in {PNPM_GLOBAL_DIR / 'package.json'}, then run pnpm install -g"
+        remove = " ".join(c["top"] for c in still)
+        return f"no upstream fix ({held}): remove with pnpm remove -g {remove}, or wait for a new release"
+    upgrades = [f"npm install -g {c['top']}@latest; " for c in checks if not c["still_affected"]]
+    remove = " ".join(c["top"] for c in still)
+    return (f"{''.join(upgrades)}no upstream fix ({held}): uninstall with npm uninstall -g {remove}, "
+            f"or wait for a new release")
+
+
+def check_upstream(recs: list[dict], resolve=resolve_latest_tree, pnpm_tops=pnpm_global_tops,
+                   is_local=npm_global_is_local, cfg: dict | None = None) -> list[str]:
+    """Set fix_status, upstream and major_bump on each record, and replace the
+    fix when upgrading cannot help. Returns a note for every top-level package
+    that was not checked, so an `unknown` status always degrades the stage.
+
+    fix_status: upgrade | blocked_upstream | unknown | unchecked
+    """
+    trees: dict[tuple[str, str], tuple[str | None, dict[str, set[str]]] | None] = {}
+    notes: list[str] = []
+
+    def tree(top, kind):
+        # keyed by kind too: an npm-linked package may share a name with a
+        # pnpm-global registry package
+        key = (top, kind)
+        if key not in trees:
+            trees[key] = None
+            # denied and local names are counted, never named, and never sent
+            # to the registry
+            if is_denied(remote_tokens(top.lstrip("@")), cfg):
+                notes.append("skipped a package from a denied owner")
+            elif kind == "npm-global" and is_local(top):
+                notes.append("skipped a linked or local npm-global package")
+            else:
+                try:
+                    trees[key] = resolve(top)
+                except Exception as e:  # noqa: BLE001 - becomes fix_status unknown
+                    notes.append(f"could not resolve {top}@latest ({type(e).__name__})")
+        return trees[key]
+
+    pnpm_cache: tuple[list[str], int] | None = None
+    for rec in recs:
+        rec["major_bump"] = major_bump(rec["version"], rec["fixed"])
+        kind = rec["scope"].removeprefix("maskin: ")
+        if kind not in UPSTREAM_KINDS or not rec["scope"].startswith("maskin: "):
+            rec["fix_status"] = "unchecked"
+            continue
+        unknown = False
+        if kind == "pnpm-global":
+            if pnpm_cache is None:
+                pnpm_cache = pnpm_tops()
+                if pnpm_cache[1]:
+                    notes.append(f"pnpm-global has {pnpm_cache[1]} non-registry package(s) that were not checked")
+                if not pnpm_cache[0]:
+                    notes.append("pnpm-global package.json has no registry packages to check")
+            tops, unknown = pnpm_cache[0], bool(pnpm_cache[1])
+        else:
+            tops = rec.get("tops") or []
+            if not tops:
+                notes.append("an npm-global finding has no top-level package")
+        checks = []
+        for top in tops:
+            t = tree(top, kind)
+            if t is None:
+                unknown = True
+                continue
+            latest, pkgs = t
+            versions = sorted(pkgs.get(rec["package"].lower(), set()), key=version_key)
+            if kind == "pnpm-global" and not versions:
+                continue  # this top-level package does not pull it in at all
+            hit = [v for v in versions if is_affected(v, rec["_affected"])]
+            checks.append({"top": top, "latest": latest, "versions": versions,
+                           "affected_versions": hit, "still_affected": bool(hit)})
+        rec["upstream"] = checks
+        if any(c["still_affected"] for c in checks):
+            rec["fix_status"] = "blocked_upstream"
+            rec["fix"] = upstream_fix(rec, kind, checks)
+        elif unknown or not tops:
+            rec["fix_status"] = "unknown"
+        else:
+            rec["fix_status"] = "upgrade"
+    return list(dict.fromkeys(notes))
+
+
 def extract_findings(osv: dict, lockfile_repo: dict[str, str], origins: dict, sbom_path: str,
                      kev: set[str]) -> tuple[list[dict], dict]:
     """Flatten osv-scanner JSON into one record per (scope, package, vuln group).
@@ -784,6 +1009,9 @@ def extract_findings(osv: dict, lockfile_repo: dict[str, str], origins: dict, sb
                         "fixed": fixed,
                         "summary": (gv[0].get("summary") if gv else "") or "",
                         "lockfile": None if (is_sbom or machine_kind) else src,
+                        # affected ranges for this package, kept in memory for
+                        # the upstream check and dropped before the report
+                        "_affected": package_affected(gv, eco, name),
                     }
                     if owner:
                         rec["fix"] = "; ".join(dict.fromkeys(machine_fix(owner["kind"], t, name, fixed) for t in owner["tops"]))
@@ -994,9 +1222,14 @@ def render_markdown(rep: dict) -> str:
             rows.sort(key=lambda x: (-any(g["malicious"] or g["kev"] for g in x[3]), -SEVERITY_RANK[x[2]], x[0]))
             L.append(f"### {scope} ({len(rows)})")
             for pkg, ver, sev, group, top in rows[:MAX_LINES_PER_SCOPE]:
+                # a blocked advisory wins over an upgradable one on the same
+                # package: its fix is the one that clears both
+                rank = lambda g: (g.get("fix_status") == "blocked_upstream", version_key(g["fixed"] or "0"))
                 fixes_by_lockfile = list(dict.fromkeys(
-                    max((g for g in group if g.get("lockfile") == lf), key=lambda g: version_key(g["fixed"] or "0"))["fix"]
+                    max((g for g in group if g.get("lockfile") == lf), key=rank)["fix"]
                     for lf in dict.fromkeys(g.get("lockfile") for g in group)))
+                lead = max(group, key=lambda g: ({"blocked_upstream": 2, "unknown": 1}.get(g.get("fix_status"), 0),
+                                                 version_key(g["fixed"] or "0")))
                 tags = []
                 if any(g["malicious"] for g in group):
                     tags.append("**ONDSINNET**")
@@ -1007,7 +1240,16 @@ def render_markdown(rep: dict) -> str:
                 ids = [g["id"] for g in group]
                 id_text = ", ".join(ids[:3]) + (f" +{len(ids) - 3}" if len(ids) > 3 else "")
                 fixed = f" → {top['fixed']}" if top["fixed"] else ""
+                if any(g.get("major_bump") for g in group):
+                    tags.append("new major, may break")
                 L.append(f"- `{pkg}@{ver}`{fixed} · {id_text} · {' · '.join(tags)}")
+                status = lead.get("fix_status")
+                if status == "blocked_upstream":
+                    still = [c for c in lead.get("upstream") or [] if c["still_affected"]]
+                    L.append("  - **Latest release does not help:** " + "; ".join(
+                        f"`{c['top']}@{c['latest']}` still pulls in `{pkg}@{'/'.join(c['affected_versions'])}`" for c in still))
+                elif status == "unknown":
+                    L.append("  - Fix status unknown: the latest release could not be checked")
                 for fix in fixes_by_lockfile[:4]:
                     L.append(f"  - `{fix}`")
                 if len(fixes_by_lockfile) > 4:
@@ -1279,6 +1521,24 @@ def _main(args, t_start: float) -> int:
     news_exact = [n for n in news_exact_all if n["key"] not in seen]
     news_name_only = [n for n in news_name_only_all if n["key"] not in seen]
     macos_new = [u for u in macos if f"macos|{u}" not in seen]
+
+    # ---- does upgrading the top-level package actually fix what is reported?
+    def upstream_stage(s):
+        reported = alarms + findings
+        for r in reported:
+            r["fix_status"] = "unchecked"
+        notes = check_upstream(reported, cfg=cfg)
+        counts: dict[str, int] = {}
+        for r in reported:
+            counts[r["fix_status"]] = counts.get(r["fix_status"], 0) + 1
+        s.detail = ", ".join(f"{k}: {v}" for k, v in sorted(counts.items())) or "nothing to check"
+        if notes:
+            # the scan is complete, but the advice for these findings is not
+            s.status, s.blocking = "degraded", True
+            s.detail += "; " + "; ".join(notes)
+    ctx.guarded("upstream", upstream_stage)
+    for r in records:
+        r.pop("_affected", None)
 
     problems = [x for x in ctx.stages if x.status == "failed" or (x.status == "degraded" and x.blocking)]
     if alarms:
