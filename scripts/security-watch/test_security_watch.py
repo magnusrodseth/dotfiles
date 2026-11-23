@@ -254,6 +254,93 @@ class Findings(unittest.TestCase):
                              f"cd {d} && uv lock --upgrade-package jinja2==3.1.6")
 
 
+def machine_rec(kind, name, version, vulns, tops=None):
+    fixed = sw.pick_fixed(vulns, "npm", name, version)
+    rec = {"scope": f"maskin: {kind}", "ecosystem": "npm", "package": name, "version": version,
+           "id": vulns[0]["id"], "severity": "HIGH", "malicious": False, "kev": [], "fixed": fixed,
+           "fix": "old command", "_affected": sw.package_affected(vulns, "npm", name)}
+    if tops is not None:
+        rec["tops"] = tops
+    return rec
+
+
+class Upstream(unittest.TestCase):
+    def test_osv_ranges(self):
+        aff = sw.package_affected([vuln("GHSA-1", fixed=("6.3.0",), name="p")], "npm", "p")
+        self.assertTrue(sw.is_affected("6.1.0", aff))
+        self.assertFalse(sw.is_affected("6.3.0", aff))
+        two_lines = [{"ranges": [{"type": "SEMVER", "events": [
+            {"introduced": "0"}, {"fixed": "6.3.0"}, {"introduced": "7.0.0"}, {"fixed": "8.4.0"}]}], "versions": []}]
+        self.assertTrue(sw.is_affected("8.3.0", two_lines))
+        self.assertFalse(sw.is_affected("6.3.0", two_lines))
+        self.assertTrue(sw.is_affected("2.0.0", [{"ranges": [{"type": "SEMVER", "events": [
+            {"introduced": "1.0.0"}, {"last_affected": "2.0.0"}]}], "versions": []}]))
+        self.assertTrue(sw.is_affected("1.2.3", [{"ranges": [], "versions": ["1.2.3"]}]))
+
+    def test_major_bump_and_selector(self):
+        self.assertTrue(sw.major_bump("5.28.4", "6.29.1"))
+        self.assertFalse(sw.major_bump("6.1.0", "6.3.0"))
+        self.assertTrue(sw.major_bump("0.3.1", "0.4.0"))
+        self.assertEqual(sw.override_selector("undici", "5.28.4"), "undici@5")
+        self.assertEqual(sw.override_selector("x", "0.3.1"), "x@0.3")
+
+    def test_npm_global_blocked_when_latest_still_pulls_it(self):
+        rec = machine_rec("npm-global", "@azure/msal-node", "6.0.1",
+                          [vuln("GHSA-m", fixed=("7.1.0",), name="@azure/msal-node")], tops=["toolkit"])
+        sw.check_upstream([rec], resolve=lambda top: ("1.1.19", {"@azure/msal-node": {"6.0.1", "7.2.3"}}))
+        self.assertEqual(rec["fix_status"], "blocked_upstream")
+        self.assertTrue(rec["major_bump"])
+        self.assertIn("toolkit@1.1.19 har fortsatt @azure/msal-node@6.0.1)", rec["fix"])
+        self.assertIn("npm uninstall -g toolkit", rec["fix"])
+
+    def test_npm_global_upgrade_when_latest_is_fixed_or_drops_it(self):
+        v = [vuln("GHSA-1", fixed=("4.17.21",))]
+        for tree in ({"lodash": {"4.17.21"}}, {}):
+            rec = machine_rec("npm-global", "lodash", "4.17.20", v, tops=["cli"])
+            sw.check_upstream([rec], resolve=lambda top: ("2.0.0", tree))
+            self.assertEqual(rec["fix_status"], "upgrade")
+            self.assertEqual(rec["fix"], "old command")
+
+    def test_pnpm_global_override_only_for_tops_that_pull_it(self):
+        rec = machine_rec("pnpm-global", "undici", "5.28.4", [vuln("GHSA-u", fixed=("6.29.1",), name="undici")])
+        trees = {"vercel": ("66.6.0", {"undici": {"5.28.4", "6.29.1"}}), "turbo": ("2.11.13", {})}
+        sw.check_upstream([rec], resolve=lambda top: trees[top], pnpm_tops=lambda: ["turbo", "vercel"])
+        self.assertEqual(rec["fix_status"], "blocked_upstream")
+        self.assertEqual([c["top"] for c in rec["upstream"]], ["vercel"])
+        self.assertIn('"undici@5": "^6.29.1"', rec["fix"])
+        self.assertIn("pnpm.overrides", rec["fix"])
+
+    def test_resolve_failure_is_unknown_and_noted(self):
+        rec = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))], tops=["cli"])
+        def boom(top):
+            raise RuntimeError("offline")
+        notes = sw.check_upstream([rec], resolve=boom)
+        self.assertEqual(rec["fix_status"], "unknown")
+        self.assertEqual(rec["fix"], "old command")
+        self.assertEqual(len(notes), 1)
+
+    def test_repos_and_denied_tops_are_not_looked_up(self):
+        repo = machine_rec("x", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))])
+        repo["scope"] = "repo: magnusrodseth/a"
+        denied = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))],
+                             tops=["@employer/cli"])
+        looked = []
+        sw.check_upstream([repo, denied], resolve=lambda top: looked.append(top) or ("1", {}), cfg=CFG)
+        self.assertEqual(looked, [])
+        self.assertEqual(repo["fix_status"], "unchecked")
+        self.assertEqual(denied["fix_status"], "unknown")
+
+    def test_report_says_latest_does_not_help(self):
+        rec = machine_rec("npm-global", "@azure/msal-node", "6.0.1",
+                          [vuln("GHSA-m", fixed=("7.1.0",), name="@azure/msal-node")], tops=["toolkit"])
+        sw.check_upstream([rec], resolve=lambda top: ("1.1.19", {"@azure/msal-node": {"6.0.1"}}))
+        rec.pop("_affected")
+        md = sw.render_markdown({**REPORT, "findings": [rec]})
+        self.assertIn("**Nyeste versjon hjelper ikke:** `toolkit@1.1.19` drar fortsatt inn `@azure/msal-node@6.0.1`", md)
+        self.assertIn("ny major, kan brekke", md)
+        self.assertIn("npm uninstall -g toolkit", md)
+
+
 class News(unittest.TestCase):
     def test_validation_rejects_and_sanitises(self):
         items, problems = sw.validate_news({"items": [

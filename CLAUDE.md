@@ -512,6 +512,19 @@ run in a git project gets its own worktree and branch, one per day.
   everything else waits for the Friday digest. Only keys not reported before
   count, and the triage tier is part of the key, so a known moderate that
   lands in KEV is reported again. A key unseen for 30 days is forgotten.
+- **Does upgrading help?** For each reported npm-global and pnpm-global
+  finding, the `upstream` stage resolves the top-level package at `@latest`
+  with `npm install --package-lock-only --ignore-scripts` in a temp dir
+  (metadata only, no package code runs) and tests every copy of the
+  vulnerable package against the advisory's OSV ranges. `fix_status` is
+  `upgrade` (the existing command helps), `blocked_upstream` (the latest
+  release still pulls an affected version; the fix becomes a `pnpm.overrides`
+  line for pnpm-global, or "uninstall or wait" for npm-global, which has no
+  overrides), `unknown` (resolution failed; the stage is degraded) or
+  `unchecked` (repos and other machine kinds). `major_bump` marks a fix that
+  leaves the installed semver line. pnpm-global findings are checked against
+  every top-level package in `~/Library/pnpm/global/5/package.json`, because
+  its lockfile does not say which one pulls a package in.
 - **The news step** is a headless `claude -p` call on the subscription (the
   script strips `ANTHROPIC_API_KEY`), Sonnet, with only WebSearch and WebFetch,
   no MCP servers and no settings, returning JSON validated against
