@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -287,7 +288,8 @@ class Upstream(unittest.TestCase):
     def test_npm_global_blocked_when_latest_still_pulls_it(self):
         rec = machine_rec("npm-global", "@azure/msal-node", "6.0.1",
                           [vuln("GHSA-m", fixed=("7.1.0",), name="@azure/msal-node")], tops=["toolkit"])
-        sw.check_upstream([rec], resolve=lambda top: ("1.1.19", {"@azure/msal-node": {"6.0.1", "7.2.3"}}))
+        sw.check_upstream([rec], resolve=lambda top: ("1.1.19", {"@azure/msal-node": {"6.0.1", "7.2.3"}}),
+                          is_local=lambda top: False)
         self.assertEqual(rec["fix_status"], "blocked_upstream")
         self.assertTrue(rec["major_bump"])
         self.assertIn("toolkit@1.1.19 har fortsatt @azure/msal-node@6.0.1)", rec["fix"])
@@ -297,14 +299,14 @@ class Upstream(unittest.TestCase):
         v = [vuln("GHSA-1", fixed=("4.17.21",))]
         for tree in ({"lodash": {"4.17.21"}}, {}):
             rec = machine_rec("npm-global", "lodash", "4.17.20", v, tops=["cli"])
-            sw.check_upstream([rec], resolve=lambda top: ("2.0.0", tree))
+            sw.check_upstream([rec], resolve=lambda top: ("2.0.0", tree), is_local=lambda top: False)
             self.assertEqual(rec["fix_status"], "upgrade")
             self.assertEqual(rec["fix"], "old command")
 
     def test_pnpm_global_override_only_for_tops_that_pull_it(self):
         rec = machine_rec("pnpm-global", "undici", "5.28.4", [vuln("GHSA-u", fixed=("6.29.1",), name="undici")])
         trees = {"vercel": ("66.6.0", {"undici": {"5.28.4", "6.29.1"}}), "turbo": ("2.11.13", {})}
-        sw.check_upstream([rec], resolve=lambda top: trees[top], pnpm_tops=lambda: ["turbo", "vercel"])
+        sw.check_upstream([rec], resolve=lambda top: trees[top], pnpm_tops=lambda: (["turbo", "vercel"], 0))
         self.assertEqual(rec["fix_status"], "blocked_upstream")
         self.assertEqual([c["top"] for c in rec["upstream"]], ["vercel"])
         self.assertIn('"undici@5": "^6.29.1"', rec["fix"])
@@ -314,7 +316,7 @@ class Upstream(unittest.TestCase):
         rec = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))], tops=["cli"])
         def boom(top):
             raise RuntimeError("offline")
-        notes = sw.check_upstream([rec], resolve=boom)
+        notes = sw.check_upstream([rec], resolve=boom, is_local=lambda top: False)
         self.assertEqual(rec["fix_status"], "unknown")
         self.assertEqual(rec["fix"], "old command")
         self.assertEqual(len(notes), 1)
@@ -325,20 +327,83 @@ class Upstream(unittest.TestCase):
         denied = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))],
                              tops=["@employer/cli"])
         looked = []
-        sw.check_upstream([repo, denied], resolve=lambda top: looked.append(top) or ("1", {}), cfg=CFG)
+        notes = sw.check_upstream([repo, denied], resolve=lambda top: looked.append(top) or ("1", {}), cfg=CFG,
+                                  is_local=lambda top: False)
         self.assertEqual(looked, [])
+        self.assertEqual(notes, ["skipped a package from a denied owner"])  # counted, not named
         self.assertEqual(repo["fix_status"], "unchecked")
         self.assertEqual(denied["fix_status"], "unknown")
 
     def test_report_says_latest_does_not_help(self):
         rec = machine_rec("npm-global", "@azure/msal-node", "6.0.1",
                           [vuln("GHSA-m", fixed=("7.1.0",), name="@azure/msal-node")], tops=["toolkit"])
-        sw.check_upstream([rec], resolve=lambda top: ("1.1.19", {"@azure/msal-node": {"6.0.1"}}))
+        sw.check_upstream([rec], resolve=lambda top: ("1.1.19", {"@azure/msal-node": {"6.0.1"}}),
+                          is_local=lambda top: False)
         rec.pop("_affected")
         md = sw.render_markdown({**REPORT, "findings": [rec]})
         self.assertIn("**Nyeste versjon hjelper ikke:** `toolkit@1.1.19` drar fortsatt inn `@azure/msal-node@6.0.1`", md)
         self.assertIn("ny major, kan brekke", md)
         self.assertIn("npm uninstall -g toolkit", md)
+
+
+    def test_pnpm_without_fixed_version_suggests_removal(self):
+        rec = machine_rec("pnpm-global", "evil", "1.0.0", [vuln("MAL-2026-1", name="evil")])
+        sw.check_upstream([rec], resolve=lambda top: ("2.0.0", {"evil": {"1.0.0"}}), pnpm_tops=lambda: (["cli"], 0))
+        self.assertEqual(rec["fix_status"], "blocked_upstream")
+        self.assertNotIn("None", rec["fix"])
+        self.assertIn("pnpm remove -g cli", rec["fix"])
+
+    def test_pnpm_override_covers_every_affected_line(self):
+        v = [{"id": "GHSA-u", "aliases": [], "summary": "s", "database_specific": {"severity": "HIGH"},
+              "affected": [{"package": {"name": "undici", "ecosystem": "npm"}, "ranges": [{"type": "SEMVER", "events": [
+                  {"introduced": "0"}, {"fixed": "5.28.5"}, {"introduced": "6.0.0"}, {"fixed": "6.21.2"}]}]}]}]
+        rec = machine_rec("pnpm-global", "undici", "5.28.4", v)
+        sw.check_upstream([rec], resolve=lambda top: ("66", {"undici": {"5.28.4", "6.0.0"}}),
+                          pnpm_tops=lambda: (["vercel"], 0))
+        self.assertIn('"undici@5": "^5.28.5", "undici@6": "^6.21.2"', rec["fix"])
+
+    def test_npm_global_keeps_upgrade_for_tops_that_are_fixed(self):
+        rec = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))], tops=["cli-a", "cli-b"])
+        trees = {"cli-a": ("2", {"lodash": {"4.17.21"}}), "cli-b": ("1", {"lodash": {"4.17.20"}})}
+        sw.check_upstream([rec], resolve=lambda top: trees[top], is_local=lambda top: False)
+        self.assertTrue(rec["fix"].startswith("npm install -g cli-a@latest; ingen fiks oppstrøms (cli-b@1"))
+
+    def test_local_tops_are_never_looked_up(self):
+        looked = []
+        resolve = lambda top: looked.append(top) or ("1", {})
+        npm = machine_rec("npm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))], tops=["mine"])
+        notes = sw.check_upstream([npm], resolve=resolve, is_local=lambda top: True)
+        self.assertEqual((looked, npm["fix_status"]), ([], "unknown"))
+        self.assertEqual(notes, ["skipped a linked or local npm-global package"])
+        with tempfile.TemporaryDirectory() as d, unittest.mock.patch.object(sw, "PNPM_GLOBAL_DIR", Path(d)):
+            Path(d, "package.json").write_text(json.dumps({"dependencies": {
+                "vercel": "^66.6.0", "mine": "link:../dev/mine", "fork": "github:me/fork", "turbo": "latest"}}))
+            self.assertEqual(sw.pnpm_global_tops(), (["turbo", "vercel"], 2))
+        pnpm = machine_rec("pnpm-global", "lodash", "4.17.20", [vuln("GHSA-1", fixed=("4.17.21",))])
+        notes = sw.check_upstream([pnpm], resolve=lambda top: ("1", {"lodash": {"4.17.21"}}),
+                                  pnpm_tops=lambda: (["vercel"], 1))
+        self.assertEqual(pnpm["fix_status"], "unknown")  # the local one might still pull it in
+        self.assertIn("1 non-registry package(s)", notes[0])
+
+    def test_report_shows_blocked_advisory_next_to_upgradable_one(self):
+        a = machine_rec("npm-global", "p", "6.0.0", [vuln("GHSA-A", fixed=("8.0.0",), name="p")], tops=["cli"])
+        b = machine_rec("npm-global", "p", "6.0.0", [vuln("GHSA-B", fixed=("8.2.0",), name="p")], tops=["cli"])
+        b["_affected"][0]["ranges"][0]["events"] = [{"introduced": "0"}, {"fixed": "7.0.0"},
+                                                    {"introduced": "8.0.0"}, {"fixed": "8.2.0"}]
+        a["fixed"], b["fixed"] = "8.0.0", "7.0.0"
+        sw.check_upstream([a, b], resolve=lambda top: ("3", {"p": {"8.1.0"}}), is_local=lambda top: False)
+        self.assertEqual((a["fix_status"], b["fix_status"]), ("upgrade", "blocked_upstream"))
+        for r in (a, b):
+            r.pop("_affected")
+        md = sw.render_markdown({**REPORT, "findings": [a, b]})
+        self.assertIn("**Nyeste versjon hjelper ikke:** `cli@3` drar fortsatt inn `p@8.1.0`", md)
+        self.assertIn("npm uninstall -g cli", md)
+        self.assertNotIn("old command", md)
+
+    def test_numeric_prerelease_order(self):
+        self.assertLess(sw.version_key("2.0.0-beta.9"), sw.version_key("2.0.0-beta.10"))
+        aff = [{"ranges": [{"type": "SEMVER", "events": [{"introduced": "0"}, {"fixed": "2.0.0-beta.10"}]}], "versions": []}]
+        self.assertTrue(sw.is_affected("2.0.0-beta.9", aff))
 
 
 class News(unittest.TestCase):

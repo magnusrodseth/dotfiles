@@ -37,6 +37,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import functools
 import hashlib
 import tomllib
 import urllib.parse
@@ -123,7 +124,8 @@ def version_key(v: str) -> tuple:
     main, _, pre = v.partition("-")
     nums = tuple(int(p) if p.isdigit() else 0 for p in re.split(r"[.+]", main) if p != "")
     nums = nums + (0,) * (6 - len(nums)) if len(nums) < 6 else nums
-    return nums + ((1,) if not pre else (0, pre))
+    # numeric pre-release identifiers compare as numbers (beta.9 < beta.10)
+    return nums + ((1,) if not pre else (0, tuple((0, int(p), "") if p.isdigit() else (1, 0, p) for p in pre.split("."))))
 
 
 def norm_eco(eco: str) -> str:
@@ -818,64 +820,116 @@ def resolve_latest_tree(top: str) -> tuple[str | None, dict[str, set[str]]]:
     return top_meta.get("version"), tree
 
 
-def pnpm_global_tops() -> list[str]:
+def pnpm_global_tops() -> tuple[list[str], int]:
+    """(registry packages in the global pnpm package.json, count of others).
+
+    link:, file:, git and URL specs are local or private code: their names are
+    never looked up on the public registry.
+    """
     try:
-        return sorted(json.loads((PNPM_GLOBAL_DIR / "package.json").read_text()).get("dependencies") or {})
+        deps = json.loads((PNPM_GLOBAL_DIR / "package.json").read_text()).get("dependencies") or {}
     except (OSError, json.JSONDecodeError):
-        return []
+        return [], 0
+    registry = sorted(n for n, spec in deps.items() if ":" not in str(spec) and "/" not in str(spec))
+    return registry, len(deps) - len(registry)
+
+
+@functools.cache
+def _npm_global_root() -> Path | None:
+    try:
+        r = run(["npm", "root", "-g"], timeout=30)
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return None
+    return Path(r.stdout.strip()) if r.returncode == 0 and r.stdout.strip() else None
+
+
+def npm_global_is_local(top: str) -> bool:
+    """True for a package installed with npm link or from a local path: npm
+    keeps those as a symlink in the global root. Unknown counts as local."""
+    root = _npm_global_root()
+    return root is None or (root / top).is_symlink()
+
+
+def fixed_above(version: str, affected: list[dict]) -> str | None:
+    """The lowest fixed version above `version` in the advisory's ranges."""
+    vk = version_key(version)
+    fixes = [ev["fixed"] for aff in affected for rng in aff["ranges"] for ev in rng.get("events") or []
+             if "fixed" in ev and version_key(ev["fixed"]) > vk]
+    return min(fixes, key=version_key) if fixes else None
 
 
 def upstream_fix(rec: dict, kind: str, checks: list[dict]) -> str:
-    name, fixed = rec["package"], rec["fixed"]
+    name = rec["package"]
     still = [c for c in checks if c["still_affected"]]
+    held = "; ".join(f"{c['top']}@{c['latest']} har fortsatt {name}@{'/'.join(c['affected_versions'])}" for c in still)
     if kind == "pnpm-global":
-        sel = override_selector(name, rec["version"])
-        return (f'legg til "{sel}": "^{fixed}" under pnpm.overrides i {PNPM_GLOBAL_DIR / "package.json"}, '
-                f"så pnpm install -g")
-    parts = [f"{c['top']}@{c['latest']} har fortsatt {name}@{'/'.join(c['affected_versions'])}" for c in still]
-    uninstall = " ".join(c["top"] for c in still)
-    return (f"ingen fiks oppstrøms ({'; '.join(parts)}): avinstaller med npm uninstall -g {uninstall}, "
+        # one override per affected semver line, each to the lowest version
+        # that clears every affected copy in that line
+        lines: dict[str, list[str | None]] = {}
+        for c in still:
+            for v in c["affected_versions"]:
+                lines.setdefault(override_selector(name, v), []).append(fixed_above(v, rec["_affected"]))
+        if all(all(lines[sel]) for sel in lines):
+            pairs = ", ".join(f'"{sel}": "^{max(fixes, key=version_key)}"' for sel, fixes in sorted(lines.items()))
+            return f"legg til {pairs} under pnpm.overrides i {PNPM_GLOBAL_DIR / 'package.json'}, så pnpm install -g"
+        remove = " ".join(c["top"] for c in still)
+        return f"ingen fiks oppstrøms ({held}): fjern med pnpm remove -g {remove}, eller vent på en ny versjon"
+    upgrades = [f"npm install -g {c['top']}@latest; " for c in checks if not c["still_affected"]]
+    remove = " ".join(c["top"] for c in still)
+    return (f"{''.join(upgrades)}ingen fiks oppstrøms ({held}): avinstaller med npm uninstall -g {remove}, "
             f"eller vent på en ny versjon")
 
 
 def check_upstream(recs: list[dict], resolve=resolve_latest_tree, pnpm_tops=pnpm_global_tops,
-                   cfg: dict | None = None) -> list[str]:
+                   is_local=npm_global_is_local, cfg: dict | None = None) -> list[str]:
     """Set fix_status, upstream and major_bump on each record, and replace the
-    fix when upgrading cannot help. Returns notes for tops that failed to resolve.
+    fix when upgrading cannot help. Returns a note for every top-level package
+    that was not checked, so an `unknown` status always degrades the stage.
 
     fix_status: upgrade | blocked_upstream | unknown | unchecked
     """
     trees: dict[str, tuple[str | None, dict[str, set[str]]] | None] = {}
     notes: list[str] = []
 
-    def tree(top):
+    def tree(top, kind):
         if top not in trees:
+            trees[top] = None
+            # denied and local names are counted, never named, and never sent
+            # to the registry
             if is_denied(remote_tokens(top.lstrip("@")), cfg):
-                trees[top] = None  # a denied owner's package: never looked up
+                notes.append("skipped a package from a denied owner")
+            elif kind == "npm-global" and is_local(top):
+                notes.append("skipped a linked or local npm-global package")
             else:
                 try:
                     trees[top] = resolve(top)
                 except Exception as e:  # noqa: BLE001 - becomes fix_status unknown
-                    trees[top] = None
                     notes.append(f"could not resolve {top}@latest ({type(e).__name__})")
         return trees[top]
 
-    pnpm_cache: list[str] | None = None
+    pnpm_cache: tuple[list[str], int] | None = None
     for rec in recs:
         rec["major_bump"] = major_bump(rec["version"], rec["fixed"])
         kind = rec["scope"].removeprefix("maskin: ")
         if kind not in UPSTREAM_KINDS or not rec["scope"].startswith("maskin: "):
             rec["fix_status"] = "unchecked"
             continue
+        unknown = False
         if kind == "pnpm-global":
             if pnpm_cache is None:
                 pnpm_cache = pnpm_tops()
-            tops = pnpm_cache
+                if pnpm_cache[1]:
+                    notes.append(f"pnpm-global has {pnpm_cache[1]} non-registry package(s) that were not checked")
+                if not pnpm_cache[0]:
+                    notes.append("pnpm-global package.json has no registry packages to check")
+            tops, unknown = pnpm_cache[0], bool(pnpm_cache[1])
         else:
             tops = rec.get("tops") or []
-        checks, unknown = [], False
+            if not tops:
+                notes.append("an npm-global finding has no top-level package")
+        checks = []
         for top in tops:
-            t = tree(top)
+            t = tree(top, kind)
             if t is None:
                 unknown = True
                 continue
@@ -894,7 +948,7 @@ def check_upstream(recs: list[dict], resolve=resolve_latest_tree, pnpm_tops=pnpm
             rec["fix_status"] = "unknown"
         else:
             rec["fix_status"] = "upgrade"
-    return notes
+    return list(dict.fromkeys(notes))
 
 
 def extract_findings(osv: dict, lockfile_repo: dict[str, str], origins: dict, sbom_path: str,
@@ -1161,9 +1215,14 @@ def render_markdown(rep: dict) -> str:
             rows.sort(key=lambda x: (-any(g["malicious"] or g["kev"] for g in x[3]), -SEVERITY_RANK[x[2]], x[0]))
             L.append(f"### {scope} ({len(rows)})")
             for pkg, ver, sev, group, top in rows[:MAX_LINES_PER_SCOPE]:
+                # a blocked advisory wins over an upgradable one on the same
+                # package: its fix is the one that clears both
+                rank = lambda g: (g.get("fix_status") == "blocked_upstream", version_key(g["fixed"] or "0"))
                 fixes_by_lockfile = list(dict.fromkeys(
-                    max((g for g in group if g.get("lockfile") == lf), key=lambda g: version_key(g["fixed"] or "0"))["fix"]
+                    max((g for g in group if g.get("lockfile") == lf), key=rank)["fix"]
                     for lf in dict.fromkeys(g.get("lockfile") for g in group)))
+                lead = max(group, key=lambda g: ({"blocked_upstream": 2, "unknown": 1}.get(g.get("fix_status"), 0),
+                                                 version_key(g["fixed"] or "0")))
                 tags = []
                 if any(g["malicious"] for g in group):
                     tags.append("**ONDSINNET**")
@@ -1174,12 +1233,12 @@ def render_markdown(rep: dict) -> str:
                 ids = [g["id"] for g in group]
                 id_text = ", ".join(ids[:3]) + (f" +{len(ids) - 3}" if len(ids) > 3 else "")
                 fixed = f" → {top['fixed']}" if top["fixed"] else ""
-                if top.get("major_bump"):
+                if any(g.get("major_bump") for g in group):
                     tags.append("ny major, kan brekke")
                 L.append(f"- `{pkg}@{ver}`{fixed} · {id_text} · {' · '.join(tags)}")
-                status = top.get("fix_status")
+                status = lead.get("fix_status")
                 if status == "blocked_upstream":
-                    still = [c for c in top.get("upstream") or [] if c["still_affected"]]
+                    still = [c for c in lead.get("upstream") or [] if c["still_affected"]]
                     L.append("  - **Nyeste versjon hjelper ikke:** " + "; ".join(
                         f"`{c['top']}@{c['latest']}` drar fortsatt inn `{pkg}@{'/'.join(c['affected_versions'])}`" for c in still))
                 elif status == "unknown":
@@ -1474,7 +1533,7 @@ def _main(args, t_start: float) -> int:
     for r in records:
         r.pop("_affected", None)
 
-    problems =[x for x in ctx.stages if x.status == "failed" or (x.status == "degraded" and x.blocking)]
+    problems = [x for x in ctx.stages if x.status == "failed" or (x.status == "degraded" and x.blocking)]
     if alarms:
         status = "alarm"
     elif findings or news_exact or macos_new:
