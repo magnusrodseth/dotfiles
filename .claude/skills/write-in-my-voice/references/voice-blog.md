@@ -25,6 +25,10 @@ and confirmed it reads as him. When in doubt, match its rhythm and restraint.
 - **Opening:** concrete and result-first, fitted to the actual subject. Not a
   grand claim. The kode24 open ("Jeg brukte en halvtime på oppsett...") is the
   model: state what happened and the numbers, then say what it means.
+- **Name the reader in the first paragraph.** One plain sentence says who the
+  post is for, so the rest can stop early ("Skriver du Rust med agenter, er
+  dette for deg."). The kode24 exemplar predates this rule; add the line when
+  matching it.
 - **Section headers:** sentence-case Norwegian, often plain questions or honest
   labels: "Hvordan så eksperimentet ut?", "Hva ble resultatet?", "Hva sitter jeg
   igjen med?", "Jeg hater å sjekke skattemeldingen min".
