@@ -162,16 +162,6 @@ alias clr="claude --resume --dangerously-skip-permissions"
 alias pic="pi -c"
 alias pir="pi -r"
 
-# Headless ship: optimized for speed
-unalias ship 2>/dev/null
-function ship {
-  claude -p "Stage all changes with 'git add -A'. Review the diff. Create a concise conventional commit message (<type>: <description>). Commit and push to current branch. If no changes, report and exit." \
-    --model claude-haiku-4-5 \
-    --dangerously-skip-permissions \
-    --no-session-persistence \
-    --allowedTools "Bash(git *)"
-}
-
 # Source custom functions
 if [ -d "$HOME/zsh/functions" ]; then
     for file in "$HOME/zsh/functions"/*.sh(N); do

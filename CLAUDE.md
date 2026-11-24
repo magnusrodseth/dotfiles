@@ -190,14 +190,13 @@ hook by hand instead.
 - `enabledPlugins`: seven official LSP plugins plus `cloudflare@cloudflare`.
 - `.claude/settings.local.json` also exists and is gitignored globally.
 
-Custom commands in `.claude/commands/`:
-- `ship.md` - Automated commit and push
-
 Shell aliases (all pass `--dangerously-skip-permissions` explicitly):
 - `clc` → `claude --continue`
 - `clr` → `claude --resume`
-- `ship` is a shell *function*, not `/ship`: a headless `claude -p` run pinned to
-  haiku with `--allowedTools "Bash(git *)"`.
+
+`/ship` is the built-in Claude Ship command (commit, push, PR, review, steward).
+The custom `/ship` command and the `ship` shell function were removed 24.11.2026
+so they no longer shadow it.
 
 ### Codex and ChatGPT Desktop Integration
 
