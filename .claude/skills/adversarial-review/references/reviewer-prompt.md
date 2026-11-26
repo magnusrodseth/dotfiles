@@ -6,8 +6,25 @@ Keep the repository's checkout exactly as you found it: no edits, commits,
 pushes, deploys, or calls to external services. Repro work happens in a
 scratch worktree (see below).
 
-Read the repository's `AGENTS.md` or `CLAUDE.md` first. Read the full diff, then
-the surrounding code of every changed function, and grep for its callers.
+Read the repository's `AGENTS.md` or `CLAUDE.md` first, and its `REVIEW.md`
+when the brief names one. Read the full diff, then the surrounding code of every
+changed function, and grep for its callers.
+
+## Sweeps
+
+Before you hunt, turn the diff into a list of candidate places to check:
+
+- **Promises.** Every guarantee the diff, its docs or the PR body states
+  (never, only, always, redacted, refused). List every code path that must
+  honour it and check each one.
+- **New fields.** For each field added to a stored or returned object, list
+  every route and serialiser that returns it and who may read each one.
+- **Secrets and sinks.** Pair each new secret with every sink it can reach
+  (log, error body, trace, audit event, fixture), and each new sink with every
+  secret kind.
+- **Other paths.** For each check, right, quota or tenant filter the diff adds
+  or relies on, find every other route, job, batch path, webhook or agent tool
+  that reaches the same data or effect, and confirm it applies the same check.
 
 Report only findings you can tie to a line. For each, give:
 - `file:line`;
@@ -43,7 +60,8 @@ When a repro needs a network service, deployed config or credentials, mark it
 **not run**, give the trace from input to effect, and write the repro you would
 run.
 
-Rank findings by severity. No style or naming findings. When a repro goes
+Rank findings by severity. When the repo has a `REVIEW.md`, its rules set the
+severity, and each finding names the rule it rests on. No style or naming findings. When a repro goes
 green, drop the finding or keep it at low confidence with the reason. When
 nothing survives, say "no findings" instead of padding the list.
 

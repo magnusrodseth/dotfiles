@@ -76,6 +76,15 @@ unknowns next, polish last. Fail fast on the risky part.
 sized by risk. Also run it when a diff touches access control, auth,
 transactions or concurrency, input parsing, secrets, money, shell or SQL
 execution, or CI and infra. Skip it for docs-only changes.
+
+**Repeat findings.** When a review finding names a mistake this repo has
+already fixed once, make it a check that fails: a test, a lint rule or a
+boundary rule. When no check can hold it, add it to the repo's `AGENTS.md`.
+Pick the tool for this repo's language and existing tooling, since the right
+one differs per stack (an architecture rule is dependency-cruiser in
+TypeScript, import-linter in Python, ArchUnitNET in C#). Extend a tool the repo
+already runs before adding one, and load `find-docs` to confirm the current
+choice and its config.
 <!-- /rules:code-repo-workflow -->
 
 ## Git Authorship

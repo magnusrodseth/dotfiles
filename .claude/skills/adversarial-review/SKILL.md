@@ -24,7 +24,8 @@ Give the reviewers only:
 - the repository path, base and head SHAs, and the exact diff commands;
 - the intent of the change in one sentence, taken from the issue, PR or user
   request;
-- the path of the repo's `AGENTS.md` or `CLAUDE.md`;
+- the path of the repo's `AGENTS.md` or `CLAUDE.md`, and of its `REVIEW.md`
+  when one exists;
 - the matching section of [reviewer prompt](references/reviewer-prompt.md).
 
 Leave out your own explanation of the change, your test results, and which parts
