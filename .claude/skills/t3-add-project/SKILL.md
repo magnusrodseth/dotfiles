@@ -1,6 +1,6 @@
 ---
 name: t3-add-project
-description: Points T3 Code at a GitHub repo, cloning it first if no clone exists on this machine, then registering it as a T3 project. Use when the user gives a GitHub URL or owner/repo and asks to add it to T3, set up a T3 project for it, or "get it into T3". Also use to back up T3 projects to dotfiles or move them to another machine.
+description: Points T3 Code at a GitHub repo, cloning it first if no clone exists on this machine, then registering it as a T3 project. Use when the user gives a GitHub URL or owner/repo and asks to add it to T3, set up a T3 project for it, or "get it into T3". Also use to back up T3 projects or scheduled tasks, or move them to another machine.
 ---
 
 # Add a T3 project from a GitHub repo
@@ -62,3 +62,32 @@ Restore only the projects the user names, never the whole manifest unasked. Per 
 3. Then call `t3_project_list` for the new `projectId` and `t3_project_update` with the remaining manifest settings.
 
 Skip paths outside `~/dev` that point at worktrees (`~/.codex/worktrees/...`). They are local to the source machine.
+
+## Back up or move scheduled tasks
+
+Scheduled tasks also live only in T3's database (table `scheduled_tasks`). `scripts/t3-scheduled-tasks.py` reads it read-only. The export holds each task's title, schedule, prompt, project path, workspace strategy, model, modes and `enabled`. It leaves out the webhook token and secret, the thread id and the run history.
+
+The manifest never goes in git: prompts can name private repos and people. Carry it in the personal 1Password account as the document `T3 scheduled tasks`, next to `T3 projects manifest`.
+
+```bash
+S=~/.agents/skills/t3-add-project/scripts/t3-scheduled-tasks.py
+M=~/dotfiles/.t3/scheduled-tasks.json   # git-ignored
+
+# Source machine, after creating or changing a task
+python3 -I "$S" export -o "$M"
+op document edit "T3 scheduled tasks" "$M" --vault Private   # `op document create "$M" --title "T3 scheduled tasks" --vault Private` the first time
+
+# Target machine, after the projects are restored
+op document get "T3 scheduled tasks" --vault Private --out-file "$M" --force
+python3 -I "$S" status
+```
+
+`status` prints `missing`, `differs` (with the fields that differ) or `present` per task, matched by title.
+
+Restore only the tasks the user names. Per `missing` task:
+
+1. Find the `projectId` whose workspace root is the task's `project_path` with `t3_project_list`. `~/.t3/scratch` is T3's *No project*: omit `projectId`. A project that is not registered yet: restore it first (section above).
+2. Call `schedule_task` with `title`, `prompt`, `schedule` and `enabled` from the manifest. `thread_mode` maps to the binding: `new_thread` is `bindToCurrentThread: false`, `fresh_session` is `freshSession: true`.
+3. `schedule_task` cannot set the workspace strategy, model or runtime mode. Run `status` again and give the user the fields it still reports under `differs`, to set in T3's scheduled task settings.
+4. A `webhook` task gets a new URL and secret on creation. Tell the user to update the sender.
+

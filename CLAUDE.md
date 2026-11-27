@@ -151,6 +151,9 @@ Local secrets go in `zsh/ignored/` (auto-sourced, gitignored).
   and keys, so `.gitignore` default-denies `.t3/`. `install.sh` creates
   `~/.t3/userdata` before stowing; without it stow folds `~/.t3` into the repo.
   The app follows symlinks when it saves, so the links survive edits in the UI.
+  Projects and scheduled tasks live only in T3's database. They move between
+  machines as the 1Password documents `T3 projects manifest` and `T3 scheduled
+  tasks`, never through git; the `t3-add-project` skill exports and restores both.
 - **Default editor**: Zed (`$EDITOR="zed -w"` in `.zshenv`)
 - Note: `.zshenv` holds env vars + PATH; `.zshrc` holds interactive shell config only.
 
@@ -546,6 +549,14 @@ run in a git project gets its own worktree and branch, one per day.
   copy older than 72 hours, a lockfile osv-scanner could not parse).
 - A full run takes about 2 to 3 minutes; the OSV scan is about 80 seconds of
   that.
+- **On a new machine:** `install.sh` installs `osv-scanner` and `jq` from the
+  `Brewfile`; `run.sh` also needs `python3` 3.11 or newer, `git` and `claude`.
+  Sign `op` in to the personal account so the allowlist can be read. Clone the
+  repos to scan under `~/dev` (the projects manifest lists them). Then restore
+  the scheduled task from `T3 scheduled tasks` with the `t3-add-project` skill.
+  State under `~/.local/state/security-watch/` is not carried over: the OSV
+  databases and KEV download again. Without `seen.json` the first run counts
+  every current alarm and finding as new, and the report says so.
 
 ### Other top-level directories
 
