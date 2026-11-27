@@ -41,14 +41,16 @@ Steps, in order:
     whole root into `~/.claude/skills/`
 11. Apply the tracked Codex settings and remove duplicate or secret MCP values
     from `~/.codex/config.toml`
-12. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
+12. Add Claude Code's user-scoped MCP servers (`scripts/claude/mcp-servers.sh`;
+    the Exa key comes from 1Password, so `op` must be signed in)
+13. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
     validates skills, rejects skills that duplicate a lock entry, checks script
     refs, and gitleaks-scans the staged diff)
-13. macOS App Store apps
-14. tmux plugin manager (tpm) setup
-15. macOS system defaults
-16. Default apps for developer file types (`scripts/macos/file-associations.sh`)
-17. bat cache build
+14. macOS App Store apps
+15. tmux plugin manager (tpm) setup
+16. macOS system defaults
+17. Default apps for developer file types (`scripts/macos/file-associations.sh`)
+18. bat cache build
 
 install.sh must never source `~/.zshenv`. It did until 28.07.2026, and since
 that file is zsh (`typeset -U path`, `path=( ... )`), bash 3.2 died on it under
@@ -192,6 +194,16 @@ global `hooksPath` is set; fix a stale `INSTALL_PYTHON` path in the generated
 hook by hand instead.
 - `enabledPlugins`: seven official LSP plugins plus `cloudflare@cloudflare`.
 - `.claude/settings.local.json` also exists and is gitignored globally.
+- User-scoped MCP servers live in `~/.claude.json`, which is machine state.
+  `scripts/claude/mcp-servers.sh` declares them (exa, linkedin, vercel,
+  askable-labs) and is idempotent; `--force` re-adds after a key rotates.
+  vercel and askable-labs still need one OAuth sign-in per machine via `/mcp`.
+- Per-project auto-memory (`~/.claude/projects/<key>/memory/`) is keyed by the
+  absolute path, home directory included, so a plain copy between machines with
+  different usernames is never loaded. `scripts/claude/memories.sh export`
+  zips it with the home prefix replaced by `HOME`, leaving employer projects
+  out by default; `import` maps it back and never overwrites. The zip travels
+  as the 1Password document `Claude Code memories`, never through git.
 
 Shell aliases (all pass `--dangerously-skip-permissions` explicitly):
 - `clc` → `claude --continue`
