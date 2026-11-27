@@ -1,5 +1,6 @@
 @chhoumann/bunnai
 @mintlify/cli
+@playwright/cli
 eas-cli
 expo-cli
 turbo

@@ -23,6 +23,7 @@ set -uo pipefail
 
 # "<app-store-id>|<app bundle name in /Applications>|<human name>"
 APPS=(
+  "937984704|Amphetamine.app|Amphetamine"
   "1355679052|Dropover.app|Dropover - Easier Drag & Drop"
 )
 

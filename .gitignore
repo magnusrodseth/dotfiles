@@ -255,3 +255,6 @@ Library/LaunchAgents/com.github.facebook.watchman.plist
 
 # Python bytecode, anywhere (scripts/security-watch imports its own module in tests)
 __pycache__/
+
+# Neon CLI login (OAuth tokens)
+.config/neon/
