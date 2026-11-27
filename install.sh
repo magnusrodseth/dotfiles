@@ -115,6 +115,7 @@ cargo_packages() {
 }
 pnpm_packages()       { bash scripts/pnpm/packages.sh install; }
 npm_packages()        { bash scripts/npm/packages.sh install; }
+standalone_clis()     { bash scripts/standalone/install.sh; }
 agent_skills()        { bash scripts/skills/packages.sh install; }
 link_dotfiles_skills(){ bash scripts/skills/link-dotfiles-skills.sh; }
 configure_codex()     { bash scripts/codex/apply-profile.sh; }
@@ -147,6 +148,7 @@ run_step "Install Homebrew packages"          brew_packages
 run_step "Install Cargo packages"             cargo_packages
 run_step "Install pnpm packages"              pnpm_packages
 run_step "Install npm global packages"        npm_packages
+run_step "Install standalone CLIs"            standalone_clis
 run_step "Install agent skills"               agent_skills
 run_step "Link dotfiles skills globally"      link_dotfiles_skills
 run_step "Configure Codex and ChatGPT Desktop" configure_codex

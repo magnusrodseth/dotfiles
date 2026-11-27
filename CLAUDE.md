@@ -36,21 +36,24 @@ Steps, in order:
 7. pnpm packages from `scripts/pnpm/pnpm_packages.txt`
 8. npm global packages from `scripts/npm/npm_packages.txt` (this is where `gws`,
    `ctx7`, `agent-browser` and `playwriter` come from; skills depend on them)
-9. Agent skills from `scripts/skills/skill-lock.json`
-10. Link dotfiles-authored skills into `~/.agents/skills/`, then mirror that
+9. Standalone CLIs from `scripts/standalone/install.sh`: Claude Code's native
+   installer (the `claude` cask is the desktop app, not the CLI), `ntn`, and
+   uv tools (`basedpyright`)
+10. Agent skills from `scripts/skills/skill-lock.json`
+11. Link dotfiles-authored skills into `~/.agents/skills/`, then mirror that
     whole root into `~/.claude/skills/`
-11. Apply the tracked Codex settings and remove duplicate or secret MCP values
+12. Apply the tracked Codex settings and remove duplicate or secret MCP values
     from `~/.codex/config.toml`
-12. Add Claude Code's user-scoped MCP servers (`scripts/claude/mcp-servers.sh`;
+13. Add Claude Code's user-scoped MCP servers (`scripts/claude/mcp-servers.sh`;
     the Exa key comes from 1Password, so `op` must be signed in)
-13. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
+14. Enable repo git hooks (`core.hooksPath scripts/githooks`; pre-commit
     validates skills, rejects skills that duplicate a lock entry, checks script
     refs, and gitleaks-scans the staged diff)
-14. macOS App Store apps
-15. tmux plugin manager (tpm) setup
-16. macOS system defaults
-17. Default apps for developer file types (`scripts/macos/file-associations.sh`)
-18. bat cache build
+15. macOS App Store apps
+16. tmux plugin manager (tpm) setup
+17. macOS system defaults
+18. Default apps for developer file types (`scripts/macos/file-associations.sh`)
+19. bat cache build
 
 install.sh must never source `~/.zshenv`. It did until 28.07.2026, and since
 that file is zsh (`typeset -U path`, `path=( ... )`), bash 3.2 died on it under
