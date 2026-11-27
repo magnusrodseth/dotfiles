@@ -38,7 +38,7 @@ def tilde(p: str) -> str:
 def connect() -> sqlite3.Connection:
     if not DB.exists():
         sys.exit(f"error: T3 database not found at {DB}")
-    con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    con = sqlite3.connect(DB.resolve().as_uri() + "?mode=ro", uri=True)
     con.row_factory = sqlite3.Row
     return con
 
@@ -68,6 +68,8 @@ def export(args):
     if args.output:
         dest = Path(args.output).expanduser()
         dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.touch(mode=0o600)
+        dest.chmod(0o600)  # prompts can name private repos and people
         dest.write_text(out)
         print(f"wrote {len(tasks)} scheduled tasks to {args.output}", file=sys.stderr)
     else:
@@ -76,8 +78,14 @@ def export(args):
 
 def status(args):
     manifest = json.loads(Path(args.file).expanduser().read_text())
-    here = {t["title"]: t for t in load_tasks(connect())}
-    keys = ("prompt", "schedule", "project_path", "workspace_strategy", "model_selection", "thread_mode", "enabled")
+    local = load_tasks(connect())
+    for side, tasks in (("manifest", manifest["tasks"]), ("this machine", local)):
+        titles = [t["title"] for t in tasks]
+        for dup in sorted({t for t in titles if titles.count(t) > 1}):
+            print(f"warning: {side} has more than one task titled {dup!r}; status matches by title", file=sys.stderr)
+    here = {t["title"]: t for t in local}
+    keys = ("prompt", "schedule", "project_path", "workspace_strategy", "model_selection",
+            "runtime_mode", "interaction_mode", "thread_mode", "enabled")
     rows = []
     for t in manifest["tasks"]:
         cur = here.get(t["title"])

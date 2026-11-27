@@ -549,8 +549,9 @@ run in a git project gets its own worktree and branch, one per day.
   copy older than 72 hours, a lockfile osv-scanner could not parse).
 - A full run takes about 2 to 3 minutes; the OSV scan is about 80 seconds of
   that.
-- **On a new machine:** `install.sh` installs `osv-scanner` and `jq` from the
-  `Brewfile`; `run.sh` also needs `python3` 3.11 or newer, `git` and `claude`.
+- **On a new machine:** `install.sh` installs `osv-scanner`, `gh` and the
+  `1password-cli` cask from the `Brewfile`; `run.sh` also needs `python3` 3.11
+  or newer, `git` and `claude`. Without `gh` the Friday skills check degrades.
   Sign `op` in to the personal account so the allowlist can be read. Clone the
   repos to scan under `~/dev` (the projects manifest lists them). Then restore
   the scheduled task from `T3 scheduled tasks` with the `t3-add-project` skill.

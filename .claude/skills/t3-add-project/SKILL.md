@@ -75,19 +75,20 @@ M=~/dotfiles/.t3/scheduled-tasks.json   # git-ignored
 
 # Source machine, after creating or changing a task
 python3 -I "$S" export -o "$M"
-op document edit "T3 scheduled tasks" "$M" --vault Private   # `op document create "$M" --title "T3 scheduled tasks" --vault Private` the first time
+op document create "$M" --title "T3 scheduled tasks" --vault Private   # or `op document edit "T3 scheduled tasks" "$M"` if it exists
 
 # Target machine, after the projects are restored
 op document get "T3 scheduled tasks" --vault Private --out-file "$M" --force
 python3 -I "$S" status
 ```
 
-`status` prints `missing`, `differs` (with the fields that differ) or `present` per task, matched by title.
+Use the `onepassword-cli` skill for the account flag, as for the projects manifest.
+
+`status` prints `missing`, `differs` (with the fields that differ) or `present` per task, matched by title. It warns when a title occurs twice.
 
 Restore only the tasks the user names. Per `missing` task:
 
 1. Find the `projectId` whose workspace root is the task's `project_path` with `t3_project_list`. `~/.t3/scratch` is T3's *No project*: omit `projectId`. A project that is not registered yet: restore it first (section above).
-2. Call `schedule_task` with `title`, `prompt`, `schedule` and `enabled` from the manifest. `thread_mode` maps to the binding: `new_thread` is `bindToCurrentThread: false`, `fresh_session` is `freshSession: true`.
-3. `schedule_task` cannot set the workspace strategy, model or runtime mode. Run `status` again and give the user the fields it still reports under `differs`, to set in T3's scheduled task settings.
+2. Call `schedule_task` with `title`, `prompt`, `schedule` and `enabled` from the manifest. `thread_mode` maps to the binding: `new_thread` is `bindToCurrentThread: false`, `fresh_session` is `freshSession: true`. The export has no thread id, so a task bound to a thread comes back unbound: tell the user.
+3. `schedule_task` cannot set the workspace strategy, model, runtime mode or interaction mode. Run `status` again and give the user the fields it still reports under `differs`, to set in T3's scheduled task settings.
 4. A `webhook` task gets a new URL and secret on creation. Tell the user to update the sender.
-
