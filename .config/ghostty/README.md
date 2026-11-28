@@ -22,12 +22,6 @@ After cloning the dotfiles and running `stow .`, create `~/.config/ghostty/confi
 working-directory = /Users/magnusrodseth/dev
 ```
 
-### Gjensidige Mac
-
-```
-working-directory = /Users/magnus.rodseth/dev
-```
-
 Add any other machine-specific keys (font size, window size, theme, etc.) to the same file.
 
 ## Verifying

@@ -1,6 +1,6 @@
 ## Personal Hubs
 
-Cross-cutting repos I refer to from anywhere (paths are `$HOME`-relative; identical layout on both machines):
+Cross-cutting repos I refer to from anywhere (paths are `$HOME`-relative):
 
 - `~/dev/personal/vault`: Obsidian second brain. Notes, people, projects, meetings, health, travel, Personlig Økonomi. Read its `CLAUDE.md` before writing to it. Use the `read-up-on` skill for briefings, the `vault` skill for capturing knowledge.
 - `~/dev/personal/presentations`: all my talks and slide decks (TanStack Start app, deployed to presentations.magnusrodseth.com). Read its `AGENTS.md` before working in it. Use the `scaffold-presentation` skill to create new decks.

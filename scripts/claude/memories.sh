@@ -4,8 +4,8 @@
 #
 # Claude Code keeps memory in ~/.claude/projects/<key>/memory/, where <key> is
 # the project's absolute path with every non-alphanumeric character replaced by
-# "-". The home directory is part of that key, and it differs between machines
-# (/Users/magnus.rodseth here, /Users/magnusrodseth on the private Mac). A plain
+# "-". The home directory is part of that key, and it can differ between
+# machines (the retired Gjensidige Mac used /Users/magnus.rodseth). A plain
 # copy therefore lands under keys no project resolves to, and the memory is
 # silently never loaded.
 #
@@ -14,7 +14,7 @@
 # never overwrites: a file that already exists is skipped and reported.
 #
 # Projects whose key matches the exclude regex are left out. The default
-# excludes employer work, because memory about it should not leave the work
+# excludes employer work, because memory about it should not leave an employer's
 # machine. Pass --exclude '' to export everything.
 #
 # The zip is not tracked in git (memory names private repos and people). Carry

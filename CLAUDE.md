@@ -232,8 +232,8 @@ app integration for browser credential workflows, so login values stay in
 1Password.
 
 Cloudflare and PostHog use Codex OAuth stored as machine state. Atlassian stays
-disabled on personal machines because its account requires the Gjensidige work
-machine.
+disabled: its account worked only on the Gjensidige work machine, retired
+30.11.2026.
 
 Codex hooks are in `.codex/hooks.json`. PreToolUse runs the agent-attribution
 block. The Stop hook auto-commits and
@@ -530,7 +530,6 @@ run in a git project gets its own worktree and branch, one per day.
 
 ### Other top-level directories
 
-- `.tt/` - Theme Suggester themes
 - `browser/` - Browser extension configs (Dark Reader, Vimium, wallpapers)
 - `macos/Wallpapers/` - Desktop wallpapers (assets, not stowed)
 - `scripts/macos/` - macOS setup scripts (defaults, App Store install, file

@@ -49,7 +49,7 @@ op document get "T3 projects manifest" --vault Private --out-file "$M" --force
 python3 -I "$S" status
 ```
 
-Use the `onepassword-cli` skill for the account flag: the document goes in the personal account, which both machines can reach.
+Use the `onepassword-cli` skill for the account flag: the document goes in the personal account, which every machine signed in to it can reach.
 
 The manifest stores each project's `path` relative to `~`, its `origin` remote, and the settings `t3_project_update` accepts: `scripts`, `projectIcon`, `faviconPath`, `pinned`, `archived`, `autoPull`, `defaultThreadEnvMode`, `defaultModelSelection`. Omitted keys mean the T3 default.
 
