@@ -19,7 +19,7 @@
 tap "anomalyco/tap"
 tap "aws/tap"
 tap "beeftornado/rmtree"
-tap "facebook/fb"
+tap "meta/fb"
 tap "hashicorp/tap"
 tap "homebrew/bundle"
 tap "homebrew/services"
@@ -112,7 +112,7 @@ brew "git-lfs"
 brew "gitleaks"
 brew "gh"
 brew "gradle"
-brew "facebook/fb/idb-companion", trusted: true
+brew "meta/fb/idb-companion", trusted: true
 brew "just"
 brew "lazygit"
 brew "mobile-dev-inc/tap/maestro", trusted: true
@@ -186,7 +186,7 @@ brew "typst"
 
 # === AI / ML ===
 brew "ollama"
-brew "whisper-cpp"
+brew "whisper.cpp"
 brew "anomalyco/tap/opencode-v2", trusted: true
 
 # === Mac App Store & shell ===
@@ -260,7 +260,6 @@ vscode "esbenp.prettier-vscode"
 vscode "formulahendry.auto-rename-tag"
 vscode "github.codespaces"
 vscode "github.copilot"
-vscode "github.copilot-chat"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
@@ -285,7 +284,6 @@ vscode "ms-azuretools.vscode-docker"
 vscode "ms-dotnettools.csdevkit"
 vscode "ms-dotnettools.csharp"
 vscode "ms-dotnettools.vscode-dotnet-runtime"
-vscode "ms-ossdata.vscode-postgresql"
 vscode "ms-python.debugpy"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
