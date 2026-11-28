@@ -311,10 +311,11 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   durable-agents.md               x         x
   outbound-messages.md            x         x
   email-filing.md                 x         x
+  containers.md                   x         x         x
 ```
 
 Each target takes its own list, in `MANIFEST`. OpenCode is deliberately thin: it
-carries the output rules, `calendar-titles`, `context7`, `git-authorship`, and the shared
+carries the output rules, `calendar-titles`, `context7`, `git-authorship`, `containers`, and the shared
 refactoring workflow.
 `no-slop.md` and `github-refs.md` govern every sentence it writes. `refactoring.md`
 keeps refactoring review consistent across agents. Widen its list on purpose,
@@ -572,6 +573,12 @@ zsh/
   stayed exact, and `doctor.sh` was checking the stale one
 - `.zshrc` short-circuits for Claude Code shells (`CLAUDECODE=1`) to skip interactive plugin loading
 - Four JDKs are installed, not one: `openjdk@11` (required by `pdftk-java`), `openjdk@17` (a leftover nothing depends on), `openjdk@21` (pulled in by `kotlin-language-server`), and a plain `openjdk` 26 as a dependency. All three versioned ones are declared in `Brewfile` so the state shows up in a diff. This line previously claimed @21 was pinned as the only JDK, which had not been true for some time
+- The container runtime is OrbStack. Docker Desktop was uninstalled on
+  28.11.2026, and the shared `containers` rule tells every agent not to bring it
+  back. Its uninstaller also deleted OrbStack's links in `/usr/local/bin` and
+  `~/.docker/cli-plugins`; `docker` now comes from `~/.orbstack/bin` (put on
+  PATH by OrbStack's own hook in the untracked `~/.zprofile`), and `doctor.sh`
+  checks that compose and buildx still resolve
 - Slow completion-generators (uv, ngrok) are deferred until after first prompt via a precmd hook
 - `uv` must stay brew-managed. A cargo-installed `uv` was purged on 28.07.2026;
   `.zshenv` puts `~/.cargo/bin` ahead of `/opt/homebrew/bin`, so a cargo copy

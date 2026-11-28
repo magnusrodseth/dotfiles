@@ -337,6 +337,33 @@ for t in nvim eza zoxide atuin oh-my-posh bat tmux delta fzf zinit \
   esac
 done
 
+# --- container runtime -------------------------------------------------------
+
+section "Container runtime (OrbStack, no Docker Desktop)"
+# Docker Desktop was removed on 28.11.2026. Its uninstaller also deleted the
+# OrbStack symlinks in /usr/local/bin and ~/.docker/cli-plugins, so check the
+# plugins resolve, not only that the app is present.
+[ -d /Applications/OrbStack.app ] && pass "OrbStack.app" || fail "OrbStack.app missing (fix: brew bundle)"
+if [ -d /Applications/Docker.app ]; then
+  fail "Docker Desktop is installed (fix: /Applications/Docker.app/Contents/MacOS/uninstall)"
+else
+  pass "Docker Desktop absent"
+fi
+docker_bin="$(command -v docker 2>/dev/null)"
+case "$(readlink "$docker_bin" 2>/dev/null || echo "$docker_bin")" in
+  */.orbstack/*|*/OrbStack.app/*) pass "docker CLI is OrbStack's ($docker_bin)" ;;
+  "") fail "docker not on PATH (OrbStack's ~/.zprofile hook missing?)" ;;
+  *)  fail "docker resolves outside OrbStack: $docker_bin" ;;
+esac
+ctx="$(docker context show 2>/dev/null)"
+[ "$ctx" = "orbstack" ] && pass "docker context: orbstack" || fail "docker context is '${ctx:-unknown}' (fix: docker context use orbstack)"
+for p in docker-compose docker-buildx; do
+  if [ -x "$HOME/.docker/cli-plugins/$p" ]; then pass "$p plugin"
+  else fail "$p plugin missing (fix: ln -sf /Applications/OrbStack.app/Contents/MacOS/xbin/$p ~/.docker/cli-plugins/$p)"; fi
+done
+dead_plugins="$(find "$HOME/.docker/cli-plugins" -type l ! -exec test -e {} \; -print 2>/dev/null)"
+[ -z "$dead_plugins" ] && pass "no dead docker CLI plugin links" || warn "dead plugin links: $(echo $dead_plugins)"
+
 # --- shell init --------------------------------------------------------------
 
 section "Shell init (.zshrc Claude Code guard)"

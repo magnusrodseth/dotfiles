@@ -220,7 +220,7 @@ cask "microsoft-teams"
 cask "ngrok"
 cask "notion"
 cask "obsidian"
-cask "orbstack"
+cask "orbstack" # container runtime; Docker Desktop is deliberately absent
 cask "raycast"
 cask "readdle-spark"
 cask "slack"

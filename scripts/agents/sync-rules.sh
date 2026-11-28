@@ -65,10 +65,12 @@ RULES_DIR="scripts/agents/rules"
 # it governs the prose in every single response. calendar-titles was added
 # 02.11.2026: OpenCode creates calendar events through the gws skills too.
 # git-authorship was added 18.11.2026: OpenCode makes commits too.
+# containers was added 28.11.2026: OpenCode runs docker too, and must not
+# reinstall Docker Desktop.
 MANIFEST="
-.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing
-.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing
-.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7,git-authorship
+.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing,containers
+.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing,containers
+.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7,git-authorship,containers
 "
 
 TMPDIR_RUN="$(mktemp -d)"
