@@ -97,6 +97,32 @@
   "storageCleanup": {
     "worktreeAfterDays": 7
   },
+  "projectScriptOverrides": {
+    "ff92c837-4ad2-49a2-a0a3-1a9909c03a78": [
+      {
+        "id": "dev",
+        "name": "Dev",
+        "command": "pnpm dev",
+        "icon": "play",
+        "runOnWorktreeCreate": false,
+        "previewUrl": "http://localhost:3000"
+      },
+      {
+        "id": "install",
+        "name": "Install",
+        "command": "pnpm install",
+        "icon": "configure",
+        "runOnWorktreeCreate": true
+      },
+      {
+        "id": "test",
+        "name": "Test",
+        "command": "pnpm typecheck && pnpm lint && pnpm test",
+        "icon": "test",
+        "runOnWorktreeCreate": false
+      }
+    ]
+  },
   "defaultModelSelection": {
     "instanceId": "claudeAgent",
     "model": "claude-opus-5-5",
@@ -106,6 +132,34 @@
         "value": "medium"
       }
     ]
+  },
+  "projectSettingsOverrides": {
+    "ff92c837-4ad2-49a2-a0a3-1a9909c03a78": {
+      "defaultProjectScripts": [
+        {
+          "id": "dev",
+          "name": "Dev",
+          "command": "pnpm dev",
+          "icon": "play",
+          "runOnWorktreeCreate": false,
+          "previewUrl": "http://localhost:3000"
+        },
+        {
+          "id": "install",
+          "name": "Install",
+          "command": "pnpm install",
+          "icon": "configure",
+          "runOnWorktreeCreate": true
+        },
+        {
+          "id": "test",
+          "name": "Test",
+          "command": "pnpm typecheck && pnpm lint && pnpm test",
+          "icon": "test",
+          "runOnWorktreeCreate": false
+        }
+      ]
+    }
   },
   "projectSettingsFolded": true,
   "enableAgentDeviceAccess": true,
