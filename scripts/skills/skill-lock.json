@@ -748,42 +748,6 @@
       "installedAt": "2026-06-13T09:14:06.191Z",
       "updatedAt": "2026-11-12T20:24:29.891Z"
     },
-    "cmux-browser": {
-      "source": "manaflow-ai/cmux-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/manaflow-ai/cmux-skills.git",
-      "skillPath": "skills/cmux-browser/SKILL.md",
-      "skillFolderHash": "d45d4b24cd1367874bc6b0e6d9b5a69e7844748c",
-      "installedAt": "2026-07-07T07:51:06.042Z",
-      "updatedAt": "2026-07-07T07:51:06.042Z"
-    },
-    "cmux-cli": {
-      "source": "manaflow-ai/cmux-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/manaflow-ai/cmux-skills.git",
-      "skillPath": "skills/cmux-cli/SKILL.md",
-      "skillFolderHash": "faa135bc7d960b3c9321c597321bb74963ca5486",
-      "installedAt": "2026-07-07T07:51:06.418Z",
-      "updatedAt": "2026-07-07T07:51:06.418Z"
-    },
-    "cmux-config": {
-      "source": "manaflow-ai/cmux-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/manaflow-ai/cmux-skills.git",
-      "skillPath": "skills/cmux-config/SKILL.md",
-      "skillFolderHash": "f8df1d051e111eac8c8b499842d70b68830f7572",
-      "installedAt": "2026-07-07T07:51:06.785Z",
-      "updatedAt": "2026-07-07T07:51:06.785Z"
-    },
-    "cmux-workspace": {
-      "source": "manaflow-ai/cmux-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/manaflow-ai/cmux-skills.git",
-      "skillPath": "skills/cmux-workspace/SKILL.md",
-      "skillFolderHash": "6991a8059b64208010a8b31f172a7eae51841789",
-      "installedAt": "2026-07-07T07:51:07.721Z",
-      "updatedAt": "2026-07-07T07:51:07.721Z"
-    },
     "ask-matt": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -1314,24 +1278,6 @@
       "skillFolderHash": "87d14650c219561d4c92a9c7111cee859a65565e",
       "installedAt": "2026-11-02T20:20:43.002Z",
       "updatedAt": "2026-11-02T20:20:43.002Z"
-    },
-    "cmux-artifact": {
-      "source": "manaflow-ai/cmux-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/manaflow-ai/cmux-skills.git",
-      "skillPath": "skills/cmux-artifact/SKILL.md",
-      "skillFolderHash": "564fb9804ffc32a618624e0ccf423005f889567d",
-      "installedAt": "2026-11-02T20:20:45.125Z",
-      "updatedAt": "2026-11-02T20:20:45.125Z"
-    },
-    "cmux-ref": {
-      "source": "manaflow-ai/cmux-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/manaflow-ai/cmux-skills.git",
-      "skillPath": "skills/cmux-ref/SKILL.md",
-      "skillFolderHash": "fec176ed95fdf30ed294750f8e051b86a3cc863f",
-      "installedAt": "2026-11-02T20:20:45.129Z",
-      "updatedAt": "2026-11-02T20:20:45.129Z"
     },
     "implement-spec": {
       "source": "mattpocock/skills",

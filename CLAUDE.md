@@ -93,9 +93,6 @@ python3 scripts/security-watch/test_security_watch.py
 bash scripts/pi/update-extensions.sh          # pi update --extensions, then re-apply patches
 bash scripts/pi/patch-cc-my-pi.sh --check     # are the cc-my-pi patches still applied?
 
-# cmux agent hooks work only if the control socket authenticates
-cmux ping                                     # PONG, or the missing half (see the cmux section)
-
 # Export current packages to lists
 bash scripts/cargo/packages.sh export
 bash scripts/pnpm/packages.sh export
@@ -412,50 +409,6 @@ executable JS file". They are restored per-machine by Raycast Cloud Sync after
 signing in. `doctor.sh` checks for extensions missing their compiled JS as the
 safety net. `.config/raycast/config.json` is untracked too: it holds an account
 access token that was once committed to this public repo.
-
-### cmux
-
-`.config/cmux/cmux.json` is tracked and declares intent.
-`.config/cmux/.surface-resume-approval-secret` is gitignored machine state.
-
-**Every agent hook rides the control socket.** `cmux hooks setup` generates one
-bridge per agent (pi's is `.pi/agent/extensions/cmux-session.ts`, marked DO NOT
-EDIT and upgraded in place by cmux), and each bridge shells out to the CLI:
-`cmux hooks <agent> <event>` for session lifecycle, `cmux surface resume
-set|clear` for the binding that restores a session into its pane.
-
-`automation.socketControlMode` is `password`, and `automation.socketPassword` is
-deliberately left unset in `cmux.json` because this repo is public. The CLI looks
-for the secret in three places, in order: `--password`, `CMUX_SOCKET_PASSWORD`,
-then the value saved app-side in cmux **Settings > Automation**. Two of those are
-machine-local and neither survives a clone:
-
-- `zsh/ignored/cmux-socket.sh` exports `CMUX_SOCKET_PASSWORD` (gitignored; source
-  of truth is 1Password > Private > "cmux socket control")
-- the same value pasted into Settings > Automation
-
-The app-side copy is the load-bearing one. Once it is saved, any shell on the
-machine authenticates with no env var at all; with neither in place, every hook
-call exits 1.
-
-Nothing about that failure is loud. The pi bridge stays silent on exit 69 ("that
-surface is gone") and warns on anything else through `console.warn`, and pi's
-fullscreen TUI paints over warnings raised mid-session. So the only visible
-symptom is two JSON lines beside the prompt at shutdown, which read like launch
-noise from the session just started:
-
-```
-{"source":"cmux-pi-extension","message":"cmux hook command failed","subcommand":"stop","status":1}
-{"source":"cmux-pi-extension","message":"failed to clear Pi resume binding","status":1}
-```
-
-This machine ran with every agent hook dead until 17.08.2026, because the mode
-was `password` with no password saved on either side. `cmux ping` answering
-`PONG` is the entire check; `doctor.sh` asserts it and classifies each rejection,
-since "no socket password is configured", "Invalid password" and "Authentication
-required" are three different missing pieces with three different fixes. The
-escape hatch is `socketControlMode: "cmuxOnly"` (the schema default), which needs
-no secret anywhere, at the cost of shells outside cmux losing socket control.
 
 ### AI Agent Configurations
 
