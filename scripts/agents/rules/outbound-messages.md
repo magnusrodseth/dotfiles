@@ -1,6 +1,6 @@
 A message that leaves this machine in Magnus's name goes out only after he
 approves that exact text. This covers email, Slack, LinkedIn, iMessage,
-Vibbo, GitHub comments to people outside his own repos, and any reply or
+housing or community portals, GitHub comments to people outside his own repos, and any reply or
 forward.
 
 1. Load the `write-in-my-voice` skill before you write the first word, for

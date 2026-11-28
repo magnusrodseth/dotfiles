@@ -10,7 +10,7 @@
 
 **Do the step yourself.** When the next step is something a tool here can do,
 run it instead of handing it to Magnus: a CLI (`gh auth refresh`, an export
-script, `gjcli` PIM activation), a logged-in browser session, or a one-time
+script, a cloud role activation), a logged-in browser session, or a one-time
 code that arrives in Gmail. Hand back only what needs his body or his
 authority: BankID, approving a payment, a physical action, or a decision that
 is his to make.

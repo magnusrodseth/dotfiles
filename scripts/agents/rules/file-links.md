@@ -1,0 +1,2 @@
+- When you link a local file in Markdown, wrap the path in angle brackets whenever it contains a space: `[Project Notes.md](</Users/me/notes/Project Notes.md>)`. CommonMark ends a link destination at the first unescaped space, so `[x](/a b.md)` renders as raw text and the link cannot be clicked. Paths without spaces may stay bare. `%20` also works, but the angle-bracket form keeps the path readable and searchable.
+- This applies to chat replies, docs and PR bodies alike. Obsidian `[[wikilinks]]` inside a vault are unaffected.

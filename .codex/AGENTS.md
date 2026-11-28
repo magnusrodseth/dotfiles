@@ -29,8 +29,8 @@ browser, use that one.
   extension, with his cookies and extensions. He sees the tab in Brave and can
   take over there. Start every session with `--tab-group "<emoji> <label>"`:
   one emoji for the kind of task, then a one- or two-word label naming the task
-  or site, for example `"🛒 REMA-handel"`, `"🧪 Kimaki-test"` or
-  `"📬 Innboks"`. Quote the value, because it contains a space. When
+  or site, for example `"🛒 Shopping"`, `"🧪 Login-test"` or
+  `"📬 Inbox"`. Quote the value, because it contains a space. When
   `playwriter browser list` shows more than one browser, pass the Brave row's key
   (`install:Brave:<id>`, different per machine) as `--browser <key>`. Work in a
   tab you opened, and never act on his other tabs. If the extension rejects the
@@ -151,7 +151,7 @@ scripts unless asked. If you deliberately skip it, say so.
 <!-- rules:outbound-messages -->
 A message that leaves this machine in Magnus's name goes out only after he
 approves that exact text. This covers email, Slack, LinkedIn, iMessage,
-Vibbo, GitHub comments to people outside his own repos, and any reply or
+housing or community portals, GitHub comments to people outside his own repos, and any reply or
 forward.
 
 1. Load the `write-in-my-voice` skill before you write the first word, for
@@ -193,8 +193,8 @@ decided nothing is needed), move it out of the inbox.
 
 <!-- rules:dev-server -->
 If a project ships an agent-friendly dev command (a background launcher with
-idempotent status/stop, e.g. `make dev` / `make dev-status` / `make dev-stop`
-in hei-huset-agent), use it: those are safe for me to start, query, and stop.
+idempotent status/stop, e.g. `make dev` / `make dev-status` /
+`make dev-stop`), use it: those are safe for me to start, query, and stop.
 Otherwise, when servers are run manually in separate terminals, assume they're
 already running and don't launch them in the foreground (a foreground `dev`
 blocks indefinitely).
@@ -240,7 +240,7 @@ installed and must not come back (it was removed on 28.11.2026).
 
 **Do the step yourself.** When the next step is something a tool here can do,
 run it instead of handing it to Magnus: a CLI (`gh auth refresh`, an export
-script, `gjcli` PIM activation), a logged-in browser session, or a one-time
+script, a cloud role activation), a logged-in browser session, or a one-time
 code that arrives in Gmail. Hand back only what needs his body or his
 authority: BankID, approving a payment, a physical action, or a decision that
 is his to make.
@@ -316,11 +316,18 @@ This applies to your own prose in every response, not only when I ask for it. `/
   - `#1731` → `[#1731](https://github.com/<owner>/<repo>/pull/1731)`
   - a workflow run → `[run 18234567890](https://github.com/<owner>/<repo>/actions/runs/18234567890)`
   - a commit → `[3bf4ae5b](https://github.com/<owner>/<repo>/commit/3bf4ae5b...)`
-  - another repo's issue → `[gjensidige/skills#39](https://github.com/gjensidige/skills/issues/39)`
+  - another repo's issue → `[acme/tools#39](https://github.com/acme/tools/issues/39)`
 - Resolve the owner and repo from the working directory's `origin` remote when they are not stated. If you cannot determine the real URL, say so rather than inventing one; a wrong link is worse than a bare number.
 - **One deliberate exception: text that GitHub itself renders.** Inside an issue body, PR description, or a comment posted to GitHub, a bare `#1731` already autolinks, so leave it bare there. The rule is about surfaces that do not autolink, which is everything else, including this chat.
 - Do not link the same reference more than once in a short passage. First mention links, later mentions stay plain.
 <!-- /rules:github-refs -->
+
+## Local File Links
+
+<!-- rules:file-links -->
+- When you link a local file in Markdown, wrap the path in angle brackets whenever it contains a space: `[Project Notes.md](</Users/me/notes/Project Notes.md>)`. CommonMark ends a link destination at the first unescaped space, so `[x](/a b.md)` renders as raw text and the link cannot be clicked. Paths without spaces may stay bare. `%20` also works, but the angle-bracket form keeps the path readable and searchable.
+- This applies to chat replies, docs and PR bodies alike. Obsidian `[[wikilinks]]` inside a vault are unaffected.
+<!-- /rules:file-links -->
 
 ## Context7
 

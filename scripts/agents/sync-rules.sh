@@ -68,9 +68,9 @@ RULES_DIR="scripts/agents/rules"
 # containers was added 28.11.2026: OpenCode runs docker too, and must not
 # reinstall Docker Desktop.
 MANIFEST="
-.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing,containers
-.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing,containers
-.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,calendar-titles,context7,git-authorship,containers
+.claude/CLAUDE.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,file-links,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing,containers
+.codex/AGENTS.md:dev-server,task-completion,refactoring,writing-style,no-slop,norwegian,github-refs,file-links,calendar-titles,context7,t3-browser,code-repo-workflow,git-authorship,durable-agents,outbound-messages,email-filing,containers
+.config/opencode/AGENTS.md:refactoring,writing-style,no-slop,github-refs,file-links,calendar-titles,context7,git-authorship,containers
 "
 
 TMPDIR_RUN="$(mktemp -d)"

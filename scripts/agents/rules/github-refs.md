@@ -3,7 +3,7 @@
   - `#1731` → `[#1731](https://github.com/<owner>/<repo>/pull/1731)`
   - a workflow run → `[run 18234567890](https://github.com/<owner>/<repo>/actions/runs/18234567890)`
   - a commit → `[3bf4ae5b](https://github.com/<owner>/<repo>/commit/3bf4ae5b...)`
-  - another repo's issue → `[gjensidige/skills#39](https://github.com/gjensidige/skills/issues/39)`
+  - another repo's issue → `[acme/tools#39](https://github.com/acme/tools/issues/39)`
 - Resolve the owner and repo from the working directory's `origin` remote when they are not stated. If you cannot determine the real URL, say so rather than inventing one; a wrong link is worse than a bare number.
 - **One deliberate exception: text that GitHub itself renders.** Inside an issue body, PR description, or a comment posted to GitHub, a bare `#1731` already autolinks, so leave it bare there. The rule is about surfaces that do not autolink, which is everything else, including this chat.
 - Do not link the same reference more than once in a short passage. First mention links, later mentions stay plain.

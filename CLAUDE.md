@@ -303,6 +303,7 @@ scripts/agents/rules/          .claude/  .codex/  opencode/
   no-slop.md                      x         x         x
   norwegian.md                    x         x
   github-refs.md                  x         x         x
+  file-links.md                   x         x         x
   calendar-titles.md              x         x         x
   context7.md                     x         x         x
   t3-browser.md                   x         x
