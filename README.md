@@ -1,212 +1,77 @@
-# cd `~`
+# dotfiles
 
-## Table of Contents
+![dotfiles](images/hero.png)
 
-- [cd `~`](#cd-)
-  - [Table of Contents](#table-of-contents)
-  - [Prerequisites](#prerequisites)
-  - [Getting started](#getting-started)
-  - [What is `stow`?](#what-is-stow)
-    - [Directory structure before using `stow`](#directory-structure-before-using-stow)
-    - [Using `stow` to mirror configuration](#using-stow-to-mirror-configuration)
-    - [Resulting directory structure after stowing](#resulting-directory-structure-after-stowing)
-    - [More information on `stow`](#more-information-on-stow)
-  - [Tools used](#tools-used)
-    - [`neovim`-related tools](#neovim-related-tools)
-    - [`tmux`-related tools](#tmux-related-tools)
-    - [`zsh`-related tools](#zsh-related-tools)
-    - [`lazygit`-related tools](#lazygit-related-tools)
-    - [AI agent tooling](#ai-agent-tooling)
-  - [Keeping packages in sync](#keeping-packages-in-sync)
-  - [Configuring Raycast](#configuring-raycast)
-  - [Configuring editors](#configuring-editors)
-    - [Managing keybindings, settings and snippets](#managing-keybindings-settings-and-snippets)
-    - [Managing extensions](#managing-extensions)
-  - [Configuring Brave Browser](#configuring-brave-browser)
+My macOS setup: shell, terminal, editors and the config for the AI agents I work with. One `install.sh` takes a fresh Mac to this state, and `doctor.sh` checks that it got there.
 
-## Prerequisites
+![macOS](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white)
+![GNU Stow](https://img.shields.io/badge/managed%20with-GNU%20stow-4c8eda)
+![Homebrew](https://img.shields.io/badge/Homebrew-124%20formulae%20·%2039%20casks-fbb040?logo=homebrew&logoColor=white)
+![Agent skills](https://img.shields.io/badge/agent%20skills-250%2B-d97757)
 
-macOS ships with `git` (via the Xcode Command Line Tools), but **not** Homebrew. The [`install.sh`](/install.sh) script bootstraps both Homebrew and `stow` for you if they're missing, so the commands below are only needed if you'd rather install them ahead of time.
+## Quick start
 
 ```sh
-# Install Homebrew if you don't have it
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install Git if you don't have it
-brew install git
-```
-
-## Getting started
-
-Now that you have `git` and `brew` installed, you can clone this repository and use `stow` to manage your dotfiles. When cloning the repository, **it is important to clone it into `$HOME/dotfiles`**. This is because the `stow` command will create symbolic links relative to the current directory, so it is important to clone the repository into the `$HOME` directory to ensure that the symbolic links are created correctly.
-
-```sh
-# Clone the repository into a specified directory
-git clone https://github.com/magnusrodseth/dotfiles.git $HOME/dotfiles
-
-# Navigate to the dotfiles directory
-cd $HOME/dotfiles
-
-# Run the install script (bash; safe to re-run, exits non-zero if any step fails)
-bash install.sh
-
-# Verify the machine matches the dotfiles afterwards
-bash scripts/doctor.sh
-```
-
-`install.sh` is idempotent (safe to re-run), reports each step's real exit status, and aggregates failures instead of stopping at the first one. When it finishes, `scripts/doctor.sh` prints a read-only ✓/✗ checklist of what is and isn't set up (symlinks, Homebrew/Cargo/pnpm/VS Code packages, agent skills, fonts, CLI tools) and exits non-zero if anything's missing. The loop is: run install → run doctor → fix what's red → repeat until green.
-
-## What is `stow`?
-
-`stow` is a command-line tool that manages the installation of software packages by creating symbolic links. It is especially useful for managing dotfiles and configuration files in a clean, organized way.
-
-### Directory structure before using `stow`
-
-```sh
-~/dotfiles
-├── .zshrc
-└── config
-    └── nvim
-        └── init.vim
-```
-
-### Using `stow` to mirror configuration
-
-```sh
-# Navigate to the dotfiles directory
+git clone https://github.com/magnusrodseth/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-
-# Use stow to create symbolic links for all the files in the dotfiles directory
-stow .
+bash install.sh        # idempotent, safe to re-run
+bash scripts/doctor.sh # read-only ✓/✗ checklist
 ```
 
-### Resulting directory structure after stowing
+The repo must live at `~/dotfiles`, because `stow` links relative to its parent directory. `install.sh` installs Homebrew and `stow` if they are missing.
 
-```sh
-~
-├── .zshrc -> ~/dotfiles/zshrc
-└── .config
-    └── nvim -> ~/dotfiles/config/nvim
-        └── init.vim
+## How it works
 
+```mermaid
+flowchart LR
+    A[install.sh] --> B[stow<br/>symlinks into ~]
+    A --> C[package lists<br/>Brewfile · cargo · pnpm · npm]
+    A --> D[agent skills<br/>skill-lock.json]
+    A --> E[macOS defaults<br/>file associations]
+    B & C & D & E --> F{doctor.sh}
+    F -- red --> A
+    F -- green --> G[done]
 ```
 
-### More information on `stow`
+Config files are symlinked with `stow`. Packages are not: each package manager has a list with `export` and `install` commands, so a new machine restores from the lists. A step that fails does not stop the run. `install.sh` reports every failure at the end and exits non-zero.
 
-Refer to [this YouTube video](https://www.youtube.com/watch?v=y6XCebnB9gs) for more information.
+## Agent setup
 
-## Tools used
+Several agents read instructions and skills from different places. This repo keeps one source for each and copies it to the rest.
 
-- [`stow`](https://www.gnu.org/software/stow/), for managing dotfiles
-- [`brew`](https://brew.sh), for installing software packages
-- [`git`](https://git-scm.com), for version control
-- [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads), for the font used in the terminal (installed automatically via the `font-fira-code-nerd-font` Homebrew cask in the `Brewfile`)
-- [`ghostty`](https://ghostty.org/), for a fast, native terminal emulator
-- [`raycast`](https://www.raycast.com/), for a Spotlight replacement with extensions, window management, etc.
-- [`zed`](https://zed.dev), the primary code editor (with [`vscode`](https://code.visualstudio.com/) also configured)
-- [`brave`](https://brave.com/), the web browser
-- [Claude Code](https://www.anthropic.com/claude-code), for AI-assisted development (skills and agents live under [`.claude`](/.claude))
+```mermaid
+flowchart LR
+    R[scripts/agents/rules/*.md] -- sync-rules.sh --> CC[Claude Code<br/>~/.claude/CLAUDE.md]
+    R -- sync-rules.sh --> CX[Codex<br/>~/.codex/AGENTS.md]
+    R -- sync-rules.sh --> OC[OpenCode]
 
-### `neovim`-related tools
-
-- [`neovim`](https://neovim.io), for text editing
-- [`lazyvim`](https://www.lazyvim.org/), for an IDE experience in Neovim that is easy to set up
-
-For more information on the Neovim setup, including plugins and keymaps, refer to the [`lazyvim` documentation](https://www.lazyvim.org/).
-
-### `tmux`-related tools
-
-- [`tmux`](https://github.com/tmux/tmux/wiki), for a terminal multiplexer
-- [`tpm`](https://github.com/tmux-plugins/tpm), for managing tmux plugins
-- [`catppuccin/tmux`](https://github.com/catppuccin/tmux), for tmux themes. Note that I am using a fork of the original repository, which can be found [in this repository](https://github.com/dreamsofcode-io/catppuccin-tmux).
-
-For more information on the tmux-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=DzNmUNvnB04).
-
-### `zsh`-related tools
-
-- [`zsh`](https://www.zsh.org), for the shell
-- [`zinit`](https://github.com/zdharma-continuum/zinit), for managing zsh plugins
-- [`oh-my-posh`](https://ohmyposh.dev/docs/), for a minimal zsh prompt
-- [`fzf`](https://github.com/junegunn/fzf), for fuzzy finding
-- [`zoxide`](https://github.com/ajeetdsouza/zoxide), for fast directory switching
-- [`eza`](https://github.com/eza-community/eza), for a modern, maintained replacement for ls
-
-For more information on the zsh-related tools, refer to [this YouTube video](https://www.youtube.com/watch?v=ud7YxC33Z3w).
-
-### `lazygit`-related tools
-
-- [`lazygit`](https://github.com/jesseduffield/lazygit), for a simple terminal UI for git
-
-### AI agent tooling
-
-A large part of this repo is now [Claude Code](https://www.anthropic.com/claude-code) configuration, all under [`.claude`](/.claude):
-
-- **Skills** ([`.claude/skills`](/.claude/skills)) are restored from a lock file rather than committed wholesale. `scripts/skills/packages.sh install` reads [`skill-lock.json`](/scripts/skills/skill-lock.json) and reinstalls every skill on a new machine; `scripts/skills/link-dotfiles-skills.sh` symlinks the dotfiles-authored skills into `~/.claude/skills`.
-- **Shared agent rules** ([`scripts/agents/rules`](/scripts/agents/rules)) are committed directly.
-- [`CLAUDE.md`](/CLAUDE.md) documents the repo for Claude Code and is the canonical setup runbook.
-
-## Keeping packages in sync
-
-Packages aren't symlinked; they're declared in lists and (re)installed from them. Each manager has an `export` (snapshot what's installed) and `install` (restore from the snapshot) command, so moving to a new machine is just a matter of running the installs.
-
-```sh
-bash scripts/cargo/packages.sh export   # or: install
-bash scripts/pnpm/packages.sh export    # or: install
-bash scripts/npm/packages.sh export     # or: install
-bash scripts/skills/packages.sh export  # or: install
+    S[~/.agents/skills<br/>source of truth] --> CS[~/.claude/skills<br/>mirror symlinks]
+    S --> Z[Codex · ChatGPT · Zed]
+    L[skill-lock.json] -- install --> S
+    A[.claude/skills<br/>authored here] -- link --> S
 ```
 
-Run `bash scripts/doctor.sh` at any time to see, at a glance, which packages, symlinks, fonts, and tools are present versus missing.
+## Tools
 
-## Configuring Raycast
+| Tool | Role |
+|---|---|
+| [Ghostty](https://ghostty.org) | Terminal (Tokyo Night, FiraCode Nerd Font) |
+| [tmux](https://github.com/tmux/tmux) + [tpm](https://github.com/tmux-plugins/tpm) | Terminal multiplexer (Catppuccin Mocha) |
+| [zsh](https://www.zsh.org) + [zinit](https://github.com/zdharma-continuum/zinit) | Shell and plugin manager |
+| [oh-my-posh](https://ohmyposh.dev) | Prompt |
+| [atuin](https://atuin.sh) | Shell history, synced across machines |
+| [fzf](https://github.com/junegunn/fzf), [zoxide](https://github.com/ajeetdsouza/zoxide), [eza](https://github.com/eza-community/eza), [bat](https://github.com/sharkdp/bat) | Fuzzy finding, `cd`, `ls`, file viewing |
+| [Zed](https://zed.dev) | Main editor and `$EDITOR` |
+| [Neovim](https://neovim.io) + [LazyVim](https://www.lazyvim.org) | Terminal editor |
+| [VS Code](https://code.visualstudio.com) | Secondary editor |
+| [lazygit](https://github.com/jesseduffield/lazygit) + [delta](https://github.com/dandavison/delta) | Git TUI and diff pager |
+| [Claude Code](https://www.anthropic.com/claude-code), [Codex](https://github.com/openai/codex), [OpenCode](https://opencode.ai), [pi](https://github.com/earendil-works/pi) | Coding agents |
+| [T3 Code](https://t3.codes) | Agent workspace |
+| [OrbStack](https://orbstack.dev) | Containers and Linux VMs |
+| [Raycast](https://www.raycast.com) | Launcher and window management |
+| [Brave](https://brave.com) | Browser |
+| [1Password](https://1password.com) | Secrets, also for scripts via `op` |
 
-The Raycast configuration is stored in [`.config/raycast`](/.config/raycast), in the most recent `*.rayconfig` file. After installing Raycast, open Settings using `CMD + ,` > `Advanced` > `Import / Export` > `Import` > `Select File`. Select the most up-to-date file from the folder.
+## More
 
-Extensions are **not** in this repo. The whole `.config/raycast/extensions/`
-tree is gitignored, because Raycast's compiled command JS is gitignored too, so
-a fresh checkout would restore only icon-only `assets/` folders that Raycast
-reports as "Could not find command's executable JS file". Extensions come back
-per-machine from **Raycast Cloud Sync**: sign in after importing the
-`*.rayconfig` and they repopulate. `bash scripts/doctor.sh` flags any extension
-sitting on disk without its compiled JS.
-
-## Configuring editors
-
-[Zed](https://zed.dev) is my primary editor, with [VS Code](https://code.visualstudio.com/) also configured. (`zed -w` is the default `$EDITOR` used by git and scripts.)
-
-### Managing keybindings, settings and snippets
-
-On macOS, editor configuration lives under `~/Library/Application Support/<Editor>/User/`, so it's mirrored in this repo and symlinked by `stow`:
-
-- **VS Code** is mirrored most fully: settings, keybindings, and snippets.
-- **Zed** tracks both its [`keymap.json`](/.config/zed/keymap.json) and its [`settings.json`](/.config/zed/settings.json). Its conversation, prompt and embedding state is gitignored.
-
-Cursor and Windsurf were both mirrored here until 17.07.2026. Both apps were uninstalled
-long before that and only their settings kept being stowed, so the entries were dropped.
-Re-add a `Library/Application Support/<Editor>/User/settings.json` if either comes back.
-
-Running `stow .` as detailed above symlinks all of these to the correct locations.
-
-### Managing extensions
-
-Extensions aren't symlinked (the `~/.vscode/extensions` directory is large).
-They are declared as `vscode "publisher.name"` entries in the
-[`Brewfile`](/Brewfile) and installed by `brew bundle`, alongside every other
-package.
-
-```sh
-# Install (along with all formulae and casks)
-brew bundle --file=Brewfile
-
-# List what is installed, to compare against the Brewfile
-code --list-extensions
-```
-
-> There used to be a second manifest under `scripts/vscode/` with its own
-> export/install script. It drifted two years out of date while the Brewfile
-> block stayed exact, and `doctor.sh` was checking the stale one, so it was
-> removed. One source of truth.
-
-## Configuring Brave Browser
-
-[Brave](https://brave.com/) is the web browser, installed via the `Brewfile`. The [`browser`](/browser) directory holds the bits that aren't synced automatically: the desktop wallpaper plus exported settings for the [Dark Reader](/browser/Dark-Reader-Settings.json) and [Vimium](/browser/vimium-options.json) extensions. After installing Brave, set the wallpaper and import those extension settings.
+[`CLAUDE.md`](CLAUDE.md) is the full runbook: every install step, the stow rules, the security watch, and why things are set up the way they are.
